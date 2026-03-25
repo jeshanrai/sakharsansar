@@ -12,6 +12,7 @@ import WaysToEnjoySection from "@/components/sections/WaysToEnjoySection";
 import ProcessSection from "@/components/sections/ProcessSection";
 import ComparisonSection from "@/components/sections/ComparisonSection";
 import BenefitsSection from "@/components/sections/BenefitsSection";
+import BlogHighlightSection from "@/components/sections/BlogHighlightSection";
 import FaqsSection from "@/components/sections/FaqsSection";
 import TestimonialsSection from "@/components/sections/TestimonialsSection";
 import CtaSection from "@/components/sections/CtaSection";
@@ -84,6 +85,7 @@ export default function Home() {
       <ComparisonSection />
       <ProcessSection />
       <TestimonialsSection />
+      <BlogHighlightSection />
       <FaqsSection />
       <CtaSection />
       <Footer />

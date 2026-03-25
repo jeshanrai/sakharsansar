@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 import data from "@/data/content.json";
 
 export default function Footer() {
@@ -12,9 +13,10 @@ export default function Footer() {
         <div>
           <h4 className="font-poppins font-medium text-[11px] uppercase tracking-[0.2em] text-white/40 mb-8">Navigation</h4>
           <ul className="space-y-4 text-xs tracking-widest uppercase text-white/80">
-            <li><a href="#story" className="hover:text-white transition duration-300">Our Story</a></li>
-            <li><a href="#products" className="hover:text-white transition duration-300">Shop Collection</a></li>
-            <li><a href="#contact" className="hover:text-white transition duration-300">Contact Us</a></li>
+            <li><Link href="/#story" className="hover:text-white transition duration-300">Our Story</Link></li>
+            <li><Link href="/#products" className="hover:text-white transition duration-300">Shop Collection</Link></li>
+            <li><Link href="/blog" className="hover:text-white transition duration-300">Insights & Blog</Link></li>
+            <li><Link href="/#contact" className="hover:text-white transition duration-300">Contact Us</Link></li>
           </ul>
         </div>
         <div>
