@@ -1,0 +1,136 @@
+{
+  "brand": {
+    "name": "Himalayan Jaggery",
+    "tagline": "Pure, Chemical-Free Jaggery from Sankhuwasabha"
+  },
+  "highlights": [
+    {
+      "title": "100% Natural",
+      "icon": "Leaf",
+      "desc": "Unrefined and wholesome"
+    },
+    {
+      "title": "No Chemicals",
+      "icon": "ShieldCheck",
+      "desc": "Processed purely without additives"
+    },
+    {
+      "title": "Direct from Farmers",
+      "icon": "Users",
+      "desc": "Empowering local agriculture"
+    },
+    {
+      "title": "Handcrafted",
+      "icon": "HandHeart",
+      "desc": "Made with tradition and care"
+    }
+  ],
+  "story": {
+    "title": "Our Story",
+    "content": "We connect farmers from the pristine mountains of Sankhuwasabha directly to your home. Our sweet, mineral-rich jaggery is made using traditional methods completely devoid of bleach or artificial coloring. By choosing Himalayan Jaggery, you are not only savoring an authentic taste but also supporting rural livelihoods."
+  },
+  "farmers": [
+    {
+      "name": "Ram Bahadur",
+      "location": "Sankhuwasabha",
+      "image": "/farmers/farmer1.jpg",
+      "story": "Farming sugarcane for 20 years, Ram uses organic techniques to produce the sweetest yields."
+    }
+  ],
+  "products": [
+    {
+      "name": "Organic Jaggery Block",
+      "price": "Rs. 500",
+      "weight": "1kg",
+      "image": "/products/jaggery1.jpg",
+      "description": "Natural, rich in minerals, and slowly cooked over wood-fire for a distinct earthy flavor."
+    }
+  ],
+  "testimonials": [
+    {
+      "name": "Aarati Sharma",
+      "review": "Very pure and tasty jaggery! Makes my morning tea perfectly balanced without any guilt."
+    },
+    {
+      "name": "Bidhan Shrestha",
+      "review": "The authenticity is real. Tastes exactly like what my grandmother used to make. Highly recommended!"
+    }
+  ],
+  "process": [
+    {
+      "title": "Farming",
+      "desc": "Cultivating pesticide-free sugarcane."
+    },
+    {
+      "title": "Boiling",
+      "desc": "Slow cooking the cane juice."
+    },
+    {
+      "title": "Molding",
+      "desc": "Hand-pouring into traditional shape blocks."
+    },
+    {
+      "title": "Packaging",
+      "desc": "Eco-friendly sealing directly from source."
+    }
+  ],
+  "benefits": [
+    {
+      "title": "Rich in Minerals",
+      "desc": "Contains essential minerals like Iron, Magnesium, and Zinc, supporting bone and heart health."
+    },
+    {
+      "title": "Improves Digestion",
+      "desc": "Activates digestive enzymes, acting as a natural body cleanser after meals."
+    },
+    {
+      "title": "Energy Booster",
+      "desc": "Provides gradual energy without spikes, preventing the sudden fatigue caused by refined sugar."
+    },
+    {
+      "title": "Immunity Support",
+      "desc": "Loaded with antioxidants and nutrients that help build a stronger immune system naturally."
+    }
+  ],
+  "faqs": [
+    {
+      "question": "How is your jaggery different from market jaggery?",
+      "answer": "Our jaggery is 100% chemical-free. We do not use sulfur, bleach, or synthetic colors during the boiling process, ensuring you get the pure sugarcane extract in its most natural form."
+    },
+    {
+      "question": "What is the shelf life of the jaggery?",
+      "answer": "Store it in a cool, dark, and dry place in an airtight container. Properly preserved, it can easily last 6-12 months without losing its flavor or nutritional value."
+    },
+    {
+      "question": "Can diabetic patients consume jaggery?",
+      "answer": "While healthier and more nutritious than refined sugar, jaggery is still a sweetener with a high glycemic index. We recommend diabetic individuals consult their physician before adding it to their diet."
+    },
+    {
+      "question": "Do you deliver pan-Nepal?",
+      "answer": "Yes! We ship directly from Sankhuwasabha to major cities across Nepal. Shipping times vary depending on your location."
+    }
+  ],
+  "waysToEnjoy": [
+    {
+      "title": "Morning Tea & Coffee",
+      "desc": "Replace your daily refined sugar with a small piece of our jaggery for a caramel-like sweet start."
+    },
+    {
+      "title": "Traditional Sweets",
+      "desc": "Perfect for making authentic local desserts like Sel Roti or Kheer."
+    },
+    {
+      "title": "Direct Snack",
+      "desc": "Eat a small chunk directly after meals to promote healthy digestion."
+    }
+  ],
+  "trustBanner": {
+    "title": "Certified Pure. Proudly Nepali.",
+    "badges": [
+      "100% Chemical Free",
+      "Sourced from Sankhuwasabha",
+      "Eco-Friendly Packaging",
+      "Zero Preservatives"
+    ]
+  }
+}

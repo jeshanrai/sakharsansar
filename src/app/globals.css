@@ -1,0 +1,60 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-poppins), ui-serif, Georgia, serif;
+
+  --color-earth-brown: #6B3E26;
+  --color-earth-brown-light: #8B5A3D;
+  --color-earth-beige: #F5E9DA;
+  --color-earth-green: #7A9E7E;
+  --color-earth-dark: #2F1E12;
+
+  --color-background: var(--color-earth-beige);
+  --color-foreground: var(--color-earth-dark);
+
+  /* Animations for smooth subtle interactions */
+  --animate-fade-in: fade-in 0.6s ease-out;
+  --animate-slide-up: slide-up 0.5s ease-out;
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes slide-up {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+:root {
+  background-color: var(--color-earth-beige);
+  color: var(--color-earth-dark);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--color-earth-beige);
+  color: var(--color-earth-dark);
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
