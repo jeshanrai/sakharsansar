@@ -1,5 +1,5 @@
 import React from 'react';
-import Image from "next/image";
+
 import data from "@/data/content.json";
 import { SlideInLeft, SlideInRight } from "@/components/Animations";
 import { ArrowRight } from "lucide-react";
@@ -10,7 +10,7 @@ export default function StorySection() {
       <div className="max-w-[1440px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
         <SlideInLeft>
           <div className="relative h-[600px] lg:h-[800px] w-full overflow-hidden group">
-            <Image src="/hero.jpg" alt="Our Story" fill className="object-cover group-hover:scale-105 transition-transform duration-[1.5s] ease-out" />
+            <img src="/hero.jpg" alt="Our Story" loading="lazy" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-[1.5s] ease-out" />
           </div>
         </SlideInLeft>
         <SlideInRight delay={0.2}>

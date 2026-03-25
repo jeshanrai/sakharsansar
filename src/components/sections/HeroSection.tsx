@@ -1,5 +1,5 @@
 import React from 'react';
-import Image from "next/image";
+
 import { ArrowRight } from "lucide-react";
 import { HeroTitleWrapper, HeroSubtitleWrapper, HeroButtonWrapper } from "@/components/Animations";
 
@@ -7,12 +7,11 @@ export default function HeroSection() {
   return (
     <section className="relative min-h-screen flex items-center justify-center pt-20 px-6 overflow-hidden">
       <div className="absolute inset-0 z-0">
-        <Image 
+        <img 
           src="/hero.jpg" 
           alt="Pure Himalayan Jaggery" 
-          fill 
-          className="object-cover object-center scale-[1.02]"
-          priority
+          loading="eager"
+          className="absolute inset-0 w-full h-full object-cover object-center scale-[1.02]"
         />
         <div className="absolute inset-0 bg-black/40" />
       </div>

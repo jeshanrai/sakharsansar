@@ -1,5 +1,5 @@
 import React from 'react';
-import Image from "next/image";
+
 import data from "@/data/content.json";
 import { FadeUp, SlideInRight } from "@/components/Animations";
 
@@ -15,7 +15,7 @@ export default function FarmersSection() {
             <SlideInRight key={i} delay={i * 0.1} className="min-w-[85vw] md:min-w-[600px] snap-center">
               <div className="bg-white group cursor-default h-full border border-black/10 flex flex-col md:flex-row">
                 <div className="relative h-96 md:h-full w-full md:w-1/2 overflow-hidden bg-black/5">
-                  <Image src={farmer.image} alt={farmer.name} fill className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out grayscale group-hover:grayscale-0" />
+                  <img src={farmer.image} alt={farmer.name} loading="lazy" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out grayscale group-hover:grayscale-0" />
                 </div>
                 <div className="p-12 md:w-1/2 flex flex-col justify-center">
                   <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-black/40 mb-4">{farmer.location}</span>

@@ -1,5 +1,5 @@
 import React from 'react';
-import Image from "next/image";
+
 import data from "@/data/content.json";
 import { SlideInLeft, ZoomIn } from "@/components/Animations";
 
@@ -19,7 +19,7 @@ export default function ProductsSection() {
             <ZoomIn key={i} delay={i * 0.1} className="h-full">
               <div className="group cursor-pointer flex flex-col h-full">
                 <div className="relative aspect-[3/4] w-full overflow-hidden mb-6 bg-[#F4F1ED]">
-                  <Image src={product.image} alt={product.name} fill className="object-cover group-hover:scale-[1.03] transition-transform duration-[1s]" />
+                  <img src={product.image} alt={product.name} loading="lazy" className="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-[1s]" />
                 </div>
                 <div className="flex flex-col flex-grow">
                   <div className="flex justify-between items-start mb-2">
