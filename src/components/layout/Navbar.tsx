@@ -1,4 +1,6 @@
+"use client";
 import React from 'react';
+import { openOrderDrawer } from './OrderDrawer';
 
 export default function Navbar() {
   return (
@@ -7,7 +9,7 @@ export default function Navbar() {
       <div className="hidden md:flex gap-10 text-[13px] font-medium tracking-widest uppercase items-center">
         <a href="#story" className="text-black hover:text-black/50 transition duration-300">Our Story</a>
         <a href="#products" className="text-black hover:text-black/50 transition duration-300">Shop</a>
-        <a href="#contact" className="px-6 py-3 border border-black text-black hover:bg-black hover:text-white transition duration-300">Order Now</a>
+        <button onClick={() => openOrderDrawer()} className="px-6 py-3 border border-black text-black hover:bg-black hover:text-white transition duration-300">Order Now</button>
       </div>
     </nav>
   );

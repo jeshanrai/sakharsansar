@@ -1,4 +1,6 @@
+"use client";
 import React from 'react';
+import { openOrderDrawer } from '../layout/OrderDrawer';
 
 import data from "@/data/content.json";
 import { SlideInLeft, ZoomIn } from "@/components/Animations";
@@ -29,9 +31,9 @@ export default function ProductsSection() {
                   <p className="text-black/60 text-xs tracking-wide mb-8 font-light flex-grow leading-relaxed">{product.description}</p>
                   <div className="flex items-center justify-between border-t border-black/10 pt-6">
                     <p className="font-poppins text-sm font-medium tracking-widest uppercase text-black">{product.price}</p>
-                    <a href="#contact" className="text-[10px] font-semibold tracking-[0.2em] uppercase text-white bg-black px-6 py-3 hover:bg-black/80 transition-colors">
+                    <button onClick={() => openOrderDrawer(product.name)} className="text-[10px] font-semibold tracking-[0.2em] uppercase text-white bg-black px-6 py-3 hover:bg-black/80 transition-colors">
                       Add to Cart
-                    </a>
+                    </button>
                   </div>
                 </div>
               </div>

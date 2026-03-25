@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import Navbar from "@/components/layout/Navbar";
+import OrderDrawer from "@/components/layout/OrderDrawer";
 import Footer from "@/components/layout/Footer";
 import HeroSection from "@/components/sections/HeroSection";
 import TrustBanner from "@/components/sections/TrustBanner";
@@ -71,6 +72,7 @@ export default function Home() {
       />
       
       <Navbar />
+      <OrderDrawer />
       <HeroSection />
       <TrustBanner />
       <HighlightsSection />
