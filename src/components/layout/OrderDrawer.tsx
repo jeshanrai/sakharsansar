@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { X, CheckCircle } from 'lucide-react';
 import data from "@/data/content.json";
+import JaggeryLoader from "../ui/JaggeryLoader";
 
 export const openOrderDrawer = (productName?: string) => {
   if (typeof window !== 'undefined') {
@@ -14,6 +15,7 @@ export default function OrderDrawer() {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
@@ -45,7 +47,12 @@ export default function OrderDrawer() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitted(true);
+    setIsLoading(true);
+    // Simulate API call
+    setTimeout(() => {
+      setIsLoading(false);
+      setIsSubmitted(true);
+    }, 1500);
   };
 
   return (
@@ -55,7 +62,10 @@ export default function OrderDrawer() {
         onClick={closeDrawer}
       />
       
-      <div 
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label={isSubmitted ? "Order confirmed" : "Place your order"}
         className={`fixed right-0 top-0 h-full w-full sm:w-[500px] bg-[#F4F1ED] z-[100] transform transition-transform duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] flex flex-col`}
       >
         <div className="flex justify-between items-center p-6 sm:p-10 border-b border-black/10 bg-white">
@@ -67,9 +77,13 @@ export default function OrderDrawer() {
           </button>
         </div>
 
-        <div className="flex-1 overflow-y-auto p-6 sm:p-10">
-          {isSubmitted ? (
-            <div className="h-full flex flex-col items-center justify-center text-center space-y-6">
+        <div className="flex-1 overflow-y-auto p-6 sm:p-10 flex flex-col">
+          {isLoading ? (
+            <div className="flex-1 flex items-center justify-center">
+              <JaggeryLoader />
+            </div>
+          ) : isSubmitted ? (
+            <div className="h-full flex flex-col items-center justify-center text-center space-y-6 animate-in fade-in duration-500">
               <CheckCircle className="w-16 h-16 text-black" strokeWidth={1} />
               <h3 className="font-poppins text-2xl font-medium tracking-[0.1em] uppercase text-black">Thank You</h3>
               <p className="text-black/60 text-sm tracking-widest leading-loose">

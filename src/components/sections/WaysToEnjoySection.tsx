@@ -14,16 +14,16 @@ const getIcon = (index: number) => {
 
 export default function WaysToEnjoySection() {
   return (
-    <section className="py-32 px-6 bg-black text-white">
+    <section aria-label="Ways to Enjoy" className="py-24 sm:py-32 px-6 bg-black text-white">
       <div className="max-w-[1440px] mx-auto">
         <SlideInLeft>
-          <div className="flex flex-col items-center mb-24 border-b border-white/20 pb-12">
+          <div className="flex flex-col items-center mb-16 sm:mb-24 border-b border-white/20 pb-12">
             <h2 className="font-poppins text-3xl sm:text-5xl font-medium tracking-[0.1em] uppercase text-white mb-6">Culinary Pairings</h2>
-            <p className="text-[10px] uppercase tracking-widest text-white/50 max-w-lg text-center leading-loose">The delicate and natural sweetener for everyday indulgence.</p>
+            <p className="text-[10px] sm:text-xs uppercase tracking-widest text-white/50 max-w-lg text-center leading-loose">The delicate and natural sweetener for everyday indulgence.</p>
           </div>
         </SlideInLeft>
-        
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-16">
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-12 sm:gap-16">
           {data.waysToEnjoy.map((way, i) => (
             <ZoomIn key={i} delay={i * 0.1}>
               <div className="flex flex-col items-center text-center group cursor-default">

@@ -15,12 +15,13 @@ const getIcon = (name: string) => {
 
 export default function HighlightsSection() {
   return (
-    <section className="py-32 px-6 border-b border-black/10">
-      <div className="max-w-[1440px] mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16">
+    <section aria-label="Why Choose Us" className="py-32 px-6 border-b border-black/10">
+      <h2 className="sr-only">Why Choose SakharSansar</h2>
+      <div className="max-w-[1440px] mx-auto grid grid-cols-2 lg:grid-cols-4 gap-10 sm:gap-16">
         {data.highlights.map((item, i) => (
           <ZoomIn key={i} delay={i * 0.1}>
             <div className="flex flex-col items-center text-center group">
-              <div className="mb-8 opacity-60 group-hover:opacity-100 transition duration-500">
+              <div className="mb-6 sm:mb-8 opacity-60 group-hover:opacity-100 transition duration-500">
                 {getIcon(item.icon)}
               </div>
               <h3 className="font-poppins font-semibold text-xs tracking-[0.15em] uppercase text-black mb-4">{item.title}</h3>

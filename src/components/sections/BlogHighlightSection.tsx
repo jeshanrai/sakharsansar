@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import blogData from "@/data/blog.json";
 import { FadeUp, SlideInRight } from "@/components/Animations";
@@ -6,9 +7,9 @@ import { ArrowRight } from "lucide-react";
 
 export default function BlogHighlightSection() {
   const recentPosts = blogData.slice(0, 3);
-  
+
   return (
-    <section id="blog" className="py-32 px-6 bg-white border-b border-black/10">
+    <section id="blog" aria-label="Blog Highlights" className="py-32 px-6 bg-white border-b border-black/10">
       <div className="max-w-[1440px] mx-auto">
         <FadeUp>
           <div className="mb-24 flex flex-col md:flex-row md:items-end justify-between gap-8 border-b border-black pb-8">
@@ -18,13 +19,19 @@ export default function BlogHighlightSection() {
             </Link>
           </div>
         </FadeUp>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-12">
           {recentPosts.map((post, i) => (
             <SlideInRight key={post.slug} delay={i * 0.1} className="h-full">
               <Link href={`/blog/${post.slug}`} className="group flex flex-col h-full cursor-pointer">
                 <div className="relative aspect-[4/3] w-full overflow-hidden mb-8 bg-[#F4F1ED]">
-                  <img src={post.image} alt={post.title} loading="lazy" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-[1s] ease-out" />
+                  <Image
+                    src={post.image}
+                    alt={post.title}
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    className="object-cover group-hover:scale-105 transition-transform duration-[1s] ease-out"
+                  />
                 </div>
                 <div className="flex flex-col flex-grow">
                   <div className="flex gap-4 items-center mb-6">

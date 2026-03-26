@@ -1,6 +1,6 @@
 {
   "brand": {
-    "name": "Himalayan Jaggery",
+    "name": "SakharSansar",
     "tagline": "Pure, Chemical-Free Jaggery from Sankhuwasabha"
   },
   "highlights": [
@@ -27,7 +27,7 @@
   ],
   "story": {
     "title": "Our Story",
-    "content": "We connect farmers from the pristine mountains of Sankhuwasabha directly to your home. Our sweet, mineral-rich jaggery is made using traditional methods completely devoid of bleach or artificial coloring. By choosing Himalayan Jaggery, you are not only savoring an authentic taste but also supporting rural livelihoods."
+    "content": "We connect farmers from the pristine mountains of Sankhuwasabha directly to your home. Our sweet, mineral-rich jaggery is made using traditional methods completely devoid of bleach or artificial coloring. By choosing SakharSansar, you are not only savoring an authentic taste but also supporting rural livelihoods."
   },
   "farmers": [
     {
@@ -39,11 +39,56 @@
   ],
   "products": [
     {
+      "slug": "organic-jaggery-block",
       "name": "Organic Jaggery Block",
       "price": "Rs. 500",
       "weight": "1kg",
       "image": "/products/jaggery1.jpg",
-      "description": "Natural, rich in minerals, and slowly cooked over wood-fire for a distinct earthy flavor."
+      "description": "Natural, rich in minerals, and slowly cooked over wood-fire for a distinct earthy flavor.",
+      "longDescription": "Our signature Organic Jaggery Block is the purest form of traditional gur from Sankhuwasabha. Each block is hand-poured from slow-cooked sugarcane juice over open wood fires, preserving every mineral and nutrient that refined sugar strips away. The deep amber color and complex caramel flavor come entirely from nature — zero additives, zero bleach, zero compromise. Perfect for daily tea, cooking, or enjoying as a wholesome after-meal treat.",
+      "ingredients": "100% pure sugarcane juice",
+      "shelfLife": "6-12 months when stored in a cool, dry place",
+      "origin": "Sankhuwasabha, Koshi Province, Nepal",
+      "category": "Blocks"
+    },
+    {
+      "slug": "jaggery-powder",
+      "name": "Jaggery Powder",
+      "price": "Rs. 450",
+      "weight": "500g",
+      "image": "/products/jaggery1.jpg",
+      "description": "Finely ground natural jaggery powder, ideal for baking, desserts, and sweetening beverages.",
+      "longDescription": "Our Jaggery Powder is made by carefully crushing hand-crafted jaggery blocks into a fine, free-flowing powder. It dissolves instantly in hot or cold liquids, making it the perfect everyday replacement for refined sugar. Use it in your morning tea, sprinkle it over oatmeal, or fold it into cookie dough for a rich, caramel depth that white sugar simply cannot match. Every grain retains the full mineral profile of our farm-fresh sugarcane.",
+      "ingredients": "100% pure sugarcane jaggery",
+      "shelfLife": "6 months when stored in an airtight container",
+      "origin": "Sankhuwasabha, Koshi Province, Nepal",
+      "category": "Powder"
+    },
+    {
+      "slug": "jaggery-cubes",
+      "name": "Jaggery Cubes",
+      "price": "Rs. 350",
+      "weight": "500g",
+      "image": "/products/jaggery1.jpg",
+      "description": "Pre-portioned bite-sized cubes for effortless sweetening — drop one in your cup and enjoy.",
+      "longDescription": "Perfectly portioned for convenience, our Jaggery Cubes take the guesswork out of sweetening. Each cube is hand-cut from our signature jaggery blocks to a consistent size, so you get the same rich sweetness every time. Drop one into your tea or coffee, pack a few as a travel snack, or crush them over desserts. The compact format also makes them an ideal gift — a taste of the Himalayas, ready to share.",
+      "ingredients": "100% pure sugarcane jaggery",
+      "shelfLife": "6-12 months when stored in a cool, dry place",
+      "origin": "Sankhuwasabha, Koshi Province, Nepal",
+      "category": "Cubes"
+    },
+    {
+      "slug": "liquid-jaggery",
+      "name": "Liquid Jaggery",
+      "price": "Rs. 600",
+      "weight": "750ml",
+      "image": "/products/jaggery1.jpg",
+      "description": "A smooth, pourable syrup of pure jaggery — drizzle over pancakes, yogurt, or warm milk.",
+      "longDescription": "Our Liquid Jaggery is a velvety, golden syrup made by gently reducing fresh sugarcane juice to a thick, pourable consistency. Unlike commercial syrups loaded with corn starch and artificial flavoring, ours is single-ingredient and chemical-free. Drizzle it over pancakes, swirl it into yogurt, mix it into warm milk before bed, or use it as a natural glaze for roasted vegetables. The bottle comes with a controlled-pour cap for mess-free use.",
+      "ingredients": "100% pure concentrated sugarcane juice",
+      "shelfLife": "4 months refrigerated after opening",
+      "origin": "Sankhuwasabha, Koshi Province, Nepal",
+      "category": "Liquid"
     }
   ],
   "testimonials": [

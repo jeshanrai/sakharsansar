@@ -1,0 +1,56 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 0 2.5rem;
+  gap: 26px;
+  background: transparent;
+  width: 100%;
+}
+
+.labelWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 9px;
+}
+
+.labelLineWrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dotGroup {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #c9843e;
+  animation: dotPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes dotPulse {
+  0%, 80%, 100% { opacity: 0.25; transform: scale(0.6); }
+  40% { opacity: 1; transform: scale(1); }
+}
+
+.loadingLabel {
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  color: #a06428;
+  text-transform: uppercase;
+  font-family: var(--font-serif), Georgia, serif;
+  animation: breathe 3s ease-in-out infinite;
+}
+
+@keyframes breathe {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
