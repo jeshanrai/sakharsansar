@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import OrderDrawer from "@/components/layout/OrderDrawer";
+import FaqsSection from "@/components/sections/FaqsSection";
 import blogData from "@/data/blog.json";
 import { ArrowRight } from "lucide-react";
 
@@ -74,6 +75,7 @@ export default function BlogList() {
         </div>
       </main>
 
+      <FaqsSection />
       <Footer />
     </>
   );

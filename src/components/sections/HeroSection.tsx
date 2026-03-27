@@ -16,7 +16,7 @@ export default function HeroSection() {
           sizes="100vw"
           className="object-cover object-center scale-[1.02]"
         />
-        <div className="absolute inset-0 bg-black/40" />
+        <div className="absolute inset-0 bg-[#2C1500]/55" />
       </div>
 
       <div className="relative z-10 text-center max-w-5xl mx-auto flex flex-col items-center mt-12">
@@ -27,7 +27,7 @@ export default function HeroSection() {
           No chemicals. No middlemen. Just natural sweetness direct from Sankhuwasabha.
         </HeroSubtitleWrapper>
         <HeroButtonWrapper>
-          <Link href="/#products" className="group px-10 py-4 bg-white text-black hover:bg-black hover:text-white text-xs md:text-sm tracking-[0.2em] uppercase transition-all duration-500 inline-flex items-center gap-4">
+          <Link href="/#products" className="group px-10 py-4 bg-[#C17A2A] text-white hover:bg-[#A8671F] text-xs md:text-sm tracking-[0.2em] uppercase transition-all duration-500 inline-flex items-center gap-4">
             Shop Collection <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" strokeWidth={1.5}/>
           </Link>
         </HeroButtonWrapper>

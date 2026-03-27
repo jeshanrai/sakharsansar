@@ -6,15 +6,7 @@ import Footer from "@/components/layout/Footer";
 import HeroSection from "@/components/sections/HeroSection";
 import TrustBanner from "@/components/sections/TrustBanner";
 import HighlightsSection from "@/components/sections/HighlightsSection";
-import StorySection from "@/components/sections/StorySection";
-import FarmersSection from "@/components/sections/FarmersSection";
 import ProductsSection from "@/components/sections/ProductsSection";
-import WaysToEnjoySection from "@/components/sections/WaysToEnjoySection";
-import ProcessSection from "@/components/sections/ProcessSection";
-import ComparisonSection from "@/components/sections/ComparisonSection";
-import BenefitsSection from "@/components/sections/BenefitsSection";
-import BlogHighlightSection from "@/components/sections/BlogHighlightSection";
-import FaqsSection from "@/components/sections/FaqsSection";
 import TestimonialsSection from "@/components/sections/TestimonialsSection";
 import CtaSection from "@/components/sections/CtaSection";
 
@@ -115,16 +107,8 @@ export default function Home() {
         <HeroSection />
         <TrustBanner />
         <HighlightsSection />
-        <StorySection />
-        <FarmersSection />
         <ProductsSection />
-        <WaysToEnjoySection />
-        <BenefitsSection />
-        <ComparisonSection />
-        <ProcessSection />
         <TestimonialsSection />
-        <BlogHighlightSection />
-        <FaqsSection />
         <CtaSection />
       </main>
       <Footer />
