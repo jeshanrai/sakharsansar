@@ -5,20 +5,16 @@ import { Check } from "lucide-react";
 
 export default function TrustBanner() {
   return (
-    <section aria-label="Trust Badges" className="py-12 sm:py-16 bg-[#C17A2A] text-white">
-      <div className="max-w-[1440px] mx-auto px-6">
-        <ZoomIn>
-          <div className="text-center mb-10">
-            <h2 className="font-poppins text-lg md:text-xl font-medium tracking-[0.2em] uppercase text-white">{data.trustBanner.title}</h2>
-          </div>
-        </ZoomIn>
-
-        <div className="flex flex-wrap justify-center gap-6 sm:gap-8 md:gap-16">
+    <section aria-label="Trust Badges" className="py-10 sm:py-14 bg-[#2C1500]">
+      <div className="max-w-[1440px] mx-auto px-6 sm:px-10">
+        <div className="flex flex-wrap justify-center gap-8 sm:gap-12 md:gap-20">
           {data.trustBanner.badges.map((badge, i) => (
-            <FadeUp key={i} delay={i * 0.1}>
-              <div className="flex flex-col items-center gap-4 text-white group cursor-default">
-                <Check className="w-5 h-5 text-white/70 group-hover:text-white transition-colors" strokeWidth={1}/>
-                <span className="text-[10px] md:text-xs font-semibold tracking-[0.1em] uppercase text-center max-w-[120px] text-white/90">{badge}</span>
+            <FadeUp key={i} delay={i * 0.08}>
+              <div className="flex items-center gap-3 text-white">
+                <div className="w-8 h-8 rounded-full bg-[#C17A2A] flex items-center justify-center shrink-0">
+                  <Check className="w-4 h-4 text-white" strokeWidth={2.5} />
+                </div>
+                <span className="text-sm sm:text-base font-medium text-white/90">{badge}</span>
               </div>
             </FadeUp>
           ))}

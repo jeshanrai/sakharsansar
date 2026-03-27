@@ -5,43 +5,53 @@ import Link from 'next/link';
 import { openOrderDrawer } from '../layout/OrderDrawer';
 import data from "@/data/content.json";
 import { SlideInLeft, ZoomIn } from "@/components/Animations";
+import { ShoppingBag } from "lucide-react";
 
 export default function ProductsSection() {
   return (
-    <section id="products" aria-label="Shop Collection" className="py-32 px-6 bg-white border-b border-[#C17A2A]/20">
+    <section id="products" aria-label="Shop Collection" className="py-20 sm:py-28 px-6 sm:px-10 bg-white">
       <div className="max-w-[1440px] mx-auto">
         <SlideInLeft>
-          <div className="mb-24 flex flex-col md:flex-row md:items-end justify-between gap-8 border-b border-[#2C1500] pb-8">
-            <h2 className="font-poppins text-4xl sm:text-5xl font-medium uppercase tracking-[0.1em] text-[#2C1500]">Shop Collection</h2>
-            <p className="text-sm font-light tracking-widest text-[#2C1500]/50 uppercase max-w-md">100% Core Collection. Direct from the mold to your table.</p>
+          <div className="mb-14 sm:mb-20 text-center">
+            <p className="text-sm sm:text-base font-semibold tracking-[0.2em] uppercase text-[#C17A2A] mb-3">Our Products</p>
+            <h2 className="font-poppins text-3xl sm:text-4xl lg:text-5xl font-bold text-[#2C1500]">Shop Collection</h2>
+            <p className="text-base sm:text-lg text-[#2C1500]/50 mt-4 max-w-lg mx-auto">100% natural. Direct from the mold to your table.</p>
           </div>
         </SlideInLeft>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 justify-center">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
           {data.products.map((product, i) => (
             <ZoomIn key={product.slug} delay={i * 0.1} className="h-full">
-              <article className="group flex flex-col h-full">
+              <article className="group flex flex-col h-full bg-[#FBF4E8] rounded-2xl overflow-hidden hover:shadow-xl transition-shadow duration-500">
                 <Link href={`/products/${product.slug}`} className="block">
-                  <div className="relative aspect-[3/4] w-full overflow-hidden mb-6 bg-[#FBF4E8]">
+                  <div className="relative aspect-square w-full overflow-hidden bg-[#F5E9DA]">
                     <Image
                       src={product.image}
                       alt={`${product.name} — ${product.weight} of pure natural jaggery`}
                       fill
                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                      className="object-cover group-hover:scale-[1.03] transition-transform duration-[1s]"
+                      className="object-cover group-hover:scale-105 transition-transform duration-700"
                     />
                   </div>
-                  <div className="flex justify-between items-start mb-2">
-                    <h3 className="font-poppins text-base sm:text-lg font-medium uppercase tracking-[0.1em] text-[#2C1500] group-hover:text-[#C17A2A] transition-colors">{product.name}</h3>
-                    <span className="text-[10px] font-semibold tracking-[0.2em] text-[#C17A2A]/70 border border-[#C17A2A]/20 px-2 py-1 shrink-0 ml-2">{product.weight}</span>
-                  </div>
-                  <p className="text-[#2C1500]/55 text-xs tracking-wide mb-8 font-light flex-grow leading-relaxed">{product.description}</p>
                 </Link>
-                <div className="flex items-center justify-between border-t border-[#C17A2A]/20 pt-6 mt-auto">
-                  <p className="font-poppins text-sm font-medium tracking-widest uppercase text-[#C17A2A]">{product.price}</p>
-                  <button onClick={() => openOrderDrawer(product.name)} className="text-[10px] font-semibold tracking-[0.2em] uppercase text-white bg-[#C17A2A] px-6 py-3 hover:bg-[#A8671F] transition-colors">
-                    Add to Cart
-                  </button>
+                <div className="flex flex-col flex-grow p-5 sm:p-6">
+                  <Link href={`/products/${product.slug}`} className="block">
+                    <div className="flex items-start justify-between gap-2 mb-2">
+                      <h3 className="font-poppins text-lg sm:text-xl font-semibold text-[#2C1500] group-hover:text-[#C17A2A] transition-colors leading-tight">{product.name}</h3>
+                      <span className="text-xs font-semibold tracking-wide text-[#C17A2A] bg-[#C17A2A]/10 px-2.5 py-1 rounded-full shrink-0">{product.weight}</span>
+                    </div>
+                    <p className="text-[#2C1500]/55 text-sm sm:text-base leading-relaxed mb-5 flex-grow">{product.description}</p>
+                  </Link>
+                  <div className="flex items-center justify-between mt-auto pt-4 border-t border-[#2C1500]/10">
+                    <p className="font-poppins text-lg sm:text-xl font-bold text-[#2C1500]">{product.price}</p>
+                    <button
+                      onClick={() => openOrderDrawer(product.name)}
+                      className="inline-flex items-center gap-2 text-sm font-semibold text-white bg-[#C17A2A] px-5 py-2.5 rounded-full hover:bg-[#A8671F] transition-colors"
+                    >
+                      <ShoppingBag className="w-4 h-4" strokeWidth={2} />
+                      Add
+                    </button>
+                  </div>
                 </div>
               </article>
             </ZoomIn>
