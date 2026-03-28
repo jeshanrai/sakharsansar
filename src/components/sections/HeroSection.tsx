@@ -12,11 +12,12 @@ import {
 
 export default function HeroSection() {
   const [showPromo, setShowPromo] = useState(true);
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
 
   return (
     <section aria-label="Hero" className="relative flex flex-col sm:block sm:h-screen sm:min-h-[600px] overflow-hidden bg-white sm:bg-transparent pt-[70px] sm:pt-0">
       {/* Mobile background image (natural flow) */}
-      <div className="block sm:hidden w-full relative z-0">
+      <div className={`block sm:hidden w-full relative z-0 ${!isImageLoaded ? "bg-[#efeadd] aspect-[3/2]" : ""}`}>
         <Image
           src="/herobg.png"
           alt="Golden blocks of pure natural jaggery from Sankhuwasabha, Nepal"
@@ -24,19 +25,21 @@ export default function HeroSection() {
           height={800}
           priority
           sizes="100vw"
-          className="w-full h-auto object-contain"
+          className={`w-full h-auto object-contain transition-opacity duration-700 ${!isImageLoaded ? "opacity-0" : "opacity-100"}`}
+          onLoad={() => setIsImageLoaded(true)}
         />
       </div>
 
       {/* Desktop background image (full bleed area) */}
-      <div className="hidden sm:block absolute sm:top-0 sm:right-0 sm:bottom-[10%] sm:left-[25%] z-0 sm:rounded-3xl overflow-hidden">
+      <div className={`hidden sm:block absolute sm:top-0 sm:right-0 sm:bottom-[10%] sm:left-[25%] z-0 sm:rounded-3xl overflow-hidden ${!isImageLoaded ? "bg-[#efeadd]" : ""}`}>
         <Image
           src="/herobg.png"
           alt="Golden blocks of pure natural jaggery from Sankhuwasabha, Nepal"
           fill
           priority
           sizes="100vw"
-          className="sm:object-fill"
+          className={`sm:object-fill transition-opacity duration-700 ${!isImageLoaded ? "opacity-0" : "opacity-100"}`}
+          onLoad={() => setIsImageLoaded(true)}
         />
         {/* Subtle overlay for text readability */}
         <div className="hidden sm:block absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/20" />
@@ -62,8 +65,8 @@ export default function HeroSection() {
       {/* Overlay card / Content below on mobile */}
       <div className="relative sm:absolute sm:inset-0 z-10 flex flex-col justify-start sm:justify-end px-5 py-8 sm:p-0 sm:pb-[3%]">
         <div className="w-full max-w-[1200px] mx-auto sm:ml-0 sm:px-3 lg:px-4">
-          <HeroTitleWrapper>
-            <div className="bg-white sm:bg-black/40 sm:backdrop-blur-xl border-none sm:border-solid sm:border border-white/15 rounded-none sm:rounded-2xl px-2 py-4 sm:px-10 sm:py-7 lg:px-12 lg:py-8 w-full sm:max-w-[470px] shadow-none sm:shadow-[0_8px_32px_rgba(0,0,0,0.15)] flex flex-col items-center sm:items-start text-center sm:text-left">
+          <div className="bg-white sm:bg-black/40 sm:backdrop-blur-xl border-none sm:border-solid sm:border border-white/15 rounded-none sm:rounded-2xl px-2 py-4 sm:px-10 sm:py-7 lg:px-12 lg:py-8 w-full sm:max-w-[470px] shadow-none sm:shadow-[0_8px_32px_rgba(0,0,0,0.15)] flex flex-col items-center sm:items-start text-center sm:text-left">
+            <HeroTitleWrapper>
               <span className="block text-[11px] sm:text-[11px] font-semibold tracking-[0.25em] uppercase text-[#C17A2A] sm:text-white/60 mb-3 sm:mb-3">
                 SakharSansar
               </span>
@@ -73,24 +76,24 @@ export default function HeroSection() {
                 <br />
                 Jaggery
               </h1>
+            </HeroTitleWrapper>
 
-              <HeroSubtitleWrapper className="mt-3 sm:mt-4">
-                <p className="text-[14px] sm:text-sm text-gray-700 sm:text-white/80 max-w-sm leading-relaxed">
-                  No chemicals. No middlemen. Just natural sweetness
-                  direct from Sankhuwasabha.
-                </p>
-              </HeroSubtitleWrapper>
+            <HeroSubtitleWrapper className="mt-3 sm:mt-4">
+              <p className="text-[14px] sm:text-sm text-gray-700 sm:text-white/80 max-w-sm leading-relaxed">
+                No chemicals. No middlemen. Just natural sweetness
+                direct from Sankhuwasabha.
+              </p>
+            </HeroSubtitleWrapper>
 
-              <HeroButtonWrapper className="mt-8 sm:mt-8 w-full sm:w-auto">
-                <Link
-                  href="/#products"
-                  className="inline-flex items-center justify-center w-full sm:w-auto px-10 py-3.5 bg-[#C17A2A] text-white hover:bg-[#A8671F] text-sm font-semibold tracking-wide transition-all duration-300 rounded-full"
-                >
-                  Shop now
-                </Link>
-              </HeroButtonWrapper>
-            </div>
-          </HeroTitleWrapper>
+            <HeroButtonWrapper className="mt-8 sm:mt-8 w-full sm:w-auto">
+              <Link
+                href="/#products"
+                className="inline-flex items-center justify-center w-full sm:w-auto px-10 py-3.5 bg-[#C17A2A] text-white hover:bg-[#A8671F] text-sm font-semibold tracking-wide transition-all duration-300 rounded-full"
+              >
+                Shop now
+              </Link>
+            </HeroButtonWrapper>
+          </div>
         </div>
       </div>
     </section>
