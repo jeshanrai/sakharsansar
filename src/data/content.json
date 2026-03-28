@@ -89,6 +89,58 @@
       "shelfLife": "4 months refrigerated after opening",
       "origin": "Sankhuwasabha, Koshi Province, Nepal",
       "category": "Liquid"
+    },
+    {
+      "slug": "date-palm-jaggery",
+      "name": "Date Palm Jaggery",
+      "price": "Rs. 700",
+      "weight": "500g",
+      "image": "/products/jaggery-block.jpg",
+      "description": "A seasonal delicacy with a distinct smoky-sweet flavor, harvested from date palm sap.",
+      "longDescription": "Our Date Palm Jaggery is a rare, seasonal treat made from fresh date palm sap collected during the cool winter months. The sap is slowly reduced over gentle heat to produce a jaggery with a unique smoky-caramel flavor that is unlike any sugarcane variety. Prized across South Asia for its complex taste, this jaggery is perfect for making traditional sweets, pairing with puffed rice, or simply savoring on its own as a natural candy.",
+      "ingredients": "100% pure date palm sap",
+      "shelfLife": "6 months when stored in a cool, dry place",
+      "origin": "Sankhuwasabha, Koshi Province, Nepal",
+      "category": "Blocks"
+    },
+    {
+      "slug": "jaggery-candy",
+      "name": "Jaggery Candy",
+      "price": "Rs. 250",
+      "weight": "250g",
+      "image": "/products/jaggery-cubes.jpg",
+      "description": "Individually wrapped bite-sized jaggery candies — a healthy, on-the-go natural sweet treat.",
+      "longDescription": "Our Jaggery Candy is the perfect guilt-free snack for anyone with a sweet tooth. Each candy is a small, individually wrapped piece of pure jaggery, lightly flavored with cardamom and ginger for a warming, aromatic bite. Toss a few in your bag for work, school, or travel — they provide a quick energy boost without the crash of refined sugar. Kids love them too, making it easy to swap out artificial candies for something truly wholesome.",
+      "ingredients": "Pure sugarcane jaggery, cardamom, ginger",
+      "shelfLife": "4 months when stored in a cool, dry place",
+      "origin": "Sankhuwasabha, Koshi Province, Nepal",
+      "category": "Cubes"
+    },
+    {
+      "slug": "spiced-jaggery-mix",
+      "name": "Spiced Jaggery Mix",
+      "price": "Rs. 400",
+      "weight": "300g",
+      "image": "/products/jaggery-powder.jpg",
+      "description": "A warming blend of jaggery powder with turmeric, ginger, and black pepper for golden milk.",
+      "longDescription": "Our Spiced Jaggery Mix is a ready-to-use blend crafted for the perfect cup of golden milk or spiced tea. We combine our finest jaggery powder with organic turmeric, dried ginger, black pepper, and a hint of cinnamon — all measured in traditional proportions for maximum flavor and wellness benefits. Simply stir a spoonful into warm milk or water and enjoy a soothing, immunity-boosting drink any time of day.",
+      "ingredients": "Jaggery powder, turmeric, ginger, black pepper, cinnamon",
+      "shelfLife": "6 months when stored in an airtight container",
+      "origin": "Sankhuwasabha, Koshi Province, Nepal",
+      "category": "Powder"
+    },
+    {
+      "slug": "jaggery-spread",
+      "name": "Jaggery Spread",
+      "price": "Rs. 550",
+      "weight": "400g",
+      "image": "/products/liquid-jaggery.jpg",
+      "description": "A thick, creamy jaggery spread perfect for toast, roti, and parathas.",
+      "longDescription": "Our Jaggery Spread takes the goodness of liquid jaggery and thickens it into a rich, creamy consistency that stays put on your bread. Made by slowly reducing fresh sugarcane juice with a touch of ghee, this spread has a deep, buttery-caramel flavor that elevates any breakfast. Slather it on warm toast, roll it inside a roti, or use it as a filling for homemade pastries. No preservatives, no artificial thickeners — just pure, spreadable sweetness.",
+      "ingredients": "Pure sugarcane juice, clarified butter (ghee)",
+      "shelfLife": "3 months refrigerated after opening",
+      "origin": "Sankhuwasabha, Koshi Province, Nepal",
+      "category": "Liquid"
     }
   ],
   "testimonials": [

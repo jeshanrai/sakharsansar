@@ -50,7 +50,7 @@ export default function Navbar() {
       {/* Desktop nav */}
       <div className="hidden md:flex gap-8 lg:gap-10 text-[15px] font-medium items-center text-[#2C1500]">
         <Link href="/our-story" className="hover:text-[#C17A2A] transition duration-300">Our Story</Link>
-        <Link href="/#products" className="hover:text-[#C17A2A] transition duration-300">Shop</Link>
+        <Link href="/shop" className="hover:text-[#C17A2A] transition duration-300">Shop</Link>
         <Link href="/blog" className="hover:text-[#C17A2A] transition duration-300">Blog</Link>
         <button
           onClick={() => openOrderDrawer()}
@@ -83,7 +83,7 @@ export default function Navbar() {
         <Link href="/our-story" onClick={closeMobile} className="font-poppins text-xl sm:text-2xl font-semibold text-[#2C1500] hover:text-[#C17A2A] active:text-[#C17A2A] transition">
           Our Story
         </Link>
-        <Link href="/#products" onClick={closeMobile} className="font-poppins text-xl sm:text-2xl font-semibold text-[#2C1500] hover:text-[#C17A2A] active:text-[#C17A2A] transition">
+        <Link href="/shop" onClick={closeMobile} className="font-poppins text-xl sm:text-2xl font-semibold text-[#2C1500] hover:text-[#C17A2A] active:text-[#C17A2A] transition">
           Shop
         </Link>
         <Link href="/blog" onClick={closeMobile} className="font-poppins text-xl sm:text-2xl font-semibold text-[#2C1500] hover:text-[#C17A2A] active:text-[#C17A2A] transition">

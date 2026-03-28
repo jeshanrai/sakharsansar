@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 60" fill="none">
+  <text x="100" y="38" text-anchor="middle" font-family="Arial, sans-serif" font-size="34" font-weight="bold" fill="#232F3E">amazon</text>
+  <path d="M60 46 C80 54, 120 54, 140 46" stroke="#FF9900" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <path d="M132 44 L140 46 L136 38" fill="#FF9900"/>
+</svg>

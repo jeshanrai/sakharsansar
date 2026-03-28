@@ -9,6 +9,7 @@ import HighlightsSection from "@/components/sections/HighlightsSection";
 import ProductsSection from "@/components/sections/ProductsSection";
 import TestimonialsSection from "@/components/sections/TestimonialsSection";
 import CtaSection from "@/components/sections/CtaSection";
+import FindUsSection from "@/components/sections/FindUsSection";
 
 export const metadata: Metadata = {
   title: "SakharSansar | Pure & Natural from Sankhuwasabha",
@@ -106,9 +107,10 @@ export default function Home() {
       <main className="overflow-x-hidden">
         <HeroSection />
         <TrustBanner />
-        <HighlightsSection />
+        {/* <HighlightsSection /> */}
         <ProductsSection />
         <TestimonialsSection />
+        <FindUsSection />
         <CtaSection />
       </main>
       <Footer />
