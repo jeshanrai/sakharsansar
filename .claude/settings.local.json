@@ -1,7 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npx next:*)"
+      "Bash(npx next:*)",
+      "WebFetch(domain:lakridsbybulow.com)"
     ],
     "additionalDirectories": [
       "C:\\Users\\Dell\\Downloads"
