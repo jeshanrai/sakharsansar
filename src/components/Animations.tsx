@@ -52,25 +52,25 @@ export const ZoomIn = ({ children, delay = 0, className = "" }: { children: Reac
 );
 
 export const HeroTitleWrapper = ({ children, className }: { children: React.ReactNode, className?: string }) => (
-  <motion.h1 
+  <motion.div
     className={className}
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
   >
     {children}
-  </motion.h1>
+  </motion.div>
 );
 
 export const HeroSubtitleWrapper = ({ children, className }: { children: React.ReactNode, className?: string }) => (
-  <motion.p 
+  <motion.div
     className={className}
     initial={{ opacity: 0, y: 15 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
   >
     {children}
-  </motion.p>
+  </motion.div>
 );
 
 export const HeroButtonWrapper = ({ children, className }: { children: React.ReactNode, className?: string }) => (
