@@ -1,6 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 60" fill="none">
-  <text x="100" y="42" text-anchor="middle" font-family="Arial, sans-serif" font-size="32" font-weight="bold" fill="#E31E24">Big</text>
-  <text x="100" y="42" text-anchor="middle" font-family="Arial, sans-serif" font-size="32" font-weight="bold">
-    <tspan fill="#E31E24">Big</tspan><tspan fill="#1B4D8E">Mart</tspan>
-  </text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 60">
+  <rect width="200" height="60" rx="8" fill="#1B4D8E"/>
+  <text x="100" y="40" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="28" font-weight="700" fill="#FFFFFF">BIGMART</text>
 </svg>

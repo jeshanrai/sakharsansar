@@ -1,5 +1,4 @@
 import React from 'react';
-import Image from 'next/image';
 import { FadeUp } from "@/components/Animations";
 
 const partners = [
@@ -19,17 +18,15 @@ export default function FindUsSection() {
             Find Us At
           </h2>
         </FadeUp>
-        <div className="flex flex-wrap items-center justify-center gap-10 sm:gap-16 md:gap-20">
+        <div className="flex flex-wrap items-center justify-center gap-8 sm:gap-12 md:gap-16">
           {partners.map((partner, i) => (
             <FadeUp key={partner.name} delay={i * 0.1}>
-              <div className="grayscale hover:grayscale-0 opacity-60 hover:opacity-100 transition-all duration-500 cursor-pointer">
-                <Image
+              <div className="hover:opacity-80 transition-all duration-500 cursor-pointer">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
                   src={partner.logo}
                   alt={partner.name}
-                  width={160}
-                  height={50}
-                  style={{ width: 'auto', height: 'auto' }}
-                  className="h-10 sm:h-12 w-auto object-contain"
+                  className="h-10 sm:h-12 w-auto object-contain rounded-lg"
                 />
               </div>
             </FadeUp>
