@@ -63,22 +63,22 @@ export default function Navbar() {
 
       {/* Mobile hamburger */}
       <button
-        className="md:hidden text-[#2C1500] p-2 -mr-2 touch-manipulation"
+        className="md:hidden text-[#2C1500] p-2 -mr-2 touch-manipulation relative z-50 flex-shrink-0"
         onClick={() => setMobileOpen(!mobileOpen)}
         aria-label={mobileOpen ? "Close menu" : "Open menu"}
         aria-expanded={mobileOpen}
       >
-        {mobileOpen ? <X className="w-6 h-6" strokeWidth={1.5} /> : <Menu className="w-6 h-6" strokeWidth={1.5} />}
+        {mobileOpen ? <X className="w-6 h-6 sm:w-7 sm:h-7" strokeWidth={1.5} /> : <Menu className="w-6 h-6 sm:w-7 sm:h-7" strokeWidth={1.5} />}
       </button>
 
       {/* Mobile menu overlay */}
       <div
-        className={`fixed inset-x-0 top-0 bottom-0 bg-white z-40 flex flex-col items-center justify-center gap-8 md:hidden transition-all duration-300 ${
+        className={`fixed inset-x-0 top-0 bottom-0 bg-white z-40 flex flex-col items-center justify-start gap-6 sm:gap-8 md:hidden transition-all duration-300 overflow-y-auto pb-10 ${
           mobileOpen
             ? 'opacity-100 translate-y-0 pointer-events-auto'
             : 'opacity-0 -translate-y-4 pointer-events-none'
         }`}
-        style={{ paddingTop: navRef.current?.offsetHeight ?? 60 }}
+        style={{ paddingTop: `calc(${navRef.current?.offsetHeight ?? 72}px + 2rem)` }}
       >
         <Link href="/our-story" onClick={closeMobile} className="font-poppins text-xl sm:text-2xl font-semibold text-[#2C1500] hover:text-[#C17A2A] active:text-[#C17A2A] transition">
           Our Story
@@ -91,7 +91,7 @@ export default function Navbar() {
         </Link>
         <button
           onClick={() => { closeMobile(); openOrderDrawer(); }}
-          className="inline-flex items-center gap-3 px-8 py-3.5 bg-[#C17A2A] text-white rounded-full text-base sm:text-lg font-semibold hover:bg-[#A8671F] active:bg-[#A8671F] transition duration-300"
+          className="inline-flex items-center gap-3 mt-4 px-8 py-3.5 bg-[#C17A2A] text-white rounded-full text-base sm:text-lg font-semibold hover:bg-[#A8671F] active:bg-[#A8671F] transition duration-300"
         >
           <ShoppingBag className="w-5 h-5" strokeWidth={2} />
           Order Now
