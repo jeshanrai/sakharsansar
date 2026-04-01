@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Facebook, Instagram, Youtube, Twitter, Mail, MapPin, Phone } from 'lucide-react';
 import data from "@/data/content.json";
 
@@ -18,9 +19,15 @@ export default function Footer() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-14 sm:gap-16 mb-16 sm:mb-24">
           {/* Brand + Social */}
           <div className="sm:col-span-2 lg:col-span-1">
-            <h4 className="font-poppins font-bold text-2xl sm:text-3xl text-white mb-4">
-              {data.brand.name}
-            </h4>
+            <Link href="/" className="inline-block mb-4">
+              <Image
+                src="/word-logo.svg"
+                alt={data.brand.name}
+                width={200}
+                height={50}
+                className="h-10 sm:h-12 w-auto brightness-0 invert"
+              />
+            </Link>
             <p className="max-w-sm text-white/60 text-base leading-relaxed mb-8">
               {data.brand.tagline}
             </p>
