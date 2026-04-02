@@ -35,12 +35,13 @@ export default function Navbar() {
   const closeMobile = useCallback(() => setMobileOpen(false), []);
 
   return (
-    <nav
-      ref={navRef}
+    <>
+      <nav
+        ref={navRef}
       aria-label="Main navigation"
       className={`fixed top-0 w-full z-50 transition-all duration-500 ${scrolled
-          ? 'bg-white/95 backdrop-blur-md py-2 shadow-sm'
-          : 'bg-white py-3'
+        ? 'bg-white/95 backdrop-blur-md py-2 shadow-sm'
+        : 'bg-white py-3'
         } px-4 sm:px-10 lg:px-16`}
     >
       <div className="flex items-center justify-between">
@@ -49,9 +50,9 @@ export default function Navbar() {
           <Image
             src="/word-logo.svg"
             alt="SakharSansar"
-            width={200}
-            height={50}
-            className="h-12 sm:h-14 w-auto"
+            width={240}
+            height={60}
+            className="h-[51px] sm:h-[67px] w-auto"
             priority
           />
         </Link>
@@ -94,12 +95,13 @@ export default function Navbar() {
           {mobileOpen ? <X className="w-6 h-6 sm:w-7 sm:h-7" strokeWidth={1.5} /> : <Menu className="w-6 h-6 sm:w-7 sm:h-7" strokeWidth={1.5} />}
         </button>
       </div>
+    </nav>
 
       {/* Mobile menu overlay */}
       <div
         className={`fixed inset-x-0 top-0 bottom-0 bg-white z-40 flex flex-col items-center justify-start gap-6 sm:gap-8 md:hidden transition-all duration-300 overflow-y-auto pb-10 ${mobileOpen
-            ? 'opacity-100 translate-y-0 pointer-events-auto'
-            : 'opacity-0 -translate-y-4 pointer-events-none'
+          ? 'opacity-100 translate-y-0 pointer-events-auto'
+          : 'opacity-0 -translate-y-4 pointer-events-none'
           }`}
         style={{ paddingTop: `calc(${navRef.current?.offsetHeight ?? 72}px + 2rem)` }}
       >
@@ -120,6 +122,6 @@ export default function Navbar() {
           Order Now
         </button>
       </div>
-    </nav>
+    </>
   );
 }
