@@ -12,7 +12,7 @@ const partners = [
 
 export default function FindUsSection() {
   return (
-    <section aria-label="Find Us At" className="py-16 sm:py-20 bg-[#FBF4E8]">
+    <section aria-label="Find Us At" className="py-20 sm:py-28 bg-[#FBF4E8]">
       <div className="max-w-[1440px] mx-auto px-6 sm:px-10">
         <FadeUp>
           <h2 className="font-poppins font-semibold text-2xl sm:text-3xl text-[#2C1500] text-center mb-12 sm:mb-16">
@@ -28,7 +28,7 @@ export default function FindUsSection() {
                   alt={partner.name}
                   width={140}
                   height={60}
-                  className="h-10 sm:h-12 w-auto object-contain rounded-lg"
+                  className="h-10 sm:h-12 w-auto object-contain rounded-lg grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all duration-300"
                 />
               </div>
             </FadeUp>

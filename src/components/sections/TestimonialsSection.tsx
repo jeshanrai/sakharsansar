@@ -30,7 +30,10 @@ export default function TestimonialsSection() {
                   <div className="w-10 h-10 rounded-full bg-[#C17A2A]/15 flex items-center justify-center">
                     <span className="font-poppins font-bold text-sm text-[#C17A2A]">{test.name.charAt(0)}</span>
                   </div>
-                  <span className="font-poppins text-base font-semibold text-[#2C1500]">{test.name}</span>
+                  <div>
+                    <span className="block font-poppins text-base font-semibold text-[#2C1500] leading-none">{test.name}</span>
+                    <span className="text-xs text-[#C17A2A] font-medium tracking-wide uppercase mt-1 block">{test.location}</span>
+                  </div>
                 </figcaption>
               </figure>
             </FadeUp>

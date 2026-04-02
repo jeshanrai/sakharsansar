@@ -146,10 +146,12 @@
   "testimonials": [
     {
       "name": "Aarati Sharma",
+      "location": "Kathmandu",
       "review": "Very pure and tasty jaggery! Makes my morning tea perfectly balanced without any guilt."
     },
     {
       "name": "Bidhan Shrestha",
+      "location": "Lalitpur",
       "review": "The authenticity is real. Tastes exactly like what my grandmother used to make. Highly recommended!"
     }
   ],

@@ -67,10 +67,6 @@ export default function HeroSection() {
         <div className="w-full max-w-[1200px] mx-auto sm:ml-0 sm:px-3 lg:px-4">
           <div className="bg-white sm:bg-black/40 sm:backdrop-blur-xl border-none sm:border-solid sm:border border-white/15 rounded-none sm:rounded-2xl px-2 py-4 sm:px-10 sm:py-7 lg:px-12 lg:py-8 w-full sm:max-w-[470px] shadow-none sm:shadow-[0_8px_32px_rgba(0,0,0,0.15)] flex flex-col items-center sm:items-start text-center sm:text-left">
             <HeroTitleWrapper>
-              <span className="block text-[11px] sm:text-[11px] font-semibold tracking-[0.25em] uppercase text-[#C17A2A] sm:text-white/60 mb-3 sm:mb-3">
-                SakharSansar
-              </span>
-
               <h1 className="font-poppins text-3xl sm:text-3xl lg:text-4xl font-bold text-[#4A2511] sm:text-white leading-[1.15] uppercase">
                 Pure Himalayan
                 <br />
@@ -79,7 +75,7 @@ export default function HeroSection() {
             </HeroTitleWrapper>
 
             <HeroSubtitleWrapper className="mt-3 sm:mt-4">
-              <p className="text-[14px] sm:text-sm text-gray-700 sm:text-white/80 max-w-sm leading-relaxed">
+              <p className="text-base sm:text-lg text-gray-800 sm:text-white/95 max-w-sm leading-relaxed font-medium">
                 No chemicals. No middlemen. Just natural sweetness
                 direct from Sankhuwasabha.
               </p>

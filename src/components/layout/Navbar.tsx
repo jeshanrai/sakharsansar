@@ -53,21 +53,16 @@ export default function Navbar() {
         } px-4 sm:px-10 lg:px-16`}
     >
       <div className="flex items-center justify-between">
-        {/* Left: Word Logo */}
-        <Link href="/" className="shrink-0">
-          <Image
-            src="/word-logo.svg"
-            alt="SakharSansar"
-            width={240}
-            height={60}
-            className="h-[51px] sm:h-[67px] w-auto"
-            priority
-          />
-        </Link>
+        {/* Left: Desktop Items */}
+        <div className="hidden md:flex gap-8 lg:gap-10 text-[15px] font-medium items-center text-[#2C1500]">
+          <Link href="/our-story" className="hover:text-[#C17A2A] transition duration-300">Our Story</Link>
+          <Link href="/shop" className="hover:text-[#C17A2A] transition duration-300">Shop</Link>
+          <Link href="/blog" className="hover:text-[#C17A2A] transition duration-300">Blog</Link>
+        </div>
 
-        {/* Center: Company Logo */}
+        {/* Center: Branding */}
         <div className="absolute left-1/2 -translate-x-1/2 overflow-visible">
-          <Link href="/">
+          <Link href="/" className="flex flex-col items-center">
             <Image
               src="/company-logo.svg"
               alt="SakharSansar Logo"
@@ -79,29 +74,26 @@ export default function Navbar() {
           </Link>
         </div>
 
-        {/* Right: Desktop nav */}
-        <div className="hidden md:flex gap-8 lg:gap-10 text-[15px] font-medium items-center text-[#2C1500]">
-          <Link href="/our-story" className="hover:text-[#C17A2A] transition duration-300">Our Story</Link>
-          <Link href="/shop" className="hover:text-[#C17A2A] transition duration-300">Shop</Link>
-          <Link href="/blog" className="hover:text-[#C17A2A] transition duration-300">Blog</Link>
+        {/* Right: Actions */}
+        <div className="flex items-center gap-4">
           <button
             onClick={() => openOrderDrawer()}
-            className="ml-2 inline-flex items-center gap-2 px-7 py-3 bg-[#C17A2A] text-white rounded-full text-[15px] font-semibold hover:bg-[#A8671F] transition duration-300"
+            className="hidden md:inline-flex items-center gap-2 px-7 py-3 bg-[#C17A2A] text-white rounded-full text-[15px] font-semibold hover:bg-[#A8671F] transition duration-300"
           >
             <ShoppingBag className="w-4 h-4" strokeWidth={2} />
             Order Now
           </button>
-        </div>
 
-        {/* Mobile hamburger */}
-        <button
-          className="md:hidden text-[#2C1500] p-2 -mr-2 touch-manipulation relative z-50 flex-shrink-0"
-          onClick={() => setMobileOpen(!mobileOpen)}
-          aria-label={mobileOpen ? "Close menu" : "Open menu"}
-          aria-expanded={mobileOpen}
-        >
-          {mobileOpen ? <X className="w-6 h-6 sm:w-7 sm:h-7" strokeWidth={1.5} /> : <Menu className="w-6 h-6 sm:w-7 sm:h-7" strokeWidth={1.5} />}
-        </button>
+          {/* Mobile hamburger */}
+          <button
+            className="md:hidden text-[#2C1500] p-2 -mr-2 touch-manipulation relative z-50 flex-shrink-0"
+            onClick={() => setMobileOpen(!mobileOpen)}
+            aria-label={mobileOpen ? "Close menu" : "Open menu"}
+            aria-expanded={mobileOpen}
+          >
+            {mobileOpen ? <X className="w-6 h-6 sm:w-7 sm:h-7" strokeWidth={1.5} /> : <Menu className="w-6 h-6 sm:w-7 sm:h-7" strokeWidth={1.5} />}
+          </button>
+        </div>
       </div>
     </nav>
 
