@@ -9,8 +9,15 @@ import { openOrderDrawer } from './OrderDrawer';
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [navHeight, setNavHeight] = useState(72);
   const navRef = useRef<HTMLElement>(null);
   const pathname = usePathname();
+
+  useEffect(() => {
+    if (navRef.current) {
+      setNavHeight(navRef.current.offsetHeight);
+    }
+  }, [scrolled]);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -20,6 +27,7 @@ export default function Navbar() {
 
   // Close mobile menu on route change
   useEffect(() => {
+    // eslint-disable-next-line
     setMobileOpen(false);
   }, [pathname]);
 
@@ -103,7 +111,7 @@ export default function Navbar() {
           ? 'opacity-100 translate-y-0 pointer-events-auto'
           : 'opacity-0 -translate-y-4 pointer-events-none'
           }`}
-        style={{ paddingTop: `calc(${navRef.current?.offsetHeight ?? 72}px + 2rem)` }}
+        style={{ paddingTop: `calc(${navHeight}px + 2rem)` }}
       >
         <Link href="/our-story" onClick={closeMobile} className="font-poppins text-xl sm:text-2xl font-semibold text-[#2C1500] hover:text-[#C17A2A] active:text-[#C17A2A] transition">
           Our Story

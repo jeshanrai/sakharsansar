@@ -107,7 +107,7 @@ export default function OrderDrawer() {
                   required
                 >
                   <option value="" disabled>Choose a product</option>
-                  {data.products.map((p: any) => (
+                  {data.products.map((p: { name: string; price: string }) => (
                     <option key={p.name} value={p.name}>{p.name} - {p.price}</option>
                   ))}
                   <option value="Custom Order">Custom / Bulk Order</option>

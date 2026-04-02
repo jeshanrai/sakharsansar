@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { FadeUp } from "@/components/Animations";
 
 const partners = [
@@ -22,10 +23,11 @@ export default function FindUsSection() {
           {partners.map((partner, i) => (
             <FadeUp key={partner.name} delay={i * 0.1}>
               <div className="hover:opacity-80 transition-all duration-500 cursor-pointer">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
+                <Image
                   src={partner.logo}
                   alt={partner.name}
+                  width={140}
+                  height={60}
                   className="h-10 sm:h-12 w-auto object-contain rounded-lg"
                 />
               </div>
