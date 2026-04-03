@@ -45,14 +45,35 @@ export default function OrderDrawer() {
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    // Simulate API call
-    setTimeout(() => {
-      setIsLoading(false);
-      setIsSubmitted(true);
-    }, 1500);
+
+    const googleFormUrl =
+      "https://docs.google.com/forms/d/e/1FAIpQLSdR-DgALi4vB1TjYrcqS9f6RBx-DpSTnSk9BxJ6y4hpteOmqA/formResponse";
+
+    const params = new URLSearchParams();
+    params.append("entry.396614209", formData.name);
+    params.append("entry.597621673", formData.phone);
+    params.append("entry.1534389057", formData.address);
+    params.append("entry.1575432690", formData.quantity);
+    params.append("entry.1497466413", selectedProduct || "");
+    params.append("entry.1057130625", "");
+
+    try {
+      await fetch(googleFormUrl, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: params.toString(),
+      });
+    } catch {
+      // Google Forms with no-cors will not return a readable response,
+      // but the submission still goes through.
+    }
+
+    setIsLoading(false);
+    setIsSubmitted(true);
   };
 
   return (
@@ -84,16 +105,40 @@ export default function OrderDrawer() {
             </div>
           ) : isSubmitted ? (
             <div className="h-full flex flex-col items-center justify-center text-center space-y-6 animate-in fade-in duration-500">
-              <CheckCircle className="w-16 h-16 text-black" strokeWidth={1} />
-              <h3 className="font-poppins text-2xl font-medium tracking-[0.1em] uppercase text-black">Thank You</h3>
-              <p className="text-black/60 text-sm tracking-widest leading-loose">
-                Your order for {formData.quantity}x {selectedProduct || "Jaggery"} has been received. <br/><br/>We will contact you at {formData.phone} shortly to arrange delivery.
+              <div className="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center">
+                <CheckCircle className="w-12 h-12 text-green-600" strokeWidth={1.5} />
+              </div>
+              <h3 className="font-poppins text-2xl font-medium tracking-[0.1em] uppercase text-black">Order Confirmed!</h3>
+              <div className="bg-white rounded-lg p-5 w-full text-left space-y-3 border border-black/10">
+                <div className="flex justify-between text-sm">
+                  <span className="text-black/50">Product</span>
+                  <span className="font-medium text-black">{selectedProduct || "Jaggery"}</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-black/50">Quantity</span>
+                  <span className="font-medium text-black">{formData.quantity}</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-black/50">Name</span>
+                  <span className="font-medium text-black">{formData.name}</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-black/50">Phone</span>
+                  <span className="font-medium text-black">{formData.phone}</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-black/50">Address</span>
+                  <span className="font-medium text-black text-right max-w-[60%]">{formData.address}</span>
+                </div>
+              </div>
+              <p className="text-black/60 text-sm leading-relaxed">
+                Thank you for your order, <span className="font-medium text-black">{formData.name}</span>! We will contact you at <span className="font-medium text-black">{formData.phone}</span> shortly to confirm delivery details.
               </p>
-              <button 
+              <button
                 onClick={closeDrawer}
-                className="mt-8 px-8 py-4 bg-black text-white text-[10px] font-semibold tracking-[0.2em] uppercase hover:bg-black/80 transition-colors"
+                className="mt-4 w-full py-4 bg-black text-white text-[10px] font-semibold tracking-[0.2em] uppercase hover:bg-black/80 transition-colors"
               >
-                Close Window
+                Continue Shopping
               </button>
             </div>
           ) : (

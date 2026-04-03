@@ -53,16 +53,9 @@ export default function Navbar() {
         } px-4 sm:px-10 lg:px-16`}
     >
       <div className="flex items-center justify-between">
-        {/* Left: Desktop Items */}
-        <div className="hidden md:flex gap-8 lg:gap-10 text-[15px] font-medium items-center text-[#2C1500]">
-          <Link href="/our-story" className="hover:text-[#C17A2A] transition duration-300">Our Story</Link>
-          <Link href="/shop" className="hover:text-[#C17A2A] transition duration-300">Shop</Link>
-          <Link href="/blog" className="hover:text-[#C17A2A] transition duration-300">Blog</Link>
-        </div>
-
-        {/* Center: Branding */}
-        <div className="absolute left-1/2 -translate-x-1/2 overflow-visible">
-          <Link href="/" className="flex flex-col items-center">
+        {/* Left: Logo + Desktop Items */}
+        <div className="flex items-center gap-8 lg:gap-10">
+          <Link href="/" className="flex items-center flex-shrink-0">
             <Image
               src="/company-logo.svg"
               alt="SakharSansar Logo"
@@ -72,6 +65,11 @@ export default function Navbar() {
               priority
             />
           </Link>
+          <div className="hidden md:flex gap-8 lg:gap-10 text-[15px] font-medium items-center text-[#2C1500]">
+            <Link href="/our-story" className="hover:text-[#C17A2A] transition duration-300">Our Story</Link>
+            <Link href="/shop" className="hover:text-[#C17A2A] transition duration-300">Shop</Link>
+            <Link href="/blog" className="hover:text-[#C17A2A] transition duration-300">Blog</Link>
+          </div>
         </div>
 
         {/* Right: Actions */}
