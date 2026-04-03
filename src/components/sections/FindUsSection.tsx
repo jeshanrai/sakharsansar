@@ -28,6 +28,7 @@ export default function FindUsSection() {
                   alt={partner.name}
                   width={140}
                   height={60}
+                  loading="lazy"
                   className="h-10 sm:h-12 w-auto object-contain rounded-lg grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all duration-300"
                 />
               </div>

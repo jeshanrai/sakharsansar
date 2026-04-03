@@ -1,15 +1,17 @@
 import { Metadata } from "next";
+import dynamic from "next/dynamic";
 import contentData from "@/data/content.json";
 import Navbar from "@/components/layout/Navbar";
 import OrderDrawer from "@/components/layout/OrderDrawer";
 import Footer from "@/components/layout/Footer";
 import HeroSection from "@/components/sections/HeroSection";
 import TrustBanner from "@/components/sections/TrustBanner";
-   
 import ProductsSection from "@/components/sections/ProductsSection";
-import TestimonialsSection from "@/components/sections/TestimonialsSection";
-import CtaSection from "@/components/sections/CtaSection";
-import FindUsSection from "@/components/sections/FindUsSection";
+
+// Below-the-fold sections: lazy-loaded for faster initial page load
+const TestimonialsSection = dynamic(() => import("@/components/sections/TestimonialsSection"));
+const FindUsSection = dynamic(() => import("@/components/sections/FindUsSection"));
+const CtaSection = dynamic(() => import("@/components/sections/CtaSection"));
 
 export const metadata: Metadata = {
   title: "SakharSansar | Pure & Natural from Sankhuwasabha",

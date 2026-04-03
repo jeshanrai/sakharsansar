@@ -19,6 +19,7 @@ export default function FarmersSection() {
                     src={farmer.image}
                     alt={`${farmer.name}, jaggery farmer from ${farmer.location}`}
                     fill
+                    loading="lazy"
                     sizes="(max-width: 768px) 85vw, 300px"
                     className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out grayscale group-hover:grayscale-0"
                   />

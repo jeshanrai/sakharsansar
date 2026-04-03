@@ -23,7 +23,7 @@ export default function HeroSection() {
           alt="Golden blocks of pure natural jaggery from Sankhuwasabha, Nepal"
           width={1200}
           height={800}
-          priority
+          loading="eager"
           sizes="100vw"
           className={`w-full h-auto object-contain transition-opacity duration-700 ${!isImageLoaded ? "opacity-0" : "opacity-100"}`}
           onLoad={() => setIsImageLoaded(true)}
@@ -37,7 +37,7 @@ export default function HeroSection() {
           alt="Golden blocks of pure natural jaggery from Sankhuwasabha, Nepal"
           fill
           priority
-          sizes="100vw"
+          sizes="75vw"
           className={`sm:object-fill transition-opacity duration-700 ${!isImageLoaded ? "opacity-0" : "opacity-100"}`}
           onLoad={() => setIsImageLoaded(true)}
         />
