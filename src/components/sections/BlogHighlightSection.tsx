@@ -2,7 +2,7 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import blogData from "@/data/blog.json";
-import { FadeUp, SlideInRight } from "@/components/Animations";
+import { FadeUp, SlideInRight } from "@/components/ui/Animations";
 import { ArrowRight } from "lucide-react";
 
 export default function BlogHighlightSection() {

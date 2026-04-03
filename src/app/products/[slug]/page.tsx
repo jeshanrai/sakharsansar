@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import OrderDrawer from "@/components/layout/OrderDrawer";
-import ProductActions from "./ProductActions";
+import ProductActions from "@/components/product/ProductActions";
 import data from "@/data/content.json";
 import { ArrowLeft, Leaf, ShieldCheck, Truck } from "lucide-react";
 

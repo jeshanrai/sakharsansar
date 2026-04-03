@@ -153,6 +153,26 @@
       "name": "Bidhan Shrestha",
       "location": "Lalitpur",
       "review": "The authenticity is real. Tastes exactly like what my grandmother used to make. Highly recommended!"
+    },
+    {
+      "name": "Suman Tamang",
+      "location": "Bhaktapur",
+      "review": "Switched from refined sugar to SakharSansar jaggery three months ago. My digestion has improved and the flavor is unmatched."
+    },
+    {
+      "name": "Priya Adhikari",
+      "location": "Pokhara",
+      "review": "I use the jaggery powder for all my baking. My sel roti has never tasted better — customers keep asking for the secret!"
+    },
+    {
+      "name": "Rajesh Karki",
+      "location": "Biratnagar",
+      "review": "Ordered the liquid jaggery on a friend's recommendation. The quality is outstanding and delivery was super fast."
+    },
+    {
+      "name": "Anisha Gurung",
+      "location": "Chitwan",
+      "review": "Love that it comes straight from the farmers. You can taste the difference — no chemical aftertaste, just pure sweetness."
     }
   ],
   "process": [

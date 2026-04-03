@@ -8,7 +8,7 @@ import {
   HeroTitleWrapper,
   HeroSubtitleWrapper,
   HeroButtonWrapper,
-} from "@/components/Animations";
+} from "@/components/ui/Animations";
 
 export default function HeroSection() {
   const [showPromo, setShowPromo] = useState(true);

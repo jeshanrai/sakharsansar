@@ -1,7 +1,7 @@
 import React from 'react';
 import data from "@/data/content.json";
 import { ClipboardList } from "lucide-react";
-import { ZoomIn } from "@/components/Animations";
+import { ZoomIn } from "@/components/ui/Animations";
 
 const getIcon = (name: string) => {
   const cls = "w-7 h-7 sm:w-8 sm:h-8 text-[#4A6CF7]";

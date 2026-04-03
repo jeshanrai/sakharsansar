@@ -1,6 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
-import { FadeUp } from "@/components/Animations";
+import { FadeUp } from "@/components/ui/Animations";
 
 const partners = [
   { name: "Daraz", logo: "/partners/daraz.svg" },

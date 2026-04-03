@@ -1,6 +1,6 @@
 import React from 'react';
 import data from "@/data/content.json";
-import { FadeUp } from "@/components/Animations";
+import { FadeUp } from "@/components/ui/Animations";
 import { Check } from "lucide-react";
 
 export default function TrustBanner() {

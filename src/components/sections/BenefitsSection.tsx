@@ -1,6 +1,6 @@
 import React from 'react';
 import data from "@/data/content.json";
-import { SlideInLeft, SlideInRight } from "@/components/Animations";
+import { SlideInLeft, SlideInRight } from "@/components/ui/Animations";
 
 export default function BenefitsSection() {
   return (

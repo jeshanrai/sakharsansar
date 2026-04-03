@@ -1,6 +1,6 @@
 import React from 'react';
-import { ZoomIn } from "@/components/Animations";
-import OrderButton from "./OrderButton";
+import { ZoomIn } from "@/components/ui/Animations";
+import OrderButton from "@/components/ui/OrderButton";
 
 export default function CtaSection() {
   return (

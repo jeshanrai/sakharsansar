@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import Navbar from "@/components/layout/Navbar";
 import OrderDrawer from "@/components/layout/OrderDrawer";
 import Footer from "@/components/layout/Footer";
-import ShopContent from "./ShopContent";
+import ShopContent from "@/components/shop/ShopContent";
 
 export const metadata: Metadata = {
   title: "Shop | SakharSansar",

@@ -1,7 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import data from "@/data/content.json";
-import { FadeUp, SlideInRight } from "@/components/Animations";
+import { FadeUp, SlideInRight } from "@/components/ui/Animations";
 
 export default function FarmersSection() {
   return (

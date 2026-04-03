@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from 'react';
 import data from "@/data/content.json";
-import { FadeUp, ZoomIn } from "@/components/Animations";
+import { FadeUp, ZoomIn } from "@/components/ui/Animations";
 import { Plus, Minus } from "lucide-react";
 
 export default function FaqsSection() {

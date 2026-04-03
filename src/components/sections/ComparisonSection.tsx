@@ -1,5 +1,5 @@
 import React from 'react';
-import { ZoomIn, FadeUp } from "@/components/Animations";
+import { ZoomIn, FadeUp } from "@/components/ui/Animations";
 import { Check, X } from "lucide-react";
 
 const rows = [

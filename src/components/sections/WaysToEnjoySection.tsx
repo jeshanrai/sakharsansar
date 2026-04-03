@@ -1,6 +1,6 @@
 import React from 'react';
 import data from "@/data/content.json";
-import { SlideInLeft, ZoomIn } from "@/components/Animations";
+import { SlideInLeft, ZoomIn } from "@/components/ui/Animations";
 import { Coffee, Cookie, Utensils } from "lucide-react";
 
 const getIcon = (index: number) => {

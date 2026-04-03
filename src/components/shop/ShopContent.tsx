@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { openOrderDrawer } from '@/components/layout/OrderDrawer';
 import data from "@/data/content.json";
-import { FadeUp, ZoomIn } from "@/components/Animations";
+import { FadeUp, ZoomIn } from "@/components/ui/Animations";
 import { ShoppingBag, SlidersHorizontal, X, Search, ChevronDown } from "lucide-react";
 
 type Product = (typeof data.products)[number];

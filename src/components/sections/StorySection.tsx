@@ -2,7 +2,7 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import data from "@/data/content.json";
-import { SlideInLeft, SlideInRight } from "@/components/Animations";
+import { SlideInLeft, SlideInRight } from "@/components/ui/Animations";
 import { ArrowRight } from "lucide-react";
 
 export default function StorySection() {
