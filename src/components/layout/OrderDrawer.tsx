@@ -49,6 +49,31 @@ export default function OrderDrawer() {
     e.preventDefault();
     setIsLoading(true);
 
+    // Calculate order amount
+    const product = data.products.find((p: { name: string }) => p.name === selectedProduct);
+    const unitPrice = product ? parseInt(product.price.replace(/[^0-9]/g, ''), 10) : 0;
+    const amount = unitPrice * Number(formData.quantity);
+
+    // Submit to backend API
+    const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+    try {
+      await fetch(`${API_BASE}/orders`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          customer: formData.name,
+          phone: formData.phone,
+          address: formData.address,
+          product: selectedProduct || "Custom Order",
+          quantity: Number(formData.quantity),
+          amount,
+        }),
+      });
+    } catch {
+      // Backend may be unavailable — continue with Google Form fallback
+    }
+
+    // Also submit to Google Form as backup
     const googleFormUrl =
       "https://docs.google.com/forms/d/e/1FAIpQLSdR-DgALi4vB1TjYrcqS9f6RBx-DpSTnSk9BxJ6y4hpteOmqA/formResponse";
 
@@ -68,8 +93,7 @@ export default function OrderDrawer() {
         body: params.toString(),
       });
     } catch {
-      // Google Forms with no-cors will not return a readable response,
-      // but the submission still goes through.
+      // no-cors won't return readable response, but submission goes through
     }
 
     setIsLoading(false);
