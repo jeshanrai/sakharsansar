@@ -12,7 +12,7 @@ router.get("/", async (req: Request, res: Response): Promise<void> => {
   const { category, page = "1", limit = "20" } = req.query;
   const skip = (Number(page) - 1) * Number(limit);
 
-  const where = category && category !== "All" ? { category: category as string } : {};
+  const where = category && category !== "All" ? { category: category as string } : undefined;
 
   const [expenses, total] = await Promise.all([
     prisma.expense.findMany({
@@ -51,7 +51,7 @@ router.post("/", async (req: Request, res: Response): Promise<void> => {
 
 // DELETE /api/expenses/:id
 router.delete("/:id", async (req: Request, res: Response): Promise<void> => {
-  const { id } = req.params;
+  const id = req.params.id as string;
   await prisma.expense.delete({ where: { id } });
   res.json({ success: true });
 });
