@@ -382,10 +382,9 @@ export default function Dashboard() {
         {activeTab === "overview" && stats && (
           <div className="space-y-8">
             {/* Stat Cards */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-              <StatCard icon={DollarSign} label="Total Revenue" value={`Rs. ${stats.totalRevenue.toLocaleString()}`} sub={`Rs. ${stats.monthlyRevenue.toLocaleString()} this month`} color="bg-green-500" />
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <StatCard icon={DollarSign} label="Total Revenue" value={`Rs. ${stats.totalSales.toLocaleString()}`} sub={`Rs. ${stats.monthlySales.toLocaleString()} this month`} color="bg-green-500" />
               <StatCard icon={TrendingUp} label="Total Profit" value={`Rs. ${stats.totalProfit.toLocaleString()}`} sub={`Rs. ${stats.monthlyProfit.toLocaleString()} this month`} color={stats.totalProfit >= 0 ? "bg-emerald-500" : "bg-red-500"} />
-              <StatCard icon={ShoppingBag} label="Sakhar Sold" value={`${stats.totalQuantitySold} units`} sub={`${stats.monthlyQuantitySold} this month`} color="bg-[#C17A2A]" />
               <StatCard icon={TrendingDown} label="Total Expenses" value={`Rs. ${stats.totalExpenses.toLocaleString()}`} sub={`Rs. ${stats.monthlyExpenses.toLocaleString()} this month`} color="bg-red-500" />
             </div>
 
