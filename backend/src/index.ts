@@ -5,6 +5,7 @@ import authRoutes from "./routes/auth";
 import orderRoutes from "./routes/orders";
 import expenseRoutes from "./routes/expenses";
 import dashboardRoutes from "./routes/dashboard";
+import salesRoutes from "./routes/sales";
 import { seedDatabase } from "./lib/seed";
 
 const app = express();
@@ -18,6 +19,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/expenses", expenseRoutes);
 app.use("/api/dashboard", dashboardRoutes);
+app.use("/api/sales", salesRoutes);
 
 app.get("/api/health", (_req, res) => {
   res.json({ status: "ok" });

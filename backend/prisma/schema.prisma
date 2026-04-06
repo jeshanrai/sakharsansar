@@ -13,6 +13,17 @@ model Admin {
   password  String
   name      String
   createdAt DateTime @default(now())
+
+  // Audit relations
+  ordersCreated   Order[]   @relation("OrderCreatedBy")
+  ordersUpdated   Order[]   @relation("OrderUpdatedBy")
+  ordersDeleted   Order[]   @relation("OrderDeletedBy")
+  expensesCreated Expense[] @relation("ExpenseCreatedBy")
+  expensesUpdated Expense[] @relation("ExpenseUpdatedBy")
+  expensesDeleted Expense[] @relation("ExpenseDeletedBy")
+  salesCreated    Sale[]    @relation("SaleCreatedBy")
+  salesUpdated    Sale[]    @relation("SaleUpdatedBy")
+  salesDeleted    Sale[]    @relation("SaleDeletedBy")
 }
 
 model Order {
@@ -26,6 +37,16 @@ model Order {
   status    OrderStatus @default(PENDING)
   createdAt DateTime    @default(now())
   updatedAt DateTime    @updatedAt
+
+  // Audit fields
+  createdBy   String?
+  updatedBy   String?
+  deletedAt   DateTime?
+  deletedBy   String?
+
+  createdByAdmin Admin? @relation("OrderCreatedBy", fields: [createdBy], references: [id])
+  updatedByAdmin Admin? @relation("OrderUpdatedBy", fields: [updatedBy], references: [id])
+  deletedByAdmin Admin? @relation("OrderDeletedBy", fields: [deletedBy], references: [id])
 }
 
 model Expense {
@@ -36,6 +57,40 @@ model Expense {
   description String?
   date        DateTime @default(now())
   createdAt   DateTime @default(now())
+
+  // Audit fields
+  createdBy   String?
+  updatedBy   String?
+  deletedAt   DateTime?
+  deletedBy   String?
+
+  createdByAdmin Admin? @relation("ExpenseCreatedBy", fields: [createdBy], references: [id])
+  updatedByAdmin Admin? @relation("ExpenseUpdatedBy", fields: [updatedBy], references: [id])
+  deletedByAdmin Admin? @relation("ExpenseDeletedBy", fields: [deletedBy], references: [id])
+}
+
+model Sale {
+  id            String        @id @default(cuid())
+  customer      String
+  phone         String?
+  product       String
+  quantity      Int
+  amount        Float
+  paymentMethod PaymentMethod
+  description   String?
+  date          DateTime      @default(now())
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  // Audit fields
+  createdBy   String?
+  updatedBy   String?
+  deletedAt   DateTime?
+  deletedBy   String?
+
+  createdByAdmin Admin? @relation("SaleCreatedBy", fields: [createdBy], references: [id])
+  updatedByAdmin Admin? @relation("SaleUpdatedBy", fields: [updatedBy], references: [id])
+  deletedByAdmin Admin? @relation("SaleDeletedBy", fields: [deletedBy], references: [id])
 }
 
 enum OrderStatus {
@@ -44,4 +99,10 @@ enum OrderStatus {
   SHIPPED
   DELIVERED
   CANCELLED
+}
+
+enum PaymentMethod {
+  CASH
+  ONLINE
+  CREDIT
 }

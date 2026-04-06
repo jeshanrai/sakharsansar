@@ -3,7 +3,12 @@
     "allow": [
       "Bash(npx next:*)",
       "WebFetch(domain:lakridsbybulow.com)",
-      "Bash(npx prisma:*)"
+      "Bash(npx prisma:*)",
+      "Bash(ls -la \"d:\\\\sakhar\\\\sakharsansar\\\\src\\\\app\\\\\" | grep -E \"^d.*page)",
+      "Bash(^-.*page\")",
+      "Bash(xargs wc:*)",
+      "Bash(PRISMA_USER_CONSENT_FOR_DANGEROUS_AI_ACTION=\"Reset the database\" npx prisma migrate reset --force)",
+      "Bash(npx tsx:*)"
     ],
     "additionalDirectories": [
       "C:\\Users\\Dell\\Downloads"

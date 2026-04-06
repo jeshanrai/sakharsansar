@@ -1,6 +1,6 @@
 import { Router, Request, Response } from "express";
 import prisma from "../lib/prisma";
-import { requireAuth } from "../middleware/auth";
+import { requireAuth, AuthRequest } from "../middleware/auth";
 
 import { OrderStatus } from "@prisma/client";
 
@@ -34,7 +34,10 @@ router.get("/", requireAuth, async (req: Request, res: Response): Promise<void> 
   const { status, page = "1", limit = "20" } = req.query;
   const skip = (Number(page) - 1) * Number(limit);
 
-  const where = status ? { status: status as OrderStatus } : undefined;
+  const where: Record<string, unknown> = { deletedAt: null };
+  if (status) {
+    where.status = status as OrderStatus;
+  }
 
   const [orders, total] = await Promise.all([
     prisma.order.findMany({
@@ -50,22 +53,25 @@ router.get("/", requireAuth, async (req: Request, res: Response): Promise<void> 
 });
 
 // PATCH /api/orders/:id — protected (update status)
-router.patch("/:id", requireAuth, async (req: Request, res: Response): Promise<void> => {
+router.patch("/:id", requireAuth, async (req: AuthRequest, res: Response): Promise<void> => {
   const id = req.params.id as string;
   const { status } = req.body;
 
   const order = await prisma.order.update({
     where: { id },
-    data: { status },
+    data: { status, updatedBy: req.adminId },
   });
 
   res.json(order);
 });
 
-// DELETE /api/orders/:id — protected
-router.delete("/:id", requireAuth, async (req: Request, res: Response): Promise<void> => {
+// DELETE /api/orders/:id — soft delete
+router.delete("/:id", requireAuth, async (req: AuthRequest, res: Response): Promise<void> => {
   const id = req.params.id as string;
-  await prisma.order.delete({ where: { id } });
+  await prisma.order.update({
+    where: { id },
+    data: { deletedAt: new Date(), deletedBy: req.adminId },
+  });
   res.json({ success: true });
 });
 

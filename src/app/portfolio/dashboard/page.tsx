@@ -19,6 +19,11 @@ import {
   ClipboardList,
   X,
   AlertTriangle,
+  CreditCard,
+  Banknote,
+  Landmark,
+  ShoppingCart,
+  Edit3,
 } from "lucide-react";
 
 interface DashboardStats {
@@ -36,6 +41,16 @@ interface DashboardStats {
   recentExpenses: Expense[];
   ordersByStatus: { status: string; _count: { id: number } }[];
   monthlyChart: { month: string; revenue: number; expenses: number }[];
+  // Sales data
+  totalSales: number;
+  monthlySales: number;
+  totalSalesCount: number;
+  monthlySalesCount: number;
+  cashInHand: number;
+  moneyInBank: number;
+  creditAmount: number;
+  recentSales: Sale[];
+  salesByPaymentMethod: { paymentMethod: string; _sum: { amount: number }; _count: { id: number } }[];
 }
 
 interface Order {
@@ -59,7 +74,23 @@ interface Expense {
   date: string;
 }
 
-type Tab = "overview" | "orders" | "expenses";
+interface Sale {
+  id: string;
+  customer: string;
+  phone: string | null;
+  product: string;
+  quantity: number;
+  amount: number;
+  paymentMethod: string;
+  description: string | null;
+  date: string;
+  createdAt: string;
+  updatedAt: string;
+  createdByAdmin?: { name: string } | null;
+  updatedByAdmin?: { name: string } | null;
+}
+
+type Tab = "overview" | "orders" | "expenses" | "sales";
 
 const STATUS_COLORS: Record<string, string> = {
   PENDING: "bg-yellow-100 text-yellow-700",
@@ -67,6 +98,12 @@ const STATUS_COLORS: Record<string, string> = {
   SHIPPED: "bg-purple-100 text-purple-700",
   DELIVERED: "bg-green-100 text-green-700",
   CANCELLED: "bg-red-100 text-red-700",
+};
+
+const PAYMENT_COLORS: Record<string, string> = {
+  CASH: "bg-green-100 text-green-700",
+  ONLINE: "bg-blue-100 text-blue-700",
+  CREDIT: "bg-orange-100 text-orange-700",
 };
 
 const EXPENSE_CATEGORIES = ["Raw Materials", "Packaging", "Logistics", "Marketing", "Operations", "Labor", "Other"];
@@ -80,6 +117,9 @@ export default function Dashboard() {
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [expensesTotal, setExpensesTotal] = useState(0);
   const [expensesPage, setExpensesPage] = useState(1);
+  const [sales, setSales] = useState<Sale[]>([]);
+  const [salesTotal, setSalesTotal] = useState(0);
+  const [salesPage, setSalesPage] = useState(1);
   const [activeTab, setActiveTab] = useState<Tab>("overview");
   const [loading, setLoading] = useState(true);
   const [adminName, setAdminName] = useState("");
@@ -105,6 +145,20 @@ export default function Dashboard() {
     title: "",
     amount: "",
     category: "Raw Materials",
+    description: "",
+    date: new Date().toISOString().split("T")[0],
+  });
+
+  // Sale form
+  const [showSaleForm, setShowSaleForm] = useState(false);
+  const [editingSaleId, setEditingSaleId] = useState<string | null>(null);
+  const [saleForm, setSaleForm] = useState({
+    customer: "",
+    phone: "",
+    product: "",
+    quantity: "1",
+    amount: "",
+    paymentMethod: "CASH",
     description: "",
     date: new Date().toISOString().split("T")[0],
   });
@@ -151,9 +205,18 @@ export default function Dashboard() {
     }
   }, []);
 
+  const fetchSales = useCallback(async (page: number) => {
+    const res = await apiFetch(`/sales?page=${page}&limit=10`);
+    if (res.ok) {
+      const data = await res.json();
+      setSales(data.sales);
+      setSalesTotal(data.totalPages);
+    }
+  }, []);
+
   useEffect(() => {
-    Promise.all([fetchStats(), fetchOrders(1), fetchExpenses(1)]).finally(() => setLoading(false));
-  }, [fetchStats, fetchOrders, fetchExpenses]);
+    Promise.all([fetchStats(), fetchOrders(1), fetchExpenses(1), fetchSales(1)]).finally(() => setLoading(false));
+  }, [fetchStats, fetchOrders, fetchExpenses, fetchSales]);
 
   const updateOrderStatus = (id: string, newStatus: string, currentStatus: string) => {
     if (newStatus === currentStatus) return;
@@ -195,6 +258,57 @@ export default function Dashboard() {
     fetchExpenses(1);
     setExpensesPage(1);
     fetchStats();
+  };
+
+  const openSaleForm = (sale?: Sale) => {
+    if (sale) {
+      setEditingSaleId(sale.id);
+      setSaleForm({
+        customer: sale.customer,
+        phone: sale.phone || "",
+        product: sale.product,
+        quantity: String(sale.quantity),
+        amount: String(sale.amount),
+        paymentMethod: sale.paymentMethod,
+        description: sale.description || "",
+        date: new Date(sale.date).toISOString().split("T")[0],
+      });
+    } else {
+      setEditingSaleId(null);
+      setSaleForm({ customer: "", phone: "", product: "", quantity: "1", amount: "", paymentMethod: "CASH", description: "", date: new Date().toISOString().split("T")[0] });
+    }
+    setShowSaleForm(true);
+  };
+
+  const submitSale = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const payload = { ...saleForm, quantity: Number(saleForm.quantity), amount: Number(saleForm.amount) };
+
+    if (editingSaleId) {
+      await apiFetch(`/sales/${editingSaleId}`, { method: "PATCH", body: JSON.stringify(payload) });
+    } else {
+      await apiFetch("/sales", { method: "POST", body: JSON.stringify(payload) });
+    }
+
+    setShowSaleForm(false);
+    setEditingSaleId(null);
+    fetchSales(1);
+    setSalesPage(1);
+    fetchStats();
+  };
+
+  const deleteSale = (id: string, customer: string) => {
+    showConfirm(
+      "Delete Sale",
+      `Are you sure you want to delete the sale to "${customer}"? This action cannot be undone.`,
+      "danger",
+      async () => {
+        await apiFetch(`/sales/${id}`, { method: "DELETE" });
+        fetchSales(salesPage);
+        fetchStats();
+        closeConfirm();
+      }
+    );
   };
 
   const handleLogout = () => {
@@ -244,6 +358,7 @@ export default function Dashboard() {
           {([
             { id: "overview", label: "Overview", icon: BarChart3 },
             { id: "orders", label: "Orders", icon: ClipboardList },
+            { id: "sales", label: "Sales", icon: ShoppingCart },
             { id: "expenses", label: "Expenses", icon: Receipt },
           ] as const).map((tab) => (
             <button
@@ -272,6 +387,52 @@ export default function Dashboard() {
               <StatCard icon={TrendingUp} label="Total Profit" value={`Rs. ${stats.totalProfit.toLocaleString()}`} sub={`Rs. ${stats.monthlyProfit.toLocaleString()} this month`} color={stats.totalProfit >= 0 ? "bg-emerald-500" : "bg-red-500"} />
               <StatCard icon={ShoppingBag} label="Sakhar Sold" value={`${stats.totalQuantitySold} units`} sub={`${stats.monthlyQuantitySold} this month`} color="bg-[#C17A2A]" />
               <StatCard icon={TrendingDown} label="Total Expenses" value={`Rs. ${stats.totalExpenses.toLocaleString()}`} sub={`Rs. ${stats.monthlyExpenses.toLocaleString()} this month`} color="bg-red-500" />
+            </div>
+
+            {/* Money Breakdown: Cash, Bank, Credit */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="bg-white rounded-2xl p-5 sm:p-6 shadow-sm hover:shadow-md transition-shadow border-l-4 border-green-500">
+                <div className="flex items-start justify-between">
+                  <div className="space-y-1">
+                    <p className="text-xs font-semibold tracking-wider text-[#2C1500]/40 uppercase">Cash in Hand</p>
+                    <p className="font-poppins text-xl sm:text-2xl font-bold text-[#2C1500]">Rs. {stats.cashInHand.toLocaleString()}</p>
+                  </div>
+                  <div className="w-10 h-10 rounded-xl bg-green-500 flex items-center justify-center">
+                    <Banknote className="w-5 h-5 text-white" />
+                  </div>
+                </div>
+                <p className="text-xs text-[#2C1500]/40 mt-3">From cash sales</p>
+              </div>
+              <div className="bg-white rounded-2xl p-5 sm:p-6 shadow-sm hover:shadow-md transition-shadow border-l-4 border-blue-500">
+                <div className="flex items-start justify-between">
+                  <div className="space-y-1">
+                    <p className="text-xs font-semibold tracking-wider text-[#2C1500]/40 uppercase">Money in Bank</p>
+                    <p className="font-poppins text-xl sm:text-2xl font-bold text-[#2C1500]">Rs. {stats.moneyInBank.toLocaleString()}</p>
+                  </div>
+                  <div className="w-10 h-10 rounded-xl bg-blue-500 flex items-center justify-center">
+                    <Landmark className="w-5 h-5 text-white" />
+                  </div>
+                </div>
+                <p className="text-xs text-[#2C1500]/40 mt-3">From online payments</p>
+              </div>
+              <div className="bg-white rounded-2xl p-5 sm:p-6 shadow-sm hover:shadow-md transition-shadow border-l-4 border-orange-500">
+                <div className="flex items-start justify-between">
+                  <div className="space-y-1">
+                    <p className="text-xs font-semibold tracking-wider text-[#2C1500]/40 uppercase">Credit (Receivable)</p>
+                    <p className="font-poppins text-xl sm:text-2xl font-bold text-[#2C1500]">Rs. {stats.creditAmount.toLocaleString()}</p>
+                  </div>
+                  <div className="w-10 h-10 rounded-xl bg-orange-500 flex items-center justify-center">
+                    <CreditCard className="w-5 h-5 text-white" />
+                  </div>
+                </div>
+                <p className="text-xs text-[#2C1500]/40 mt-3">Outstanding credit sales</p>
+              </div>
+            </div>
+
+            {/* Total Sales Card */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+              <StatCard icon={ShoppingCart} label="Total Sales" value={`Rs. ${stats.totalSales.toLocaleString()}`} sub={`Rs. ${stats.monthlySales.toLocaleString()} this month`} color="bg-indigo-500" />
+              <StatCard icon={Package} label="Sales Count" value={`${stats.totalSalesCount}`} sub={`${stats.monthlySalesCount} this month`} color="bg-violet-500" />
             </div>
 
             {/* Chart + Status */}
@@ -327,7 +488,7 @@ export default function Dashboard() {
             </div>
 
             {/* Recent Activity */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* Recent Orders */}
               <div className="bg-white rounded-2xl p-6 shadow-sm">
                 <div className="flex items-center justify-between mb-4">
@@ -347,6 +508,31 @@ export default function Dashboard() {
                       </div>
                     </div>
                   ))}
+                </div>
+              </div>
+
+              {/* Recent Sales */}
+              <div className="bg-white rounded-2xl p-6 shadow-sm">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="font-poppins font-semibold text-[#2C1500]">Recent Sales</h3>
+                  <button onClick={() => setActiveTab("sales")} className="text-xs text-[#C17A2A] font-semibold hover:underline">View All</button>
+                </div>
+                <div className="space-y-3">
+                  {stats.recentSales.map((sale) => (
+                    <div key={sale.id} className="flex items-center justify-between py-2 border-b border-black/5 last:border-0">
+                      <div>
+                        <p className="text-sm font-medium text-[#2C1500]">{sale.customer}</p>
+                        <p className="text-xs text-[#2C1500]/40">{sale.product} x{sale.quantity}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-sm font-bold text-green-600">Rs. {sale.amount.toLocaleString()}</p>
+                        <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${PAYMENT_COLORS[sale.paymentMethod]}`}>{sale.paymentMethod}</span>
+                      </div>
+                    </div>
+                  ))}
+                  {stats.recentSales.length === 0 && (
+                    <p className="text-sm text-[#2C1500]/30 text-center py-4">No sales yet</p>
+                  )}
                 </div>
               </div>
 
@@ -441,6 +627,190 @@ export default function Dashboard() {
                 ))}
               </div>
             )}
+          </div>
+        )}
+
+        {/* SALES TAB */}
+        {activeTab === "sales" && (
+          <div className="space-y-6">
+            {/* Add Sale */}
+            <div className="flex justify-end">
+              <button
+                onClick={() => openSaleForm()}
+                className="flex items-center gap-2 px-5 py-2.5 bg-[#C17A2A] text-white text-sm font-semibold rounded-xl hover:bg-[#A8671F] transition-colors"
+              >
+                <Plus className="w-4 h-4" />
+                Add Sale
+              </button>
+            </div>
+
+            {/* Sale Form Modal */}
+            {showSaleForm && (
+              <>
+                <div className="fixed inset-0 bg-black/40 z-40" onClick={() => setShowSaleForm(false)} />
+                <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-white rounded-2xl p-8 z-50 shadow-2xl max-h-[90vh] overflow-y-auto">
+                  <div className="flex items-center justify-between mb-6">
+                    <h3 className="font-poppins font-semibold text-lg text-[#2C1500]">{editingSaleId ? "Edit Sale" : "New Sale"}</h3>
+                    <button onClick={() => setShowSaleForm(false)} className="text-[#2C1500]/30 hover:text-[#2C1500]">
+                      <X className="w-5 h-5" />
+                    </button>
+                  </div>
+                  <form onSubmit={submitSale} className="flex flex-col gap-4">
+                    <input
+                      type="text"
+                      required
+                      placeholder="Customer name"
+                      value={saleForm.customer}
+                      onChange={(e) => setSaleForm({ ...saleForm, customer: e.target.value })}
+                      className="w-full bg-[#F4F1ED] rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 ring-[#C17A2A]/30"
+                    />
+                    <input
+                      type="text"
+                      placeholder="Phone (optional)"
+                      value={saleForm.phone}
+                      onChange={(e) => setSaleForm({ ...saleForm, phone: e.target.value })}
+                      className="w-full bg-[#F4F1ED] rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 ring-[#C17A2A]/30"
+                    />
+                    <input
+                      type="text"
+                      required
+                      placeholder="Product"
+                      value={saleForm.product}
+                      onChange={(e) => setSaleForm({ ...saleForm, product: e.target.value })}
+                      className="w-full bg-[#F4F1ED] rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 ring-[#C17A2A]/30"
+                    />
+                    <div className="grid grid-cols-2 gap-4">
+                      <input
+                        type="number"
+                        required
+                        min="1"
+                        placeholder="Quantity"
+                        value={saleForm.quantity}
+                        onChange={(e) => setSaleForm({ ...saleForm, quantity: e.target.value })}
+                        className="w-full bg-[#F4F1ED] rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 ring-[#C17A2A]/30"
+                      />
+                      <input
+                        type="number"
+                        required
+                        placeholder="Amount (Rs.)"
+                        value={saleForm.amount}
+                        onChange={(e) => setSaleForm({ ...saleForm, amount: e.target.value })}
+                        className="w-full bg-[#F4F1ED] rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 ring-[#C17A2A]/30"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-xs font-semibold text-[#2C1500]/50 uppercase tracking-wider mb-2 block">Payment Method</label>
+                      <div className="grid grid-cols-3 gap-2">
+                        {(["CASH", "ONLINE", "CREDIT"] as const).map((method) => (
+                          <button
+                            key={method}
+                            type="button"
+                            onClick={() => setSaleForm({ ...saleForm, paymentMethod: method })}
+                            className={`py-2.5 rounded-xl text-sm font-semibold transition-all ${
+                              saleForm.paymentMethod === method
+                                ? method === "CASH" ? "bg-green-500 text-white" : method === "ONLINE" ? "bg-blue-500 text-white" : "bg-orange-500 text-white"
+                                : "bg-[#F4F1ED] text-[#2C1500]/60 hover:bg-[#eae5dd]"
+                            }`}
+                          >
+                            {method}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    <textarea
+                      placeholder="Description (optional)"
+                      rows={2}
+                      value={saleForm.description}
+                      onChange={(e) => setSaleForm({ ...saleForm, description: e.target.value })}
+                      className="w-full bg-[#F4F1ED] rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 ring-[#C17A2A]/30 resize-none"
+                    />
+                    <input
+                      type="date"
+                      value={saleForm.date}
+                      onChange={(e) => setSaleForm({ ...saleForm, date: e.target.value })}
+                      className="w-full bg-[#F4F1ED] rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 ring-[#C17A2A]/30"
+                    />
+                    <button type="submit" className="w-full py-3 bg-[#C17A2A] text-white font-semibold rounded-xl hover:bg-[#A8671F] transition-colors">
+                      {editingSaleId ? "Update Sale" : "Add Sale"}
+                    </button>
+                  </form>
+                </div>
+              </>
+            )}
+
+            {/* Sales Table */}
+            <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
+              <div className="p-6 border-b border-black/5">
+                <h3 className="font-poppins font-semibold text-lg text-[#2C1500]">All Sales</h3>
+                <p className="text-sm text-[#2C1500]/40 mt-1">Track sales by payment method</p>
+              </div>
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="bg-[#F4F1ED]">
+                      <th className="text-left px-6 py-3 font-semibold text-[#2C1500]/60 text-xs uppercase tracking-wider">Customer</th>
+                      <th className="text-left px-6 py-3 font-semibold text-[#2C1500]/60 text-xs uppercase tracking-wider">Product</th>
+                      <th className="text-left px-6 py-3 font-semibold text-[#2C1500]/60 text-xs uppercase tracking-wider">Qty</th>
+                      <th className="text-left px-6 py-3 font-semibold text-[#2C1500]/60 text-xs uppercase tracking-wider">Amount</th>
+                      <th className="text-left px-6 py-3 font-semibold text-[#2C1500]/60 text-xs uppercase tracking-wider">Payment</th>
+                      <th className="text-left px-6 py-3 font-semibold text-[#2C1500]/60 text-xs uppercase tracking-wider">Date</th>
+                      <th className="text-left px-6 py-3 font-semibold text-[#2C1500]/60 text-xs uppercase tracking-wider">By</th>
+                      <th className="text-left px-6 py-3 font-semibold text-[#2C1500]/60 text-xs uppercase tracking-wider">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {sales.map((sale) => (
+                      <tr key={sale.id} className="border-b border-black/5 hover:bg-[#F4F1ED]/50 transition-colors">
+                        <td className="px-6 py-4">
+                          <p className="font-medium text-[#2C1500]">{sale.customer}</p>
+                          {sale.phone && <p className="text-xs text-[#2C1500]/40">{sale.phone}</p>}
+                        </td>
+                        <td className="px-6 py-4 text-[#2C1500]">{sale.product}</td>
+                        <td className="px-6 py-4 text-[#2C1500]">{sale.quantity}</td>
+                        <td className="px-6 py-4 font-semibold text-green-600">Rs. {sale.amount.toLocaleString()}</td>
+                        <td className="px-6 py-4">
+                          <span className={`text-xs font-semibold px-3 py-1 rounded-full ${PAYMENT_COLORS[sale.paymentMethod]}`}>
+                            {sale.paymentMethod}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 text-[#2C1500]/50 text-xs">{new Date(sale.date).toLocaleDateString()}</td>
+                        <td className="px-6 py-4">
+                          <p className="text-xs text-[#2C1500]/40">{sale.createdByAdmin?.name || "—"}</p>
+                          {sale.updatedByAdmin && (
+                            <p className="text-[10px] text-[#2C1500]/30">edited by {sale.updatedByAdmin.name}</p>
+                          )}
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="flex items-center gap-2">
+                            <button onClick={() => openSaleForm(sale)} className="text-blue-400 hover:text-blue-600 transition-colors">
+                              <Edit3 className="w-4 h-4" />
+                            </button>
+                            <button onClick={() => deleteSale(sale.id, sale.customer)} className="text-red-400 hover:text-red-600 transition-colors">
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              {salesTotal > 1 && (
+                <div className="flex items-center justify-center gap-2 p-4 border-t border-black/5">
+                  {Array.from({ length: salesTotal }, (_, i) => (
+                    <button
+                      key={i}
+                      onClick={() => { setSalesPage(i + 1); fetchSales(i + 1); }}
+                      className={`w-8 h-8 rounded-lg text-xs font-semibold transition-colors ${
+                        salesPage === i + 1 ? "bg-[#C17A2A] text-white" : "text-[#2C1500]/50 hover:bg-[#C17A2A]/10"
+                      }`}
+                    >
+                      {i + 1}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         )}
 
