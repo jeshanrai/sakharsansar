@@ -12,7 +12,8 @@ export async function apiFetch(path: string, options: RequestInit = {}) {
     },
   });
 
-  if (res.status === 401) {
+  // Only redirect on 401 for authenticated routes, not login itself
+  if (res.status === 401 && !path.includes("/auth/login")) {
     if (typeof window !== "undefined") {
       localStorage.removeItem("token");
       window.location.href = "/portfolio";
