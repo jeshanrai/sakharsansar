@@ -10,7 +10,7 @@ import { seedDatabase } from "./lib/seed";
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(cors({ origin: ["http://localhost:3000", "http://localhost:3001"], credentials: true }));
+app.use(cors({ origin: true, credentials: true }));
 app.use(express.json());
 
 // Routes
