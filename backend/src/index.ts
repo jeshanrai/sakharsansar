@@ -5,6 +5,7 @@ import authRoutes from "./routes/auth";
 import orderRoutes from "./routes/orders";
 import expenseRoutes from "./routes/expenses";
 import dashboardRoutes from "./routes/dashboard";
+import { seedDatabase } from "./lib/seed";
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -22,6 +23,7 @@ app.get("/api/health", (_req, res) => {
   res.json({ status: "ok" });
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
   console.log(`Backend running on http://localhost:${PORT}`);
+  await seedDatabase();
 });
