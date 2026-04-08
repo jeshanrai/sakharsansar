@@ -354,7 +354,7 @@ export default function Dashboard() {
 
       {/* Tabs */}
       <div className="bg-white border-b border-black/5">
-        <div className="max-w-[1440px] mx-auto px-4 sm:px-8 flex gap-1">
+        <div className="max-w-[1440px] mx-auto px-4 sm:px-8 flex gap-1 overflow-x-auto scrollbar-hide">
           {([
             { id: "overview", label: "Overview", icon: BarChart3 },
             { id: "orders", label: "Orders", icon: ClipboardList },
@@ -364,13 +364,13 @@ export default function Dashboard() {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-2 px-5 py-3.5 text-sm font-medium border-b-2 transition-all ${
+              className={`flex items-center gap-2 px-5 py-3.5 text-sm font-medium border-b-2 transition-all whitespace-nowrap ${
                 activeTab === tab.id
                   ? "border-[#C17A2A] text-[#C17A2A]"
                   : "border-transparent text-[#2C1500]/40 hover:text-[#2C1500]/70"
               }`}
             >
-              <tab.icon className="w-4 h-4" />
+              <tab.icon className="w-4 h-4 shrink-0" />
               {tab.label}
             </button>
           ))}
