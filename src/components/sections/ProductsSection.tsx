@@ -1,72 +1,100 @@
 "use client";
-import { memo, useCallback } from 'react';
+import { memo } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { openOrderDrawer } from '../layout/OrderDrawer';
 import data from "@/data/content.json";
-import { SlideInLeft, ZoomIn } from "@/components/ui/Animations";
-import { ShoppingBag } from "lucide-react";
+import { FadeUp, SlideInLeft } from "@/components/ui/Animations";
+import { ArrowRight } from "lucide-react";
 
 type Product = (typeof data.products)[number];
 
-const ProductCard = memo(function ProductCard({ product }: { product: Product }) {
-  const handleOrder = useCallback(() => openOrderDrawer(product.name), [product.name]);
-
+const ProductCard = memo(function ProductCard({ product, index }: { product: Product; index: number }) {
   return (
-    <article className="group flex flex-col h-full bg-[#FBF4E8] rounded-2xl overflow-hidden hover:shadow-xl transition-shadow duration-500">
-      <Link href={`/products/${product.slug}`} className="block">
-        <div className="relative aspect-square w-full overflow-hidden bg-[#F5E9DA]">
+    <Link
+      href={`/products/${product.slug}`}
+      className="group flex flex-col h-full"
+      aria-label={`${product.name} — ${product.price}`}
+    >
+      <article className="flex flex-col h-full">
+        <div className="relative aspect-[4/5] w-full overflow-hidden bg-ivory mb-6">
           <Image
             src={product.image}
             alt={`${product.name} — ${product.weight} of pure natural jaggery`}
             fill
-            loading="lazy"
+            loading={index < 2 ? "eager" : "lazy"}
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-            className="object-cover group-hover:scale-105 transition-transform duration-700"
+            className="object-cover transition-transform duration-[1.4s] ease-out group-hover:scale-[1.04]"
           />
+          {/* Hover label */}
+          <span className="absolute bottom-5 left-5 right-5 label-caps text-cream bg-jaggery/85 backdrop-blur-sm px-4 py-3 text-center opacity-0 translate-y-3 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500">
+            View Product
+          </span>
         </div>
-      </Link>
-      <div className="flex flex-col flex-grow p-4 sm:p-6">
-        <Link href={`/products/${product.slug}`} className="block">
-          <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-1.5 sm:gap-2 mb-2">
-            <h3 className="font-poppins text-base sm:text-xl font-semibold text-[#2C1500] group-hover:text-[#C17A2A] transition-colors leading-tight line-clamp-1 sm:line-clamp-none">{product.name}</h3>
-            <span className="text-[10px] sm:text-xs font-semibold tracking-wide text-[#C17A2A] bg-[#C17A2A]/10 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full shrink-0 self-start sm:self-auto">{product.weight}</span>
+
+        <div className="flex flex-col gap-2">
+          <div className="flex items-baseline justify-between gap-3">
+            <h3 className="font-serif text-h4 text-jaggery group-hover:text-caramel-deep transition-colors">
+              {product.name}
+            </h3>
+            <span className="font-serif text-base text-jaggery whitespace-nowrap nums-price">
+              {product.price}
+            </span>
           </div>
-          <p className="text-[#2C1500]/55 text-xs sm:text-base leading-relaxed mb-4 sm:mb-5 flex-grow line-clamp-2 sm:line-clamp-none">{product.description}</p>
-        </Link>
-        <div className="flex items-center justify-between mt-auto pt-3 sm:pt-4 border-t border-[#2C1500]/10">
-          <p className="font-poppins text-base sm:text-xl font-bold text-[#2C1500]">{product.price}</p>
-          <button
-            onClick={handleOrder}
-            className="inline-flex items-center min-w-0 flex-shrink-0 gap-1.5 sm:gap-2 text-xs sm:text-sm font-semibold text-white bg-[#C17A2A] px-3 py-1.5 sm:px-5 sm:py-2.5 rounded-full hover:bg-[#A8671F] transition-colors"
-          >
-            <ShoppingBag className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" strokeWidth={2} />
-            <span>Add</span>
-          </button>
+          <div className="flex items-center justify-between">
+            <span className="label-caps text-jaggery/55 nums-price">{product.weight}</span>
+            <span className="label-caps text-jaggery/45">{product.category}</span>
+          </div>
         </div>
-      </div>
-    </article>
+      </article>
+    </Link>
   );
 });
 
 export default function ProductsSection() {
-  return (
-    <section id="products" aria-label="Shop Collection" className="py-20 sm:py-28 px-6 sm:px-10 bg-white">
-      <div className="max-w-[1440px] mx-auto">
-        <SlideInLeft>
-          <div className="mb-14 sm:mb-20 text-center">
-            <p className="text-sm sm:text-base font-semibold tracking-[0.2em] uppercase text-[#C17A2A] mb-3">Our Products</p>
-            <h2 className="font-poppins text-3xl sm:text-4xl lg:text-5xl font-bold text-[#2C1500]">Shop Collection</h2>
-            <p className="text-base sm:text-lg text-[#2C1500]/50 mt-4 max-w-lg mx-auto">100% natural. Direct from the mold to your table.</p>
-          </div>
-        </SlideInLeft>
+  // Hero showcase: first four products only
+  const showcase = data.products.slice(0, 4);
 
-        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-8">
-          {data.products.map((product, i) => (
-            <ZoomIn key={product.slug} delay={i * 0.1} className="h-full">
-              <ProductCard product={product} />
-            </ZoomIn>
+  return (
+    <section
+      id="products"
+      aria-label="The Collection"
+      className="py-24 sm:py-36 px-6 sm:px-10 lg:px-16 bg-ivory"
+    >
+      <div className="max-w-[1440px] mx-auto">
+        {/* Editorial header — asymmetric */}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 mb-16 sm:mb-24 items-end">
+          <SlideInLeft className="md:col-span-7">
+            <span className="label-caps text-caramel mb-5 block">The Collection</span>
+            <h2 className="font-serif text-h1 text-jaggery tracking-[-0.018em] text-balance">
+              Eight expressions of <span className="italic font-light">one cane</span>.
+            </h2>
+          </SlideInLeft>
+          <FadeUp delay={0.2} className="md:col-span-5">
+            <p className="text-jaggery/70 text-lede max-w-md md:ml-auto">
+              From slow-poured blocks to spiced powders — every form is hand-crafted
+              from a single, chemical-free harvest in Sankhuwasabha.
+            </p>
+          </FadeUp>
+        </div>
+
+        {/* 4-up showcase */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-10">
+          {showcase.map((product, i) => (
+            <FadeUp key={product.slug} delay={i * 0.08} className="h-full">
+              <ProductCard product={product} index={i} />
+            </FadeUp>
           ))}
+        </div>
+
+        {/* View full collection */}
+        <div className="mt-20 sm:mt-24 flex justify-center">
+          <Link
+            href="/shop"
+            className="group inline-flex items-center gap-3 label-caps text-jaggery border-b border-jaggery/30 hover:border-jaggery pb-1.5 transition-colors"
+          >
+            View the full collection
+            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" strokeWidth={1.5} />
+          </Link>
         </div>
       </div>
     </section>

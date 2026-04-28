@@ -1,39 +1,88 @@
 import React from 'react';
-import data from "@/data/content.json";
-import { SlideInLeft, ZoomIn } from "@/components/ui/Animations";
-import { Coffee, Cookie, Utensils } from "lucide-react";
+import Image from 'next/image';
+import Link from 'next/link';
+import { FadeUp, SlideInLeft } from "@/components/ui/Animations";
+import { ArrowUpRight } from "lucide-react";
 
-const getIcon = (index: number) => {
-  switch (index) {
-    case 0: return <Coffee className="w-8 h-8 text-black" strokeWidth={1} />;
-    case 1: return <Cookie className="w-8 h-8 text-black" strokeWidth={1} />;
-    case 2: return <Utensils className="w-8 h-8 text-black" strokeWidth={1} />;
-    default: return <Coffee className="w-8 h-8 text-black" strokeWidth={1} />;
-  }
-};
+const rituals = [
+  {
+    eyebrow: "Morning",
+    title: "Chiya, the way it should be",
+    desc: "A spoon of jaggery powder dissolves into hot milk-tea and turns the whole cup amber.",
+    image: "/products/jaggery-powder.jpg",
+    nepali: "मिठो",
+    href: "/blog",
+  },
+  {
+    eyebrow: "Festive",
+    title: "Sel roti, sweetened with the harvest",
+    desc: "Liquid jaggery folded into rice-flour batter — a Tihar table classic from Sankhuwasabha kitchens.",
+    image: "/products/liquid-jaggery.jpg",
+    nepali: "उत्सव",
+    href: "/blog",
+  },
+  {
+    eyebrow: "Ayurvedic",
+    title: "A square after every meal",
+    desc: "Tradition holds it aids digestion and replaces refined sugar's late-day crash with quiet warmth.",
+    image: "/products/jaggery-cubes.jpg",
+    nepali: "आरोग्य",
+    href: "/blog",
+  },
+];
 
 export default function WaysToEnjoySection() {
   return (
-    <section aria-label="Ways to Enjoy" className="py-24 sm:py-32 px-6 bg-black text-white">
+    <section
+      aria-label="Ways to savor"
+      className="py-24 sm:py-36 px-6 sm:px-10 lg:px-16 bg-cream paper-grain"
+    >
       <div className="max-w-[1440px] mx-auto">
-        <SlideInLeft>
-          <div className="flex flex-col items-center mb-16 sm:mb-24 border-b border-white/20 pb-12">
-            <h2 className="font-poppins text-3xl sm:text-5xl font-medium tracking-[0.1em] uppercase text-white mb-6">Culinary Pairings</h2>
-            <p className="text-[10px] sm:text-xs uppercase tracking-widest text-white/50 max-w-lg text-center leading-loose">The delicate and natural sweetener for everyday indulgence.</p>
-          </div>
-        </SlideInLeft>
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 mb-16 sm:mb-24 items-end">
+          <SlideInLeft className="md:col-span-7">
+            <span className="label-caps text-caramel mb-5 block">Ways to Savor</span>
+            <h2 className="font-serif text-h1 text-jaggery tracking-[-0.018em] text-balance">
+              From <span className="italic font-light">chiya</span> to ritual.
+            </h2>
+          </SlideInLeft>
+          <FadeUp delay={0.2} className="md:col-span-5">
+            <p className="text-jaggery/70 text-lede max-w-md md:ml-auto">
+              Jaggery isn&rsquo;t a substitute for sugar — it&rsquo;s its own ingredient,
+              with its own grammar. Here&rsquo;s how Nepali kitchens use it.
+            </p>
+          </FadeUp>
+        </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-12 sm:gap-16">
-          {data.waysToEnjoy.map((way, i) => (
-            <ZoomIn key={i} delay={i * 0.1}>
-              <div className="flex flex-col items-center text-center group cursor-default">
-                <div className="w-16 h-16 rounded-full border border-white/20 flex items-center justify-center mb-10 group-hover:-translate-y-2 transition-transform duration-500 bg-white/5">
-                  {React.cloneElement(getIcon(i), { className: "w-6 h-6 text-white", strokeWidth: 1.5 })}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 sm:gap-12">
+          {rituals.map((r, i) => (
+            <FadeUp key={r.title} delay={i * 0.12}>
+              <Link href={r.href} className="group flex flex-col h-full">
+                <div className="relative aspect-[4/5] w-full overflow-hidden bg-ivory mb-6">
+                  <Image
+                    src={r.image}
+                    alt={r.title}
+                    fill
+                    loading="lazy"
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                    className="object-cover transition-transform duration-[1.4s] ease-out group-hover:scale-[1.04]"
+                  />
+                  <span className="absolute top-5 right-5 font-devanagari text-2xl text-cream drop-shadow-[0_2px_8px_rgba(0,0,0,0.45)]">
+                    {r.nepali}
+                  </span>
                 </div>
-                <h3 className="font-poppins text-xs font-semibold tracking-[0.2em] uppercase text-white mb-6 w-full pb-4 border-b border-white/10">{way.title}</h3>
-                <p className="text-white/60 text-[11px] leading-loose max-w-[250px] font-light lowercase tracking-widest">{way.desc}</p>
-              </div>
-            </ZoomIn>
+                <span className="label-caps text-caramel mb-3 block">{r.eyebrow}</span>
+                <h3 className="font-serif text-h3 text-jaggery mb-4 group-hover:text-caramel-deep transition-colors text-balance">
+                  {r.title}
+                </h3>
+                <p className="text-jaggery/70 text-body mb-6">
+                  {r.desc}
+                </p>
+                <span className="mt-auto inline-flex items-center gap-2 label-caps text-jaggery/80 group-hover:text-jaggery">
+                  Read the recipe
+                  <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" strokeWidth={1.5} />
+                </span>
+              </Link>
+            </FadeUp>
           ))}
         </div>
       </div>

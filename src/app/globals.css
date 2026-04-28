@@ -1,37 +1,227 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --font-serif: var(--font-poppins), ui-serif, Georgia, serif;
+  /* ──────────────────────────────────────────────────────────
+     TYPOGRAPHY
+     ──────────────────────────────────────────────────────── */
 
-  --color-earth-brown: #6B3E26;
-  --color-earth-brown-light: #8B5A3D;
-  --color-earth-beige: #F5E9DA;
-  --color-earth-green: #7A9E7E;
-  --color-earth-dark: #2F1E12;
+  /* Families
+     - sans      → Inter, body & UI
+     - serif     → Fraunces (variable, opsz-aware), display & editorial
+     - devanagari → Tiro Devanagari Hindi, Nepali/Sanskrit accents
+  */
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Roboto, sans-serif;
+  --font-serif: var(--font-fraunces), ui-serif, "Iowan Old Style", Georgia, serif;
+  --font-devanagari: var(--font-devanagari), "Tiro Devanagari Hindi",
+    "Noto Serif Devanagari", "Sanskrit Text", serif;
 
-  --color-background: var(--color-earth-beige);
-  --color-foreground: var(--color-earth-dark);
+  /* Editorial type scale — pairs line-height with each step.
+     Uses clamp() so headlines breathe across viewports without media queries. */
+  --text-eyebrow:    0.6875rem;   /* 11px · label-caps */
+  --text-eyebrow--line-height: 1;
+  --text-caption:    0.75rem;     /* 12px */
+  --text-caption--line-height: 1.4;
+  --text-meta:       0.8125rem;   /* 13px · weights, prices, captions */
+  --text-meta--line-height: 1.45;
+  --text-body:       1.0625rem;   /* 17px */
+  --text-body--line-height: 1.7;
+  --text-lede:       clamp(1.125rem, 0.95rem + 0.55vw, 1.375rem); /* 18→22 */
+  --text-lede--line-height: 1.55;
+  --text-h4:         1.375rem;    /* 22px · card title */
+  --text-h4--line-height: 1.25;
+  --text-h3:         clamp(1.5rem, 1.2rem + 1vw, 2rem);          /* 24→32 */
+  --text-h3--line-height: 1.2;
+  --text-h2:         clamp(2rem, 1.4rem + 2.4vw, 3rem);          /* 32→48 */
+  --text-h2--line-height: 1.08;
+  --text-h1:         clamp(2.5rem, 1.5rem + 4vw, 4.25rem);       /* 40→68 */
+  --text-h1--line-height: 1.04;
+  --text-display:    clamp(3rem, 1.4rem + 6.5vw, 6.5rem);        /* 48→104 */
+  --text-display--line-height: 1.02;
 
+  /* Tracking — editorial sans is tighter at large sizes, looser for caps */
+  --tracking-display: -0.018em;
+  --tracking-tight:   -0.012em;
+  --tracking-normal:  0;
+  --tracking-wide:    0.05em;
+  --tracking-caps:    0.22em;
+
+  /* ──────────────────────────────────────────────────────────
+     COLOR — Himalayan jaggery palette
+     ──────────────────────────────────────────────────────── */
+  --color-jaggery: #3D2817;
+  --color-jaggery-soft: #5A3B22;
+  --color-caramel: #B8763E;
+  --color-caramel-deep: #9A5F2E;
+  --color-honey: #E8A857;
+
+  --color-cream: #F5EDE0;
+  --color-ivory: #FAF6EE;
+  --color-beige: #D9C4A3;
+
+  --color-forest: #4A5D3A;
+  --color-terracotta: #C4623E;
+  --color-ink: #1A1410;
+
+  /* Legacy aliases (kept so older components don't break) */
+  --color-earth-brown: #3D2817;
+  --color-earth-brown-light: #5A3B22;
+  --color-earth-beige: #F5EDE0;
+  --color-earth-green: #4A5D3A;
+  --color-earth-dark: #1A1410;
+
+  --color-background: var(--color-cream);
+  --color-foreground: var(--color-jaggery);
 }
 
 :root {
-  background-color: var(--color-earth-beige);
-  color: var(--color-earth-dark);
+  background-color: var(--color-cream);
+  color: var(--color-jaggery);
+  /* Let Fraunces use its `opsz` axis so contrast adapts to size. */
+  font-optical-sizing: auto;
+  /* OpenType: contextual alternates + standard ligatures. Tabular nums
+     are opt-in via .nums-tabular so editorial body still uses oldstyle. */
+  font-feature-settings: "calt", "liga", "kern";
+  font-variant-numeric: oldstyle-nums proportional-nums;
+  /* Smoother diacritics on Devanagari + Latin */
+  text-rendering: optimizeLegibility;
 }
 
 html {
   scroll-behavior: smooth;
+  /* Limit how much iOS Safari inflates text in landscape */
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
   font-family: var(--font-sans);
-  background: var(--color-earth-beige);
-  color: var(--color-earth-dark);
+  font-size: var(--text-body);
+  line-height: var(--text-body--line-height);
+  background: var(--color-cream);
+  color: var(--color-jaggery);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Headings default to the display serif so any unclassed heading still
+   carries the editorial voice. Components can override with utilities. */
+h1, h2, h3, h4 {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  letter-spacing: var(--tracking-tight);
+  text-wrap: balance;
+}
+
+h1 { font-size: var(--text-h1); line-height: var(--text-h1--line-height); }
+h2 { font-size: var(--text-h2); line-height: var(--text-h2--line-height); }
+h3 { font-size: var(--text-h3); line-height: var(--text-h3--line-height); }
+h4 { font-size: var(--text-h4); line-height: var(--text-h4--line-height); }
+
+p { text-wrap: pretty; }
+
+em, i, .italic {
+  /* Fraunces has a true italic — tilt slightly more for warmth */
+  font-style: italic;
+}
+
+::selection {
+  background: var(--color-jaggery);
+  color: var(--color-cream);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 @layer utilities {
-  .text-balance {
+  /* ── Typographic scale utilities ─────────────────────────── */
+  .text-display { font-size: var(--text-display); line-height: var(--text-display--line-height); }
+  .text-h1      { font-size: var(--text-h1); line-height: var(--text-h1--line-height); }
+  .text-h2      { font-size: var(--text-h2); line-height: var(--text-h2--line-height); }
+  .text-h3      { font-size: var(--text-h3); line-height: var(--text-h3--line-height); }
+  .text-h4      { font-size: var(--text-h4); line-height: var(--text-h4--line-height); }
+  .text-lede    { font-size: var(--text-lede); line-height: var(--text-lede--line-height); }
+  .text-body    { font-size: var(--text-body); line-height: var(--text-body--line-height); }
+  .text-meta    { font-size: var(--text-meta); line-height: var(--text-meta--line-height); }
+  .text-eyebrow { font-size: var(--text-eyebrow); line-height: var(--text-eyebrow--line-height); }
+
+  /* ── Editorial label (small caps, generous tracking) ─────── */
+  .label-caps {
+    font-family: var(--font-sans);
+    font-size: var(--text-eyebrow);
+    line-height: 1;
+    font-weight: 500;
+    letter-spacing: var(--tracking-caps);
+    text-transform: uppercase;
+  }
+
+  /* ── Devanagari — Nepali/Sanskrit accents ────────────────── */
+  .font-devanagari {
+    font-family: var(--font-devanagari);
+    font-weight: 400;
+    letter-spacing: 0.01em;
+  }
+
+  /* ── Numerics ────────────────────────────────────────────── */
+  .nums-tabular { font-variant-numeric: tabular-nums lining-nums; }
+  .nums-oldstyle { font-variant-numeric: oldstyle-nums proportional-nums; }
+  /* Prices & weights look settled with lining tabular figures */
+  .nums-price {
+    font-variant-numeric: tabular-nums lining-nums;
+    font-feature-settings: "tnum", "lnum";
+  }
+
+  /* ── Fraunces stylistic alternates ──────────────────────────
+     SOFT axis softens terminals; WONK enables off-axis 'g'/'e'.
+     Used selectively on hero/display text. */
+  .font-soft  { font-variation-settings: "SOFT" 50; }
+  .font-wonk  { font-variation-settings: "WONK" 1; }
+
+  /* ── Drop cap for editorial first paragraphs ─────────────── */
+  .has-dropcap::first-letter {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    font-size: 4.25em;
+    float: left;
+    line-height: 0.85;
+    margin: 0.1em 0.12em -0.1em 0;
+    color: var(--color-jaggery);
+  }
+
+  /* ── Pull quote ──────────────────────────────────────────── */
+  .pull-quote {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(1.5rem, 1.1rem + 1.6vw, 2.25rem);
+    line-height: 1.3;
+    letter-spacing: var(--tracking-tight);
     text-wrap: balance;
+  }
+
+  /* ── Helpers ─────────────────────────────────────────────── */
+  .text-balance { text-wrap: balance; }
+  .text-pretty  { text-wrap: pretty; }
+
+  /* Hide scrollbar (used by horizontal scroll sections) */
+  .scrollbar-hide::-webkit-scrollbar { display: none; }
+  .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+  /* Subtle paper grain — applied as ::after overlay */
+  .paper-grain { position: relative; isolation: isolate; }
+  .paper-grain::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0.04;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.24  0 0 0 0 0.16  0 0 0 0 0.09  0 0 0 0.9 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
   }
 }

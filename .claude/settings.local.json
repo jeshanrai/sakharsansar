@@ -8,7 +8,8 @@
       "Bash(^-.*page\")",
       "Bash(xargs wc:*)",
       "Bash(PRISMA_USER_CONSENT_FOR_DANGEROUS_AI_ACTION=\"Reset the database\" npx prisma migrate reset --force)",
-      "Bash(npx tsx:*)"
+      "Bash(npx tsx:*)",
+      "Bash(npx tsc *)"
     ],
     "additionalDirectories": [
       "C:\\Users\\Dell\\Downloads"

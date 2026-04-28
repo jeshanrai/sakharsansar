@@ -1,43 +1,95 @@
-import React from 'react';
+"use client";
+
+import React, { useState, useCallback, useEffect } from 'react';
 import data from "@/data/content.json";
 import { FadeUp } from "@/components/ui/Animations";
-import { Star } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 export default function TestimonialsSection() {
-  return (
-    <section aria-label="Customer Testimonials" className="py-20 sm:py-28 px-6 sm:px-10 bg-[#FBF4E8]">
-      <div className="max-w-[1440px] mx-auto">
-        <div className="text-center mb-14 sm:mb-20">
-          <p className="text-sm sm:text-base font-semibold tracking-[0.2em] uppercase text-[#C17A2A] mb-3">Testimonials</p>
-          <h2 className="font-poppins text-3xl sm:text-4xl lg:text-5xl font-bold text-[#2C1500]">What Our Customers Say</h2>
-        </div>
+  const [active, setActive] = useState(0);
+  const total = data.testimonials.length;
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-10 max-w-4xl mx-auto">
-          {data.testimonials.map((test, i) => (
-            <FadeUp key={i} delay={i * 0.15}>
-              <figure className="bg-white rounded-2xl p-8 sm:p-10 hover:shadow-lg transition-shadow duration-500">
-                <div className="flex gap-1 mb-5">
-                  {[...Array(5)].map((_, j) => (
-                    <Star key={j} className="w-5 h-5 text-[#C17A2A] fill-[#C17A2A]" />
-                  ))}
-                </div>
-                <blockquote>
-                  <p className="text-base sm:text-lg text-[#2C1500]/80 leading-relaxed mb-6">
-                    &ldquo;{test.review}&rdquo;
-                  </p>
-                </blockquote>
-                <figcaption className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-[#C17A2A]/15 flex items-center justify-center">
-                    <span className="font-poppins font-bold text-sm text-[#C17A2A]">{test.name.charAt(0)}</span>
-                  </div>
-                  <div>
-                    <span className="block font-poppins text-base font-semibold text-[#2C1500] leading-none">{test.name}</span>
-                    <span className="text-xs text-[#C17A2A] font-medium tracking-wide uppercase mt-1 block">{test.location}</span>
-                  </div>
-                </figcaption>
-              </figure>
-            </FadeUp>
-          ))}
+  const next = useCallback(() => setActive(i => (i + 1) % total), [total]);
+  const prev = useCallback(() => setActive(i => (i - 1 + total) % total), [total]);
+
+  useEffect(() => {
+    const id = setInterval(next, 7000);
+    return () => clearInterval(id);
+  }, [next]);
+
+  const t = data.testimonials[active];
+
+  return (
+    <section
+      aria-label="Customer voices"
+      className="py-24 sm:py-36 px-6 sm:px-10 lg:px-16 bg-ivory paper-grain"
+    >
+      <div className="max-w-3xl mx-auto text-center">
+        <FadeUp>
+          <span className="label-caps text-caramel mb-12 block">Voices</span>
+        </FadeUp>
+
+        <FadeUp delay={0.1}>
+          <blockquote
+            key={active}
+            className="animate-in fade-in duration-700"
+          >
+            {/* Decorative quote mark */}
+            <span className="font-serif italic text-7xl sm:text-8xl text-caramel/30 leading-none block mb-2" aria-hidden="true">
+              &ldquo;
+            </span>
+            <p className="pull-quote text-jaggery mb-12 text-2xl sm:text-3xl lg:text-[2.5rem]">
+              {t.review}
+            </p>
+            <footer className="flex flex-col items-center gap-3">
+              <div className="w-14 h-14 rounded-full bg-caramel/15 flex items-center justify-center">
+                <span className="font-serif text-xl text-caramel-deep">
+                  {t.name.charAt(0)}
+                </span>
+              </div>
+              <div className="flex flex-col items-center gap-1">
+                <cite className="not-italic font-serif text-base text-jaggery">
+                  {t.name}
+                </cite>
+                <span className="label-caps text-jaggery/55">{t.location}</span>
+              </div>
+            </footer>
+          </blockquote>
+        </FadeUp>
+
+        {/* Navigation: arrows + dots */}
+        <div className="mt-14 flex items-center justify-center gap-8">
+          <button
+            onClick={prev}
+            aria-label="Previous testimonial"
+            className="text-jaggery/50 hover:text-jaggery transition-colors p-1"
+          >
+            <ChevronLeft className="w-5 h-5" strokeWidth={1.5} />
+          </button>
+
+          <div className="flex items-center gap-3">
+            {data.testimonials.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setActive(i)}
+                aria-label={`Go to testimonial ${i + 1}`}
+                aria-current={i === active}
+                className={`h-1.5 rounded-full transition-all duration-500 ${
+                  i === active
+                    ? 'w-8 bg-jaggery'
+                    : 'w-1.5 bg-jaggery/25 hover:bg-jaggery/50'
+                }`}
+              />
+            ))}
+          </div>
+
+          <button
+            onClick={next}
+            aria-label="Next testimonial"
+            className="text-jaggery/50 hover:text-jaggery transition-colors p-1"
+          >
+            <ChevronRight className="w-5 h-5" strokeWidth={1.5} />
+          </button>
         </div>
       </div>
     </section>

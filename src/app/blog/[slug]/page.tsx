@@ -13,40 +13,24 @@ interface Props {
 }
 
 export async function generateStaticParams() {
-  return blogData.map((post) => ({
-    slug: post.slug,
-  }));
+  return blogData.map((post) => ({ slug: post.slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const resolvedParams = await params;
   const post = blogData.find((p) => p.slug === resolvedParams.slug);
-
-  if (!post) {
-    return {
-      title: "Post Not Found",
-    };
-  }
+  if (!post) return { title: "Post Not Found" };
 
   return {
-    title: `${post.title} | SakharSansar Blog`,
+    title: `${post.title} | SakharSansar Journal`,
     description: post.description,
-    alternates: {
-      canonical: `https://sakharsansar.com/blog/${post.slug}`,
-    },
+    alternates: { canonical: `https://sakharsansar.com/blog/${post.slug}` },
     openGraph: {
       title: post.title,
       description: post.description,
       url: `https://sakharsansar.com/blog/${post.slug}`,
       siteName: "SakharSansar",
-      images: [
-        {
-          url: post.image,
-          width: 1200,
-          height: 630,
-          alt: post.title,
-        },
-      ],
+      images: [{ url: post.image, width: 1200, height: 630, alt: post.title }],
       type: "article",
       publishedTime: post.date,
       authors: [post.author],
@@ -64,10 +48,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function BlogPost({ params }: Props) {
   const resolvedParams = await params;
   const post = blogData.find((p) => p.slug === resolvedParams.slug);
-
-  if (!post) {
-    notFound();
-  }
+  if (!post) notFound();
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -75,17 +56,11 @@ export default async function BlogPost({ params }: Props) {
     "headline": post.title,
     "description": post.description,
     "image": `https://sakharsansar.com${post.image}`,
-    "author": {
-      "@type": "Organization",
-      "name": post.author
-    },
+    "author": { "@type": "Organization", "name": post.author },
     "publisher": {
       "@type": "Organization",
       "name": "SakharSansar",
-      "logo": {
-        "@type": "ImageObject",
-        "url": "https://sakharsansar.com/hero.jpg"
-      }
+      "logo": { "@type": "ImageObject", "url": "https://sakharsansar.com/hero.jpg" }
     },
     "datePublished": post.date,
     "keywords": post.tags.join(', '),
@@ -94,6 +69,8 @@ export default async function BlogPost({ params }: Props) {
       "@id": `https://sakharsansar.com/blog/${post.slug}`
     }
   };
+
+  const paragraphs = post.content.split('\n\n');
 
   return (
     <>
@@ -107,28 +84,34 @@ export default async function BlogPost({ params }: Props) {
       </header>
       <OrderDrawer />
 
-      <main className="py-32 sm:py-40 px-6 min-h-screen overflow-x-hidden">
-        <article className="max-w-[800px] mx-auto">
-          <Link href="/blog" className="inline-flex items-center gap-4 text-[10px] font-semibold tracking-[0.2em] uppercase text-black hover:text-black/60 transition-colors mb-16 sm:mb-24">
-            <ArrowLeft className="w-4 h-4 transition-transform duration-500" strokeWidth={1.5}/> Back to Insights
+      <main className="bg-cream pt-28 sm:pt-36 pb-24 sm:pb-32 px-6 sm:px-10 lg:px-16 min-h-screen overflow-x-hidden">
+        <article className="max-w-[760px] mx-auto">
+          <Link
+            href="/blog"
+            className="inline-flex items-center gap-3 label-caps text-jaggery/60 hover:text-jaggery transition-colors mb-12 sm:mb-16"
+          >
+            <ArrowLeft className="w-4 h-4" strokeWidth={1.5} /> Back to Journal
           </Link>
 
-          <header className="mb-16">
-            <div className="flex gap-4 items-center mb-8">
-              <span className="text-[10px] font-semibold tracking-[0.2em] text-black/50 border border-black/10 px-3 py-1 uppercase">{post.tags[0]}</span>
-              <time dateTime={post.date} className="text-[10px] tracking-widest text-black/40 uppercase font-medium">{post.date}</time>
+          <header className="mb-14">
+            <div className="flex items-center gap-4 mb-7">
+              <span className="label-caps text-caramel">{post.tags[0]}</span>
+              <span className="w-1 h-1 rounded-full bg-jaggery/30" />
+              <time dateTime={post.date} className="label-caps text-jaggery/45">
+                {post.date}
+              </time>
             </div>
 
-            <h1 className="font-poppins text-3xl sm:text-4xl md:text-5xl font-medium uppercase tracking-[0.1em] text-black leading-tight mb-8">
+            <h1 className="font-serif text-h1 text-jaggery tracking-[-0.018em] mb-7 text-balance">
               {post.title}
             </h1>
 
-            <p className="text-black/60 text-base sm:text-lg tracking-wide font-light leading-loose">
+            <p className="font-serif italic text-jaggery/75 text-lede">
               {post.description}
             </p>
           </header>
 
-          <div className="relative aspect-[16/9] w-full overflow-hidden mb-16 bg-[#F4F1ED]">
+          <div className="relative aspect-[16/9] w-full overflow-hidden mb-14 bg-ivory">
             <Image
               src={post.image}
               alt={post.title}
@@ -139,50 +122,47 @@ export default async function BlogPost({ params }: Props) {
             />
           </div>
 
-          <div className="prose prose-lg prose-p:font-light prose-p:leading-loose prose-p:text-black/70 prose-headings:font-poppins prose-headings:tracking-[0.1em] prose-headings:uppercase prose-headings:font-medium max-w-none pb-24 border-b border-black/10">
-            {post.content.split('\n\n').map((paragraph, index) => {
+          <div className="pb-16 border-b border-jaggery/15">
+            {paragraphs.map((paragraph, index) => {
               if (paragraph.startsWith('### ')) {
                 return (
-                  <h3 key={index} className="text-xl sm:text-2xl mt-16 mb-8 text-black">
+                  <h3
+                    key={index}
+                    className="font-serif text-h3 text-jaggery mt-14 mb-6"
+                  >
                     {paragraph.replace('### ', '')}
                   </h3>
                 );
               }
               return (
-                <p key={index} className="mb-8">
+                <p
+                  key={index}
+                  className={`text-jaggery/85 text-lede mb-7 ${index === 0 ? 'has-dropcap' : ''}`}
+                >
                   {paragraph}
                 </p>
               );
             })}
           </div>
 
-          <div className="pt-16 flex flex-col items-center text-center">
-            <p className="text-sm font-light tracking-widest text-black/60 uppercase mb-8">Share this article</p>
-            <div className="flex gap-6">
-              <a
-                href={`https://twitter.com/intent/tweet?url=https://sakharsansar.com/blog/${post.slug}&text=${encodeURIComponent(post.title)}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-xs font-semibold tracking-[0.2em] uppercase text-black hover:text-black/50 transition"
-              >
-                Twitter
-              </a>
-              <a
-                href={`https://www.facebook.com/sharer/sharer.php?u=https://sakharsansar.com/blog/${post.slug}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-xs font-semibold tracking-[0.2em] uppercase text-black hover:text-black/50 transition"
-              >
-                Facebook
-              </a>
-              <a
-                href={`https://www.linkedin.com/sharing/share-offsite/?url=https://sakharsansar.com/blog/${post.slug}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-xs font-semibold tracking-[0.2em] uppercase text-black hover:text-black/50 transition"
-              >
-                LinkedIn
-              </a>
+          <div className="pt-14 flex flex-col items-center text-center">
+            <p className="label-caps text-jaggery/55 mb-7">Share this article</p>
+            <div className="flex gap-8">
+              {[
+                { name: "Twitter", href: `https://twitter.com/intent/tweet?url=https://sakharsansar.com/blog/${post.slug}&text=${encodeURIComponent(post.title)}` },
+                { name: "Facebook", href: `https://www.facebook.com/sharer/sharer.php?u=https://sakharsansar.com/blog/${post.slug}` },
+                { name: "LinkedIn", href: `https://www.linkedin.com/sharing/share-offsite/?url=https://sakharsansar.com/blog/${post.slug}` },
+              ].map(s => (
+                <a
+                  key={s.name}
+                  href={s.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="label-caps text-jaggery hover:text-caramel-deep transition-colors"
+                >
+                  {s.name}
+                </a>
+              ))}
             </div>
           </div>
         </article>

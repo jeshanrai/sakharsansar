@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Truck, X } from "lucide-react";
+import { ArrowDown } from "lucide-react";
 import {
   HeroTitleWrapper,
   HeroSubtitleWrapper,
@@ -11,85 +11,81 @@ import {
 } from "@/components/ui/Animations";
 
 export default function HeroSection() {
-  const [showPromo, setShowPromo] = useState(true);
   const [isImageLoaded, setIsImageLoaded] = useState(false);
 
   return (
-    <section aria-label="Hero" className="relative flex flex-col sm:block sm:h-screen sm:min-h-[600px] overflow-hidden bg-white sm:bg-transparent pt-[70px] sm:pt-0">
-      {/* Mobile background image (natural flow) */}
-      <div className={`block sm:hidden w-full relative z-0 ${!isImageLoaded ? "bg-[#efeadd] aspect-[3/2]" : ""}`}>
+    <section
+      aria-label="Hero"
+      className="relative min-h-[88vh] sm:min-h-[92vh] flex flex-col bg-cream overflow-hidden"
+    >
+      {/* Full-bleed image */}
+      <div className={`absolute inset-0 z-0 ${!isImageLoaded ? "bg-beige/40" : ""}`}>
         <Image
           src="/herobg.png"
-          alt="Golden blocks of pure natural jaggery from Sankhuwasabha, Nepal"
-          width={1200}
-          height={800}
-          loading="eager"
-          sizes="100vw"
-          className={`w-full h-auto object-contain transition-opacity duration-700 ${!isImageLoaded ? "opacity-0" : "opacity-100"}`}
-          onLoad={() => setIsImageLoaded(true)}
-        />
-      </div>
-
-      {/* Desktop background image (full bleed area) */}
-      <div className={`hidden sm:block absolute sm:top-0 sm:right-0 sm:bottom-[10%] sm:left-[25%] z-0 sm:rounded-3xl overflow-hidden ${!isImageLoaded ? "bg-[#efeadd]" : ""}`}>
-        <Image
-          src="/herobg.png"
-          alt="Golden blocks of pure natural jaggery from Sankhuwasabha, Nepal"
+          alt="Golden blocks of pure Himalayan jaggery from Sankhuwasabha, Nepal"
           fill
           priority
-          sizes="75vw"
-          className={`sm:object-fill transition-opacity duration-700 ${!isImageLoaded ? "opacity-0" : "opacity-100"}`}
+          sizes="100vw"
+          className={`object-cover transition-opacity duration-1000 ${
+            !isImageLoaded ? "opacity-0" : "opacity-100"
+          }`}
           onLoad={() => setIsImageLoaded(true)}
         />
-        {/* Subtle overlay for text readability */}
-        <div className="hidden sm:block absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/20" />
+        {/* Warm vignette to ground type */}
+        <div className="absolute inset-0 bg-gradient-to-r from-jaggery/65 via-jaggery/30 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-jaggery/45 via-transparent to-transparent" />
       </div>
 
-      {/* Promo strip - top right */}
-      {showPromo && (
-        <div className="absolute top-3 left-3 right-3 sm:top-4 sm:left-auto sm:right-4 z-20 flex items-center gap-2 bg-black/40 backdrop-blur-xl border border-white/15 rounded-full px-3 py-1.5 sm:px-4 sm:py-2 shadow-[0_4px_16px_rgba(0,0,0,0.15)]">
-          <Truck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white shrink-0" strokeWidth={1.5} />
-          <p className="text-[10px] sm:text-xs text-white/80 font-medium leading-snug">
-            Free shipping on all orders! Ends 31st March
-          </p>
-          <button
-            onClick={() => setShowPromo(false)}
-            aria-label="Dismiss promo"
-            className="shrink-0 p-0.5 rounded-full hover:bg-white/10 transition ml-2"
-          >
-            <X className="w-3.5 h-3.5 text-white/50" strokeWidth={2} />
-          </button>
-        </div>
-      )}
-
-      {/* Overlay card / Content below on mobile */}
-      <div className="relative sm:absolute sm:inset-0 z-10 flex flex-col justify-start sm:justify-end px-5 py-8 sm:p-0 sm:pb-[3%]">
-        <div className="w-full max-w-[1200px] mx-auto sm:ml-0 sm:px-3 lg:px-4">
-          <div className="bg-white sm:bg-black/40 sm:backdrop-blur-xl border-none sm:border-solid sm:border border-white/15 rounded-none sm:rounded-2xl px-2 py-4 sm:px-10 sm:py-7 lg:px-12 lg:py-8 w-full sm:max-w-[470px] shadow-none sm:shadow-[0_8px_32px_rgba(0,0,0,0.15)] flex flex-col items-center sm:items-start text-center sm:text-left">
-            <HeroTitleWrapper>
-              <h1 className="font-poppins text-3xl sm:text-3xl lg:text-4xl font-bold text-[#4A2511] sm:text-white leading-[1.15] uppercase">
-                Pure Himalayan
-                <br />
-                Jaggery
-              </h1>
-            </HeroTitleWrapper>
-
-            <HeroSubtitleWrapper className="mt-3 sm:mt-4">
-              <p className="text-base sm:text-lg text-gray-800 sm:text-white/95 max-w-sm leading-relaxed font-medium">
-                No chemicals. No middlemen. Just natural sweetness
-                direct from Sankhuwasabha.
+      {/* Content */}
+      <div className="relative z-10 flex-1 flex flex-col justify-end pt-32 sm:pt-40 pb-16 sm:pb-24 px-6 sm:px-10 lg:px-16">
+        <div className="max-w-[1440px] mx-auto w-full">
+          <div className="max-w-2xl">
+            <HeroSubtitleWrapper className="mb-6 sm:mb-8">
+              <p className="text-honey text-base sm:text-lg tracking-wide">
+                <span className="font-devanagari">सखर संसार</span>
+                <span className="font-serif italic"> — From Sankhuwasabha, with reverence</span>
               </p>
             </HeroSubtitleWrapper>
 
-            <HeroButtonWrapper className="mt-8 sm:mt-8 w-full sm:w-auto">
+            <HeroTitleWrapper>
+              <h1 className="font-serif font-soft text-cream text-display font-normal tracking-[-0.018em] text-balance">
+                Sweetness from the
+                <span className="italic font-light"> Roof </span>
+                of the World
+              </h1>
+            </HeroTitleWrapper>
+
+            <HeroSubtitleWrapper className="mt-7 sm:mt-9">
+              <p className="text-cream/85 text-lede max-w-xl font-normal">
+                Wood-fired jaggery, crafted by Himalayan farmers for seven generations.
+                No chemicals, no middlemen — only mineral-rich gur, slow-poured by hand.
+              </p>
+            </HeroSubtitleWrapper>
+
+            <HeroButtonWrapper className="mt-10 sm:mt-12 flex flex-col sm:flex-row sm:items-center gap-5 sm:gap-8">
               <Link
-                href="/#products"
-                className="inline-flex items-center justify-center w-full sm:w-auto px-10 py-3.5 bg-[#C17A2A] text-white hover:bg-[#A8671F] text-sm font-semibold tracking-wide transition-all duration-300 rounded-full"
+                href="/shop"
+                className="group inline-flex items-center justify-center label-caps px-9 py-4 bg-cream text-jaggery hover:bg-honey hover:text-jaggery transition-colors duration-500 rounded-full w-full sm:w-auto"
               >
-                Shop now
+                Discover the Harvest
+                <ArrowDown className="w-3.5 h-3.5 ml-3 -rotate-45 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" strokeWidth={2} />
+              </Link>
+              <Link
+                href="/our-story"
+                className="label-caps text-cream/80 hover:text-cream underline underline-offset-[6px] decoration-cream/30 hover:decoration-cream/80 transition-all"
+              >
+                Read our story
               </Link>
             </HeroButtonWrapper>
           </div>
+        </div>
+
+        {/* Scroll cue */}
+        <div className="hidden sm:flex absolute right-10 lg:right-16 bottom-12 flex-col items-center gap-3 text-cream/60">
+          <span className="label-caps text-[10px] [writing-mode:vertical-rl] rotate-180">
+            Scroll
+          </span>
+          <span className="w-px h-12 bg-cream/40 animate-pulse" />
         </div>
       </div>
     </section>

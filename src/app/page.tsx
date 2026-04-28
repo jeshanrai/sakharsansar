@@ -5,24 +5,26 @@ import Navbar from "@/components/layout/Navbar";
 import OrderDrawer from "@/components/layout/OrderDrawer";
 import Footer from "@/components/layout/Footer";
 import HeroSection from "@/components/sections/HeroSection";
-import TrustBanner from "@/components/sections/TrustBanner";
+import OriginStorySection from "@/components/sections/OriginStorySection";
 import ProductsSection from "@/components/sections/ProductsSection";
 
-// Below-the-fold sections: lazy-loaded for faster initial page load
+// Below-the-fold sections — lazy-loaded
+const ProcessSection = dynamic(() => import("@/components/sections/ProcessSection"));
+const WaysToEnjoySection = dynamic(() => import("@/components/sections/WaysToEnjoySection"));
 const TestimonialsSection = dynamic(() => import("@/components/sections/TestimonialsSection"));
 const FindUsSection = dynamic(() => import("@/components/sections/FindUsSection"));
-const CtaSection = dynamic(() => import("@/components/sections/CtaSection"));
+const TrustBanner = dynamic(() => import("@/components/sections/TrustBanner"));
 
 export const metadata: Metadata = {
-  title: "SakharSansar | Pure & Natural from Sankhuwasabha",
-  description: "Experience the authentic taste of 100% natural, chemical-free jaggery direct from farmers in Sankhuwasabha, Nepal. Order pure Himalayan gur.",
-  keywords: ["Jaggery", "Natural Jaggery", "Sankhuwasabha", "Nepal", "SakharSansar", "Organic Gur", "Chemical Free", "Sweetener"],
+  title: "SakharSansar | Sweetness from the Roof of the World",
+  description: "Wood-fired Himalayan jaggery from Sankhuwasabha, hand-poured by Nepali farmers for seven generations. Pure, chemical-free, mineral-rich gur.",
+  keywords: ["Jaggery", "Himalayan Jaggery", "Sankhuwasabha", "Nepal", "SakharSansar", "Organic Gur", "Chemical Free", "Wood-fired", "Sweetener"],
   alternates: {
     canonical: "https://sakharsansar.com",
   },
   openGraph: {
-    title: "SakharSansar | Pure & Natural from Sankhuwasabha",
-    description: "Experience the authentic taste of 100% natural, chemical-free jaggery direct from farmers in Sankhuwasabha, Nepal. Order pure Himalayan gur.",
+    title: "SakharSansar | Sweetness from the Roof of the World",
+    description: "Wood-fired Himalayan jaggery from Sankhuwasabha, hand-poured by Nepali farmers for seven generations.",
     url: "https://sakharsansar.com",
     siteName: "SakharSansar",
     images: [
@@ -30,7 +32,7 @@ export const metadata: Metadata = {
         url: "/hero.jpg",
         width: 1200,
         height: 630,
-        alt: "Pure SakharSansar from Sankhuwasabha",
+        alt: "Pure Himalayan jaggery from Sankhuwasabha",
       },
     ],
     locale: "en_US",
@@ -38,8 +40,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "SakharSansar | Pure & Natural",
-    description: "100% natural, chemical-free jaggery direct from farmers in Sankhuwasabha, Nepal.",
+    title: "SakharSansar | Wood-fired Himalayan jaggery",
+    description: "Pure, chemical-free jaggery hand-poured in Sankhuwasabha, Nepal.",
     images: ["/hero.jpg"],
   },
 };
@@ -50,7 +52,7 @@ export default function Home() {
     "@type": "LocalBusiness",
     "name": "SakharSansar",
     "image": "https://sakharsansar.com/hero.jpg",
-    "description": "Pure, Chemical-Free Jaggery sourced directly from farmers in Sankhuwasabha, Nepal.",
+    "description": "Wood-fired Himalayan jaggery from Sankhuwasabha, Nepal.",
     "address": {
       "@type": "PostalAddress",
       "addressLocality": "Sankhuwasabha",
@@ -108,12 +110,13 @@ export default function Home() {
       <OrderDrawer />
       <main className="overflow-x-hidden">
         <HeroSection />
-        <TrustBanner />
-        {/* <HighlightsSection /> */}
+        <OriginStorySection />
         <ProductsSection />
+        <ProcessSection />
+        <WaysToEnjoySection />
         <TestimonialsSection />
+        <TrustBanner />
         <FindUsSection />
-        <CtaSection />
       </main>
       <Footer />
     </>

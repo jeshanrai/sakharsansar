@@ -1,37 +1,44 @@
 import React from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
-import data from "@/data/content.json";
-import { SlideInLeft, SlideInRight } from "@/components/ui/Animations";
-import { ArrowRight } from "lucide-react";
+import { FadeUp } from "@/components/ui/Animations";
 
 export default function StorySection() {
   return (
-    <section id="story" aria-label="Our Story" className="py-32 px-6 bg-white border-b border-black/10 overflow-hidden">
-      <div className="max-w-[1440px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
-        <SlideInLeft>
-          <div className="relative h-[500px] sm:h-[600px] lg:h-[800px] w-full overflow-hidden group">
-            <Image
-              src="/hero.jpg"
-              alt="Sugarcane fields and traditional jaggery production in Sankhuwasabha"
-              fill
-              sizes="(max-width: 1024px) 100vw, 50vw"
-              className="object-cover group-hover:scale-105 transition-transform duration-[1.5s] ease-out"
-            />
-          </div>
-        </SlideInLeft>
-        <SlideInRight delay={0.2}>
-          <div className="flex flex-col justify-center px-4 md:px-12">
-            <h2 className="font-poppins text-4xl sm:text-6xl font-medium uppercase tracking-[0.1em] text-black mb-8 leading-tight">{data.story.title}</h2>
-            <div className="w-full h-px bg-black/20 mb-12" />
-            <p className="text-base text-black/70 leading-loose max-w-xl font-light mb-12">
-              {data.story.content}
+    <section
+      id="story"
+      aria-label="Our Story"
+      className="relative min-h-[88vh] flex flex-col bg-cream overflow-hidden"
+    >
+      <div className="absolute inset-0 z-0">
+        <Image
+          src="/hero.jpg"
+          alt="Sankhuwasabha valley at first light"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-jaggery/60 via-jaggery/35 to-jaggery/75" />
+      </div>
+
+      <div className="relative z-10 flex-1 flex flex-col justify-end pb-20 sm:pb-28 px-6 sm:px-10 lg:px-16 pt-32">
+        <div className="max-w-[1440px] mx-auto w-full">
+          <FadeUp>
+            <span className="label-caps text-honey mb-6 block">Our Story</span>
+          </FadeUp>
+          <FadeUp delay={0.1}>
+            <h1 className="font-serif font-soft text-cream text-display font-normal tracking-[-0.018em] max-w-4xl text-balance">
+              Seven generations of <span className="italic font-light">slow sweetness.</span>
+            </h1>
+          </FadeUp>
+          <FadeUp delay={0.2}>
+            <p className="text-cream/85 text-lede mt-8 max-w-2xl">
+              Long before there were brands, there was the recipe. Passed quietly from
+              one generation to the next in the kitchens of Sankhuwasabha — a way of
+              turning sugarcane into something the body actually wants.
             </p>
-            <Link href="/#contact" className="group inline-flex items-center gap-4 text-xs font-semibold tracking-[0.2em] uppercase text-black transition-all hover:text-black/60">
-              Discover the Origin <ArrowRight className="w-4 h-4 group-hover:translate-x-2 transition-transform duration-500" strokeWidth={1}/>
-            </Link>
-          </div>
-        </SlideInRight>
+          </FadeUp>
+        </div>
       </div>
     </section>
   );

@@ -3,21 +3,17 @@ import Navbar from "@/components/layout/Navbar";
 import OrderDrawer from "@/components/layout/OrderDrawer";
 import Footer from "@/components/layout/Footer";
 import StorySection from "@/components/sections/StorySection";
+import StoryChaptersSection from "@/components/sections/StoryChaptersSection";
 import FarmersSection from "@/components/sections/FarmersSection";
-import WaysToEnjoySection from "@/components/sections/WaysToEnjoySection";
-import BenefitsSection from "@/components/sections/BenefitsSection";
-import ComparisonSection from "@/components/sections/ComparisonSection";
-import ProcessSection from "@/components/sections/ProcessSection";
+import StoryCtaSection from "@/components/sections/StoryCtaSection";
 
 export const metadata: Metadata = {
   title: "Our Story | SakharSansar",
-  description: "Learn about SakharSansar's roots in Sankhuwasabha, our farmers, traditional jaggery-making process, and the values behind every block of pure Himalayan gur.",
-  alternates: {
-    canonical: "https://sakharsansar.com/our-story",
-  },
+  description: "Seven generations of slow sweetness. Read the story of Sankhuwasabha, our farmers, the wood-fire craft, and the promise behind every block of pure Himalayan jaggery.",
+  alternates: { canonical: "https://sakharsansar.com/our-story" },
   openGraph: {
     title: "Our Story | SakharSansar",
-    description: "Learn about SakharSansar's roots in Sankhuwasabha, our farmers, traditional jaggery-making process, and the values behind every block of pure Himalayan gur.",
+    description: "Seven generations of slow sweetness from Sankhuwasabha — the land, the farmers, the craft, the promise.",
     url: "https://sakharsansar.com/our-story",
     siteName: "SakharSansar",
     images: ["/hero.jpg"],
@@ -34,11 +30,9 @@ export default function OurStory() {
       <OrderDrawer />
       <main className="overflow-x-hidden">
         <StorySection />
+        <StoryChaptersSection />
         <FarmersSection />
-        <ProcessSection />
-        <WaysToEnjoySection />
-        <BenefitsSection />
-        <ComparisonSection />
+        <StoryCtaSection />
       </main>
       <Footer />
     </>

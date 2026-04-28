@@ -8,9 +8,9 @@ export default function ProductActions({ productName }: { productName: string })
   return (
     <button
       onClick={() => openOrderDrawer(productName)}
-      className="group w-full sm:w-auto inline-flex items-center justify-center gap-4 px-12 py-5 bg-black text-white text-[11px] font-semibold tracking-[0.2em] uppercase hover:bg-black/85 transition-colors"
+      className="group w-full inline-flex items-center justify-center gap-3 px-8 py-5 bg-jaggery text-cream label-caps hover:bg-jaggery-soft transition-colors rounded-full"
     >
-      Order Now
+      Add to Order
       <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" strokeWidth={1.5} />
     </button>
   );
