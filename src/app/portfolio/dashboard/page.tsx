@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { apiFetch } from "@/lib/api";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import {
   DollarSign,
   Package,
@@ -24,6 +25,7 @@ import {
   Landmark,
   ShoppingCart,
   Edit3,
+  Users,
 } from "lucide-react";
 
 interface DashboardStats {
@@ -90,7 +92,17 @@ interface Sale {
   updatedByAdmin?: { name: string } | null;
 }
 
-type Tab = "overview" | "orders" | "expenses" | "sales";
+interface UserStats {
+  id: string;
+  name: string;
+  email: string;
+  totalSales: number;
+  totalSalesCount: number;
+  totalExpenses: number;
+  totalExpensesCount: number;
+}
+
+type Tab = "overview" | "orders" | "expenses" | "sales" | "users";
 
 const STATUS_COLORS: Record<string, string> = {
   PENDING: "bg-yellow-100 text-yellow-700",
@@ -120,6 +132,9 @@ export default function Dashboard() {
   const [sales, setSales] = useState<Sale[]>([]);
   const [salesTotal, setSalesTotal] = useState(0);
   const [salesPage, setSalesPage] = useState(1);
+  const [userStats, setUserStats] = useState<UserStats[]>([]);
+  const [chartTimeframe, setChartTimeframe] = useState<"weekly" | "monthly">("monthly");
+  const [salesChartData, setSalesChartData] = useState<{ label: string; sales: number }[]>([]);
   const [activeTab, setActiveTab] = useState<Tab>("overview");
   const [loading, setLoading] = useState(true);
   const [adminName, setAdminName] = useState("");
@@ -214,9 +229,30 @@ export default function Dashboard() {
     }
   }, []);
 
+  const fetchUserStats = useCallback(async () => {
+    const res = await apiFetch("/dashboard/users-stats");
+    if (res.ok) {
+      const data = await res.json();
+      setUserStats(data);
+    }
+  }, []);
+
+  const fetchSalesChart = useCallback(async (timeframe: "weekly" | "monthly") => {
+    const res = await apiFetch(`/dashboard/sales-chart?timeframe=${timeframe}`);
+    if (res.ok) {
+      const data = await res.json();
+      setSalesChartData(data);
+    }
+  }, []);
+
   useEffect(() => {
-    Promise.all([fetchStats(), fetchOrders(1), fetchExpenses(1), fetchSales(1)]).finally(() => setLoading(false));
-  }, [fetchStats, fetchOrders, fetchExpenses, fetchSales]);
+    Promise.all([fetchStats(), fetchOrders(1), fetchExpenses(1), fetchSales(1), fetchUserStats(), fetchSalesChart(chartTimeframe)]).finally(() => setLoading(false));
+  }, [fetchStats, fetchOrders, fetchExpenses, fetchSales, fetchUserStats, chartTimeframe, fetchSalesChart]);
+
+  const handleChartTimeframeChange = (timeframe: "weekly" | "monthly") => {
+    setChartTimeframe(timeframe);
+    fetchSalesChart(timeframe);
+  };
 
   const updateOrderStatus = (id: string, newStatus: string, currentStatus: string) => {
     if (newStatus === currentStatus) return;
@@ -360,6 +396,7 @@ export default function Dashboard() {
             { id: "orders", label: "Orders", icon: ClipboardList },
             { id: "sales", label: "Sales", icon: ShoppingCart },
             { id: "expenses", label: "Expenses", icon: Receipt },
+            { id: "users", label: "Users", icon: Users },
           ] as const).map((tab) => (
             <button
               key={tab.id}
@@ -484,6 +521,66 @@ export default function Dashboard() {
                   </div>
                 </div>
               </div>
+            </div>
+
+            {/* Sales Growth Line Chart */}
+            <div className="bg-white rounded-2xl p-6 shadow-sm">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="font-poppins font-semibold text-[#2C1500]">Sales Growth Timeline</h3>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => handleChartTimeframeChange("weekly")}
+                    className={`px-4 py-2 rounded-lg text-xs font-semibold transition-colors ${
+                      chartTimeframe === "weekly"
+                        ? "bg-[#C17A2A] text-white"
+                        : "bg-[#F4F1ED] text-[#2C1500] hover:bg-[#2C1500]/10"
+                    }`}
+                  >
+                    Weekly
+                  </button>
+                  <button
+                    onClick={() => handleChartTimeframeChange("monthly")}
+                    className={`px-4 py-2 rounded-lg text-xs font-semibold transition-colors ${
+                      chartTimeframe === "monthly"
+                        ? "bg-[#C17A2A] text-white"
+                        : "bg-[#F4F1ED] text-[#2C1500] hover:bg-[#2C1500]/10"
+                    }`}
+                  >
+                    Monthly
+                  </button>
+                </div>
+              </div>
+              {salesChartData.length > 0 ? (
+                <div style={{ width: "100%", height: 400 }}>
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={salesChartData} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="rgba(44, 21, 0, 0.1)" />
+                      <XAxis dataKey="label" stroke="rgba(44, 21, 0, 0.4)" style={{ fontSize: "12px" }} />
+                      <YAxis stroke="rgba(44, 21, 0, 0.4)" style={{ fontSize: "12px" }} />
+                      <Tooltip
+                        contentStyle={{
+                          backgroundColor: "#FFFFFF",
+                          border: "1px solid rgba(44, 21, 0, 0.1)",
+                          borderRadius: "8px",
+                          padding: "10px",
+                        }}
+                        formatter={(value) => `Rs. ${(value as number).toLocaleString()}`}
+                        labelStyle={{ color: "#2C1500" }}
+                      />
+                      <Legend
+                        wrapperStyle={{ paddingTop: "20px" }}
+                        iconType="line"
+                        formatter={(value) => <span style={{ color: "#2C1500", fontSize: "12px", fontWeight: "500" }}>{value}</span>}
+                      />
+                      <Line type="monotone" dataKey="sales" stroke="#C17A2A" strokeWidth={3} dot={{ fill: "#C17A2A", r: 6 }} activeDot={{ r: 8 }} name="Sales" />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </div>
+              ) : (
+                <div className="h-80 flex items-center justify-center text-[#2C1500]/40">
+                  <p>No sales data available</p>
+                </div>
+              )}
             </div>
 
             {/* Recent Activity */}
@@ -937,6 +1034,67 @@ export default function Dashboard() {
                 </div>
               )}
             </div>
+          </div>
+        )}
+
+        {/* USERS TAB */}
+        {activeTab === "users" && (
+          <div className="space-y-6">
+            <div className="flex items-center justify-between">
+              <h2 className="text-2xl font-poppins font-bold text-[#2C1500]">Sales & Expenses by User</h2>
+            </div>
+
+            {userStats.length === 0 ? (
+              <div className="bg-white rounded-2xl p-12 text-center shadow-sm">
+                <Users className="w-12 h-12 text-[#2C1500]/20 mx-auto mb-3" />
+                <p className="text-[#2C1500]/40 font-medium">No users found</p>
+              </div>
+            ) : (
+              <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="border-b border-[#2C1500]/10 bg-[#F4F1ED]">
+                        <th className="text-left px-6 py-4 font-semibold text-[#2C1500]">Name</th>
+                        <th className="text-left px-6 py-4 font-semibold text-[#2C1500]">Email</th>
+                        <th className="text-right px-6 py-4 font-semibold text-[#2C1500]">Total Sales</th>
+                        <th className="text-right px-6 py-4 font-semibold text-[#2C1500]">Sales Count</th>
+                        <th className="text-right px-6 py-4 font-semibold text-[#2C1500]">Total Expenses</th>
+                        <th className="text-right px-6 py-4 font-semibold text-[#2C1500]">Expenses Count</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-[#2C1500]/10">
+                      {userStats.map((user) => (
+                        <tr key={user.id} className="hover:bg-[#F4F1ED]/50 transition-colors">
+                          <td className="px-6 py-4">
+                            <p className="font-medium text-[#2C1500]">{user.name}</p>
+                          </td>
+                          <td className="px-6 py-4">
+                            <p className="text-[#2C1500]/60 text-xs">{user.email}</p>
+                          </td>
+                          <td className="px-6 py-4 text-right">
+                            <p className="font-semibold text-green-600">Rs. {user.totalSales.toLocaleString()}</p>
+                          </td>
+                          <td className="px-6 py-4 text-right">
+                            <span className="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-green-100 text-green-700 text-xs font-semibold">
+                              {user.totalSalesCount}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 text-right">
+                            <p className="font-semibold text-red-600">Rs. {user.totalExpenses.toLocaleString()}</p>
+                          </td>
+                          <td className="px-6 py-4 text-right">
+                            <span className="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-red-100 text-red-700 text-xs font-semibold">
+                              {user.totalExpensesCount}
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
           </div>
         )}
       </main>

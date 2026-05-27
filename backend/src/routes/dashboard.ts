@@ -128,4 +128,98 @@ router.get("/stats", async (_req: Request, res: Response): Promise<void> => {
   });
 });
 
+// GET /api/dashboard/users-stats
+router.get("/users-stats", async (_req: Request, res: Response): Promise<void> => {
+  const activeSaleFilter = { deletedAt: null };
+  const activeExpenseFilter = { deletedAt: null };
+
+  // Get all admins with their sales and expenses
+  const admins = await prisma.admin.findMany({
+    select: { id: true, name: true, email: true },
+  });
+
+  const userStats = await Promise.all(
+    admins.map(async (admin) => {
+      const [salesData, expensesData] = await Promise.all([
+        prisma.sale.aggregate({
+          where: { createdBy: admin.id, ...activeSaleFilter },
+          _sum: { amount: true },
+          _count: true,
+        }),
+        prisma.expense.aggregate({
+          where: { createdBy: admin.id, ...activeExpenseFilter },
+          _sum: { amount: true },
+          _count: true,
+        }),
+      ]);
+
+      return {
+        id: admin.id,
+        name: admin.name,
+        email: admin.email,
+        totalSales: salesData._sum.amount || 0,
+        totalSalesCount: salesData._count,
+        totalExpenses: expensesData._sum.amount || 0,
+        totalExpensesCount: expensesData._count,
+      };
+    })
+  );
+
+  res.json(userStats);
+});
+
+// GET /api/dashboard/sales-chart
+router.get("/sales-chart", async (_req: Request, res: Response): Promise<void> => {
+  const { timeframe = "monthly" } = _req.query;
+  const now = new Date();
+  const activeSaleFilter = { deletedAt: null };
+
+  let chartData: { label: string; sales: number }[] = [];
+
+  if (timeframe === "weekly") {
+    // Get last 12 weeks of sales data
+    for (let i = 11; i >= 0; i--) {
+      const weekStart = new Date(now);
+      weekStart.setDate(weekStart.getDate() - weekStart.getDay() - i * 7);
+      const weekEnd = new Date(weekStart);
+      weekEnd.setDate(weekEnd.getDate() + 7);
+
+      const weeklySales = await prisma.sale.aggregate({
+        where: {
+          date: { gte: weekStart, lt: weekEnd },
+          ...activeSaleFilter,
+        },
+        _sum: { amount: true },
+      });
+
+      const weekLabel = `Week ${Math.floor((now.getTime() - weekStart.getTime()) / (7 * 24 * 60 * 60 * 1000)) + 1}`;
+      chartData.push({
+        label: weekLabel,
+        sales: weeklySales._sum.amount || 0,
+      });
+    }
+  } else {
+    // Get last 12 months of sales data
+    for (let i = 11; i >= 0; i--) {
+      const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
+      const nextMonth = new Date(now.getFullYear(), now.getMonth() - i + 1, 1);
+
+      const monthlySales = await prisma.sale.aggregate({
+        where: {
+          date: { gte: date, lt: nextMonth },
+          ...activeSaleFilter,
+        },
+        _sum: { amount: true },
+      });
+
+      chartData.push({
+        label: date.toLocaleString("default", { month: "short" }),
+        sales: monthlySales._sum.amount || 0,
+      });
+    }
+  }
+
+  res.json(chartData);
+});
+
 export default router;
