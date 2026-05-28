@@ -1,7 +1,11 @@
 {
   "permissions": {
     "allow": [
-      "WebFetch(domain:docs.google.com)"
+      "WebFetch(domain:docs.google.com)",
+      "Bash(curl -s http://localhost:3000/portfolio/dashboard)",
+      "Bash(curl -s -o /dev/null -w \"Dashboard HTTP %{http_code}\\\\n\" http://localhost:3000/portfolio/dashboard)",
+      "Bash(curl -s -o /dev/null -w \"Login HTTP %{http_code}\\\\n\" http://localhost:3000/portfolio)",
+      "Bash(curl -s http://localhost:3000/portfolio)"
     ]
   }
 }
