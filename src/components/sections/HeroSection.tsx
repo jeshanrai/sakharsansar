@@ -74,14 +74,6 @@ const SLIDES: Slide[] = [
   },
 ];
 
-const CATEGORIES = [
-  { label: "Blocks", href: "/shop", icon: "/products/jaggery-block.jpg" },
-  { label: "Powder", href: "/shop", icon: "/products/jaggery-powder.jpg" },
-  { label: "Cubes", href: "/shop", icon: "/products/jaggery-cubes.jpg" },
-  { label: "Liquid", href: "/shop", icon: "/products/liquid-jaggery.jpg" },
-  { label: "Gift Box", href: "/shop", icon: "/products/jaggery1.jpg" },
-];
-
 const AUTO_MS = 6500;
 
 const TONE_MAP: Record<Slide["eyebrowTone"], { ring: string; dot: string; text: string }> = {
@@ -172,7 +164,7 @@ export default function HeroSection() {
           <ChevronRight className="w-5 h-5" strokeWidth={1.75} />
         </button>
 
-        <div className="relative max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-20 min-h-[640px] sm:min-h-[700px] lg:min-h-[680px] flex items-center py-10 sm:py-14 lg:py-16">
+        <div className="relative max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-20 min-h-[760px] sm:min-h-[88svh] lg:min-h-[92svh] flex items-center py-12 sm:py-16 lg:py-20">
           <AnimatePresence mode="wait" custom={direction}>
             <motion.div
               key={slide.id}
@@ -353,37 +345,6 @@ export default function HeroSection() {
         </div>
       </div>
 
-      {/* ─── Category quick-links band ─── */}
-      <div className="bg-ivory border-y border-jaggery/8">
-        <div className="max-w-[1440px] mx-auto px-4 sm:px-10 lg:px-16 py-5 sm:py-6">
-          <div className="grid grid-cols-5 gap-2 sm:gap-4">
-            {CATEGORIES.map((cat, i) => (
-              <Link
-                key={cat.label}
-                href={cat.href}
-                className="group flex flex-col items-center gap-2.5 py-3 px-2 rounded-2xl hover:bg-cream transition-colors duration-300"
-                aria-label={`Shop ${cat.label}`}
-              >
-                <span className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-full overflow-hidden bg-cream ring-1 ring-jaggery/10 group-hover:ring-caramel/40 group-hover:scale-105 transition-all duration-500">
-                  <Image
-                    src={cat.icon}
-                    alt=""
-                    fill
-                    sizes="56px"
-                    className="object-cover"
-                  />
-                </span>
-                <span className="label-caps text-jaggery/70 group-hover:text-caramel-deep text-[10px] sm:text-[10.5px] transition-colors text-center">
-                  {cat.label}
-                </span>
-                {i === 4 && (
-                  <span className="absolute -mt-1 ml-12 sm:ml-14 inline-block w-1.5 h-1.5 rounded-full bg-terracotta" />
-                )}
-              </Link>
-            ))}
-          </div>
-        </div>
-      </div>
     </section>
   );
 }

@@ -1,19 +1,10 @@
 import { Metadata } from "next";
-import dynamic from "next/dynamic";
 import contentData from "@/data/content.json";
 import OrderDrawer from "@/components/layout/OrderDrawer";
 import Footer from "@/components/layout/Footer";
 import HeroSection from "@/components/sections/HeroSection";
 import TrustStrip from "@/components/sections/TrustStrip";
-import OriginStorySection from "@/components/sections/OriginStorySection";
 import ProductsSection from "@/components/sections/ProductsSection";
-
-// Below-the-fold sections — lazy-loaded
-const ProcessSection = dynamic(() => import("@/components/sections/ProcessSection"));
-const WaysToEnjoySection = dynamic(() => import("@/components/sections/WaysToEnjoySection"));
-const TestimonialsSection = dynamic(() => import("@/components/sections/TestimonialsSection"));
-const FindUsSection = dynamic(() => import("@/components/sections/FindUsSection"));
-const TrustBanner = dynamic(() => import("@/components/sections/TrustBanner"));
 
 export const metadata: Metadata = {
   title: "SakharSansar | Sweetness from the Roof of the World",
@@ -109,12 +100,6 @@ export default function Home() {
         <HeroSection />
         <TrustStrip />
         <ProductsSection />
-        <OriginStorySection />
-        <ProcessSection />
-        <WaysToEnjoySection />
-        <TestimonialsSection />
-        <TrustBanner />
-        <FindUsSection />
       </main>
       <Footer />
     </>

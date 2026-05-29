@@ -19,7 +19,7 @@ export default function Navbar() {
   const pathname = usePathname();
 
   useEffect(() => {
-    const handle = () => setScrolled(window.scrollY > 8);
+    const handle = () => setScrolled(window.scrollY > 4);
     handle();
     window.addEventListener("scroll", handle, { passive: true });
     return () => window.removeEventListener("scroll", handle);
@@ -36,7 +36,7 @@ export default function Navbar() {
 
   const closeMobile = useCallback(() => setMobileOpen(false), []);
 
-  // Hide on internal/admin routes
+  // Hide on admin routes
   if (pathname?.startsWith("/portfolio")) return null;
 
   const isActive = (href: string) =>
@@ -46,80 +46,77 @@ export default function Navbar() {
     <>
       <nav
         aria-label="Main navigation"
-        className={`fixed top-9 inset-x-0 z-50 h-20 transition-colors duration-300 ${
+        className={`fixed top-9 inset-x-0 z-50 h-[72px] bg-cream/95 backdrop-blur-md transition-shadow duration-300 ${
           scrolled
-            ? "bg-cream/95 backdrop-blur-md"
-            : "bg-cream/75 backdrop-blur-sm"
+            ? "shadow-[0_1px_0_0_rgba(26,20,16,0.06)]"
+            : "shadow-none"
         }`}
       >
-        <div className="h-full max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 flex items-center gap-6">
-          {/* ─── Logo ───────────────────────────── */}
+        <div className="h-full max-w-7xl mx-auto px-5 sm:px-8 lg:px-10 grid grid-cols-[auto_1fr_auto] items-center gap-8">
+          {/* ─── Logo (left) ─────────────────── */}
           <Link
             href="/"
             aria-label="SakharSansar — home"
             onClick={closeMobile}
-            className="flex-shrink-0"
+            className="block relative"
           >
-            <div className="relative h-10 w-[170px] sm:h-11 sm:w-[195px]">
+            <div className="relative h-10 w-[170px] sm:w-[185px]">
               <Image
                 src="/word-logo.svg"
                 alt="SakharSansar"
                 fill
                 priority
-                sizes="195px"
+                sizes="185px"
                 className="object-contain object-left"
               />
             </div>
           </Link>
 
-          {/* ─── Center nav (desktop) ──────────── */}
-          <ul className="hidden md:flex items-center gap-9 lg:gap-12 mx-auto">
+          {/* ─── Center nav (desktop) ───────── */}
+          <ul className="hidden md:flex items-center justify-center gap-10 lg:gap-14">
             {NAV.map((link) => {
               const active = isActive(link.href);
               return (
-                <li key={link.href}>
+                <li key={link.href} className="relative">
                   <Link
                     href={link.href}
                     aria-current={active ? "page" : undefined}
-                    className={`group relative inline-flex items-center text-[15px] font-semibold tracking-tight transition-colors duration-200 ${
+                    className={`relative inline-block py-2 text-[14px] tracking-[0.01em] transition-colors duration-200 ${
                       active
-                        ? "text-jaggery"
-                        : "text-jaggery/75 hover:text-jaggery"
+                        ? "text-jaggery font-semibold"
+                        : "text-jaggery/70 font-medium hover:text-jaggery"
                     }`}
                   >
                     {link.label}
-                    {/* Underline indicator */}
+                  </Link>
+                  {/* Active dot indicator */}
+                  {active && (
                     <span
                       aria-hidden
-                      className={`pointer-events-none absolute -bottom-1.5 left-0 right-0 h-[2px] bg-caramel origin-left transition-transform duration-300 ease-out ${
-                        active ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
-                      }`}
+                      className="absolute left-1/2 -translate-x-1/2 -bottom-0.5 w-1 h-1 rounded-full bg-caramel"
                     />
-                  </Link>
+                  )}
                 </li>
               );
             })}
           </ul>
 
-          {/* ─── Right utilities ───────────────── */}
-          <div className="flex items-center gap-1.5 sm:gap-2.5 ml-auto md:ml-0">
-            {/* Cart */}
+          {/* ─── Right utilities ────────────── */}
+          <div className="flex items-center justify-end gap-2">
+            {/* Cart with badge */}
             <button
               type="button"
               onClick={() => openOrderDrawer()}
-              aria-label="Open cart"
-              className="h-11 w-11 flex items-center justify-center rounded-full text-jaggery hover:bg-jaggery/8 transition-colors"
+              aria-label="Cart, 2 items"
+              className="relative h-11 w-11 inline-flex items-center justify-center rounded-full text-jaggery hover:bg-jaggery/[0.06] transition-colors"
             >
-              <ShoppingBag className="h-5 w-5" strokeWidth={1.6} />
-            </button>
-
-            {/* Order CTA */}
-            <button
-              type="button"
-              onClick={() => openOrderDrawer()}
-              className="hidden sm:inline-flex items-center h-11 px-6 rounded-full bg-jaggery text-cream text-[14px] font-semibold tracking-tight hover:bg-jaggery-soft transition-colors"
-            >
-              Order Now
+              <ShoppingBag className="h-[19px] w-[19px]" strokeWidth={1.5} />
+              <span
+                aria-hidden
+                className="absolute top-1.5 right-1.5 min-w-[16px] h-[16px] px-1 rounded-full bg-terracotta text-cream text-[10px] font-semibold flex items-center justify-center tabular-nums leading-none"
+              >
+                2
+              </span>
             </button>
 
             {/* Mobile hamburger */}
@@ -128,12 +125,12 @@ export default function Navbar() {
               onClick={() => setMobileOpen((v) => !v)}
               aria-label={mobileOpen ? "Close menu" : "Open menu"}
               aria-expanded={mobileOpen}
-              className="md:hidden h-11 w-11 flex items-center justify-center rounded-full text-jaggery hover:bg-jaggery/8 transition-colors"
+              className="md:hidden h-11 w-11 inline-flex items-center justify-center rounded-full text-jaggery hover:bg-jaggery/[0.06] transition-colors"
             >
               {mobileOpen ? (
-                <X className="h-[22px] w-[22px]" strokeWidth={1.6} />
+                <X className="h-[22px] w-[22px]" strokeWidth={1.5} />
               ) : (
-                <Menu className="h-[22px] w-[22px]" strokeWidth={1.6} />
+                <Menu className="h-[22px] w-[22px]" strokeWidth={1.5} />
               )}
             </button>
           </div>
@@ -149,7 +146,10 @@ export default function Navbar() {
         }`}
         aria-hidden={!mobileOpen}
       >
-        <div className="absolute inset-0 bg-cream" onClick={closeMobile} />
+        <div
+          className="absolute inset-0 bg-cream"
+          onClick={closeMobile}
+        />
         <div className="relative h-full pt-32 pb-12 px-7 max-w-md mx-auto flex flex-col">
           <ul className="flex flex-col">
             {NAV.map((link) => {
@@ -160,13 +160,18 @@ export default function Navbar() {
                     href={link.href}
                     onClick={closeMobile}
                     aria-current={active ? "page" : undefined}
-                    className={`block py-5 font-serif text-3xl tracking-tight border-b border-jaggery/10 transition-colors ${
+                    className={`group flex items-center justify-between gap-4 py-5 border-b border-jaggery/10 ${
                       active
                         ? "text-jaggery"
                         : "text-jaggery/70 hover:text-jaggery"
-                    }`}
+                    } transition-colors`}
                   >
-                    {link.label}
+                    <span className="font-serif text-3xl tracking-tight">
+                      {link.label}
+                    </span>
+                    {active && (
+                      <span className="w-1.5 h-1.5 rounded-full bg-caramel" />
+                    )}
                   </Link>
                 </li>
               );
@@ -179,9 +184,10 @@ export default function Navbar() {
               closeMobile();
               openOrderDrawer();
             }}
-            className="mt-10 w-full h-12 rounded-full bg-jaggery text-cream text-[13px] font-medium tracking-wide hover:bg-jaggery-soft transition-colors"
+            className="mt-10 w-full h-12 inline-flex items-center justify-center gap-2 rounded-full bg-jaggery text-cream text-[13px] font-semibold tracking-wide hover:bg-jaggery-soft transition-colors"
           >
-            Place an Order
+            <ShoppingBag className="h-4 w-4" strokeWidth={1.6} />
+            View Cart
           </button>
         </div>
       </div>
