@@ -15,6 +15,8 @@
   --font-serif: var(--font-fraunces), ui-serif, "Iowan Old Style", Georgia, serif;
   --font-devanagari: var(--font-devanagari), "Tiro Devanagari Hindi",
     "Noto Serif Devanagari", "Sanskrit Text", serif;
+  --font-display: var(--font-fredoka), ui-rounded, "Helvetica Rounded",
+    "Nunito", system-ui, sans-serif;
 
   /* Editorial type scale — pairs line-height with each step.
      Uses clamp() so headlines breathe across viewports without media queries. */
@@ -167,6 +169,29 @@ em, i, .italic {
     letter-spacing: 0.01em;
   }
 
+  /* ── Display rounded sans — for hero/promo treatments ───── */
+  .font-display {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: -0.005em;
+  }
+
+  /* ── Sticker outline — chunky cream halo for accent text on
+     coloured backgrounds. Uses paint-order + text-stroke for a
+     clean cut, falls back to text-shadow on older browsers. */
+  .text-sticker {
+    -webkit-text-stroke: 10px var(--color-cream);
+    paint-order: stroke fill;
+    text-shadow:
+      0 6px 0 rgba(26, 20, 16, 0.12);
+  }
+  .text-sticker-sm {
+    -webkit-text-stroke: 6px var(--color-cream);
+    paint-order: stroke fill;
+    text-shadow:
+      0 4px 0 rgba(26, 20, 16, 0.10);
+  }
+
   /* ── Numerics ────────────────────────────────────────────── */
   .nums-tabular { font-variant-numeric: tabular-nums lining-nums; }
   .nums-oldstyle { font-variant-numeric: oldstyle-nums proportional-nums; }
@@ -211,6 +236,21 @@ em, i, .italic {
   /* Hide scrollbar (used by horizontal scroll sections) */
   .scrollbar-hide::-webkit-scrollbar { display: none; }
   .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+  /* ── Marquee — used by the promo bar at the top of the site.
+     The content is rendered twice in a row; the wrapper slides
+     left by 50% of its total width to produce a seamless loop. */
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+  .animate-marquee {
+    animation: marquee 38s linear infinite;
+  }
+  .animate-marquee:hover { animation-play-state: paused; }
+  @media (prefers-reduced-motion: reduce) {
+    .animate-marquee { animation: none; }
+  }
 
   /* Subtle paper grain — applied as ::after overlay */
   .paper-grain { position: relative; isolation: isolate; }

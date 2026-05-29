@@ -5,7 +5,21 @@
       "Bash(curl -s http://localhost:3000/portfolio/dashboard)",
       "Bash(curl -s -o /dev/null -w \"Dashboard HTTP %{http_code}\\\\n\" http://localhost:3000/portfolio/dashboard)",
       "Bash(curl -s -o /dev/null -w \"Login HTTP %{http_code}\\\\n\" http://localhost:3000/portfolio)",
-      "Bash(curl -s http://localhost:3000/portfolio)"
+      "Bash(curl -s http://localhost:3000/portfolio)",
+      "Bash(curl -s -o /dev/null -w \"Home HTTP %{http_code}\\\\n\" http://localhost:3000/)",
+      "Bash(curl -s http://localhost:3000/)",
+      "Bash(grep -oE \"\\(Sweetness from the|Wood-Fired|Eight expressions|Letters from afar|Editor.{0,3}s Choice\\)\")",
+      "Read(//home/jeshanrai/Downloads/**)",
+      "Bash(identify ~/Downloads/flux-2-max_b_createbg_images_only.jpeg)",
+      "Bash(python3 -c \"from PIL import Image; img=Image.open\\('/home/jeshanrai/Downloads/flux-2-max_b_createbg_images_only.jpeg'\\); print\\(img.size, img.mode\\)\")",
+      "Bash(cp ~/Downloads/flux-2-max_b_createbg_images_only.jpeg /home/jeshanrai/Desktop/sakhar/sakharsansar/public/hero-cane-bg.jpg && ls -la /home/jeshanrai/Desktop/sakhar/sakharsansar/public/hero-cane-bg.jpg)",
+      "Bash(curl -s -o /dev/null -w \"Home HTTP %{http_code}\\\\nImage HTTP %{http_code}\\\\n\" http://localhost:3000/)",
+      "Bash(curl -s -o /dev/null -w \"Image HTTP %{http_code}\\\\n\" http://localhost:3000/hero-cane-bg.jpg)",
+      "Bash(curl -s -o /dev/null -w \"Home HTTP %{http_code}\\\\nImage HTTP %{http_code}\\\\n\" http://localhost:3000/ http://localhost:3000/hero-cane-bg.jpg)",
+      "Bash(curl -s -o /dev/null http://localhost:3000/)"
+    ],
+    "additionalDirectories": [
+      "/home/jeshanrai/Downloads"
     ]
   }
 }

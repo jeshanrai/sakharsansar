@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
-import { Inter, Fraunces, Tiro_Devanagari_Hindi } from "next/font/google";
+import { Inter, Fraunces, Tiro_Devanagari_Hindi, Fredoka } from "next/font/google";
 import "./globals.css";
+import PromoBar from "@/components/layout/PromoBar";
+import Navbar from "@/components/layout/Navbar";
 
 // Body sans — Söhne-adjacent. Use 400 for body, 500 for emphasis.
 const inter = Inter({
@@ -34,6 +36,14 @@ const tiroDevanagari = Tiro_Devanagari_Hindi({
   display: "swap",
 });
 
+// Display sans for hero/promo treatments — chunky, rounded, sticker-friendly.
+const fredoka = Fredoka({
+  subsets: ["latin"],
+  weight: ["500", "600", "700"],
+  variable: "--font-fredoka",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   metadataBase: new URL("https://sakharsansar.com"),
   title: "SakharSansar | Sweetness from the Roof of the World",
@@ -48,8 +58,10 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <body
-        className={`${inter.variable} ${fraunces.variable} ${tiroDevanagari.variable} font-sans antialiased bg-cream text-jaggery`}
+        className={`${inter.variable} ${fraunces.variable} ${tiroDevanagari.variable} ${fredoka.variable} font-sans antialiased bg-cream text-jaggery`}
       >
+        <PromoBar />
+        <Navbar />
         {children}
       </body>
     </html>

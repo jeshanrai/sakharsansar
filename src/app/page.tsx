@@ -1,10 +1,10 @@
 import { Metadata } from "next";
 import dynamic from "next/dynamic";
 import contentData from "@/data/content.json";
-import Navbar from "@/components/layout/Navbar";
 import OrderDrawer from "@/components/layout/OrderDrawer";
 import Footer from "@/components/layout/Footer";
 import HeroSection from "@/components/sections/HeroSection";
+import TrustStrip from "@/components/sections/TrustStrip";
 import OriginStorySection from "@/components/sections/OriginStorySection";
 import ProductsSection from "@/components/sections/ProductsSection";
 
@@ -104,14 +104,12 @@ export default function Home() {
         />
       ))}
 
-      <header>
-        <Navbar />
-      </header>
       <OrderDrawer />
       <main className="overflow-x-hidden">
         <HeroSection />
-        <OriginStorySection />
+        <TrustStrip />
         <ProductsSection />
+        <OriginStorySection />
         <ProcessSection />
         <WaysToEnjoySection />
         <TestimonialsSection />

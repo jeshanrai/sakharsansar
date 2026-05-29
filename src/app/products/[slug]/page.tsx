@@ -2,7 +2,6 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import OrderDrawer from "@/components/layout/OrderDrawer";
 import ProductActions from "@/components/product/ProductActions";
@@ -129,9 +128,6 @@ export default async function ProductPage({ params }: Props) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <header>
-        <Navbar />
-      </header>
       <OrderDrawer />
 
       <main className="overflow-x-hidden bg-cream">

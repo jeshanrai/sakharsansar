@@ -1,5 +1,4 @@
 import { Metadata } from "next";
-import Navbar from "@/components/layout/Navbar";
 import OrderDrawer from "@/components/layout/OrderDrawer";
 import Footer from "@/components/layout/Footer";
 import ShopContent from "@/components/shop/ShopContent";
@@ -23,9 +22,6 @@ export const metadata: Metadata = {
 export default function ShopPage() {
   return (
     <>
-      <header>
-        <Navbar />
-      </header>
       <OrderDrawer />
       <main className="overflow-x-hidden pt-20">
         <ShopContent />

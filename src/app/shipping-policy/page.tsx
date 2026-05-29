@@ -1,5 +1,4 @@
 import { Metadata } from "next";
-import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 
 export const metadata: Metadata = {
@@ -10,7 +9,7 @@ export const metadata: Metadata = {
 export default function ShippingPolicyPage() {
   return (
     <>
-      <header><Navbar /></header>
+
       <main className="pt-36 pb-24 px-6 bg-[#FBF4E8] min-h-screen">
         <div className="max-w-3xl mx-auto">
           <p className="text-sm font-medium tracking-[0.2em] uppercase text-[#C17A2A] mb-4">Delivery</p>

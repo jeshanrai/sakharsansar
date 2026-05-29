@@ -2,7 +2,6 @@ import React from 'react';
 import { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
-import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import OrderDrawer from "@/components/layout/OrderDrawer";
 import blogData from "@/data/blog.json";
@@ -27,9 +26,6 @@ export default function BlogList() {
 
   return (
     <>
-      <header>
-        <Navbar />
-      </header>
       <OrderDrawer />
 
       <main className="bg-cream pt-32 sm:pt-40 pb-24 sm:pb-32 px-6 sm:px-10 lg:px-16 min-h-screen overflow-x-hidden">

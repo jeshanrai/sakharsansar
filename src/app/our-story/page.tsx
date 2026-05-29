@@ -1,5 +1,4 @@
 import { Metadata } from "next";
-import Navbar from "@/components/layout/Navbar";
 import OrderDrawer from "@/components/layout/OrderDrawer";
 import Footer from "@/components/layout/Footer";
 import StorySection from "@/components/sections/StorySection";
@@ -24,9 +23,6 @@ export const metadata: Metadata = {
 export default function OurStory() {
   return (
     <>
-      <header>
-        <Navbar />
-      </header>
       <OrderDrawer />
       <main className="overflow-x-hidden">
         <StorySection />
