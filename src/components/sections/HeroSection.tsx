@@ -32,23 +32,23 @@ type Slide = {
 const SLIDES: Slide[] = [
   {
     id: "harvest",
-    eyebrow: "Winter Harvest",
+    eyebrow: "100% Organic · No Chemicals",
     eyebrowTone: "honey",
-    headlineTop: "Pure gur.",
-    headlineAccent: "Slow-poured.",
+    headlineTop: "Pure Sakhar.",
+    headlineAccent: "Wood-fired.",
     price: "Rs. 500",
     strike: "Rs. 650",
     badge: "Save 23%",
-    ctaLabel: "Shop block",
+    ctaLabel: "Shop sakhar",
     ctaHref: "/products/organic-jaggery-block",
     product: "/products/jaggery-block.jpg",
     imageBg: "from-honey/55 via-honey/15 to-transparent",
   },
   {
     id: "powder",
-    eyebrow: "Daily Ritual",
+    eyebrow: "Direct from Farmers",
     eyebrowTone: "terracotta",
-    headlineTop: "Soft powder.",
+    headlineTop: "Organic Sakhar.",
     headlineAccent: "Ready to brew.",
     price: "Rs. 450",
     strike: "Rs. 560",
@@ -60,9 +60,9 @@ const SLIDES: Slide[] = [
   },
   {
     id: "gift",
-    eyebrow: "New · Festive Trio",
+    eyebrow: "Premium · Festive Trio",
     eyebrowTone: "forest",
-    headlineTop: "Festive trio.",
+    headlineTop: "Farmer's Sakhar.",
     headlineAccent: "Hand-tied.",
     price: "Rs. 1,290",
     strike: "Rs. 1,600",
@@ -143,7 +143,9 @@ export default function HeroSection() {
             alt=""
             fill
             priority
+            fetchPriority="high"
             sizes="100vw"
+            quality={75}
             className="object-cover"
           />
         </div>

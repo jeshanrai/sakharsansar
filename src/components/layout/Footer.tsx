@@ -48,8 +48,8 @@ export default function Footer() {
               </div>
             </Link>
             <p className="mt-5 text-cream/65 text-sm leading-relaxed max-w-sm">
-              Wood-fired Himalayan jaggery from Sankhuwasabha — pure,
-              chemical-free, hand-poured for seven generations.
+              100% organic Sakhar — wood-fired Himalayan jaggery from
+              Sankhuwasabha. Pure, chemical-free, and direct from farmers.
             </p>
             <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 text-cream/65 text-[13px]">
               <a

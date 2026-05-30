@@ -1,21 +1,44 @@
 import { Metadata } from "next";
+import dynamic from "next/dynamic";
+import Script from "next/script";
 import contentData from "@/data/content.json";
-import OrderDrawer from "@/components/layout/OrderDrawer";
-import Footer from "@/components/layout/Footer";
 import HeroSection from "@/components/sections/HeroSection";
 import TrustStrip from "@/components/sections/TrustStrip";
-import ProductsSection from "@/components/sections/ProductsSection";
+
+// Below-the-fold — split out of the initial JS bundle
+const ProductsSection = dynamic(
+  () => import("@/components/sections/ProductsSection"),
+);
+const Footer = dynamic(() => import("@/components/layout/Footer"));
+const OrderDrawer = dynamic(() => import("@/components/layout/OrderDrawer"));
 
 export const metadata: Metadata = {
-  title: "SakharSansar | Sweetness from the Roof of the World",
-  description: "Wood-fired Himalayan jaggery from Sankhuwasabha, hand-poured by Nepali farmers for seven generations. Pure, chemical-free, mineral-rich gur.",
-  keywords: ["Jaggery", "Himalayan Jaggery", "Sankhuwasabha", "Nepal", "SakharSansar", "Organic Gur", "Chemical Free", "Wood-fired", "Sweetener"],
+  title: "Sakhar — 100% Organic Jaggery from Sankhuwasabha | SakharSansar",
+  description:
+    "Buy 100% organic Sakhar (pure Himalayan jaggery) direct from farmers in Sankhuwasabha. Wood-fired, chemical-free, premium quality — shipped pan-Nepal.",
+  keywords: [
+    "Sakhar",
+    "Organic Sakhar",
+    "Pure Sakhar",
+    "Buy Sakhar Online",
+    "100% Organic Jaggery",
+    "Sankhuwasabha Sakhar",
+    "Chemical-Free Sakhar",
+    "Premium Sakhar Nepal",
+    "Sakhar Sansar",
+    "Wood-fired Jaggery",
+    "Himalayan Jaggery",
+    "Organic Gur Nepal",
+    "Direct from Farmers",
+    "Natural Sweetener",
+  ],
   alternates: {
     canonical: "https://sakharsansar.com",
   },
   openGraph: {
-    title: "SakharSansar | Sweetness from the Roof of the World",
-    description: "Wood-fired Himalayan jaggery from Sankhuwasabha, hand-poured by Nepali farmers for seven generations.",
+    title: "Sakhar — 100% Organic Jaggery from Sankhuwasabha",
+    description:
+      "Pure, premium Sakhar — wood-fired by Himalayan farmers. 100% organic, no chemicals, direct from the farm.",
     url: "https://sakharsansar.com",
     siteName: "SakharSansar",
     images: [
@@ -23,7 +46,7 @@ export const metadata: Metadata = {
         url: "/hero.jpg",
         width: 1200,
         height: 630,
-        alt: "Pure Himalayan jaggery from Sankhuwasabha",
+        alt: "100% organic Sakhar — wood-fired Himalayan jaggery from Sankhuwasabha, Nepal",
       },
     ],
     locale: "en_US",
@@ -31,8 +54,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "SakharSansar | Wood-fired Himalayan jaggery",
-    description: "Pure, chemical-free jaggery hand-poured in Sankhuwasabha, Nepal.",
+    title: "Sakhar — 100% Organic Himalayan Jaggery",
+    description:
+      "Pure Sakhar from Sankhuwasabha. 100% organic, chemical-free, direct from farmers.",
     images: ["/hero.jpg"],
   },
 };
@@ -42,16 +66,20 @@ export default function Home() {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
     "name": "SakharSansar",
+    "alternateName": ["Sakhar Sansar", "Sakhar"],
     "image": "https://sakharsansar.com/hero.jpg",
-    "description": "Wood-fired Himalayan jaggery from Sankhuwasabha, Nepal.",
+    "description":
+      "100% organic Sakhar (Himalayan jaggery) — wood-fired, chemical-free, direct from Sankhuwasabha farmers. Premium pure gur shipped pan-Nepal.",
+    "keywords":
+      "Sakhar, Organic Sakhar, Pure Sakhar, 100% Organic Jaggery, Sankhuwasabha Sakhar, Chemical-Free Sakhar, Premium Jaggery Nepal, Wood-fired Sakhar",
     "address": {
       "@type": "PostalAddress",
       "addressLocality": "Sankhuwasabha",
       "addressRegion": "Koshi Province",
-      "addressCountry": "NP"
+      "addressCountry": "NP",
     },
     "priceRange": "$$",
-    "url": "https://sakharsansar.com"
+    "url": "https://sakharsansar.com",
   };
 
   const productsJsonLd = contentData.products.map(product => ({
@@ -83,14 +111,18 @@ export default function Home() {
 
   return (
     <>
-      <script
+      <Script
+        id="ld-business"
         type="application/ld+json"
+        strategy="afterInteractive"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       {productsJsonLd.map((productLd, i) => (
-        <script
+        <Script
           key={i}
+          id={`ld-product-${i}`}
           type="application/ld+json"
+          strategy="afterInteractive"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(productLd) }}
         />
       ))}

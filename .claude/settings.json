@@ -16,7 +16,9 @@
       "Bash(curl -s -o /dev/null -w \"Home HTTP %{http_code}\\\\nImage HTTP %{http_code}\\\\n\" http://localhost:3000/)",
       "Bash(curl -s -o /dev/null -w \"Image HTTP %{http_code}\\\\n\" http://localhost:3000/hero-cane-bg.jpg)",
       "Bash(curl -s -o /dev/null -w \"Home HTTP %{http_code}\\\\nImage HTTP %{http_code}\\\\n\" http://localhost:3000/ http://localhost:3000/hero-cane-bg.jpg)",
-      "Bash(curl -s -o /dev/null http://localhost:3000/)"
+      "Bash(curl -s -o /dev/null http://localhost:3000/)",
+      "Bash(sed -n '40,60p' /home/jeshanrai/Desktop/sakhar/sakharsansar/src/app/layout.tsx)",
+      "Bash(sed -n '1,16p' /home/jeshanrai/Desktop/sakhar/sakharsansar/src/app/page.tsx)"
     ],
     "additionalDirectories": [
       "/home/jeshanrai/Downloads"

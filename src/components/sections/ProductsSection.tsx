@@ -62,14 +62,14 @@ export default function ProductsSection() {
           <div>
             <div className="flex items-center gap-2.5 mb-3">
               <span className="w-6 h-px bg-caramel" />
-              <span className="label-caps text-caramel text-[10px]">Shop the harvest</span>
+              <span className="label-caps text-caramel text-[10px]">Shop pure sakhar</span>
             </div>
             <h2 className="font-serif font-soft text-jaggery tracking-[-0.02em] text-balance leading-[1.05] text-[clamp(2rem,4vw,3.25rem)]">
-              The collection.
+              The sakhar collection.
             </h2>
           </div>
           <p className="text-jaggery/60 text-[15px] leading-relaxed max-w-sm sm:text-right">
-            Eight forms, one harvest. Hand-poured in Sankhuwasabha and shipped fresh.
+            100% organic sakhar — eight pure forms, one chemical-free harvest. Direct from Sankhuwasabha farmers.
           </p>
         </div>
 

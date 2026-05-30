@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, Fraunces, Tiro_Devanagari_Hindi, Fredoka } from "next/font/google";
 import "./globals.css";
 import PromoBar from "@/components/layout/PromoBar";
@@ -46,8 +46,29 @@ const fredoka = Fredoka({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://sakharsansar.com"),
-  title: "SakharSansar | Sweetness from the Roof of the World",
-  description: "Wood-fired Himalayan jaggery from Sankhuwasabha, crafted by Nepali farmers for seven generations. Pure, chemical-free, hand-poured.",
+  title: {
+    default: "SakharSansar | 100% Organic Sakhar from Sankhuwasabha",
+    template: "%s | SakharSansar",
+  },
+  description:
+    "100% organic Sakhar (Himalayan jaggery) — wood-fired, chemical-free, direct from Sankhuwasabha farmers.",
+  applicationName: "SakharSansar",
+  authors: [{ name: "SakharSansar" }],
+  creator: "SakharSansar",
+  publisher: "SakharSansar",
+  formatDetection: { telephone: false },
+  robots: { index: true, follow: true, googleBot: { index: true, follow: true } },
+};
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#F5EDE0" },
+    { media: "(prefers-color-scheme: dark)", color: "#1A1410" },
+  ],
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  colorScheme: "light",
 };
 
 export default function RootLayout({
@@ -57,6 +78,18 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="scroll-smooth">
+      <head>
+        {/* Preconnect to Google Fonts origin so the font CSS resolves earlier */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        {/* Preload the hero LCP image (used in HeroSection + ProductsSection card frames) */}
+        <link
+          rel="preload"
+          as="image"
+          href="/hero-cane-bg.jpg"
+          fetchPriority="high"
+        />
+      </head>
       <body
         className={`${inter.variable} ${fraunces.variable} ${tiroDevanagari.variable} ${fredoka.variable} font-sans antialiased bg-cream text-jaggery`}
       >

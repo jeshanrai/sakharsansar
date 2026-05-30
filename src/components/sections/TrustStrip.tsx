@@ -10,10 +10,10 @@ type Badge = {
 };
 
 const BADGES: Badge[] = [
+  { icon: Leaf, big: "100%", small: "Organic Sakhar" },
   { icon: ShieldCheck, big: "NO", small: "Chemicals" },
-  { icon: Leaf, big: "ALL", small: "Natural" },
   { icon: Flame, big: "WOOD", small: "Fired" },
-  { icon: HandHeart, big: "DIRECT", small: "from Farm" },
+  { icon: HandHeart, big: "DIRECT", small: "from Farmers" },
 ];
 
 export default function TrustStrip() {
@@ -48,12 +48,12 @@ export default function TrustStrip() {
         >
           <div className="inline-flex items-center gap-3 mb-4">
             <span className="w-8 h-px bg-honey/60" />
-            <span className="label-caps text-honey">Our promise</span>
+            <span className="label-caps text-honey">Why our sakhar</span>
             <span className="w-8 h-px bg-honey/60" />
           </div>
           <h2 className="font-display font-bold text-cream tracking-tight text-balance leading-[0.95]">
-            <span className="block text-[clamp(2rem,4.5vw,3.5rem)]">Honest from</span>
-            <span className="block text-[clamp(2.5rem,5.5vw,4.5rem)] text-honey mt-1 sm:mt-2">cane to cup.</span>
+            <span className="block text-[clamp(2rem,4.5vw,3.5rem)]">100% organic.</span>
+            <span className="block text-[clamp(2.5rem,5.5vw,4.5rem)] text-honey mt-1 sm:mt-2">Pure sakhar.</span>
           </h2>
         </motion.div>
 

@@ -10,10 +10,10 @@ type Msg = {
 };
 
 const MESSAGES: Msg[] = [
-  { icon: Tag, text: "Flat 10% off on orders above Rs. 1,500 — code", highlight: "SWEET10" },
+  { icon: Tag, text: "Flat 10% off on pure sakhar above Rs. 1,500 — code", highlight: "SAKHAR10" },
+  { icon: Sparkles, text: "100% organic sakhar · No chemicals · Direct from farmers" },
   { icon: Truck, text: "Free shipping pan-Nepal on orders above Rs. 2,000" },
-  { icon: Sparkles, text: "New Winter Harvest — slow-poured under open sky" },
-  { icon: Flame, text: "Wood-fired in Sankhuwasabha · Shipped within 24h" },
+  { icon: Flame, text: "Wood-fired sakhar from Sankhuwasabha · Shipped within 24h" },
 ];
 
 export default function PromoBar() {
