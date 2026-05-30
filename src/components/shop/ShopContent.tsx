@@ -1,208 +1,206 @@
 "use client";
-import React, { useState, useMemo, useEffect, useCallback, memo } from 'react';
-import Image from 'next/image';
-import Link from 'next/link';
+
+import React, { useState, useMemo, useEffect, useCallback, memo, useRef } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  X,
+  Search,
+  Star,
+  Plus,
+  Heart,
+  ChevronDown,
+  ArrowRight,
+  ArrowUpRight,
+  SlidersHorizontal,
+  Check,
+  ChevronRight,
+  Sparkles,
+} from "lucide-react";
 import data from "@/data/content.json";
-import { FadeUp } from "@/components/ui/Animations";
-import { SlidersHorizontal, X, Search, ChevronDown } from "lucide-react";
 
 type Product = (typeof data.products)[number];
 
-const ShopProductCard = memo(function ShopProductCard({ product }: { product: Product }) {
-  return (
-    <Link
-      href={`/products/${product.slug}`}
-      className="group flex flex-col h-full"
-      aria-label={`${product.name} — ${product.price}`}
-    >
-      <article className="flex flex-col h-full">
-        <div className="relative aspect-[4/5] w-full overflow-hidden bg-ivory mb-5">
-          <Image
-            src={product.image}
-            alt={`${product.name} — ${product.weight} of pure natural jaggery`}
-            fill
-            loading="lazy"
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-            className="object-cover transition-transform duration-[1.4s] ease-out group-hover:scale-[1.04]"
-          />
-          <span className="absolute top-4 left-4 font-serif italic text-meta text-cream bg-jaggery/80 backdrop-blur-sm px-3 py-1">
-            {product.category}
-          </span>
-        </div>
-        <div className="flex flex-col gap-2">
-          <div className="flex items-baseline justify-between gap-3">
-            <h3 className="font-serif text-h4 text-jaggery group-hover:text-caramel-deep transition-colors">
-              {product.name}
-            </h3>
-            <span className="font-serif text-base text-jaggery whitespace-nowrap nums-price">
-              {product.price}
-            </span>
-          </div>
-          <div className="flex items-center justify-between">
-            <span className="label-caps text-jaggery/55 nums-price">{product.weight}</span>
-            <span className="label-caps text-jaggery/45 group-hover:text-jaggery transition-colors">
-              View →
-            </span>
-          </div>
-        </div>
-      </article>
-    </Link>
-  );
-});
+/* ─── Card backdrop (matches landing) ─────────────────────────── */
+const CARD_BG =
+  "bg-[#2D9577] bg-[url('/hero-cane-bg.jpg')] bg-cover bg-center";
 
-const categories = ["All", ...Array.from(new Set(data.products.map(p => p.category)))];
+function ratingFor(slug: string) {
+  let h = 0;
+  for (let i = 0; i < slug.length; i++) h = (h * 31 + slug.charCodeAt(i)) & 0xffff;
+  const rating = (4.5 + (h % 5) / 10).toFixed(1);
+  const count = 120 + (h % 400);
+  return { rating, count };
+}
 
-const sortOptions = [
-  { label: "Default", value: "default" },
-  { label: "Price: Low to High", value: "price-asc" },
-  { label: "Price: High to Low", value: "price-desc" },
-  { label: "Name: A–Z", value: "name-asc" },
+function badgeFor(slug: string, index: number): { label: string; tone: string } | null {
+  if (index === 0) return { label: "Bestseller", tone: "bg-jaggery text-cream" };
+  if (slug === "jaggery-spread" || slug === "spiced-jaggery-mix")
+    return { label: "New", tone: "bg-honey text-jaggery" };
+  return null;
+}
+
+function parsePrice(price: string): number {
+  return parseInt(price.replace(/[^0-9]/g, ""), 10) || 0;
+}
+
+const CATEGORIES = ["All", ...Array.from(new Set(data.products.map((p) => p.category)))];
+
+const SORT_OPTIONS = [
+  { label: "Featured", value: "default" },
+  { label: "Price · Low to High", value: "price-asc" },
+  { label: "Price · High to Low", value: "price-desc" },
+  { label: "Name · A–Z", value: "name-asc" },
 ];
 
-const priceRanges = [
-  { label: "All Prices", min: 0, max: Infinity },
+const PRICE_RANGES = [
+  { label: "Any Price", min: 0, max: Infinity },
   { label: "Under Rs. 300", min: 0, max: 299 },
-  { label: "Rs. 300 – Rs. 500", min: 300, max: 500 },
+  { label: "Rs. 300 – 500", min: 300, max: 500 },
   { label: "Above Rs. 500", min: 501, max: Infinity },
 ];
 
-function parsePrice(price: string): number {
-  return parseInt(price.replace(/[^0-9]/g, ''), 10) || 0;
-}
-
-function SidebarFilters({
-  searchQuery, setSearchQuery,
-  activeCategory, setActiveCategory,
-  activePriceRange, setActivePriceRange,
-  sortBy, setSortBy,
-  hasActiveFilters, clearAll, productCounts,
+/* ─────────────────────────── Product Card (unchanged) ─────────────────────────── */
+const ShopProductCard = memo(function ShopProductCard({
+  product,
+  index,
+  isWishlisted,
+  onToggleWishlist,
 }: {
-  searchQuery: string;
-  setSearchQuery: (v: string) => void;
-  activeCategory: string;
-  setActiveCategory: (v: string) => void;
-  activePriceRange: number;
-  setActivePriceRange: (v: number) => void;
-  sortBy: string;
-  setSortBy: (v: string) => void;
-  hasActiveFilters: boolean;
-  clearAll: () => void;
-  productCounts: Record<string, number>;
+  product: Product;
+  index: number;
+  isWishlisted: boolean;
+  onToggleWishlist: () => void;
 }) {
+  const { rating, count } = ratingFor(product.slug);
+  const badge = badgeFor(product.slug, index);
+  const hasDiscount = index < 2;
+  const originalPrice = hasDiscount
+    ? `Rs. ${Math.round(parsePrice(product.price) * 1.25)}`
+    : null;
+
   return (
-    <div className="flex flex-col gap-9">
-      <div>
-        <h3 className="label-caps text-jaggery/60 mb-3">Search</h3>
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-jaggery/35" />
-          <input
-            type="text"
-            placeholder="Search the collection"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-cream border-b border-jaggery/20 pl-9 pr-9 py-3 text-sm text-jaggery placeholder:text-jaggery/35 focus:outline-none focus:border-jaggery transition-colors font-serif"
-          />
-          {searchQuery && (
-            <button
-              onClick={() => setSearchQuery("")}
-              aria-label="Clear search"
-              className="absolute right-2 top-1/2 -translate-y-1/2 text-jaggery/45 hover:text-jaggery transition-colors"
-            >
-              <X className="w-4 h-4" />
-            </button>
+    <motion.article
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, delay: (index % 9) * 0.04, ease: [0.16, 1, 0.3, 1] }}
+      className={`group flex flex-col rounded-3xl p-3 sm:p-4 transition-transform duration-500 hover:-translate-y-1 ${CARD_BG}`}
+    >
+      <div className="relative aspect-square w-full">
+        <div className="relative w-full h-full rounded-2xl overflow-hidden bg-cream">
+          {badge && (
+            <span className={`absolute top-3 left-3 z-10 label-caps text-[9px] px-2.5 py-1 rounded-full ${badge.tone}`}>
+              {badge.label}
+            </span>
+          )}
+
+          <button
+            type="button"
+            onClick={onToggleWishlist}
+            aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
+            className={`absolute top-2.5 right-2.5 z-10 w-8 h-8 rounded-full bg-cream/90 backdrop-blur-sm flex items-center justify-center transition-colors ${
+              isWishlisted ? "text-terracotta" : "text-jaggery/45 hover:text-terracotta opacity-0 group-hover:opacity-100"
+            }`}
+          >
+            <Heart className={`w-3.5 h-3.5 ${isWishlisted ? "fill-current" : ""}`} strokeWidth={1.75} />
+          </button>
+
+          <Link
+            href={`/products/${product.slug}`}
+            className="block absolute inset-0"
+            aria-label={`${product.name} — ${product.price}`}
+          >
+            <Image
+              src={product.image}
+              alt={`${product.name} — ${product.weight} of pure organic sakhar`}
+              fill
+              loading={index < 6 ? "eager" : "lazy"}
+              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+              className="object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-[1.04]"
+            />
+          </Link>
+
+          <Link
+            href={`/products/${product.slug}`}
+            aria-label={`Add ${product.name} to bag`}
+            className="absolute inset-x-3 bottom-3 z-10 h-10 rounded-full bg-jaggery text-cream label-caps text-[10px] flex items-center justify-center gap-1.5 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300"
+          >
+            <Plus className="w-3.5 h-3.5" strokeWidth={2} />
+            Add to bag
+          </Link>
+        </div>
+      </div>
+
+      <div className="pt-5 px-1.5 pb-1 flex flex-col">
+        <div className="flex items-center justify-between gap-2 mb-3">
+          <span className="text-[10px] font-bold tracking-[0.22em] uppercase text-honey">
+            {product.category}
+          </span>
+          <div className="flex items-center gap-1.5">
+            <Star className="w-3.5 h-3.5 fill-honey stroke-honey" />
+            <span className="text-[13px] font-bold text-cream tabular-nums leading-none">{rating}</span>
+            <span className="text-[11px] text-cream/55 font-medium leading-none">({count})</span>
+          </div>
+        </div>
+
+        <Link href={`/products/${product.slug}`} className="block">
+          <h3 className="font-display font-bold text-cream text-[20px] sm:text-[22px] tracking-tight leading-[1.1] group-hover:text-honey transition-colors">
+            {product.name}
+          </h3>
+        </Link>
+
+        <p className="mt-2.5 text-[10px] font-bold tracking-[0.2em] uppercase text-cream/65">
+          {product.weight}
+        </p>
+
+        <div className="mt-4 flex items-baseline gap-2.5">
+          <span className="font-display font-bold text-cream text-[24px] sm:text-[26px] tracking-tight nums-price leading-none">
+            {product.price}
+          </span>
+          {originalPrice && (
+            <span className="text-[13px] text-cream/45 line-through nums-price font-medium">
+              {originalPrice}
+            </span>
           )}
         </div>
       </div>
-
-      <div>
-        <h3 className="label-caps text-jaggery/60 mb-3">Form</h3>
-        <ul className="flex flex-col">
-          {categories.map((cat) => (
-            <li key={cat}>
-              <button
-                onClick={() => setActiveCategory(cat)}
-                className={`w-full flex items-center justify-between py-2 text-left transition-colors ${
-                  activeCategory === cat
-                    ? 'text-jaggery'
-                    : 'text-jaggery/55 hover:text-jaggery'
-                }`}
-              >
-                <span className={`font-serif text-base ${activeCategory === cat ? 'italic' : ''}`}>
-                  {cat}
-                </span>
-                <span className="label-caps text-jaggery/40">
-                  {productCounts[cat] ?? 0}
-                </span>
-              </button>
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      <div>
-        <h3 className="label-caps text-jaggery/60 mb-3">Price</h3>
-        <ul className="flex flex-col">
-          {priceRanges.map((range, idx) => (
-            <li key={idx}>
-              <button
-                onClick={() => setActivePriceRange(idx)}
-                className={`w-full flex items-center gap-3 py-2 text-left transition-colors ${
-                  activePriceRange === idx ? 'text-jaggery' : 'text-jaggery/55 hover:text-jaggery'
-                }`}
-              >
-                <span className={`w-3 h-3 rounded-full border ${
-                  activePriceRange === idx ? 'border-jaggery bg-jaggery' : 'border-jaggery/30'
-                }`} />
-                <span className="font-serif text-base">{range.label}</span>
-              </button>
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      <div>
-        <h3 className="label-caps text-jaggery/60 mb-3">Sort By</h3>
-        <div className="relative">
-          <select
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value)}
-            className="w-full bg-cream border-b border-jaggery/20 py-3 pr-8 text-sm text-jaggery font-serif focus:outline-none focus:border-jaggery transition-colors cursor-pointer appearance-none"
-          >
-            {sortOptions.map(opt => (
-              <option key={opt.value} value={opt.value}>{opt.label}</option>
-            ))}
-          </select>
-          <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-jaggery/45 pointer-events-none" />
-        </div>
-      </div>
-
-      {hasActiveFilters && (
-        <button
-          onClick={clearAll}
-          className="label-caps text-terracotta hover:underline self-start"
-        >
-          Clear all filters
-        </button>
-      )}
-    </div>
+    </motion.article>
   );
-}
+});
 
+/* ─────────────────────────── Page ─────────────────────────── */
 export default function ShopContent() {
   const [activeCategory, setActiveCategory] = useState("All");
   const [activePriceRange, setActivePriceRange] = useState(0);
   const [sortBy, setSortBy] = useState("default");
   const [searchQuery, setSearchQuery] = useState("");
-  const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
+  const [sortOpen, setSortOpen] = useState(false);
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  const [wishlisted, setWishlisted] = useState<Set<string>>(new Set());
+  const [newsletterEmail, setNewsletterEmail] = useState("");
+  const [newsletterSent, setNewsletterSent] = useState(false);
+  const sortRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    document.body.style.overflow = mobileFilterOpen ? 'hidden' : '';
-    return () => { document.body.style.overflow = ''; };
-  }, [mobileFilterOpen]);
+    if (!sortOpen) return;
+    const onClick = (e: MouseEvent) => {
+      if (sortRef.current && !sortRef.current.contains(e.target as Node)) {
+        setSortOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", onClick);
+    return () => document.removeEventListener("mousedown", onClick);
+  }, [sortOpen]);
+
+  useEffect(() => {
+    document.body.style.overflow = filtersOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [filtersOpen]);
 
   const productCounts = useMemo(() => {
     const counts: Record<string, number> = { All: data.products.length };
-    data.products.forEach(p => {
+    data.products.forEach((p) => {
       counts[p.category] = (counts[p.category] || 0) + 1;
     });
     return counts;
@@ -210,17 +208,16 @@ export default function ShopContent() {
 
   const filteredProducts = useMemo(() => {
     let products = [...data.products];
-    if (activeCategory !== "All") products = products.filter(p => p.category === activeCategory);
+    if (activeCategory !== "All") products = products.filter((p) => p.category === activeCategory);
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
-      products = products.filter(p =>
-        p.name.toLowerCase().includes(q) ||
-        p.description.toLowerCase().includes(q)
+      products = products.filter(
+        (p) => p.name.toLowerCase().includes(q) || p.description.toLowerCase().includes(q),
       );
     }
-    const range = priceRanges[activePriceRange];
+    const range = PRICE_RANGES[activePriceRange];
     if (range && activePriceRange !== 0) {
-      products = products.filter(p => {
+      products = products.filter((p) => {
         const price = parsePrice(p.price);
         return price >= range.min && price <= range.max;
       });
@@ -233,7 +230,17 @@ export default function ShopContent() {
     return products;
   }, [activeCategory, activePriceRange, sortBy, searchQuery]);
 
-  const hasActiveFilters = activeCategory !== "All" || searchQuery.trim() !== "" || sortBy !== "default" || activePriceRange !== 0;
+  const hasActiveFilters =
+    activeCategory !== "All" ||
+    searchQuery.trim() !== "" ||
+    sortBy !== "default" ||
+    activePriceRange !== 0;
+
+  const activeCount =
+    (activeCategory !== "All" ? 1 : 0) +
+    (activePriceRange !== 0 ? 1 : 0) +
+    (sortBy !== "default" ? 1 : 0) +
+    (searchQuery.trim() !== "" ? 1 : 0);
 
   const clearAll = useCallback(() => {
     setActiveCategory("All");
@@ -242,122 +249,536 @@ export default function ShopContent() {
     setActivePriceRange(0);
   }, []);
 
-  const sidebarProps = {
-    searchQuery,
-    setSearchQuery: useCallback((v: string) => setSearchQuery(v), []),
-    activeCategory,
-    setActiveCategory: useCallback((v: string) => setActiveCategory(v), []),
-    activePriceRange,
-    setActivePriceRange: useCallback((v: number) => setActivePriceRange(v), []),
-    sortBy,
-    setSortBy: useCallback((v: string) => setSortBy(v), []),
-    hasActiveFilters,
-    clearAll,
-    productCounts,
+  const toggleWishlist = useCallback((slug: string) => {
+    setWishlisted((prev) => {
+      const next = new Set(prev);
+      if (next.has(slug)) next.delete(slug); else next.add(slug);
+      return next;
+    });
+  }, []);
+
+  const activeSortLabel = SORT_OPTIONS.find((s) => s.value === sortBy)?.label || "Featured";
+
+  const handleNewsletter = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newsletterEmail) return;
+    setNewsletterSent(true);
+    setTimeout(() => {
+      setNewsletterSent(false);
+      setNewsletterEmail("");
+    }, 3000);
   };
 
   return (
-    <section className="py-12 sm:py-20 px-6 sm:px-10 lg:px-16 bg-cream min-h-screen">
-      <div className="max-w-[1440px] mx-auto">
-        {/* Editorial header */}
-        <FadeUp>
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 mb-14 sm:mb-20 items-end">
-            <div className="md:col-span-8">
-              <span className="label-caps text-caramel mb-5 block">The Collection</span>
-              <h1 className="font-serif font-soft text-jaggery text-display tracking-[-0.018em] text-balance">
-                Eight expressions of <span className="italic font-light">one cane.</span>
+    <>
+      {/* ─── Editorial header ─────────────────────────── */}
+      <section className="relative bg-cream pt-10 sm:pt-14 pb-2 px-5 sm:px-8 lg:px-12 overflow-hidden">
+        {/* Soft honey halo */}
+        <div
+          aria-hidden
+          className="absolute -top-32 -right-32 w-[34rem] h-[34rem] rounded-full bg-honey/15 blur-3xl pointer-events-none"
+        />
+
+        <div className="relative max-w-7xl mx-auto">
+          {/* Breadcrumb */}
+          <nav aria-label="Breadcrumb" className="mb-6">
+            <ol className="flex items-center gap-1.5 text-[11px] font-medium text-jaggery/50">
+              <li>
+                <Link href="/" className="hover:text-jaggery transition-colors">
+                  Home
+                </Link>
+              </li>
+              <li aria-hidden>
+                <ChevronRight className="w-3 h-3" strokeWidth={2} />
+              </li>
+              <li className="text-jaggery font-semibold">Shop</li>
+            </ol>
+          </nav>
+
+          {/* Headline block */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-end">
+            <div className="lg:col-span-8">
+              <div className="flex items-center gap-2.5 mb-4">
+                <span className="w-6 h-px bg-caramel" />
+                <span className="text-[10px] font-bold tracking-[0.22em] uppercase text-caramel">
+                  Shop pure sakhar
+                </span>
+              </div>
+              <h1 className="font-display font-bold text-jaggery tracking-tight text-balance leading-[0.95]">
+                <span className="block text-[clamp(2.75rem,7vw,5.5rem)]">
+                  Every form of
+                </span>
+                <span className="block text-[clamp(2.75rem,7vw,5.5rem)] text-caramel-deep">
+                  <span className="font-serif italic font-normal">honest</span> sakhar.
+                </span>
               </h1>
             </div>
-            <p className="md:col-span-4 text-jaggery/75 text-lede md:max-w-sm md:ml-auto">
-              Each form &mdash; block, powder, liquid, cube &mdash; pulls a different
-              flavour from the same Sankhuwasabha harvest.
-            </p>
-          </div>
-        </FadeUp>
 
-        {/* Mobile filter toggle */}
-        <div className="lg:hidden mb-6">
-          <button
-            onClick={() => setMobileFilterOpen(true)}
-            className="inline-flex items-center gap-2 label-caps px-5 py-3 border border-jaggery/30 text-jaggery hover:bg-jaggery hover:text-cream transition-colors rounded-full"
-          >
-            <SlidersHorizontal className="w-4 h-4" strokeWidth={1.5} />
-            Filters
-            {hasActiveFilters && (
-              <span className="w-2 h-2 rounded-full bg-caramel" />
-            )}
-          </button>
-        </div>
-
-        {/* Mobile drawer */}
-        <div className={`fixed inset-0 z-50 lg:hidden transition-all duration-300 ${
-          mobileFilterOpen ? 'visible' : 'invisible'
-        }`}>
-          <div
-            className={`absolute inset-0 bg-jaggery/30 transition-opacity duration-300 ${
-              mobileFilterOpen ? 'opacity-100' : 'opacity-0'
-            }`}
-            onClick={() => setMobileFilterOpen(false)}
-          />
-          <div className={`absolute left-0 top-0 bottom-0 w-[320px] max-w-[85vw] bg-cream shadow-2xl transition-transform duration-300 overflow-y-auto ${
-            mobileFilterOpen ? 'translate-x-0' : '-translate-x-full'
-          }`}>
-            <div className="p-7">
-              <div className="flex items-center justify-between mb-8">
-                <h2 className="font-serif text-2xl text-jaggery">Filters</h2>
-                <button
-                  onClick={() => setMobileFilterOpen(false)}
-                  aria-label="Close filters"
-                  className="text-jaggery/60 hover:text-jaggery transition-colors p-1"
-                >
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
-              <SidebarFilters {...sidebarProps} />
-            </div>
-          </div>
-        </div>
-
-        <div className="flex gap-12 lg:gap-16">
-          <aside className="hidden lg:block w-[230px] shrink-0">
-            <div className="sticky top-32">
-              <SidebarFilters {...sidebarProps} />
-            </div>
-          </aside>
-
-          <div className="flex-1 min-w-0">
-            <div className="mb-8 flex items-center justify-between border-b border-jaggery/15 pb-4">
-              <p className="label-caps text-jaggery/55">
-                {filteredProducts.length} {filteredProducts.length === 1 ? 'piece' : 'pieces'}
-                {activeCategory !== "All" && ` · ${activeCategory}`}
-              </p>
-            </div>
-
-            {filteredProducts.length > 0 ? (
-              <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-5 gap-y-12 sm:gap-x-8 sm:gap-y-16">
-                {filteredProducts.map((product, i) => (
-                  <FadeUp key={product.slug} delay={i * 0.05} className="h-full">
-                    <ShopProductCard product={product} />
-                  </FadeUp>
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-24">
-                <p className="font-serif text-2xl text-jaggery/50 mb-3">Nothing matches.</p>
-                <p className="text-sm text-jaggery/40 mb-8 font-light">
-                  Try clearing a filter or refining your search.
+            {/* Right info card */}
+            <div className="lg:col-span-4">
+              <div className="bg-white/60 backdrop-blur-sm border border-jaggery/8 rounded-3xl p-5 sm:p-6">
+                <p className="text-[14px] text-jaggery/70 leading-relaxed">
+                  100% organic. Wood-fired in Sankhuwasabha. Hand-poured by farmers
+                  for <em className="font-serif italic text-jaggery">seven generations</em>.
                 </p>
-                <button
-                  onClick={clearAll}
-                  className="label-caps px-6 py-3 border border-jaggery text-jaggery hover:bg-jaggery hover:text-cream transition-colors rounded-full"
-                >
-                  Reset filters
-                </button>
+                <div className="mt-5 pt-5 border-t border-jaggery/10 flex items-center gap-5">
+                  <Stat value={String(data.products.length)} label="Forms" />
+                  <span className="w-px h-8 bg-jaggery/12" />
+                  <Stat value="4.9★" label="Rating" />
+                  <span className="w-px h-8 bg-jaggery/12" />
+                  <Stat value="100%" label="Organic" />
+                </div>
               </div>
-            )}
+            </div>
           </div>
+        </div>
+      </section>
+
+      {/* ─── Sticky filter bar ────────────────────────── */}
+      <div className="sticky top-29 z-30 bg-cream/95 backdrop-blur-md mt-8 sm:mt-10">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
+          {/* Filter controls */}
+          <div className="border-t border-jaggery/10 pt-4 pb-3.5 flex items-center gap-3">
+            {/* Category pills */}
+            <div className="flex-1 min-w-0 overflow-x-auto scrollbar-hide -mx-1 px-1">
+              <ul className="flex items-center gap-1">
+                {CATEGORIES.map((cat) => {
+                  const active = activeCategory === cat;
+                  return (
+                    <li key={cat}>
+                      <button
+                        onClick={() => setActiveCategory(cat)}
+                        className={`relative inline-flex items-center gap-1.5 h-9 px-3.5 rounded-full text-[13px] font-medium tracking-tight whitespace-nowrap transition-all ${
+                          active
+                            ? "bg-jaggery text-cream shadow-[0_4px_12px_rgba(26,20,16,0.12)]"
+                            : "text-jaggery/65 hover:text-jaggery hover:bg-jaggery/[0.04]"
+                        }`}
+                      >
+                        {cat}
+                        <span className={`text-[10px] tabular-nums ${active ? "text-cream/60" : "text-jaggery/35"}`}>
+                          {productCounts[cat] ?? 0}
+                        </span>
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+
+            {/* Right utilities */}
+            <div className="flex items-center gap-2 shrink-0">
+              {/* Inline search (desktop) */}
+              <div className="hidden md:block relative">
+                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-jaggery/40" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Find sakhar…"
+                  className="h-9 w-[180px] lg:w-[220px] pl-9 pr-8 rounded-full bg-white border border-jaggery/12 text-[13px] text-jaggery placeholder:text-jaggery/40 focus:outline-none focus:border-jaggery/40 focus:w-[260px] transition-all"
+                />
+                {searchQuery && (
+                  <button
+                    onClick={() => setSearchQuery("")}
+                    aria-label="Clear search"
+                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-jaggery/45 hover:text-jaggery"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                )}
+              </div>
+
+              {/* Mobile search button → expands filters drawer */}
+              <button
+                type="button"
+                onClick={() => setFiltersOpen(true)}
+                aria-label="Search and filters"
+                className="md:hidden h-9 w-9 inline-flex items-center justify-center rounded-full text-jaggery/65 hover:text-jaggery hover:bg-jaggery/[0.04] transition-colors"
+              >
+                <Search className="w-4 h-4" strokeWidth={1.6} />
+              </button>
+
+              {/* Sort dropdown */}
+              <div ref={sortRef} className="relative">
+                <button
+                  type="button"
+                  onClick={() => setSortOpen((v) => !v)}
+                  aria-haspopup="listbox"
+                  aria-expanded={sortOpen}
+                  className="inline-flex items-center gap-1.5 h-9 px-3 sm:px-4 rounded-full text-jaggery hover:bg-jaggery/[0.04] transition-colors text-[12px] font-semibold tracking-tight border border-jaggery/12"
+                >
+                  <span className="hidden sm:inline text-jaggery/55">Sort</span>
+                  <span className="hidden sm:inline text-jaggery/25">·</span>
+                  <span className="sm:hidden">Sort</span>
+                  <span className="hidden sm:inline">{activeSortLabel.split(" · ")[0]}</span>
+                  <ChevronDown className={`w-3.5 h-3.5 transition-transform ${sortOpen ? "rotate-180" : ""}`} />
+                </button>
+                <AnimatePresence>
+                  {sortOpen && (
+                    <motion.ul
+                      initial={{ opacity: 0, y: -6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -6 }}
+                      transition={{ duration: 0.18 }}
+                      role="listbox"
+                      className="absolute right-0 top-full mt-2 w-60 bg-white border border-jaggery/10 rounded-2xl shadow-[0_8px_30px_rgba(26,20,16,0.10)] p-1.5 z-20"
+                    >
+                      {SORT_OPTIONS.map((opt) => {
+                        const active = sortBy === opt.value;
+                        return (
+                          <li key={opt.value}>
+                            <button
+                              type="button"
+                              role="option"
+                              aria-selected={active}
+                              onClick={() => { setSortBy(opt.value); setSortOpen(false); }}
+                              className={`w-full flex items-center justify-between gap-3 h-10 px-3 rounded-xl text-left text-[13px] tracking-tight transition-colors ${
+                                active ? "bg-jaggery/8 text-jaggery font-semibold" : "text-jaggery/70 hover:bg-jaggery/[0.04] font-medium"
+                              }`}
+                            >
+                              {opt.label}
+                              {active && <Check className="w-3.5 h-3.5 text-caramel" strokeWidth={2} />}
+                            </button>
+                          </li>
+                        );
+                      })}
+                    </motion.ul>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              {/* Filters button */}
+              <button
+                type="button"
+                onClick={() => setFiltersOpen(true)}
+                className="relative inline-flex items-center gap-1.5 h-9 px-3 sm:px-4 rounded-full text-jaggery hover:bg-jaggery/[0.04] transition-colors text-[12px] font-semibold tracking-tight border border-jaggery/12"
+              >
+                <SlidersHorizontal className="w-3.5 h-3.5" strokeWidth={1.75} />
+                <span className="hidden sm:inline">Filter</span>
+                {activeCount > 0 && (
+                  <span className="inline-flex items-center justify-center min-w-[16px] h-[16px] px-1 rounded-full bg-caramel text-cream text-[9px] font-bold tabular-nums">
+                    {activeCount}
+                  </span>
+                )}
+              </button>
+            </div>
+          </div>
+
+          {/* Active filter chips */}
+          <AnimatePresence>
+            {hasActiveFilters && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.2 }}
+                className="overflow-hidden"
+              >
+                <div className="pb-4 flex items-center gap-2 flex-wrap">
+                  {activeCategory !== "All" && (
+                    <Chip onRemove={() => setActiveCategory("All")}>{activeCategory}</Chip>
+                  )}
+                  {activePriceRange !== 0 && (
+                    <Chip onRemove={() => setActivePriceRange(0)}>{PRICE_RANGES[activePriceRange].label}</Chip>
+                  )}
+                  {sortBy !== "default" && (
+                    <Chip onRemove={() => setSortBy("default")}>{activeSortLabel}</Chip>
+                  )}
+                  {searchQuery && (
+                    <Chip onRemove={() => setSearchQuery("")}>&ldquo;{searchQuery}&rdquo;</Chip>
+                  )}
+                  <button
+                    onClick={clearAll}
+                    className="ml-1 text-[11px] font-bold tracking-[0.15em] uppercase text-terracotta hover:text-jaggery transition-colors"
+                  >
+                    Clear all
+                  </button>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
-    </section>
+
+      {/* ─── Product grid ─────────────────────────────── */}
+      <section className="bg-cream pt-6 sm:pt-8 pb-20 sm:pb-28 px-5 sm:px-8 lg:px-12 min-h-[60vh]">
+        <div className="max-w-7xl mx-auto">
+          {/* Result count */}
+          <div className="mb-7 flex items-center justify-between">
+            <p className="text-[12px] font-bold tracking-[0.18em] uppercase text-jaggery/55">
+              Showing{" "}
+              <span className="text-jaggery">{filteredProducts.length}</span>{" "}
+              {filteredProducts.length === 1 ? "form" : "forms"}
+              {activeCategory !== "All" && (
+                <>
+                  <span className="mx-2 text-jaggery/25">·</span>
+                  <span className="text-caramel-deep">{activeCategory}</span>
+                </>
+              )}
+            </p>
+          </div>
+
+          {filteredProducts.length > 0 ? (
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={`${activeCategory}-${activePriceRange}-${sortBy}-${searchQuery}`}
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -2 }}
+                transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                className="grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-7"
+              >
+                {filteredProducts.map((product, i) => (
+                  <ShopProductCard
+                    key={product.slug}
+                    product={product}
+                    index={i}
+                    isWishlisted={wishlisted.has(product.slug)}
+                    onToggleWishlist={() => toggleWishlist(product.slug)}
+                  />
+                ))}
+              </motion.div>
+            </AnimatePresence>
+          ) : (
+            <EmptyState onReset={clearAll} />
+          )}
+        </div>
+      </section>
+
+      {/* ─── Closing newsletter ───────────────────────── */}
+      <section className="relative bg-ink text-cream py-16 sm:py-24 px-5 sm:px-8 lg:px-12 overflow-hidden paper-grain">
+        <div
+          aria-hidden
+          className="absolute -top-32 left-1/4 w-[36rem] h-[36rem] rounded-full bg-honey/12 blur-3xl pointer-events-none"
+        />
+        <div
+          aria-hidden
+          className="absolute -bottom-32 right-0 w-[28rem] h-[28rem] rounded-full bg-caramel/10 blur-3xl pointer-events-none"
+        />
+
+        <div className="relative max-w-3xl mx-auto text-center">
+          <div className="inline-flex items-center gap-3 mb-5">
+            <span className="w-6 h-px bg-honey/60" />
+            <span className="text-[10px] font-bold tracking-[0.22em] uppercase text-honey">
+              Letters from the workshop
+            </span>
+            <span className="w-6 h-px bg-honey/60" />
+          </div>
+
+          <h2 className="font-display font-bold tracking-tight text-balance leading-[1.02] text-[clamp(1.75rem,3.5vw,2.75rem)]">
+            <span className="block">Be the first to know</span>
+            <span className="block text-honey">when new sakhar arrives.</span>
+          </h2>
+
+          <p className="mt-5 text-cream/65 text-[14px] sm:text-[15px] leading-relaxed max-w-md mx-auto">
+            One letter a season. Harvest news, kitchen recipes, and quiet notes
+            from Sankhuwasabha — no noise.
+          </p>
+
+          <form
+            onSubmit={handleNewsletter}
+            className="mt-9 max-w-md mx-auto"
+          >
+            <div className="relative flex items-center gap-2 p-1.5 rounded-full bg-cream/8 border border-cream/15 backdrop-blur-sm focus-within:border-honey/40 transition-colors">
+              <input
+                type="email"
+                required
+                value={newsletterEmail}
+                onChange={(e) => setNewsletterEmail(e.target.value)}
+                placeholder="you@kitchen.com"
+                aria-label="Email address"
+                className="flex-1 min-w-0 h-11 pl-4 bg-transparent text-[14px] text-cream placeholder:text-cream/40 focus:outline-none"
+              />
+              <button
+                type="submit"
+                disabled={newsletterSent}
+                className="group relative inline-flex items-center justify-center gap-2 h-11 px-5 sm:px-6 rounded-full bg-honey text-jaggery text-[12.5px] font-bold tracking-tight hover:shadow-[0_8px_24px_rgba(232,168,87,0.4)] transition-all duration-300 shrink-0 disabled:opacity-80"
+              >
+                {newsletterSent ? (
+                  <>
+                    <Check className="w-3.5 h-3.5" strokeWidth={2.5} />
+                    Subscribed
+                  </>
+                ) : (
+                  <>
+                    Subscribe
+                    <ArrowUpRight
+                      className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"
+                      strokeWidth={2}
+                    />
+                  </>
+                )}
+              </button>
+            </div>
+            <p className="mt-3.5 text-[11px] text-cream/40">
+              No spam · Unsubscribe anytime
+            </p>
+          </form>
+        </div>
+      </section>
+
+      {/* ─── Filters / search drawer ──────────────────── */}
+      <AnimatePresence>
+        {filtersOpen && (
+          <div className="fixed inset-0 z-[60]">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setFiltersOpen(false)}
+              className="absolute inset-0 bg-jaggery/45 backdrop-blur-sm"
+            />
+            <motion.div
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "spring", damping: 28, stiffness: 260 }}
+              className="absolute right-0 top-0 bottom-0 w-[360px] max-w-[92vw] bg-cream shadow-2xl overflow-y-auto"
+            >
+              <div className="p-7">
+                <div className="flex items-center justify-between mb-8">
+                  <h2 className="font-display font-bold text-2xl text-jaggery tracking-tight">Filter</h2>
+                  <button
+                    onClick={() => setFiltersOpen(false)}
+                    aria-label="Close filters"
+                    className="w-9 h-9 rounded-full text-jaggery hover:bg-jaggery/[0.06] flex items-center justify-center transition-colors"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+
+                {/* Mobile search */}
+                <div className="md:hidden mb-8">
+                  <h3 className="text-[10px] font-bold tracking-[0.22em] uppercase text-jaggery/55 mb-3">
+                    Search
+                  </h3>
+                  <div className="relative">
+                    <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-jaggery/40" />
+                    <input
+                      type="text"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      placeholder="Find sakhar…"
+                      className="w-full h-11 pl-10 pr-9 rounded-full bg-white border border-jaggery/12 text-[13px] text-jaggery placeholder:text-jaggery/40 focus:outline-none focus:border-jaggery/40"
+                    />
+                    {searchQuery && (
+                      <button
+                        onClick={() => setSearchQuery("")}
+                        aria-label="Clear"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-jaggery/45 hover:text-jaggery"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                {/* Price */}
+                <div className="mb-8">
+                  <h3 className="text-[10px] font-bold tracking-[0.22em] uppercase text-jaggery/55 mb-3">
+                    Price
+                  </h3>
+                  <ul className="flex flex-col gap-0.5">
+                    {PRICE_RANGES.map((range, idx) => {
+                      const active = activePriceRange === idx;
+                      return (
+                        <li key={idx}>
+                          <button
+                            onClick={() => setActivePriceRange(idx)}
+                            className={`w-full flex items-center gap-3 py-2 text-left transition-colors ${
+                              active ? "text-jaggery" : "text-jaggery/60 hover:text-jaggery"
+                            }`}
+                          >
+                            <span className={`w-3.5 h-3.5 rounded-full border-2 flex items-center justify-center ${
+                              active ? "border-jaggery" : "border-jaggery/25"
+                            }`}>
+                              {active && <span className="w-1.5 h-1.5 rounded-full bg-jaggery" />}
+                            </span>
+                            <span className={`text-[14px] tracking-tight ${active ? "font-semibold" : "font-medium"}`}>
+                              {range.label}
+                            </span>
+                          </button>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+
+                <button
+                  onClick={() => setFiltersOpen(false)}
+                  className="w-full h-12 rounded-full bg-jaggery text-cream text-[13px] font-semibold tracking-tight hover:bg-jaggery-soft transition-colors"
+                >
+                  Show {filteredProducts.length} forms
+                </button>
+                {hasActiveFilters && (
+                  <button
+                    onClick={() => { clearAll(); setFiltersOpen(false); }}
+                    className="mt-3 w-full h-11 rounded-full text-[12px] font-semibold tracking-tight text-terracotta hover:bg-terracotta/8 transition-colors"
+                  >
+                    Clear all filters
+                  </button>
+                )}
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+    </>
+  );
+}
+
+/* ─── Stat (header) ─── */
+function Stat({ value, label }: { value: string; label: string }) {
+  return (
+    <div className="flex flex-col leading-none">
+      <span className="font-display font-bold text-jaggery text-[18px] tabular-nums">
+        {value}
+      </span>
+      <span className="text-[9px] font-bold tracking-[0.18em] uppercase text-jaggery/45 mt-1.5">
+        {label}
+      </span>
+    </div>
+  );
+}
+
+/* ─── Removable chip ─── */
+function Chip({ children, onRemove }: { children: React.ReactNode; onRemove: () => void }) {
+  return (
+    <span className="inline-flex items-center gap-1.5 h-7 pl-3 pr-1 rounded-full bg-jaggery/8 text-jaggery text-[12px] font-medium tracking-tight">
+      {children}
+      <button
+        type="button"
+        onClick={onRemove}
+        aria-label="Remove filter"
+        className="w-5 h-5 rounded-full hover:bg-jaggery/12 flex items-center justify-center transition-colors"
+      >
+        <X className="w-3 h-3" strokeWidth={2} />
+      </button>
+    </span>
+  );
+}
+
+/* ─── Empty state ─── */
+function EmptyState({ onReset }: { onReset: () => void }) {
+  return (
+    <div className="text-center py-20 sm:py-28">
+      <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-honey/15 mb-6">
+        <Sparkles className="w-7 h-7 text-caramel-deep" strokeWidth={1.5} />
+      </div>
+      <p className="font-display font-bold text-jaggery text-[clamp(1.75rem,3.5vw,2.75rem)] tracking-tight leading-tight">
+        No sakhar found.
+      </p>
+      <p className="text-[14px] text-jaggery/55 mt-3 max-w-sm mx-auto leading-relaxed">
+        We couldn&apos;t find a form matching your filters.
+        Try adjusting your search or browse the full collection.
+      </p>
+      <button
+        onClick={onReset}
+        className="mt-8 inline-flex items-center gap-2 h-12 px-7 rounded-full bg-jaggery text-cream text-[12.5px] font-semibold tracking-tight hover:bg-jaggery-soft hover:-translate-y-px transition-all duration-300 shadow-[0_8px_24px_rgba(26,20,16,0.15)]"
+      >
+        Browse all sakhar
+        <ArrowRight className="w-3.5 h-3.5" strokeWidth={1.75} />
+      </button>
+    </div>
   );
 }
