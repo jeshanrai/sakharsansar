@@ -45,10 +45,9 @@ const corsOptions: cors.CorsOptions = {
   maxAge: 86400, // cache preflight 24h
 };
 
+// cors() responds to OPTIONS preflight automatically because it short-circuits
+// when req.method === "OPTIONS". No separate app.options() handler needed.
 app.use(cors(corsOptions));
-// Explicitly answer preflight on every route — some hosts (Render free tier
-// behind their proxy) don't always route OPTIONS to wildcard handlers.
-app.options("*", cors(corsOptions));
 
 app.use(express.json());
 
