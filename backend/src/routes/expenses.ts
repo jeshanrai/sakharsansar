@@ -9,12 +9,15 @@ router.use(requireAuth);
 
 // GET /api/expenses
 router.get("/", async (req: AuthRequest, res: Response): Promise<void> => {
-  const { category, page = "1", limit = "20" } = req.query;
+  const { category, createdBy, page = "1", limit = "20" } = req.query;
   const skip = (Number(page) - 1) * Number(limit);
 
   const where: Record<string, unknown> = { deletedAt: null };
   if (category && category !== "All") {
     where.category = category as string;
+  }
+  if (createdBy && typeof createdBy === "string") {
+    where.createdBy = createdBy;
   }
 
   const [expenses, total] = await Promise.all([

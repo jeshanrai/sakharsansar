@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Mail, TrendingUp, TrendingDown, MoreHorizontal, Users as UsersIcon } from "lucide-react";
+import { Mail, TrendingUp, TrendingDown, ChevronRight, Users as UsersIcon } from "lucide-react";
 import { apiFetch } from "@/lib/api";
 import { Card, SectionHeading, Button, EmptyState } from "../_components/primitives";
+import UserDetailDrawer from "../_components/UserDetailDrawer";
 import type { UserRow } from "../_data/types";
 
 const rs = (n: number) => `Rs. ${(n || 0).toLocaleString()}`;
@@ -20,6 +21,13 @@ const initialsOf = (name: string) =>
 export default function UsersPage() {
   const [users, setUsers] = useState<UserRow[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedUser, setSelectedUser] = useState<UserRow | null>(null);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+
+  const openUser = (user: UserRow) => {
+    setSelectedUser(user);
+    setDrawerOpen(true);
+  };
 
   useEffect(() => {
     let cancelled = false;
@@ -94,13 +102,17 @@ export default function UsersPage() {
               const denom = user.totalSales + user.totalExpenses;
               const ratio = denom > 0 ? user.totalSales / denom : 0;
               return (
-                <motion.div
+                <motion.button
                   key={user.id}
+                  type="button"
+                  onClick={() => openUser(user)}
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.05 }}
+                  className="text-left group focus:outline-none focus-visible:ring-2 focus-visible:ring-[#B8763E]/40 rounded-2xl"
+                  aria-label={`View ${user.name}'s sales and expenses`}
                 >
-                  <Card className="p-5 sm:p-6" hover>
+                  <Card className="p-5 sm:p-6 transition-all group-hover:border-[#B8763E]/30 group-hover:shadow-[0_8px_30px_rgba(26,20,16,0.08)] group-hover:-translate-y-0.5">
                     <div className="flex items-start gap-4">
                       <div className="relative shrink-0">
                         <div className="h-12 w-12 sm:h-14 sm:w-14 rounded-2xl bg-gradient-to-br from-[#E8A857]/25 to-[#B8763E]/25 flex items-center justify-center text-[#B8763E] font-semibold">
@@ -112,11 +124,11 @@ export default function UsersPage() {
                         <div className="flex items-start justify-between gap-2">
                           <div className="min-w-0">
                             <p className="font-medium text-[#1A1410] truncate">{user.name}</p>
-                            <p className="text-[11px] text-[#1A1410]/50">Admin</p>
+                            <p className="text-[11px] text-[#1A1410]/50">Admin · Tap to view activity</p>
                           </div>
-                          <button className="h-8 w-8 rounded-lg hover:bg-[#FAF6EE] text-[#1A1410]/40 flex items-center justify-center shrink-0">
-                            <MoreHorizontal className="w-4 h-4" />
-                          </button>
+                          <span className="h-8 w-8 rounded-lg text-[#1A1410]/30 group-hover:text-[#B8763E] group-hover:bg-[#B8763E]/10 flex items-center justify-center shrink-0 transition-colors">
+                            <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                          </span>
                         </div>
                         <p className="text-xs text-[#1A1410]/45 flex items-center gap-1 mt-1.5">
                           <Mail className="w-3 h-3" /> {user.email}
@@ -158,12 +170,18 @@ export default function UsersPage() {
                       </div>
                     </div>
                   </Card>
-                </motion.div>
+                </motion.button>
               );
             })}
           </div>
         </>
       )}
+
+      <UserDetailDrawer
+        user={selectedUser}
+        open={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+      />
     </div>
   );
 }

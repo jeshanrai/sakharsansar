@@ -10,12 +10,15 @@ router.use(requireAuth);
 
 // GET /api/sales
 router.get("/", async (req: AuthRequest, res: Response): Promise<void> => {
-  const { paymentMethod, page = "1", limit = "20" } = req.query;
+  const { paymentMethod, createdBy, page = "1", limit = "20" } = req.query;
   const skip = (Number(page) - 1) * Number(limit);
 
   const where: Record<string, unknown> = { deletedAt: null };
   if (paymentMethod && paymentMethod !== "All") {
     where.paymentMethod = paymentMethod as PaymentMethod;
+  }
+  if (createdBy && typeof createdBy === "string") {
+    where.createdBy = createdBy;
   }
 
   const [sales, total] = await Promise.all([

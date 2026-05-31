@@ -62,7 +62,28 @@ app.get("/api/health", (_req, res) => {
   res.json({ status: "ok" });
 });
 
+// ── Startup ──────────────────────────────────────────────────────────
+// Validate critical env vars early so failures are obvious in the logs
+// instead of cascading into Prisma's stack traces.
+const dbUrl = process.env.DATABASE_URL ?? "";
+if (!dbUrl) {
+  console.error("✖ DATABASE_URL is not set. Set it in your hosting env.");
+} else if (!/^(postgres(ql)?:\/\/)/.test(dbUrl)) {
+  console.error(
+    "✖ DATABASE_URL is set but does not start with 'postgresql://' or 'postgres://'. " +
+      "Check the value in your hosting environment.",
+  );
+}
+
 app.listen(PORT, async () => {
   console.log(`Backend running on http://localhost:${PORT}`);
-  await seedDatabase();
+  // Seed must never crash the server. If the DB isn't reachable yet,
+  // log it and keep serving — health/CORS still work, the API will
+  // surface a clean error per request.
+  try {
+    await seedDatabase();
+  } catch (err) {
+    console.error("⚠ seedDatabase failed — continuing without seed:");
+    console.error(err instanceof Error ? err.message : err);
+  }
 });
