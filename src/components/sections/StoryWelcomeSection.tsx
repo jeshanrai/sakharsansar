@@ -1,6 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { FadeUp, SlideInLeft, SlideInRight } from "@/components/ui/Animations";
+import { WavyEdge } from "@/components/ui/StoryArt";
 
 /**
  * "Nice to meet" frame — deep green band with a staggered cream card and a
@@ -11,9 +12,16 @@ export default function StoryWelcomeSection() {
   return (
     <section
       aria-label="Nice to meet us"
-      className="relative bg-grove text-cream px-6 sm:px-10 lg:px-16 py-20 sm:py-28 overflow-hidden"
+      className="relative bg-grove text-cream px-6 sm:px-10 lg:px-16 pt-28 sm:pt-36 pb-20 sm:pb-28 overflow-hidden"
     >
-      <div className="max-w-[1180px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-6 items-center">
+      {/* Curved transition — peach flows down from the hero into the green */}
+      <WavyEdge
+        aria-hidden
+        flip
+        className="absolute top-0 left-0 w-full h-[55px] sm:h-[75px] text-peach"
+      />
+
+      <div className="relative z-10 max-w-[1180px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-6 items-center">
         {/* Cream card — sits lower */}
         <SlideInLeft className="lg:col-span-6 lg:mt-24 lg:z-10">
           <div className="rounded-[1.75rem] bg-ivory text-jaggery px-7 sm:px-12 py-10 sm:py-14 shadow-2xl shadow-grove-deep/40">

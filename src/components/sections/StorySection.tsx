@@ -10,7 +10,7 @@ export default function StorySection() {
     <section
       id="story"
       aria-label="Our Story"
-      className="relative bg-peach overflow-hidden pt-20 sm:pt-24 pb-[24vw] sm:pb-[19vw] lg:pb-[15vw]"
+      className="relative bg-peach overflow-hidden pt-20 sm:pt-24 pb-[14vw] sm:pb-[12vw] lg:pb-[10vw]"
     >
       {/* Hand-drawn banner — sugarcane harvest and wood-fire craft frame the
           open centre where the headline sits. Anchored to the foot of the hero
@@ -41,7 +41,7 @@ export default function StorySection() {
           </nav>
         </FadeUp>
 
-        <div className="max-w-2xl mx-auto text-center">
+        <div className="max-w-2xl mx-auto text-center mt-[10vw] sm:mt-[7vw] lg:mt-[5vw]">
           <FadeUp delay={0.05}>
             <div className="relative inline-block">
               <HeartScribble className="absolute -left-16 -top-6 w-20 h-14 text-peach-line rotate-[-8deg] hidden sm:block" />

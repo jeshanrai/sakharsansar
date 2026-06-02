@@ -2,6 +2,7 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { FadeUp } from "@/components/ui/Animations";
+import { WavyEdge } from "@/components/ui/StoryArt";
 
 type RangeCard = {
   label: string;
@@ -39,15 +40,27 @@ export default function StoryCtaSection() {
   return (
     <section
       aria-label="Taste the whole range"
-      className="relative bg-grove text-cream px-6 sm:px-10 lg:px-16 py-20 sm:py-28 overflow-hidden"
+      className="relative bg-grove text-cream px-6 sm:px-10 lg:px-16 pt-28 sm:pt-36 pb-20 sm:pb-28 overflow-hidden"
     >
-      {/* Oversized faint watermark */}
-      <span
+      {/* Curved transition — peach flows down into the green grid */}
+      <WavyEdge
         aria-hidden
-        className="pointer-events-none select-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 font-marker uppercase whitespace-nowrap text-grove-line/40 text-[22vw] leading-none tracking-tight"
+        flip
+        className="absolute top-0 left-0 w-full h-[55px] sm:h-[75px] text-peach z-20"
+      />
+
+      {/* Oversized faint watermark — infinite horizontal marquee. The phrase
+          set is rendered twice so the -50% slide loops seamlessly. */}
+      <div
+        aria-hidden
+        className="pointer-events-none select-none absolute top-1/2 left-0 w-full -translate-y-1/2 overflow-hidden"
       >
-        Sakhar
-      </span>
+        <div className="animate-marquee inline-flex whitespace-nowrap font-marker uppercase text-grove-line/35 text-[16vw] leading-none tracking-tight">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <span key={i} className="px-[3vw]">Sakhar Sansar</span>
+          ))}
+        </div>
+      </div>
 
       <div className="relative z-10 max-w-[1180px] mx-auto">
         <FadeUp>
