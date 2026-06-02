@@ -17,6 +17,8 @@
     "Noto Serif Devanagari", "Sanskrit Text", serif;
   --font-display: var(--font-fredoka), ui-rounded, "Helvetica Rounded",
     "Nunito", system-ui, sans-serif;
+  --font-marker: var(--font-marker), "Comic Sans MS", "Marker Felt", ui-rounded,
+    sans-serif;
 
   /* Editorial type scale — pairs line-height with each step.
      Uses clamp() so headlines breathe across viewports without media queries. */
@@ -64,6 +66,14 @@
   --color-forest: #4A5D3A;
   --color-terracotta: #C4623E;
   --color-ink: #1A1410;
+
+  /* Our Story palette — deep "grove" green + warm peach bands, echoing the
+     hand-drawn editorial reference. Line tints are for background SVG art. */
+  --color-grove: #0F5A2C;
+  --color-grove-deep: #0B4623;
+  --color-grove-line: #1F7A40;
+  --color-peach: #FBEEDD;
+  --color-peach-line: #EBA45C;
 
   /* Legacy aliases (kept so older components don't break) */
   --color-earth-brown: #3D2817;
@@ -174,6 +184,13 @@ em, i, .italic {
     font-family: var(--font-display);
     font-weight: 600;
     letter-spacing: -0.005em;
+  }
+
+  /* ── Hand-drawn marker — Our Story headings ──────────────── */
+  .font-marker {
+    font-family: var(--font-marker);
+    font-weight: 400;
+    letter-spacing: 0.005em;
   }
 
   /* ── Sticker outline — chunky cream halo for accent text on

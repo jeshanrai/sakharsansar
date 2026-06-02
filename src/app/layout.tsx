@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Fraunces, Tiro_Devanagari_Hindi, Fredoka } from "next/font/google";
+import { Inter, Fraunces, Tiro_Devanagari_Hindi, Fredoka, Gochi_Hand } from "next/font/google";
 import "./globals.css";
 import PromoBar from "@/components/layout/PromoBar";
 import Navbar from "@/components/layout/Navbar";
@@ -41,6 +41,16 @@ const fredoka = Fredoka({
   subsets: ["latin"],
   weight: ["500", "600", "700"],
   variable: "--font-fredoka",
+  display: "swap",
+});
+
+// Hand-drawn marker — used for the Our Story page headings to echo the
+// playful, hand-lettered tone of the reference design. Upright, even-weight
+// print lettering that reads cleanly in all-caps.
+const gochiHand = Gochi_Hand({
+  subsets: ["latin"],
+  weight: ["400"],
+  variable: "--font-marker",
   display: "swap",
 });
 
@@ -91,7 +101,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${inter.variable} ${fraunces.variable} ${tiroDevanagari.variable} ${fredoka.variable} font-sans antialiased bg-cream text-jaggery`}
+        className={`${inter.variable} ${fraunces.variable} ${tiroDevanagari.variable} ${fredoka.variable} ${gochiHand.variable} font-sans antialiased bg-cream text-jaggery`}
       >
         <PromoBar />
         <Navbar />
