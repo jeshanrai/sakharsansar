@@ -4,15 +4,19 @@ import Image from 'next/image';
 import Link from 'next/link';
 import Footer from "@/components/layout/Footer";
 import OrderDrawer from "@/components/layout/OrderDrawer";
+import BlogEditorsPicks from "@/components/sections/blog/BlogEditorsPicks";
+import BlogCategories from "@/components/sections/blog/BlogCategories";
 import blogData from "@/data/blog.json";
-import { ArrowUpRight } from "lucide-react";
+import { Bee, Ladybug, WavyEdge } from "@/components/ui/StoryArt";
+import { Daisy } from "@/components/ui/Doodles";
+import { ArrowRight } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Journal | SakharSansar",
+  title: "Blogs | SakharSansar",
   description: "Letters from Sankhuwasabha — recipes, rituals, and the slow stories behind every block of pure Himalayan jaggery.",
   alternates: { canonical: "https://sakharsansar.com/blog" },
   openGraph: {
-    title: "Journal | SakharSansar",
+    title: "Blogs | SakharSansar",
     description: "Letters from Sankhuwasabha — recipes, rituals, and harvest notes.",
     url: "https://sakharsansar.com/blog",
     siteName: "SakharSansar",
@@ -22,106 +26,100 @@ export const metadata: Metadata = {
 };
 
 export default function BlogList() {
-  const [featured, ...rest] = blogData;
+  const featured = blogData[0];
+  const categories = [...new Set(blogData.flatMap((p) => p.tags ?? []))];
 
   return (
     <>
       <OrderDrawer />
 
-      <main className="bg-cream pt-32 sm:pt-40 pb-24 sm:pb-32 px-6 sm:px-10 lg:px-16 min-h-screen overflow-x-hidden">
-        <div className="max-w-[1440px] mx-auto">
-          {/* Editorial header */}
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 mb-16 sm:mb-24 items-end border-b border-jaggery/15 pb-10">
-            <div className="md:col-span-8">
-              <span className="label-caps text-caramel mb-5 block">The Journal</span>
-              <h1 className="font-serif font-soft text-jaggery text-display tracking-[-0.018em] text-balance">
-                Letters from <span className="italic font-light">Sankhuwasabha.</span>
-              </h1>
-            </div>
-            <p className="md:col-span-4 text-jaggery/70 text-lede md:max-w-sm md:ml-auto">
-              Recipes, rituals, harvest notes, and the slow stories behind the jaggery
-              we pour by hand.
-            </p>
+      <main className="overflow-x-hidden">
+        {/* ─── 1 · Hero (peach) ─────────────────────── */}
+        <section
+          aria-label="Blog"
+          className="relative bg-peach px-6 sm:px-10 lg:px-16 pt-28 sm:pt-36 pb-24 sm:pb-32 overflow-hidden"
+        >
+          {/* Doodles */}
+          <Ladybug
+            aria-hidden
+            className="pointer-events-none absolute top-24 right-[34%] w-16 h-16 text-peach-line/70 -rotate-12 hidden md:block"
+          />
+          <Bee
+            aria-hidden
+            className="pointer-events-none absolute top-32 right-[8%] w-28 h-20 text-peach-line/70 hidden md:block"
+          />
+          <Daisy
+            aria-hidden
+            className="pointer-events-none absolute top-[11rem] right-[16%] w-16 h-16 text-peach-line/50 hidden md:block"
+          />
+
+          <div className="max-w-[1280px] mx-auto">
+            <h1 className="font-marker uppercase text-jaggery leading-[0.9] tracking-tight text-[clamp(3rem,9vw,6.5rem)]">
+              Blog
+            </h1>
           </div>
 
-          {/* Featured */}
-          {featured && (
-            <Link
-              href={`/blog/${featured.slug}`}
-              className="group grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 mb-20 sm:mb-32"
-            >
-              <div className="lg:col-span-7 relative aspect-[4/3] sm:aspect-[3/2] w-full overflow-hidden bg-ivory">
+          {/* Wave down into the green featured band */}
+          <WavyEdge
+            aria-hidden
+            className="absolute bottom-0 left-0 w-full h-[55px] sm:h-[80px] text-grove"
+          />
+        </section>
+
+        {/* ─── 2 · Featured (green) ─────────────────── */}
+        {featured && (
+          <section
+            aria-label="This month's featured blog"
+            className="relative bg-grove text-cream px-6 sm:px-10 lg:px-16 pt-6 sm:pt-10 pb-16 sm:pb-24 overflow-hidden"
+          >
+            <div className="max-w-[1280px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+              <Link
+                href={`/blog/${featured.slug}`}
+                className="group relative aspect-[4/3] sm:aspect-[3/2] w-full overflow-hidden rounded-[1.75rem] ring-1 ring-cream/10 shadow-2xl shadow-grove-deep/40"
+              >
                 <Image
                   src={featured.image}
                   alt={featured.title}
                   fill
                   priority
-                  sizes="(max-width: 1024px) 100vw, 60vw"
+                  sizes="(max-width: 1024px) 100vw, 50vw"
                   className="object-cover transition-transform duration-[1.4s] ease-out group-hover:scale-[1.03]"
                 />
-              </div>
-              <div className="lg:col-span-5 flex flex-col justify-center">
-                <div className="flex items-center gap-4 mb-5">
-                  <span className="label-caps text-caramel">{featured.tags[0]}</span>
-                  <span className="w-1 h-1 rounded-full bg-jaggery/30" />
-                  <time dateTime={featured.date} className="label-caps text-jaggery/45">
-                    {featured.date}
-                  </time>
-                </div>
-                <h2 className="font-serif text-h1 text-jaggery tracking-[-0.018em] mb-6 group-hover:text-caramel-deep transition-colors text-balance">
-                  {featured.title}
-                </h2>
-                <p className="text-jaggery/75 text-lede mb-8">
-                  {featured.description}
-                </p>
-                <span className="inline-flex items-center gap-3 label-caps text-jaggery border-b border-jaggery/30 group-hover:border-jaggery pb-1.5 self-start transition-colors">
-                  Read the article
-                  <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" strokeWidth={1.5} />
-                </span>
-              </div>
-            </Link>
-          )}
-
-          {/* Rest of posts — 2-col grid */}
-          {rest.length > 0 && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-16 sm:gap-x-16 sm:gap-y-24">
-              {rest.map((post) => (
-                <Link
-                  key={post.slug}
-                  href={`/blog/${post.slug}`}
-                  className="group flex flex-col h-full"
-                >
-                  <div className="relative aspect-[4/3] w-full overflow-hidden bg-ivory mb-6">
-                    <Image
-                      src={post.image}
-                      alt={post.title}
-                      fill
-                      loading="lazy"
-                      sizes="(max-width: 768px) 100vw, 50vw"
-                      className="object-cover transition-transform duration-[1.4s] ease-out group-hover:scale-[1.03]"
-                    />
-                  </div>
-                  <div className="flex items-center gap-4 mb-4">
-                    <span className="label-caps text-caramel">{post.tags[0]}</span>
-                    <span className="w-1 h-1 rounded-full bg-jaggery/30" />
-                    <time dateTime={post.date} className="label-caps text-jaggery/45">
-                      {post.date}
-                    </time>
-                  </div>
-                  <h2 className="font-serif text-h3 text-jaggery tracking-[-0.012em] mb-4 group-hover:text-caramel-deep transition-colors text-balance">
-                    {post.title}
+              </Link>
+              <div>
+                <span className="label-caps text-honey mb-5 block">This month&rsquo;s featured blog</span>
+                <Link href={`/blog/${featured.slug}`} className="group inline-block">
+                  <h2 className="font-marker uppercase text-cream leading-[0.98] text-[clamp(2rem,4.4vw,3.4rem)] group-hover:text-honey transition-colors text-balance">
+                    {featured.title}
                   </h2>
-                  <p className="text-jaggery/70 text-body mb-5 flex-grow">
-                    {post.description}
-                  </p>
-                  <span className="inline-flex items-center gap-2 label-caps text-jaggery/80 group-hover:text-jaggery">
-                    Read more
-                    <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" strokeWidth={1.5} />
-                  </span>
                 </Link>
-              ))}
+                <p className="text-cream/80 text-lede mt-6 max-w-xl">{featured.description}</p>
+                <Link
+                  href={`/blog/${featured.slug}`}
+                  className="mt-8 inline-flex items-center gap-2 rounded-full bg-cream text-jaggery label-caps px-8 py-4 hover:bg-honey transition-colors"
+                >
+                  Read the article
+                  <ArrowRight className="w-4 h-4" strokeWidth={2} />
+                </Link>
+              </div>
             </div>
-          )}
+          </section>
+        )}
+
+        {/* ─── 3 · Editor's Picks (green carousel) ──── */}
+        <BlogEditorsPicks posts={blogData} />
+
+        {/* ─── 4 · Blog Categories (peach) ──────────── */}
+        <div className="relative bg-peach">
+          {/* Wave: green dips down into the peach categories band */}
+          <WavyEdge
+            aria-hidden
+            flip
+            className="absolute top-0 left-0 z-10 w-full h-[55px] sm:h-[80px] text-grove"
+          />
+          <div className="pt-10 sm:pt-16">
+            <BlogCategories posts={blogData} categories={categories} />
+          </div>
         </div>
       </main>
 

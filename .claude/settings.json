@@ -40,7 +40,8 @@
       "Bash(python3 -c 'from PIL import Image;im=Image.open\\('\\\\''__TRACKED_VAR__'\\\\''\\);print\\(im.size,'\\\\''__TRACKED_VAR__'\\\\''\\)')",
       "Bash(python3 -c \"from PIL import Image;im=Image.open\\('public/story-hero.png'\\);print\\('dims:',im.size\\)\")",
       "Bash(node -e \"const sharp=require\\('sharp'\\); sharp\\('src/app/icon.svg',{density:72}\\).resize\\(220,220,{fit:'contain',background:{r:245,g:237,b:224,alpha:1}}\\).png\\(\\).toFile\\('/tmp/iconprev.png'\\).then\\(\\(\\)=>console.log\\('ok'\\)\\).catch\\(e=>console.log\\('ERR',e.message\\)\\)\")",
-      "Bash(node -e \"const s=require\\('sharp'\\); s\\('public/logo-mark.svg',{density:200}\\).resize\\(240,240,{fit:'contain',background:{r:0,g:0,b:0,alpha:0}}\\).webp\\({quality:90}\\).toFile\\('public/logo-mark.webp'\\).then\\(i=>console.log\\('webp',i.size,'bytes',i.width+'x'+i.height\\)\\).catch\\(e=>console.log\\('ERR',e.message\\)\\)\")"
+      "Bash(node -e \"const s=require\\('sharp'\\); s\\('public/logo-mark.svg',{density:200}\\).resize\\(240,240,{fit:'contain',background:{r:0,g:0,b:0,alpha:0}}\\).webp\\({quality:90}\\).toFile\\('public/logo-mark.webp'\\).then\\(i=>console.log\\('webp',i.size,'bytes',i.width+'x'+i.height\\)\\).catch\\(e=>console.log\\('ERR',e.message\\)\\)\")",
+      "Bash(node -e \"const d=require\\('./src/data/blog.json'\\); console.log\\('count:',d.length\\); console.log\\('keys:',Object.keys\\(d[0]\\)\\); console.log\\('sample:',JSON.stringify\\(d[0],null,1\\)\\); const tags=[...new Set\\(d.flatMap\\(p=>p.tags||[]\\)\\)]; console.log\\('all tags:',tags\\);\")"
     ],
     "additionalDirectories": [
       "/home/jeshanrai/Downloads"

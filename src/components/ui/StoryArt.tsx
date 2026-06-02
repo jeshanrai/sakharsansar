@@ -124,6 +124,46 @@ export const LandscapeBand = ({ className = "" }: ArtProps) => (
   </svg>
 );
 
+/** A little line-art bee. */
+export const Bee = ({ className = "" }: ArtProps) => (
+  <svg viewBox="0 0 120 90" aria-hidden className={className}>
+    <g {...stroke} strokeWidth={2.4}>
+      {/* wings */}
+      <path d="M64 30c10-16 30-20 36-10s-6 26-22 26" />
+      <path d="M70 40c14-6 32 0 33 12s-22 14-32 4" />
+      {/* body */}
+      <ellipse cx="48" cy="50" rx="26" ry="18" />
+      <path d="M40 34v32M52 33v34M63 38v24" />
+      {/* head + antennae */}
+      <circle cx="22" cy="50" r="8" />
+      <path d="M18 43l-6-8M24 42l2-9" />
+      {/* flight trail */}
+      <path d="M86 64c8 4 8 10 0 12" />
+    </g>
+  </svg>
+);
+
+/** A little line-art ladybug. */
+export const Ladybug = ({ className = "" }: ArtProps) => (
+  <svg viewBox="0 0 90 80" aria-hidden className={className}>
+    <g {...stroke} strokeWidth={2.4}>
+      {/* head */}
+      <path d="M30 20a16 16 0 0 1 30 0" />
+      <path d="M40 12l-4-7M50 12l4-7" />
+      {/* shell */}
+      <path d="M14 44a31 31 0 0 1 62 0c0 18-14 30-31 30S14 62 14 44Z" />
+      <path d="M45 22v52" />
+      {/* spots */}
+      <circle cx="30" cy="44" r="4" />
+      <circle cx="60" cy="44" r="4" />
+      <circle cx="33" cy="60" r="3.5" />
+      <circle cx="57" cy="60" r="3.5" />
+      {/* legs */}
+      <path d="M16 38l-9-4M14 50H5M18 62l-8 5M74 38l9-4M76 50h9M72 62l8 5" />
+    </g>
+  </svg>
+);
+
 /**
  * Organic wavy divider. Renders a filled wave whose flat side is the bottom;
  * tint with `text-*` (fill follows currentColor). Set `flip` to hang the wave
