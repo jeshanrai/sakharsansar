@@ -7,7 +7,7 @@ import OrderDrawer from "@/components/layout/OrderDrawer";
 import BlogEditorsPicks from "@/components/sections/blog/BlogEditorsPicks";
 import BlogCategories from "@/components/sections/blog/BlogCategories";
 import blogData from "@/data/blog.json";
-import { Bee, Ladybug, WavyEdge } from "@/components/ui/StoryArt";
+import { Bee, Ladybug, AnimatedWave } from "@/components/ui/StoryArt";
 import { Daisy } from "@/components/ui/Doodles";
 import { ArrowRight } from "lucide-react";
 
@@ -60,7 +60,7 @@ export default function BlogList() {
           </div>
 
           {/* Wave down into the green featured band */}
-          <WavyEdge
+          <AnimatedWave
             aria-hidden
             className="absolute bottom-0 left-0 w-full h-[55px] sm:h-[80px] text-grove"
           />
@@ -112,7 +112,7 @@ export default function BlogList() {
         {/* ─── 4 · Blog Categories (peach) ──────────── */}
         <div className="relative bg-peach">
           {/* Wave: green dips down into the peach categories band */}
-          <WavyEdge
+          <AnimatedWave
             aria-hidden
             flip
             className="absolute top-0 left-0 z-10 w-full h-[55px] sm:h-[80px] text-grove"

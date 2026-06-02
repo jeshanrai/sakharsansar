@@ -106,9 +106,9 @@ export default function Navbar() {
             <Link
               href="/shop"
               aria-label="Favourites"
-              className="relative h-11 w-11 inline-flex items-center justify-center rounded-full text-jaggery hover:bg-jaggery/[0.06] transition-colors"
+              className="relative h-12 w-12 inline-flex items-center justify-center rounded-full text-jaggery hover:bg-jaggery/[0.06] transition-colors"
             >
-              <Heart className="h-[19px] w-[19px]" strokeWidth={1.5} />
+              <Heart className="h-[24px] w-[24px]" strokeWidth={1.6} />
             </Link>
 
             {/* Cart with badge */}
@@ -116,9 +116,9 @@ export default function Navbar() {
               type="button"
               onClick={() => openOrderDrawer()}
               aria-label="Cart, 2 items"
-              className="relative h-11 w-11 inline-flex items-center justify-center rounded-full text-jaggery hover:bg-jaggery/[0.06] transition-colors"
+              className="relative h-12 w-12 inline-flex items-center justify-center rounded-full text-jaggery hover:bg-jaggery/[0.06] transition-colors"
             >
-              <ShoppingBag className="h-[19px] w-[19px]" strokeWidth={1.5} />
+              <ShoppingBag className="h-[24px] w-[24px]" strokeWidth={1.6} />
               <span
                 aria-hidden
                 className="absolute top-1.5 right-1.5 min-w-[16px] h-[16px] px-1 rounded-full bg-terracotta text-cream text-[10px] font-semibold flex items-center justify-center tabular-nums leading-none"

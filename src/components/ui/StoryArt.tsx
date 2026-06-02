@@ -165,6 +165,34 @@ export const Ladybug = ({ className = "" }: ArtProps) => (
 );
 
 /**
+ * Animated "snake" wave divider. The SVG is two periods wide and slides left
+ * by one period on a loop, so the crests appear to drift sideways. Tint with
+ * `text-*` (fill follows currentColor); set `flip` to hang it from the top.
+ * Give the wrapper its position + height via `className`.
+ */
+export const AnimatedWave = ({
+  className = "",
+  flip = false,
+}: ArtProps & { flip?: boolean }) => (
+  <div
+    aria-hidden
+    className={`overflow-hidden ${className}`}
+    style={flip ? { transform: "scaleY(-1)" } : undefined}
+  >
+    <svg
+      className="absolute bottom-0 left-0 h-full w-[200%] animate-wave-flow"
+      viewBox="0 0 2880 90"
+      preserveAspectRatio="none"
+    >
+      <path
+        fill="currentColor"
+        d="M0 45C240 10 480 10 720 45 960 80 1200 80 1440 45 1680 10 1920 10 2160 45 2400 80 2640 80 2880 45V90H0Z"
+      />
+    </svg>
+  </div>
+);
+
+/**
  * Organic wavy divider. Renders a filled wave whose flat side is the bottom;
  * tint with `text-*` (fill follows currentColor). Set `flip` to hang the wave
  * from the top of a section instead.

@@ -269,6 +269,20 @@ em, i, .italic {
     .animate-marquee { animation: none; }
   }
 
+  /* ── Flowing wave divider — the snake-like section border.
+     The SVG is rendered two periods wide (200%); sliding it left by
+     50% (one period) loops seamlessly so the crests drift sideways. */
+  @keyframes wave-flow {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+  .animate-wave-flow {
+    animation: wave-flow 14s linear infinite;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .animate-wave-flow { animation: none; }
+  }
+
   /* Subtle paper grain — applied as ::after overlay */
   .paper-grain { position: relative; isolation: isolate; }
   .paper-grain::after {

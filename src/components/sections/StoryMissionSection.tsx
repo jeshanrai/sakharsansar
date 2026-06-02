@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { FadeUp } from "@/components/ui/Animations";
-import { LandscapeBand, WavyEdge } from "@/components/ui/StoryArt";
+import { LandscapeBand, AnimatedWave } from "@/components/ui/StoryArt";
 
 /**
  * "Real food, nothing added" frame — a centered green band with tonal
@@ -44,7 +44,7 @@ export default function StoryMissionSection() {
       </div>
 
       {/* Wave down into the peach band */}
-      <WavyEdge
+      <AnimatedWave
         aria-hidden
         className="absolute bottom-0 left-0 w-full h-[60px] sm:h-[80px] text-peach"
       />

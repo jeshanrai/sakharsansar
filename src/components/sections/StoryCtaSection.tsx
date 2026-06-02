@@ -2,7 +2,7 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { FadeUp } from "@/components/ui/Animations";
-import { WavyEdge } from "@/components/ui/StoryArt";
+import { AnimatedWave } from "@/components/ui/StoryArt";
 
 type RangeCard = {
   label: string;
@@ -43,7 +43,7 @@ export default function StoryCtaSection() {
       className="relative bg-grove text-cream px-6 sm:px-10 lg:px-16 pt-28 sm:pt-36 pb-20 sm:pb-28 overflow-hidden"
     >
       {/* Curved transition — peach flows down into the green grid */}
-      <WavyEdge
+      <AnimatedWave
         aria-hidden
         flip
         className="absolute top-0 left-0 w-full h-[55px] sm:h-[75px] text-peach z-20"

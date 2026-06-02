@@ -13,6 +13,7 @@ import {
   Tag,
   Sparkles,
 } from "lucide-react";
+import { AnimatedWave } from "@/components/ui/StoryArt";
 
 type Slide = {
   id: string;
@@ -166,7 +167,7 @@ export default function HeroSection() {
           <ChevronRight className="w-5 h-5" strokeWidth={1.75} />
         </button>
 
-        <div className="relative max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-20 min-h-[760px] sm:min-h-[88svh] lg:min-h-[92svh] flex items-center py-12 sm:py-16 lg:py-20">
+        <div className="relative max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-20 min-h-[600px] sm:min-h-[70svh] lg:min-h-[76svh] flex items-center py-10 sm:py-14 lg:py-16">
           <AnimatePresence mode="wait" custom={direction}>
             <motion.div
               key={slide.id}
@@ -347,6 +348,8 @@ export default function HeroSection() {
         </div>
       </div>
 
+      {/* Green snake border flowing into the "Why our sakhar" band below */}
+      <AnimatedWave className="pointer-events-none absolute bottom-0 left-0 z-10 w-full h-[48px] sm:h-[72px] text-grove" />
     </section>
   );
 }

@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { ShieldCheck, Leaf, Flame, HandHeart } from "lucide-react";
+import { AnimatedWave } from "@/components/ui/StoryArt";
 
 type Badge = {
   icon: typeof Leaf;
@@ -20,8 +21,11 @@ export default function TrustStrip() {
   return (
     <section
       aria-label="Why SakharSansar"
-      className="relative bg-jaggery text-cream py-16 sm:py-20 lg:py-24 px-6 sm:px-10 lg:px-16 overflow-hidden paper-grain"
+      className="relative isolate bg-grove text-cream pt-24 sm:pt-28 lg:pt-32 pb-24 sm:pb-28 lg:pb-32 px-6 sm:px-10 lg:px-16 overflow-hidden paper-grain"
     >
+      {/* Animated snake border — blends into the cream Products section below.
+          (The top divider is supplied by the hero as a green wave.) */}
+      <AnimatedWave className="absolute bottom-0 left-0 z-[1] w-full h-[48px] sm:h-[72px] text-cream" />
       {/* Decorative swirl pattern */}
       <div
         aria-hidden
@@ -51,9 +55,9 @@ export default function TrustStrip() {
             <span className="label-caps text-honey">Why our sakhar</span>
             <span className="w-8 h-px bg-honey/60" />
           </div>
-          <h2 className="font-display font-bold text-cream tracking-tight text-balance leading-[0.95]">
-            <span className="block text-[clamp(2rem,4.5vw,3.5rem)]">100% organic.</span>
-            <span className="block text-[clamp(2.5rem,5.5vw,4.5rem)] text-honey mt-1 sm:mt-2">Pure sakhar.</span>
+          <h2 className="font-marker uppercase text-cream text-balance leading-[0.95]">
+            <span className="block text-[clamp(2rem,4.5vw,3.5rem)]">100% organic</span>
+            <span className="block text-[clamp(2.5rem,5.5vw,4.5rem)] text-honey mt-1 sm:mt-2">Pure sakhar</span>
           </h2>
         </motion.div>
 
@@ -88,12 +92,12 @@ export default function TrustStrip() {
                 )}
               </div>
 
-              {/* Chunky display text */}
-              <div className="font-display font-bold text-cream leading-[0.88]">
-                <p className="text-[clamp(1.9rem,3.5vw,2.6rem)] tracking-tight">
+              {/* Chunky hand-drawn text */}
+              <div className="text-cream leading-[0.9]">
+                <p className="font-marker uppercase text-[clamp(2rem,3.6vw,2.75rem)]">
                   {badge.big}
                 </p>
-                <p className="text-[clamp(0.85rem,1.3vw,1.05rem)] tracking-tight mt-1.5 text-cream/85 font-semibold uppercase">
+                <p className="label-caps text-[clamp(0.7rem,1vw,0.8rem)] mt-2 text-cream/85">
                   {badge.small}
                 </p>
               </div>
