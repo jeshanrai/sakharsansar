@@ -55,14 +55,14 @@ export default function Footer() {
   return (
     <footer className="bg-peach text-jaggery">
       <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-12 pt-16 sm:pt-20 pb-10">
-        <div className="grid grid-cols-2 md:grid-cols-12 gap-y-12 gap-x-8">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-y-12 gap-x-8">
           {/* ─── Brand + social + address ─────────────── */}
-          <div className="col-span-2 md:col-span-6">
+          <div className="md:col-span-6">
             <Link href="/" aria-label="SakharSansar — home" className="inline-flex items-center gap-3.5">
               <span className="relative block h-12 w-12 rounded-full overflow-hidden border-2 border-jaggery/10">
                 <Image src="/logo-mark.webp" alt="" fill sizes="48px" className="object-cover scale-[1.02]" />
               </span>
-              <span className="relative block h-9 w-[180px]">
+              <span className="relative block h-8 w-[150px] sm:h-9 sm:w-[180px]">
                 <Image src="/word-logo.svg" alt="SakharSansar" fill sizes="180px" className="object-contain object-left" />
               </span>
             </Link>
@@ -94,18 +94,20 @@ export default function Footer() {
           </div>
 
           {/* ─── Link columns ─────────────────────────── */}
-          {COLUMNS.map((col) => (
-            <nav key={col.title} aria-label={col.title} className="col-span-1 md:col-span-2">
-              <h4 className="font-marker uppercase text-jaggery text-xl mb-6">{col.title}</h4>
-              <ul className="space-y-4">
-                {col.links.map((link) => (
-                  <li key={link.label}>
-                    <FooterLink href={link.href} label={link.label} />
-                  </li>
-                ))}
-              </ul>
-            </nav>
-          ))}
+          <div className="md:col-span-6 grid grid-cols-3 gap-x-5 sm:gap-x-6 gap-y-10">
+            {COLUMNS.map((col) => (
+              <nav key={col.title} aria-label={col.title}>
+                <h4 className="font-marker uppercase text-jaggery text-lg sm:text-xl mb-5 sm:mb-6">{col.title}</h4>
+                <ul className="space-y-4">
+                  {col.links.map((link) => (
+                    <li key={link.label}>
+                      <FooterLink href={link.href} label={link.label} />
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+            ))}
+          </div>
         </div>
 
         {/* ─── Bottom bar ───────────────────────────── */}

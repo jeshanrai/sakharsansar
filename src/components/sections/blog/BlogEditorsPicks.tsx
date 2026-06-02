@@ -36,16 +36,16 @@ export default function BlogEditorsPicks({ posts }: { posts: Post[] }) {
     >
       <div className="max-w-[1280px] mx-auto">
         {/* Header + controls */}
-        <div className="flex items-end justify-between gap-6 mb-10 sm:mb-14">
-          <h2 className="font-marker uppercase text-cream leading-[0.95] text-[clamp(2rem,5vw,3.5rem)]">
+        <div className="flex items-end justify-between gap-4 mb-10 sm:mb-14">
+          <h2 className="font-marker uppercase text-cream leading-[0.95] text-[clamp(1.6rem,5vw,3.5rem)]">
             Editor&rsquo;s picks
           </h2>
-          <div className="flex items-center gap-3 shrink-0">
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
             <button
               type="button"
               onClick={() => scrollBy(-1)}
               aria-label="Previous picks"
-              className="h-12 w-12 inline-flex items-center justify-center rounded-full border border-cream/40 text-cream hover:bg-cream hover:text-grove transition-colors"
+              className="h-10 w-10 sm:h-12 sm:w-12 inline-flex items-center justify-center rounded-full border border-cream/40 text-cream hover:bg-cream hover:text-grove transition-colors"
             >
               <ArrowLeft className="w-5 h-5" strokeWidth={1.8} />
             </button>
@@ -53,7 +53,7 @@ export default function BlogEditorsPicks({ posts }: { posts: Post[] }) {
               type="button"
               onClick={() => scrollBy(1)}
               aria-label="Next picks"
-              className="h-12 w-12 inline-flex items-center justify-center rounded-full border border-cream/40 text-cream hover:bg-cream hover:text-grove transition-colors"
+              className="h-10 w-10 sm:h-12 sm:w-12 inline-flex items-center justify-center rounded-full border border-cream/40 text-cream hover:bg-cream hover:text-grove transition-colors"
             >
               <ArrowRight className="w-5 h-5" strokeWidth={1.8} />
             </button>

@@ -73,6 +73,40 @@ export default async function ProductPage({ params }: Props) {
     "countryOfOrigin": { "@type": "Country", "name": "Nepal" }
   };
 
+  // FAQ — answered from real product data so the schema matches what renders.
+  const faqs = [
+    {
+      q: `Is ${product.name} chemical-free?`,
+      a: `Yes. ${product.name} is made only from slow-cooked sugarcane juice — no bleach, no sulphur, no anti-caking agents and no artificial colour. Ingredients: ${product.ingredients}.`,
+    },
+    {
+      q: `Where is ${product.name} made?`,
+      a: `It is wood-fired by our farming cooperative in ${product.origin}, using methods unchanged for seven generations.`,
+    },
+    {
+      q: "How should I store it and how long does it keep?",
+      a: `${product.shelfLife}. Keep it away from direct sunlight and humidity — a little natural crystallisation over time is a sign of purity, not spoilage.`,
+    },
+    {
+      q: "How is jaggery different from refined white sugar?",
+      a: "Unlike refined sugar, our unrefined jaggery retains the iron, magnesium and potassium naturally present in sugarcane, and carries a deep caramel flavour refined sugar can't match.",
+    },
+    {
+      q: "Do you deliver across Nepal?",
+      a: "Yes — we ship pan-Nepal, packed in compostable kraft paper, direct from our Sankhuwasabha cooperative.",
+    },
+  ];
+
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faqs.map((f) => ({
+      "@type": "Question",
+      "name": f.q,
+      "acceptedAnswer": { "@type": "Answer", "text": f.a },
+    })),
+  };
+
   // Expandable detail sections
   const sections = [
     {
@@ -126,6 +160,10 @@ export default async function ProductPage({ params }: Props) {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
 
       <OrderDrawer />
@@ -211,6 +249,27 @@ export default async function ProductPage({ params }: Props) {
               {/* Expandable sections */}
               <ProductDetailSections sections={sections} />
             </div>
+          </div>
+        </section>
+
+        {/* FAQ — visible content backing the FAQPage schema above */}
+        <section
+          aria-label="Frequently asked questions"
+          className="py-20 sm:py-28 px-6 sm:px-10 lg:px-16 bg-cream border-t border-jaggery/10"
+        >
+          <div className="max-w-3xl mx-auto">
+            <span className="label-caps text-caramel mb-5 block">Good to know</span>
+            <h2 className="font-serif text-h2 text-jaggery tracking-[-0.018em] mb-10 text-balance">
+              Questions, <span className="italic font-light">answered.</span>
+            </h2>
+            <dl className="border-t border-jaggery/12">
+              {faqs.map((f) => (
+                <div key={f.q} className="py-7 border-b border-jaggery/12">
+                  <dt className="font-serif text-h4 text-jaggery mb-3 text-balance">{f.q}</dt>
+                  <dd className="text-jaggery/75 text-body max-w-2xl">{f.a}</dd>
+                </div>
+              ))}
+            </dl>
           </div>
         </section>
 

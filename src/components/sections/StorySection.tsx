@@ -10,25 +10,8 @@ export default function StorySection() {
     <section
       id="story"
       aria-label="Our Story"
-      className="relative bg-peach overflow-hidden pt-20 sm:pt-24 pb-[14vw] sm:pb-[12vw] lg:pb-[10vw]"
+      className="relative bg-peach overflow-hidden pt-20 sm:pt-24 pb-10 sm:pb-14 lg:pb-[10vw]"
     >
-      {/* Hand-drawn banner — sugarcane harvest and wood-fire craft frame the
-          open centre where the headline sits. Anchored to the foot of the hero
-          and faded into the peach so it reads as a background. */}
-      <div aria-hidden className="absolute inset-x-0 bottom-0 z-0">
-        <Image
-          src="/story-hero.png"
-          alt=""
-          width={4096}
-          height={1024}
-          priority
-          fetchPriority="high"
-          sizes="100vw"
-          className="w-full h-auto"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-peach via-peach/30 to-transparent" />
-      </div>
-
       <div className="relative z-10 px-6 sm:px-10 lg:px-16">
         {/* Breadcrumb */}
         <FadeUp>
@@ -41,11 +24,11 @@ export default function StorySection() {
           </nav>
         </FadeUp>
 
-        <div className="max-w-2xl mx-auto text-center mt-[10vw] sm:mt-[7vw] lg:mt-[5vw]">
+        <div className="max-w-2xl mx-auto text-center lg:mt-[5vw]">
           <FadeUp delay={0.05}>
             <div className="relative inline-block">
-              <HeartScribble className="absolute -left-16 -top-6 w-20 h-14 text-peach-line rotate-[-8deg] hidden sm:block" />
-              <h1 className="font-marker uppercase text-jaggery leading-[0.9] tracking-tight text-[clamp(2.75rem,8vw,6rem)]">
+              <HeartScribble className="absolute -left-12 -top-5 w-14 h-10 sm:-left-16 sm:-top-6 sm:w-20 sm:h-14 text-peach-line rotate-[-8deg]" />
+              <h1 className="font-marker uppercase text-jaggery leading-[0.9] tracking-tight text-[clamp(2.5rem,8vw,6rem)]">
                 A bit about us
               </h1>
             </div>
@@ -59,6 +42,27 @@ export default function StorySection() {
             </p>
           </FadeUp>
         </div>
+      </div>
+
+      {/* Hand-drawn banner — sugarcane harvest and wood-fire craft.
+          Stacks below the copy on mobile (a clean full-width strip); on large
+          screens it anchors to the foot of the hero so the headline sits in its
+          open centre, flanked by the artwork. */}
+      <div
+        aria-hidden
+        className="relative mt-8 lg:mt-0 lg:absolute lg:inset-x-0 lg:bottom-0 lg:z-0"
+      >
+        <Image
+          src="/story-hero.png"
+          alt=""
+          width={4096}
+          height={1024}
+          priority
+          fetchPriority="high"
+          sizes="100vw"
+          className="w-full h-auto"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-peach via-peach/40 to-transparent lg:via-peach/30" />
       </div>
     </section>
   );

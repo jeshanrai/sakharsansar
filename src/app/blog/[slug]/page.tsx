@@ -62,6 +62,9 @@ export default async function BlogPost({ params }: Props) {
       "logo": { "@type": "ImageObject", "url": "https://sakharsansar.com/hero.jpg" }
     },
     "datePublished": post.date,
+    "dateModified": post.date,
+    "inLanguage": "en",
+    "articleSection": post.tags[0],
     "keywords": post.tags.join(', '),
     "mainEntityOfPage": {
       "@type": "WebPage",
