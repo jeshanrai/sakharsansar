@@ -3,6 +3,7 @@ import { Inter, Fraunces, Tiro_Devanagari_Hindi, Fredoka, Gochi_Hand } from "nex
 import "./globals.css";
 import PromoBar from "@/components/layout/PromoBar";
 import Navbar from "@/components/layout/Navbar";
+import FloatingContact from "@/components/layout/FloatingContact";
 
 // Body sans — Söhne-adjacent. Use 400 for body, 500 for emphasis.
 const inter = Inter({
@@ -106,6 +107,7 @@ export default function RootLayout({
         <PromoBar />
         <Navbar />
         {children}
+        <FloatingContact />
       </body>
     </html>
   );

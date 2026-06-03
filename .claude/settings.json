@@ -46,7 +46,8 @@
       "Bash(node -e \"try{const c=require\\('./src/data/content.json'\\); console.log\\('content.products:', \\(c.products||[]\\).map\\(p=>p.slug||p.id||p.name\\).slice\\(0,12\\)\\)}catch\\(e\\){console.log\\('err',e.message\\)}\")",
       "Bash(node -e \"const c=require\\('./src/data/content.json'\\); console.log\\(Object.keys\\(c\\)\\); console.log\\('product sample keys:', Object.keys\\(c.products[0]\\)\\)\")",
       "Bash(node -e \"const b=require\\('./src/data/blog.json'\\); console.log\\('keys:',Object.keys\\(b[0]\\),'| dates:',b.map\\(p=>p.date\\)\\)\")",
-      "Bash(node -e \"const c=require\\('./src/data/content.json'\\); console.log\\('brand:',JSON.stringify\\(c.brand\\)\\); console.log\\('prod sample:',JSON.stringify\\({slug:c.products[0].slug,name:c.products[0].name,description:c.products[0].description,category:c.products[0].category}\\)\\)\")"
+      "Bash(node -e \"const c=require\\('./src/data/content.json'\\); console.log\\('brand:',JSON.stringify\\(c.brand\\)\\); console.log\\('prod sample:',JSON.stringify\\({slug:c.products[0].slug,name:c.products[0].name,description:c.products[0].description,category:c.products[0].category}\\)\\)\")",
+      "Bash(node -e \"const c=require\\('./src/data/content.json'\\); console.log\\('brand:',JSON.stringify\\(c.brand\\)\\); console.log\\('has contact key:', !!c.contact\\)\")"
     ],
     "additionalDirectories": [
       "/home/jeshanrai/Downloads"
