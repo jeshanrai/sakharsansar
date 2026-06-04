@@ -6,6 +6,7 @@ import StorySection from "@/components/sections/StorySection";
 import StoryWelcomeSection from "@/components/sections/StoryWelcomeSection";
 import StoryNatureSection from "@/components/sections/StoryNatureSection";
 import StoryMissionSection from "@/components/sections/StoryMissionSection";
+import StoryProcessSection from "@/components/sections/StoryProcessSection";
 import StoryRootsSection from "@/components/sections/StoryRootsSection";
 import FarmersSection from "@/components/sections/FarmersSection";
 import StoryHeritageSection from "@/components/sections/StoryHeritageSection";
@@ -127,6 +128,7 @@ export default function OurStory() {
         <StoryWelcomeSection />  {/* 2 · Nice to meet us (green) */}
         <StoryNatureSection />   {/* 3 · Pure is in our nature (green) */}
         <StoryMissionSection />  {/* 4 · Real food, nothing added (green) */}
+        <StoryProcessSection />  {/* · How it's made — making-process film (peach) */}
         <StoryRootsSection />    {/* 5 · Chemical-free at our roots (peach) */}
         <FarmersSection />       {/* 6 · Meet the makers (peach) */}
         <StoryHeritageSection /> {/* 7 · Seven generations (peach) */}

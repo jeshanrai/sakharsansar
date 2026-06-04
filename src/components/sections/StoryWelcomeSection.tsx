@@ -1,6 +1,6 @@
 import React from 'react';
-import Image from 'next/image';
 import { FadeUp, SlideInLeft, SlideInRight } from "@/components/ui/Animations";
+import VideoFrame from "@/components/ui/VideoFrame";
 import { AnimatedWave } from "@/components/ui/StoryArt";
 
 /**
@@ -38,18 +38,18 @@ export default function StoryWelcomeSection() {
           </div>
         </SlideInLeft>
 
-        {/* Image — sits higher */}
+        {/* Ambient farm video — sits higher.
+            SCAFFOLD: poster is an existing image; drop /media/farm-loop.mp4
+            into public/ (a short, silent, looping farm/valley clip) and it
+            autoplays. Until then this simply shows the poster still. */}
         <SlideInRight className="lg:col-span-6 lg:-mt-10">
-          <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[1.75rem] ring-1 ring-cream/10 shadow-2xl shadow-grove-deep/40">
-            <Image
-              src="/hero.jpg"
-              alt="A young farmer looking out over the terraced Sankhuwasabha valley"
-              fill
-              loading="lazy"
-              sizes="(max-width: 1024px) 100vw, 50vw"
-              className="object-cover"
-            />
-          </div>
+          <VideoFrame
+            variant="ambient"
+            src="/media/farm-loop.mp4"
+            poster="/hero.jpg"
+            posterAlt="The terraced Sankhuwasabha valley where our cane is grown"
+            className="aspect-[4/3] w-full ring-1 ring-cream/10 shadow-2xl shadow-grove-deep/40"
+          />
         </SlideInRight>
       </div>
 
