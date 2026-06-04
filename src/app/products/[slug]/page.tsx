@@ -232,7 +232,7 @@ export default async function ProductPage({ params }: Props) {
                 </span>
               </div>
 
-              <ProductActions productName={product.name} />
+              <ProductActions productName={product.name} slug={product.slug} />
 
               {/* Trust strip — pills */}
               <div className="flex flex-wrap gap-2.5 mt-7 mb-11">

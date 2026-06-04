@@ -50,7 +50,8 @@
       "Bash(node -e \"const c=require\\('./src/data/content.json'\\); console.log\\('brand:',JSON.stringify\\(c.brand\\)\\); console.log\\('has contact key:', !!c.contact\\)\")",
       "Bash(python3 -c \"import json;d=json.load\\(open\\('src/data/blog.json'\\)\\);print\\(list\\(d[0].keys\\(\\)\\)\\);print\\('posts:',len\\(d\\)\\)\")",
       "Bash(python3 -c \"import json;d=json.load\\(open\\('src/data/content.json'\\)\\);p=d['products'][0];print\\(list\\(p.keys\\(\\)\\)\\);print\\('products:',len\\(d['products']\\)\\)\")",
-      "Bash(npm run *)"
+      "Bash(npm run *)",
+      "Bash(node -e \"const d=require\\('./src/data/content.json'\\); console.log\\(JSON.stringify\\(d.products[0],null,2\\)\\); console.log\\('total products:', d.products.length\\); console.log\\('keys:', Object.keys\\(d.products[0]\\)\\)\")"
     ],
     "additionalDirectories": [
       "/home/jeshanrai/Downloads"

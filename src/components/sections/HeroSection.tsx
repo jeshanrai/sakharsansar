@@ -9,8 +9,6 @@ import {
   ArrowUpRight,
   ChevronLeft,
   ChevronRight,
-  Star,
-  Tag,
   Sparkles,
 } from "lucide-react";
 import { AnimatedWave } from "@/components/ui/StoryArt";
@@ -199,22 +197,8 @@ export default function HeroSection() {
                   </span>
                 </h1>
 
-                {/* Price row */}
-                <div className="mt-7 flex items-end flex-wrap gap-4">
-                  <div className="flex items-baseline gap-3">
-                    <span className="font-serif text-cream text-[clamp(1.75rem,3vw,2.5rem)] tracking-tight nums-price leading-none">
-                      {slide.price}
-                    </span>
-                    <span className="text-cream/45 text-lg line-through nums-price">{slide.strike}</span>
-                  </div>
-                  <span className="inline-flex items-center gap-1.5 bg-terracotta text-cream rounded-full px-3 py-1.5 label-caps text-[10px] shadow-lg shadow-ink/30">
-                    <Tag className="w-3 h-3" strokeWidth={1.75} />
-                    {slide.badge}
-                  </span>
-                </div>
-
                 {/* CTA row */}
-                <div className="mt-7 flex flex-col sm:flex-row sm:items-center gap-4">
+                <div className="mt-8 flex flex-col sm:flex-row sm:items-center gap-4">
                   <Link
                     href={slide.ctaHref}
                     className="group relative inline-flex items-center justify-center gap-3 px-7 py-4 rounded-full bg-jaggery text-cream font-medium overflow-hidden shadow-lg shadow-jaggery/25 hover:shadow-xl hover:shadow-jaggery/35 hover:-translate-y-0.5 transition-all duration-500"
@@ -225,14 +209,6 @@ export default function HeroSection() {
                     <ArrowUpRight className="w-4 h-4 relative group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" strokeWidth={1.75} />
                   </Link>
 
-                </div>
-
-                {/* Trust row — minimal */}
-                <div className="mt-7 flex items-center gap-2 text-[12px] text-cream/85">
-                  <Star className="w-3.5 h-3.5 fill-honey stroke-honey" />
-                  <span className="font-medium text-cream">4.9</span>
-                  <span className="text-cream/40">·</span>
-                  <span>1.2K+ reviews</span>
                 </div>
               </div>
 

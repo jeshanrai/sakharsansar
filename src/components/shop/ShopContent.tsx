@@ -18,6 +18,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import data from "@/data/content.json";
+import { useIsFavourite, toggleFavourite } from "@/lib/favourites";
 
 type Product = (typeof data.products)[number];
 
@@ -64,15 +65,12 @@ const PRICE_RANGES = [
 const ShopProductCard = memo(function ShopProductCard({
   product,
   index,
-  isWishlisted,
-  onToggleWishlist,
 }: {
   product: Product;
   index: number;
-  isWishlisted: boolean;
-  onToggleWishlist: () => void;
 }) {
   const { rating, count } = ratingFor(product.slug);
+  const isWishlisted = useIsFavourite(product.slug);
   const badge = badgeFor(product.slug, index);
   const hasDiscount = index < 2;
   const originalPrice = hasDiscount
@@ -84,9 +82,15 @@ const ShopProductCard = memo(function ShopProductCard({
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: (index % 9) * 0.04, ease: [0.16, 1, 0.3, 1] }}
-      className={`group flex flex-col rounded-3xl p-3 sm:p-4 transition-transform duration-500 hover:-translate-y-1 ${CARD_BG}`}
+      className={`group relative flex flex-col rounded-3xl p-3 sm:p-4 transition-transform duration-500 hover:-translate-y-1 ${CARD_BG}`}
     >
-      <div className="relative aspect-square w-full">
+      {/* Legibility scrim — darkens the photo behind the text so it reads consistently */}
+      <span
+        aria-hidden
+        className="absolute inset-0 rounded-3xl bg-gradient-to-t from-jaggery/65 via-jaggery/20 to-transparent pointer-events-none"
+      />
+
+      <div className="relative z-10 aspect-square w-full">
         <div className="relative w-full h-full rounded-2xl overflow-hidden bg-cream">
           {badge && (
             <span className={`absolute top-3 left-3 z-10 label-caps text-[9px] px-2.5 py-1 rounded-full ${badge.tone}`}>
@@ -96,8 +100,8 @@ const ShopProductCard = memo(function ShopProductCard({
 
           <button
             type="button"
-            onClick={onToggleWishlist}
-            aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
+            onClick={() => toggleFavourite(product.slug)}
+            aria-label={isWishlisted ? "Remove from favourites" : "Add to favourites"}
             className={`absolute top-2.5 right-2.5 z-10 w-8 h-8 rounded-full bg-cream/90 backdrop-blur-sm flex items-center justify-center transition-colors ${
               isWishlisted ? "text-terracotta" : "text-jaggery/45 hover:text-terracotta opacity-0 group-hover:opacity-100"
             }`}
@@ -131,7 +135,7 @@ const ShopProductCard = memo(function ShopProductCard({
         </div>
       </div>
 
-      <div className="pt-5 px-1.5 pb-1 flex flex-col">
+      <div className="relative z-10 pt-5 px-1.5 pb-1 flex flex-col [text-shadow:0_1px_2px_rgba(26,20,16,0.28)]">
         <div className="flex items-center justify-between gap-2 mb-3">
           <span className="text-[10px] font-bold tracking-[0.22em] uppercase text-honey">
             {product.category}
@@ -139,17 +143,17 @@ const ShopProductCard = memo(function ShopProductCard({
           <div className="flex items-center gap-1.5">
             <Star className="w-3.5 h-3.5 fill-honey stroke-honey" />
             <span className="text-[13px] font-bold text-cream tabular-nums leading-none">{rating}</span>
-            <span className="text-[11px] text-cream/55 font-medium leading-none">({count})</span>
+            <span className="text-[11px] text-cream/75 font-medium leading-none">({count})</span>
           </div>
         </div>
 
         <Link href={`/products/${product.slug}`} className="block">
-          <h3 className="font-display font-bold text-cream text-[20px] sm:text-[22px] tracking-tight leading-[1.1] group-hover:text-honey transition-colors">
+          <h3 className="font-display font-bold text-cream text-[20px] sm:text-[22px] tracking-tight leading-[1.1] line-clamp-2 min-h-[2.2em] group-hover:text-honey transition-colors">
             {product.name}
           </h3>
         </Link>
 
-        <p className="mt-2.5 text-[10px] font-bold tracking-[0.2em] uppercase text-cream/65">
+        <p className="mt-2.5 text-[10px] font-bold tracking-[0.2em] uppercase text-cream/80">
           {product.weight}
         </p>
 
@@ -158,7 +162,7 @@ const ShopProductCard = memo(function ShopProductCard({
             {product.price}
           </span>
           {originalPrice && (
-            <span className="text-[13px] text-cream/45 line-through nums-price font-medium">
+            <span className="text-[13px] text-cream/60 line-through nums-price font-medium">
               {originalPrice}
             </span>
           )}
@@ -176,7 +180,6 @@ export default function ShopContent() {
   const [searchQuery, setSearchQuery] = useState("");
   const [sortOpen, setSortOpen] = useState(false);
   const [filtersOpen, setFiltersOpen] = useState(false);
-  const [wishlisted, setWishlisted] = useState<Set<string>>(new Set());
   const sortRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -244,14 +247,6 @@ export default function ShopContent() {
     setSearchQuery("");
     setSortBy("default");
     setActivePriceRange(0);
-  }, []);
-
-  const toggleWishlist = useCallback((slug: string) => {
-    setWishlisted((prev) => {
-      const next = new Set(prev);
-      if (next.has(slug)) next.delete(slug); else next.add(slug);
-      return next;
-    });
   }, []);
 
   const activeSortLabel = SORT_OPTIONS.find((s) => s.value === sortBy)?.label || "Featured";
@@ -520,8 +515,6 @@ export default function ShopContent() {
                     key={product.slug}
                     product={product}
                     index={i}
-                    isWishlisted={wishlisted.has(product.slug)}
-                    onToggleWishlist={() => toggleWishlist(product.slug)}
                   />
                 ))}
               </motion.div>

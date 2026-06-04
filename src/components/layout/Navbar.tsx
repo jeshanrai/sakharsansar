@@ -6,6 +6,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { ShoppingBag, Heart, Menu, X } from "lucide-react";
 import { openOrderDrawer } from "./OrderDrawer";
+import { useFavouritesCount } from "@/lib/favourites";
 
 const NAV = [
   { href: "/shop", label: "Shop" },
@@ -17,6 +18,7 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
+  const favCount = useFavouritesCount();
 
   useEffect(() => {
     const handle = () => setScrolled(window.scrollY > 4);
@@ -104,11 +106,24 @@ export default function Navbar() {
           <div className="flex items-center justify-end justify-self-end gap-1">
             {/* Favourites */}
             <Link
-              href="/shop"
-              aria-label="Favourites"
-              className="relative h-12 w-12 inline-flex items-center justify-center rounded-full text-jaggery hover:bg-jaggery/[0.06] transition-colors"
+              href="/favourites"
+              aria-label={favCount > 0 ? `Favourites, ${favCount} items` : "Favourites"}
+              className={`relative h-12 w-12 inline-flex items-center justify-center rounded-full transition-colors ${
+                isActive("/favourites") ? "text-terracotta" : "text-jaggery hover:bg-jaggery/[0.06]"
+              }`}
             >
-              <Heart className="h-[24px] w-[24px]" strokeWidth={1.6} />
+              <Heart
+                className={`h-[24px] w-[24px] ${isActive("/favourites") ? "fill-current" : ""}`}
+                strokeWidth={1.6}
+              />
+              {favCount > 0 && (
+                <span
+                  aria-hidden
+                  className="absolute top-1.5 right-1.5 min-w-[16px] h-[16px] px-1 rounded-full bg-terracotta text-cream text-[10px] font-semibold flex items-center justify-center tabular-nums leading-none"
+                >
+                  {favCount}
+                </span>
+              )}
             </Link>
 
             {/* Cart with badge */}
@@ -192,13 +207,27 @@ export default function Navbar() {
             })}
           </ul>
 
+          <Link
+            href="/favourites"
+            onClick={closeMobile}
+            className="mt-10 w-full h-12 inline-flex items-center justify-center gap-2 rounded-full border border-jaggery/20 text-jaggery text-[13px] font-semibold tracking-wide hover:bg-jaggery/[0.04] transition-colors"
+          >
+            <Heart className="h-4 w-4" strokeWidth={1.6} />
+            Favourites
+            {favCount > 0 && (
+              <span className="ml-0.5 min-w-[18px] h-[18px] px-1 rounded-full bg-terracotta text-cream text-[10px] font-semibold flex items-center justify-center tabular-nums">
+                {favCount}
+              </span>
+            )}
+          </Link>
+
           <button
             type="button"
             onClick={() => {
               closeMobile();
               openOrderDrawer();
             }}
-            className="mt-10 w-full h-12 inline-flex items-center justify-center gap-2 rounded-full bg-jaggery text-cream text-[13px] font-semibold tracking-wide hover:bg-jaggery-soft transition-colors"
+            className="mt-3 w-full h-12 inline-flex items-center justify-center gap-2 rounded-full bg-jaggery text-cream text-[13px] font-semibold tracking-wide hover:bg-jaggery-soft transition-colors"
           >
             <ShoppingBag className="h-4 w-4" strokeWidth={1.6} />
             View Cart

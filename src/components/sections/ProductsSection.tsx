@@ -6,6 +6,7 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { Star, Plus, ArrowRight, Heart } from "lucide-react";
 import data from "@/data/content.json";
+import { useIsFavourite, toggleFavourite } from "@/lib/favourites";
 
 type Product = (typeof data.products)[number];
 
@@ -34,21 +35,11 @@ const CARD_BG =
 
 export default function ProductsSection() {
   const [active, setActive] = useState<Category>("All");
-  const [wishlisted, setWishlisted] = useState<Set<string>>(new Set());
 
   const filtered = useMemo(() => {
     if (active === "All") return data.products;
     return data.products.filter((p) => p.category === active);
   }, [active]);
-
-  const toggleWishlist = (slug: string) => {
-    setWishlisted((prev) => {
-      const next = new Set(prev);
-      if (next.has(slug)) next.delete(slug);
-      else next.add(slug);
-      return next;
-    });
-  };
 
   return (
     <section
@@ -132,8 +123,6 @@ export default function ProductsSection() {
                 key={product.slug}
                 product={product}
                 index={i}
-                isWishlisted={wishlisted.has(product.slug)}
-                onToggleWishlist={() => toggleWishlist(product.slug)}
               />
             ))}
           </motion.div>
@@ -169,15 +158,12 @@ export default function ProductsSection() {
 const ProductCard = memo(function ProductCard({
   product,
   index,
-  isWishlisted,
-  onToggleWishlist,
 }: {
   product: Product;
   index: number;
-  isWishlisted: boolean;
-  onToggleWishlist: () => void;
 }) {
   const { rating, count } = ratingFor(product.slug);
+  const isWishlisted = useIsFavourite(product.slug);
   const badge = badgeFor(product.slug, index);
   const hasDiscount = index < 2;
   const originalPrice = hasDiscount
@@ -190,10 +176,16 @@ const ProductCard = memo(function ProductCard({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-30px" }}
       transition={{ duration: 0.45, delay: index * 0.04, ease: [0.16, 1, 0.3, 1] }}
-      className={`group flex flex-col rounded-3xl p-3 sm:p-4 transition-transform duration-500 hover:-translate-y-1 ${CARD_BG}`}
+      className={`group relative flex flex-col rounded-3xl p-3 sm:p-4 transition-transform duration-500 hover:-translate-y-1 ${CARD_BG}`}
     >
+      {/* Legibility scrim — darkens the photo behind the text so it reads consistently */}
+      <span
+        aria-hidden
+        className="absolute inset-0 rounded-3xl bg-gradient-to-t from-jaggery/65 via-jaggery/20 to-transparent pointer-events-none"
+      />
+
       {/* Image frame */}
-      <div className="relative aspect-square w-full">
+      <div className="relative z-10 aspect-square w-full">
         {/* Inner image container */}
         <div className="relative w-full h-full rounded-2xl overflow-hidden bg-cream">
           {/* Badge — top-left */}
@@ -208,8 +200,8 @@ const ProductCard = memo(function ProductCard({
           {/* Wishlist — top-right */}
           <button
             type="button"
-            onClick={onToggleWishlist}
-            aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
+            onClick={() => toggleFavourite(product.slug)}
+            aria-label={isWishlisted ? "Remove from favourites" : "Add to favourites"}
             className={`absolute top-2.5 right-2.5 z-10 w-8 h-8 rounded-full bg-cream/90 backdrop-blur-sm flex items-center justify-center transition-colors ${
               isWishlisted
                 ? "text-terracotta"
@@ -250,7 +242,7 @@ const ProductCard = memo(function ProductCard({
       </div>
 
       {/* Info */}
-      <div className="pt-5 px-1.5 pb-1 flex flex-col">
+      <div className="relative z-10 pt-5 px-1.5 pb-1 flex flex-col [text-shadow:0_1px_2px_rgba(26,20,16,0.28)]">
         {/* Top meta — category + rating */}
         <div className="flex items-center justify-between gap-2 mb-3">
           <span className="text-[10px] font-bold tracking-[0.22em] uppercase text-honey">
@@ -261,21 +253,21 @@ const ProductCard = memo(function ProductCard({
             <span className="text-[13px] font-bold text-cream tabular-nums leading-none">
               {rating}
             </span>
-            <span className="text-[11px] text-cream/55 font-medium leading-none">
+            <span className="text-[11px] text-cream/75 font-medium leading-none">
               ({count})
             </span>
           </div>
         </div>
 
-        {/* Product name — chunky display */}
+        {/* Product name — chunky display, locked to two lines so prices align */}
         <Link href={`/products/${product.slug}`} className="block">
-          <h3 className="font-display font-bold text-cream text-[20px] sm:text-[22px] tracking-tight leading-[1.1] group-hover:text-honey transition-colors">
+          <h3 className="font-display font-bold text-cream text-[20px] sm:text-[22px] tracking-tight leading-[1.1] line-clamp-2 min-h-[2.2em] group-hover:text-honey transition-colors">
             {product.name}
           </h3>
         </Link>
 
         {/* Weight */}
-        <p className="mt-2.5 text-[10px] font-bold tracking-[0.2em] uppercase text-cream/65">
+        <p className="mt-2.5 text-[10px] font-bold tracking-[0.2em] uppercase text-cream/80">
           {product.weight}
         </p>
 
@@ -285,7 +277,7 @@ const ProductCard = memo(function ProductCard({
             {product.price}
           </span>
           {originalPrice && (
-            <span className="text-[13px] text-cream/45 line-through nums-price font-medium">
+            <span className="text-[13px] text-cream/60 line-through nums-price font-medium">
               {originalPrice}
             </span>
           )}
