@@ -10,6 +10,7 @@ import OrdersPage from "./_pages/OrdersPage";
 import SalesPage from "./_pages/SalesPage";
 import DeliveryPage from "./_pages/DeliveryPage";
 import ExpensesPage from "./_pages/ExpensesPage";
+import B2BPage from "./_pages/B2BPage";
 import UsersPage from "./_pages/UsersPage";
 
 export default function Dashboard() {
@@ -69,6 +70,7 @@ export default function Dashboard() {
       {activeTab === "sales" && <SalesPage onToast={showToast} />}
       {activeTab === "delivery" && <DeliveryPage onToast={showToast} />}
       {activeTab === "expenses" && <ExpensesPage onToast={showToast} />}
+      {activeTab === "b2b" && <B2BPage onToast={showToast} />}
       {activeTab === "users" && <UsersPage />}
       <Toast visible={toast.visible} message={toast.message} />
       <ConfirmDialog

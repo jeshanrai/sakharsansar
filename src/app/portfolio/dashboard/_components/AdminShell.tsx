@@ -10,6 +10,7 @@ import {
   Receipt,
   Users,
   Truck,
+  Store,
   Bell,
   Search,
   Menu,
@@ -19,7 +20,7 @@ import {
   Sparkles,
 } from "lucide-react";
 
-export type Tab = "overview" | "orders" | "sales" | "delivery" | "expenses" | "users";
+export type Tab = "overview" | "orders" | "sales" | "delivery" | "expenses" | "b2b" | "users";
 
 const NAV: { id: Tab; label: string; mobileLabel?: string; icon: typeof LayoutDashboard; hint: string }[] = [
   { id: "overview", label: "Overview", icon: LayoutDashboard, hint: "Today's snapshot" },
@@ -27,6 +28,7 @@ const NAV: { id: Tab; label: string; mobileLabel?: string; icon: typeof LayoutDa
   { id: "sales", label: "Sales", icon: ShoppingCart, hint: "In-store + repeat" },
   { id: "delivery", label: "Delivery", icon: Truck, hint: "Shipments on the road" },
   { id: "expenses", label: "Expenses", icon: Receipt, hint: "Cash outflow" },
+  { id: "b2b", label: "B2B Shops", mobileLabel: "Shops", icon: Store, hint: "Wholesale clients" },
   { id: "users", label: "Team", icon: Users, hint: "Staff activity" },
 ];
 
@@ -285,7 +287,7 @@ export default function AdminShell({ activeTab, onTabChange, adminName, onLogout
                 )}
                 <item.icon className={`w-[17px] h-[17px] relative z-10 shrink-0 ${Active ? "text-white" : "text-[#F5EDE0]/70"}`} />
                 <span className={`text-[9.5px] leading-none relative z-10 font-semibold tracking-tight ${Active ? "text-white" : "text-[#F5EDE0]/70"}`}>
-                  {item.label}
+                  {item.mobileLabel ?? item.label}
                 </span>
               </button>
             );

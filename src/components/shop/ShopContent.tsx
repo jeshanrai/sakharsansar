@@ -12,7 +12,6 @@ import {
   Heart,
   ChevronDown,
   ArrowRight,
-  ArrowUpRight,
   SlidersHorizontal,
   Check,
   ChevronRight,
@@ -178,8 +177,6 @@ export default function ShopContent() {
   const [sortOpen, setSortOpen] = useState(false);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [wishlisted, setWishlisted] = useState<Set<string>>(new Set());
-  const [newsletterEmail, setNewsletterEmail] = useState("");
-  const [newsletterSent, setNewsletterSent] = useState(false);
   const sortRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -258,16 +255,6 @@ export default function ShopContent() {
   }, []);
 
   const activeSortLabel = SORT_OPTIONS.find((s) => s.value === sortBy)?.label || "Featured";
-
-  const handleNewsletter = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newsletterEmail) return;
-    setNewsletterSent(true);
-    setTimeout(() => {
-      setNewsletterSent(false);
-      setNewsletterEmail("");
-    }, 3000);
-  };
 
   return (
     <>
@@ -542,78 +529,6 @@ export default function ShopContent() {
           ) : (
             <EmptyState onReset={clearAll} />
           )}
-        </div>
-      </section>
-
-      {/* ─── Closing newsletter ───────────────────────── */}
-      <section className="relative bg-ink text-cream py-16 sm:py-24 px-5 sm:px-8 lg:px-12 overflow-hidden paper-grain">
-        <div
-          aria-hidden
-          className="absolute -top-32 left-1/4 w-[36rem] h-[36rem] rounded-full bg-honey/12 blur-3xl pointer-events-none"
-        />
-        <div
-          aria-hidden
-          className="absolute -bottom-32 right-0 w-[28rem] h-[28rem] rounded-full bg-caramel/10 blur-3xl pointer-events-none"
-        />
-
-        <div className="relative max-w-3xl mx-auto text-center">
-          <div className="inline-flex items-center gap-3 mb-5">
-            <span className="w-6 h-px bg-honey/60" />
-            <span className="text-[10px] font-bold tracking-[0.22em] uppercase text-honey">
-              Letters from the workshop
-            </span>
-            <span className="w-6 h-px bg-honey/60" />
-          </div>
-
-          <h2 className="font-display font-bold tracking-tight text-balance leading-[1.02] text-[clamp(1.75rem,3.5vw,2.75rem)]">
-            <span className="block">Be the first to know</span>
-            <span className="block text-honey">when new sakhar arrives.</span>
-          </h2>
-
-          <p className="mt-5 text-cream/65 text-[14px] sm:text-[15px] leading-relaxed max-w-md mx-auto">
-            One letter a season. Harvest news, kitchen recipes, and quiet notes
-            from Sankhuwasabha — no noise.
-          </p>
-
-          <form
-            onSubmit={handleNewsletter}
-            className="mt-9 max-w-md mx-auto"
-          >
-            <div className="relative flex items-center gap-2 p-1.5 rounded-full bg-cream/8 border border-cream/15 backdrop-blur-sm focus-within:border-honey/40 transition-colors">
-              <input
-                type="email"
-                required
-                value={newsletterEmail}
-                onChange={(e) => setNewsletterEmail(e.target.value)}
-                placeholder="you@kitchen.com"
-                aria-label="Email address"
-                className="flex-1 min-w-0 h-11 pl-4 bg-transparent text-[14px] text-cream placeholder:text-cream/40 focus:outline-none"
-              />
-              <button
-                type="submit"
-                disabled={newsletterSent}
-                className="group relative inline-flex items-center justify-center gap-2 h-11 px-5 sm:px-6 rounded-full bg-honey text-jaggery text-[12.5px] font-bold tracking-tight hover:shadow-[0_8px_24px_rgba(232,168,87,0.4)] transition-all duration-300 shrink-0 disabled:opacity-80"
-              >
-                {newsletterSent ? (
-                  <>
-                    <Check className="w-3.5 h-3.5" strokeWidth={2.5} />
-                    Subscribed
-                  </>
-                ) : (
-                  <>
-                    Subscribe
-                    <ArrowUpRight
-                      className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"
-                      strokeWidth={2}
-                    />
-                  </>
-                )}
-              </button>
-            </div>
-            <p className="mt-3.5 text-[11px] text-cream/40">
-              No spam · Unsubscribe anytime
-            </p>
-          </form>
         </div>
       </section>
 

@@ -93,6 +93,47 @@ export interface DashboardStats {
   salesByPaymentMethod: { paymentMethod: PaymentMethod; _sum: { amount: number | null }; _count: { id: number } }[];
 }
 
+// ── B2B clients — wholesale/retail shops we supply ────────────────
+export type B2BType =
+  | "RETAILER"
+  | "WHOLESALER"
+  | "DISTRIBUTOR"
+  | "CAFE_RESTAURANT"
+  | "SUPERMARKET"
+  | "OTHER";
+
+export interface B2BClient {
+  id: string;
+  shopName: string;
+  contactPerson: string | null;
+  phone: string;          // main contact number
+  altPhone: string | null;
+  email: string | null;
+  type: B2BType;
+  address: string;        // location, in words
+  mapUrl: string | null;  // Google Maps link to the shop's pin
+  notes: string | null;
+  createdAt: string;
+}
+
+export const B2B_TYPES: B2BType[] = [
+  "RETAILER",
+  "WHOLESALER",
+  "DISTRIBUTOR",
+  "CAFE_RESTAURANT",
+  "SUPERMARKET",
+  "OTHER",
+];
+
+export const B2B_TONES: Record<B2BType, { bg: string; text: string; dot: string; label: string }> = {
+  RETAILER: { bg: "bg-sky-50", text: "text-sky-700", dot: "bg-sky-500", label: "Retailer" },
+  WHOLESALER: { bg: "bg-violet-50", text: "text-violet-700", dot: "bg-violet-500", label: "Wholesaler" },
+  DISTRIBUTOR: { bg: "bg-amber-50", text: "text-amber-700", dot: "bg-amber-500", label: "Distributor" },
+  CAFE_RESTAURANT: { bg: "bg-rose-50", text: "text-rose-700", dot: "bg-rose-500", label: "Café / Restaurant" },
+  SUPERMARKET: { bg: "bg-emerald-50", text: "text-emerald-700", dot: "bg-emerald-500", label: "Supermarket" },
+  OTHER: { bg: "bg-slate-100", text: "text-slate-700", dot: "bg-slate-500", label: "Other" },
+};
+
 export const EXPENSE_CATEGORIES = [
   "Raw Materials",
   "Packaging",
