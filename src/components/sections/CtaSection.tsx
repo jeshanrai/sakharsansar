@@ -4,7 +4,7 @@ import OrderButton from "@/components/ui/OrderButton";
 
 export default function CtaSection() {
   return (
-    <section id="contact" aria-label="Call to Action" className="py-24 sm:py-32 px-6 sm:px-10 bg-[#2C1500] relative overflow-hidden">
+    <section id="cta-contact" aria-label="Call to Action" className="py-24 sm:py-32 px-6 sm:px-10 bg-[#2C1500] relative overflow-hidden">
       {/* Decorative circles */}
       <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-[#C17A2A]/10" />
       <div className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-[#C17A2A]/5" />
