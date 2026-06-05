@@ -177,3 +177,36 @@ export const CATEGORY_COLORS: Record<string, string> = {
   Labor: "#9A5F2E",
   Other: "#3D2817",
 };
+
+// ── Enquiries — storefront contact-form messages ──────────────────
+export type EnquiryType = "B2C" | "B2B" | "GIFTING" | "PARTNERSHIP" | "OTHER";
+export type EnquiryStatus = "NEW" | "READ" | "REPLIED" | "ARCHIVED";
+
+export interface Enquiry {
+  id: string;
+  name: string;
+  contact: string;        // email or phone the customer left
+  type: EnquiryType;
+  message: string;
+  status: EnquiryStatus;
+  createdAt: string;
+  updatedAt?: string;
+}
+
+export const ENQUIRY_TYPES: EnquiryType[] = ["B2C", "B2B", "GIFTING", "PARTNERSHIP", "OTHER"];
+export const ENQUIRY_STATUSES: EnquiryStatus[] = ["NEW", "READ", "REPLIED", "ARCHIVED"];
+
+export const ENQUIRY_TYPE_TONES: Record<EnquiryType, { bg: string; text: string; dot: string; label: string }> = {
+  B2C: { bg: "bg-sky-50", text: "text-sky-700", dot: "bg-sky-500", label: "Retail · B2C" },
+  B2B: { bg: "bg-violet-50", text: "text-violet-700", dot: "bg-violet-500", label: "Wholesale · B2B" },
+  GIFTING: { bg: "bg-rose-50", text: "text-rose-700", dot: "bg-rose-500", label: "Gifting" },
+  PARTNERSHIP: { bg: "bg-amber-50", text: "text-amber-700", dot: "bg-amber-500", label: "Partnership" },
+  OTHER: { bg: "bg-slate-100", text: "text-slate-700", dot: "bg-slate-500", label: "Other" },
+};
+
+export const ENQUIRY_STATUS_TONES: Record<EnquiryStatus, { bg: string; text: string; dot: string }> = {
+  NEW: { bg: "bg-emerald-50", text: "text-emerald-700", dot: "bg-emerald-500" },
+  READ: { bg: "bg-sky-50", text: "text-sky-700", dot: "bg-sky-500" },
+  REPLIED: { bg: "bg-violet-50", text: "text-violet-700", dot: "bg-violet-500" },
+  ARCHIVED: { bg: "bg-slate-100", text: "text-slate-600", dot: "bg-slate-400" },
+};

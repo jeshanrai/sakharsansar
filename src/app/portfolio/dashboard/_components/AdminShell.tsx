@@ -11,6 +11,7 @@ import {
   Users,
   Truck,
   Store,
+  Inbox,
   Bell,
   Search,
   Menu,
@@ -20,11 +21,12 @@ import {
   Sparkles,
 } from "lucide-react";
 
-export type Tab = "overview" | "orders" | "sales" | "delivery" | "expenses" | "b2b" | "users";
+export type Tab = "overview" | "orders" | "enquiries" | "sales" | "delivery" | "expenses" | "b2b" | "users";
 
 const NAV: { id: Tab; label: string; mobileLabel?: string; icon: typeof LayoutDashboard; hint: string }[] = [
   { id: "overview", label: "Overview", icon: LayoutDashboard, hint: "Today's snapshot" },
   { id: "orders", label: "Orders", icon: ClipboardList, hint: "Online orders" },
+  { id: "enquiries", label: "Enquiries", mobileLabel: "Inbox", icon: Inbox, hint: "Contact messages" },
   { id: "sales", label: "Sales", icon: ShoppingCart, hint: "In-store + repeat" },
   { id: "delivery", label: "Delivery", icon: Truck, hint: "Shipments on the road" },
   { id: "expenses", label: "Expenses", icon: Receipt, hint: "Cash outflow" },

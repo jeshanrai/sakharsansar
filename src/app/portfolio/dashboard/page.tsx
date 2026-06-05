@@ -7,6 +7,7 @@ import AdminShell, { type Tab } from "./_components/AdminShell";
 import { Toast, ConfirmDialog } from "./_components/primitives";
 import OverviewPage from "./_pages/OverviewPage";
 import OrdersPage from "./_pages/OrdersPage";
+import EnquiriesPage from "./_pages/EnquiriesPage";
 import SalesPage from "./_pages/SalesPage";
 import DeliveryPage from "./_pages/DeliveryPage";
 import ExpensesPage from "./_pages/ExpensesPage";
@@ -67,6 +68,7 @@ export default function Dashboard() {
     >
       {activeTab === "overview" && <OverviewPage adminName={adminName} />}
       {activeTab === "orders" && <OrdersPage onToast={showToast} />}
+      {activeTab === "enquiries" && <EnquiriesPage onToast={showToast} />}
       {activeTab === "sales" && <SalesPage onToast={showToast} />}
       {activeTab === "delivery" && <DeliveryPage onToast={showToast} />}
       {activeTab === "expenses" && <ExpensesPage onToast={showToast} />}

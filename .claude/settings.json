@@ -53,7 +53,12 @@
       "Bash(npm run *)",
       "Bash(node -e \"const d=require\\('./src/data/content.json'\\); console.log\\(JSON.stringify\\(d.products[0],null,2\\)\\); console.log\\('total products:', d.products.length\\); console.log\\('keys:', Object.keys\\(d.products[0]\\)\\)\")",
       "Bash(node -e \"const d=require\\('./src/data/content.json'\\); console.log\\(Object.keys\\(d\\)\\); if\\(d.contact\\)console.log\\(JSON.stringify\\(d.contact,null,2\\)\\); if\\(d.company\\)console.log\\(JSON.stringify\\(d.company,null,2\\)\\)\")",
-      "Bash(node -e \"const l=require\\('lucide-react'\\); console.log\\(Object.keys\\(l\\).filter\\(k=>/tik|tok/i.test\\(k\\)\\)\\)\")"
+      "Bash(node -e \"const l=require\\('lucide-react'\\); console.log\\(Object.keys\\(l\\).filter\\(k=>/tik|tok/i.test\\(k\\)\\)\\)\")",
+      "Bash(command -v ffmpeg)",
+      "Bash(command -v ffprobe)",
+      "Bash(command -v gst-discoverer-1.0)",
+      "Bash(gst-discoverer-1.0 IMG_1393.MOV)",
+      "Bash(vlc --version)"
     ],
     "additionalDirectories": [
       "/home/jeshanrai/Downloads"

@@ -24,6 +24,8 @@ model Admin {
   salesCreated    Sale[]    @relation("SaleCreatedBy")
   salesUpdated    Sale[]    @relation("SaleUpdatedBy")
   salesDeleted    Sale[]    @relation("SaleDeletedBy")
+  enquiriesUpdated Enquiry[] @relation("EnquiryUpdatedBy")
+  enquiriesDeleted Enquiry[] @relation("EnquiryDeletedBy")
 }
 
 model Order {
@@ -93,12 +95,46 @@ model Sale {
   deletedByAdmin Admin? @relation("SaleDeletedBy", fields: [deletedBy], references: [id])
 }
 
+model Enquiry {
+  id        String        @id @default(cuid())
+  name      String
+  contact   String        // email or phone the customer gave
+  type      EnquiryType   @default(OTHER)
+  message   String
+  status    EnquiryStatus @default(NEW)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  // Audit fields (no createdBy — these come from the public contact form)
+  updatedBy String?
+  deletedAt DateTime?
+  deletedBy String?
+
+  updatedByAdmin Admin? @relation("EnquiryUpdatedBy", fields: [updatedBy], references: [id])
+  deletedByAdmin Admin? @relation("EnquiryDeletedBy", fields: [deletedBy], references: [id])
+}
+
 enum OrderStatus {
   PENDING
   CONFIRMED
   SHIPPED
   DELIVERED
   CANCELLED
+}
+
+enum EnquiryType {
+  B2C
+  B2B
+  GIFTING
+  PARTNERSHIP
+  OTHER
+}
+
+enum EnquiryStatus {
+  NEW
+  READ
+  REPLIED
+  ARCHIVED
 }
 
 enum PaymentMethod {

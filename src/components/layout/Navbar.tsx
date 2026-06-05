@@ -56,9 +56,29 @@ export default function Navbar() {
             : "shadow-[0_1px_0_0_rgba(26,20,16,0.06)]"
         }`}
       >
-        <div className="h-full max-w-7xl mx-auto px-5 sm:px-8 lg:px-10 grid grid-cols-[1fr_auto_1fr] items-center gap-4">
-          {/* ─── Left: nav links (desktop) + hamburger (mobile) ─── */}
-          <div className="flex items-center justify-self-start">
+        <div className="h-full max-w-7xl mx-auto px-5 sm:px-8 lg:px-10 flex items-center gap-4">
+          {/* ─── Left: logo + nav links (desktop) ─── */}
+          <div className="flex items-center gap-5 lg:gap-10 min-w-0">
+            {/* Logo */}
+            <Link
+              href="/"
+              aria-label="SakharSansar — home"
+              onClick={closeMobile}
+              className="group shrink-0 inline-flex items-center"
+            >
+              <span className="relative block h-12 w-12 sm:h-[54px] sm:w-[54px] rounded-full overflow-hidden transition-transform duration-300 group-hover:-translate-y-0.5">
+                <Image
+                  src="/logo-mark.webp"
+                  alt="SakharSansar"
+                  fill
+                  priority
+                  sizes="80px"
+                  className="object-cover scale-[1.02]"
+                />
+              </span>
+            </Link>
+
+            {/* Desktop nav links */}
             <ul className="hidden md:flex items-center gap-9 lg:gap-12">
               {NAV.map((link) => {
                 const active = isActive(link.href);
@@ -85,27 +105,10 @@ export default function Navbar() {
                 );
               })}
             </ul>
-
-            <button
-              type="button"
-              onClick={() => setMobileOpen((v) => !v)}
-              aria-label={mobileOpen ? "Close menu" : "Open menu"}
-              aria-expanded={mobileOpen}
-              className="md:hidden h-11 w-11 -ml-2 inline-flex items-center justify-center rounded-full text-jaggery hover:bg-jaggery/[0.06] transition-colors"
-            >
-              {mobileOpen ? (
-                <X className="h-[22px] w-[22px]" strokeWidth={1.5} />
-              ) : (
-                <Menu className="h-[22px] w-[22px]" strokeWidth={1.5} />
-              )}
-            </button>
           </div>
 
-          {/* ─── Center: circular logo badge (reserves space) ─── */}
-          <div className="w-[72px] sm:w-[90px]" aria-hidden />
-
-          {/* ─── Right utilities ────────────── */}
-          <div className="flex items-center justify-end justify-self-end gap-1">
+          {/* ─── Right: utilities + mobile menu ─── */}
+          <div className="flex items-center gap-1 ml-auto">
             {/* Favourites */}
             <Link
               href="/favourites"
@@ -143,29 +146,23 @@ export default function Navbar() {
                 2
               </span>
             </button>
+
+            {/* Mobile hamburger */}
+            <button
+              type="button"
+              onClick={() => setMobileOpen((v) => !v)}
+              aria-label={mobileOpen ? "Close menu" : "Open menu"}
+              aria-expanded={mobileOpen}
+              className="md:hidden h-11 w-11 inline-flex items-center justify-center rounded-full text-jaggery hover:bg-jaggery/[0.06] transition-colors"
+            >
+              {mobileOpen ? (
+                <X className="h-[22px] w-[22px]" strokeWidth={1.5} />
+              ) : (
+                <Menu className="h-[22px] w-[22px]" strokeWidth={1.5} />
+              )}
+            </button>
           </div>
         </div>
-
-        {/* ─── Center: circular logo badge, protruding below the bar ─── */}
-        <Link
-          href="/"
-          aria-label="SakharSansar — home"
-          onClick={closeMobile}
-          className="absolute left-1/2 top-2 -translate-x-1/2 z-[60] group"
-        >
-          <span className="block rounded-full bg-cream p-1 shadow-xl shadow-jaggery/25 ring-1 ring-jaggery/5 transition-transform duration-300 group-hover:-translate-y-0.5">
-            <span className="relative block h-[60px] w-[60px] sm:h-[78px] sm:w-[78px] rounded-full overflow-hidden">
-              <Image
-                src="/logo-mark.webp"
-                alt="SakharSansar"
-                fill
-                priority
-                sizes="80px"
-                className="object-cover scale-[1.02]"
-              />
-            </span>
-          </span>
-        </Link>
       </nav>
 
       {/* ─── Mobile drawer ───────────────────── */}

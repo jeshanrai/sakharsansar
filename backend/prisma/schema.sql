@@ -44,6 +44,28 @@ CREATE TABLE "Expense" (
     CONSTRAINT "Expense_pkey" PRIMARY KEY ("id")
 );
 
+-- Enquiry enums
+CREATE TYPE "EnquiryType" AS ENUM ('B2C', 'B2B', 'GIFTING', 'PARTNERSHIP', 'OTHER');
+CREATE TYPE "EnquiryStatus" AS ENUM ('NEW', 'READ', 'REPLIED', 'ARCHIVED');
+
+-- Enquiry table (storefront contact form)
+CREATE TABLE "Enquiry" (
+    "id"        TEXT NOT NULL DEFAULT gen_random_uuid()::text,
+    "name"      TEXT NOT NULL,
+    "contact"   TEXT NOT NULL,
+    "type"      "EnquiryType" NOT NULL DEFAULT 'OTHER',
+    "message"   TEXT NOT NULL,
+    "status"    "EnquiryStatus" NOT NULL DEFAULT 'NEW',
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedBy" TEXT,
+    "deletedAt" TIMESTAMP(3),
+    "deletedBy" TEXT,
+    CONSTRAINT "Enquiry_pkey" PRIMARY KEY ("id")
+);
+CREATE INDEX "Enquiry_status_idx" ON "Enquiry"("status");
+CREATE INDEX "Enquiry_createdAt_idx" ON "Enquiry"("createdAt");
+
 -- Seed: 3 Admin users (password: Sakhar123)
 INSERT INTO "Admin" ("id", "email", "password", "name") VALUES
   (gen_random_uuid()::text, 'jeshan@sakharsansar.com',  crypt('Sakhar123', gen_salt('bf', 10)), 'Jeshan Rai'),

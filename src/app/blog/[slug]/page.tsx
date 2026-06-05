@@ -4,10 +4,10 @@ import Image from 'next/image';
 import Link from 'next/link';
 import Footer from "@/components/layout/Footer";
 import OrderDrawer from "@/components/layout/OrderDrawer";
-import { AnimatedWave } from "@/components/ui/StoryArt";
-import { Daisy, Squiggle } from "@/components/ui/Doodles";
+import { AnimatedWave, Bee } from "@/components/ui/StoryArt";
+import { Daisy } from "@/components/ui/Doodles";
 import blogData from "@/data/blog.json";
-import { ArrowLeft, ArrowRight, Clock, Twitter, Facebook, Linkedin } from "lucide-react";
+import { ArrowRight, ChevronRight, Clock, Twitter, Facebook, Linkedin } from "lucide-react";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -100,20 +100,30 @@ export default async function BlogPost({ params }: Props) {
       <OrderDrawer />
 
       <main className="bg-cream overflow-x-hidden">
-        {/* ─── Header ─────────────────────────────────────────────── */}
-        <header className="relative pt-28 sm:pt-36 pb-2 px-6 sm:px-10 lg:px-16">
-          <Daisy aria-hidden className="absolute top-24 right-[6%] w-16 h-16 text-honey/30 -rotate-12 hidden md:block" />
+        {/* ─── Hero (peach) ───────────────────────────────────────── */}
+        <header className="relative bg-peach overflow-hidden pt-28 sm:pt-36 pb-24 sm:pb-32 px-6 sm:px-10 lg:px-16">
+          {/* Doodles */}
+          <Bee aria-hidden className="pointer-events-none absolute top-28 right-[8%] w-24 h-16 text-peach-line/70 hidden md:block" />
+          <Daisy aria-hidden className="pointer-events-none absolute top-24 right-[27%] w-14 h-14 text-peach-line/50 -rotate-12 hidden md:block" />
 
-          <div className="max-w-[760px] mx-auto">
-            <Link
-              href="/blog"
-              className="inline-flex items-center gap-2.5 rounded-full bg-ivory border border-jaggery/10 px-4 py-2 label-caps text-jaggery/65 hover:text-jaggery hover:border-jaggery/25 transition-colors mb-10"
-            >
-              <ArrowLeft className="w-3.5 h-3.5" strokeWidth={2} /> Back to Journal
-            </Link>
+          <div className="relative z-10 max-w-[820px] mx-auto">
+            {/* Breadcrumb */}
+            <nav aria-label="Breadcrumb" className="mb-7">
+              <ol className="flex items-center gap-2 label-caps text-jaggery/45">
+                <li>
+                  <Link href="/" className="hover:text-grove transition-colors">Home</Link>
+                </li>
+                <ChevronRight className="w-3 h-3 text-jaggery/30" strokeWidth={2.5} aria-hidden />
+                <li>
+                  <Link href="/blog" className="hover:text-grove transition-colors">Journal</Link>
+                </li>
+                <ChevronRight className="w-3 h-3 text-jaggery/30" strokeWidth={2.5} aria-hidden />
+                <li aria-current="page" className="text-grove">Article</li>
+              </ol>
+            </nav>
 
             <div className="flex flex-wrap items-center gap-3 mb-6">
-              <span className="inline-flex items-center rounded-full bg-forest/10 border border-forest/15 px-3.5 py-1.5 label-caps text-forest">
+              <span className="inline-flex items-center rounded-full bg-grove/10 border border-grove/15 px-3.5 py-1.5 label-caps text-grove">
                 {post.tags[0]}
               </span>
               <time dateTime={post.date} className="label-caps text-jaggery/45">{post.date}</time>
@@ -123,20 +133,17 @@ export default async function BlogPost({ params }: Props) {
               </span>
             </div>
 
-            <h1 className="font-serif text-h1 text-jaggery tracking-[-0.018em] text-balance">
+            {/* Title — hand-marker, consistent with every page hero */}
+            <h1 className="font-marker uppercase text-jaggery leading-[0.95] tracking-tight text-[clamp(2.25rem,5.5vw,4.25rem)] text-balance">
               {post.title}
             </h1>
 
-            <div className="relative inline-block mt-2 mb-7">
-              <Squiggle className="w-40 h-3 text-caramel/60" />
-            </div>
-
-            <p className="font-serif italic text-jaggery/75 text-lede mb-9">
+            <p className="font-serif italic text-jaggery/75 text-lede mt-6 mb-8 max-w-2xl">
               {post.description}
             </p>
 
             {/* Byline */}
-            <div className="flex items-center gap-3 pb-2">
+            <div className="flex items-center gap-3">
               <div className="h-11 w-11 rounded-full bg-gradient-to-br from-honey to-caramel flex items-center justify-center text-cream font-serif text-sm shadow-sm">
                 {authorInitials}
               </div>
@@ -146,10 +153,13 @@ export default async function BlogPost({ params }: Props) {
               </div>
             </div>
           </div>
+
+          {/* Wave pours the peach hero down into the cream article */}
+          <AnimatedWave aria-hidden className="absolute bottom-0 left-0 w-full h-[48px] sm:h-[68px] text-cream" />
         </header>
 
         {/* ─── Hero image ─────────────────────────────────────────── */}
-        <div className="px-6 sm:px-10 lg:px-16 mt-8 sm:mt-10">
+        <div className="px-6 sm:px-10 lg:px-16 mt-10 sm:mt-12">
           <div className="max-w-[1000px] mx-auto">
             <div className="relative aspect-[16/9] w-full overflow-hidden rounded-3xl bg-ivory ring-1 ring-jaggery/8 shadow-xl shadow-jaggery/10">
               <Image
@@ -226,8 +236,8 @@ export default async function BlogPost({ params }: Props) {
           <section aria-label="Keep reading" className="px-6 sm:px-10 lg:px-16 pb-24 sm:pb-28">
             <div className="max-w-[1000px] mx-auto">
               <span className="label-caps text-caramel mb-4 block">More from the Journal</span>
-              <h2 className="font-serif text-h2 text-jaggery tracking-[-0.018em] mb-10">
-                Keep reading.
+              <h2 className="font-marker uppercase text-jaggery leading-[0.98] text-[clamp(1.8rem,4vw,3rem)] text-balance mb-10">
+                Keep reading
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-7 sm:gap-10">
                 {related.map((r) => (
@@ -242,7 +252,7 @@ export default async function BlogPost({ params }: Props) {
                       />
                     </div>
                     <span className="label-caps text-forest mb-2 block">{r.tags[0]}</span>
-                    <h3 className="font-serif text-h4 text-jaggery group-hover:text-caramel-deep transition-colors text-balance">
+                    <h3 className="font-marker uppercase text-jaggery text-2xl leading-[1.05] group-hover:text-caramel-deep transition-colors text-balance">
                       {r.title}
                     </h3>
                     <span className="mt-3 inline-flex items-center gap-2 label-caps text-jaggery/55 group-hover:text-jaggery transition-colors">
@@ -260,8 +270,8 @@ export default async function BlogPost({ params }: Props) {
           <AnimatedWave aria-hidden flip className="absolute top-0 left-0 w-full h-[48px] sm:h-[68px] text-cream" />
           <div className="relative z-10 max-w-2xl mx-auto text-center">
             <span className="label-caps text-honey mb-5 block">From page to pantry</span>
-            <h2 className="font-serif text-h2 text-cream tracking-[-0.018em] text-balance">
-              Now — taste the story.
+            <h2 className="font-marker uppercase text-cream leading-[0.98] text-[clamp(2rem,4.4vw,3.4rem)] text-balance">
+              Now — taste the story
             </h2>
             <p className="text-cream/80 text-lede mt-6 max-w-xl mx-auto">
               Every block, powder and pour ships directly from our Sankhuwasabha

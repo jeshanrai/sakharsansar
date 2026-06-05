@@ -1,58 +1,92 @@
 "use client";
 
 import React, { useState } from "react";
-import { Send, Check } from "lucide-react";
+import { Send, Check, Loader2 } from "lucide-react";
 
 const PHONE = "9779860149199";
 const EMAIL = "hello@sakharsansar.com";
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
 
+// value = backend EnquiryType enum, label = what the customer sees.
 const INQUIRY_TYPES = [
-  "Home order (B2C)",
-  "Wholesale / Bulk (B2B)",
-  "Gifting & hampers",
-  "Partnership / Reseller",
-  "Something else",
+  { value: "B2C", label: "Home order (B2C)" },
+  { value: "B2B", label: "Wholesale / Bulk (B2B)" },
+  { value: "GIFTING", label: "Gifting & hampers" },
+  { value: "PARTNERSHIP", label: "Partnership / Reseller" },
+  { value: "OTHER", label: "Something else" },
 ] as const;
+
+const labelFor = (value: string) =>
+  INQUIRY_TYPES.find((t) => t.value === value)?.label ?? value;
 
 function compose(fields: { name: string; contact: string; type: string; message: string }) {
   return (
     `Namaste SakharSansar 🙏\n\n` +
     `Name: ${fields.name}\n` +
     `Contact: ${fields.contact}\n` +
-    `Enquiry: ${fields.type}\n\n` +
+    `Enquiry: ${labelFor(fields.type)}\n\n` +
     `${fields.message}`
   );
 }
 
 /**
- * Contact enquiry form. No backend dependency — it composes the enquiry and
- * hands off to WhatsApp (the channel used across the site) with an email
- * fallback, so a message always reaches a real person.
+ * Contact enquiry form. Saves to the backend (admin inbox); if the API is
+ * unreachable it falls back to handing off to WhatsApp so a message always
+ * reaches a real person.
  */
 export default function ContactForm() {
   const [form, setForm] = useState({
     name: "",
     contact: "",
-    type: INQUIRY_TYPES[0] as string,
+    type: INQUIRY_TYPES[0].value as string,
     message: "",
   });
+  const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
+  const [savedToInbox, setSavedToInbox] = useState(false);
 
   const update = (key: keyof typeof form) => (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
   ) => setForm((f) => ({ ...f, [key]: e.target.value }));
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const body = compose(form);
-    const waHref = `https://wa.me/${PHONE}?text=${encodeURIComponent(body)}`;
-    window.open(waHref, "_blank", "noopener,noreferrer");
+    setSending(true);
+
+    let ok = false;
+    try {
+      const res = await fetch(`${API_BASE}/enquiries`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: form.name,
+          contact: form.contact,
+          type: form.type,
+          message: form.message,
+        }),
+      });
+      ok = res.ok;
+    } catch {
+      ok = false;
+    }
+
+    setSending(false);
+    setSavedToInbox(ok);
+    // If the backend didn't take it, hand off to WhatsApp so it still reaches us.
+    if (!ok) {
+      window.open(
+        `https://wa.me/${PHONE}?text=${encodeURIComponent(compose(form))}`,
+        "_blank",
+        "noopener,noreferrer",
+      );
+    }
     setSent(true);
   };
 
+  const waHref = `https://wa.me/${PHONE}?text=${encodeURIComponent(compose(form))}`;
   const mailtoHref =
     `mailto:${EMAIL}` +
-    `?subject=${encodeURIComponent(`Enquiry · ${form.type}`)}` +
+    `?subject=${encodeURIComponent(`Enquiry · ${labelFor(form.type)}`)}` +
     `&body=${encodeURIComponent(compose(form))}`;
 
   if (sent) {
@@ -62,22 +96,31 @@ export default function ContactForm() {
           <Check className="w-8 h-8" strokeWidth={2} />
         </div>
         <h3 className="font-marker uppercase text-jaggery leading-[0.95] text-[clamp(1.5rem,3vw,2rem)]">
-          Almost there!
+          Message received!
         </h3>
         <p className="text-jaggery/75 text-body mt-4 max-w-md mx-auto">
-          We&rsquo;ve opened WhatsApp with your enquiry ready to send — just hit send and
-          we&rsquo;ll reply soon. WhatsApp didn&rsquo;t open?{" "}
+          {savedToInbox
+            ? "Thanks for reaching out — we've got your enquiry and will reply soon."
+            : "We've opened WhatsApp with your enquiry ready to send — just hit send and we'll reply soon."}{" "}
+          Want a faster reply?{" "}
+          <a href={waHref} target="_blank" rel="noopener noreferrer" className="text-grove font-medium underline underline-offset-2">
+            Ping us on WhatsApp
+          </a>{" "}
+          or{" "}
           <a href={mailtoHref} className="text-grove font-medium underline underline-offset-2">
-            Email us instead
+            email us
           </a>
           .
         </p>
         <button
           type="button"
-          onClick={() => setSent(false)}
+          onClick={() => {
+            setSent(false);
+            setForm({ name: "", contact: "", type: INQUIRY_TYPES[0].value, message: "" });
+          }}
           className="mt-8 inline-flex items-center justify-center px-6 py-3 rounded-full border border-jaggery/20 text-jaggery label-caps hover:border-grove hover:text-grove transition-colors"
         >
-          Edit enquiry
+          Send another
         </button>
       </div>
     );
@@ -113,8 +156,8 @@ export default function ContactForm() {
       <Field label="What's it about?">
         <select value={form.type} onChange={update("type")} className="w-full bg-white border border-jaggery/15 rounded-xl px-4 py-3 text-[15px] text-jaggery focus:outline-none focus:border-grove transition-colors appearance-none cursor-pointer">
           {INQUIRY_TYPES.map((t) => (
-            <option key={t} value={t}>
-              {t}
+            <option key={t.value} value={t.value}>
+              {t.label}
             </option>
           ))}
         </select>
@@ -133,10 +176,20 @@ export default function ContactForm() {
 
       <button
         type="submit"
-        className="group mt-1 inline-flex items-center justify-center gap-2.5 px-7 py-4 rounded-full bg-jaggery text-cream label-caps hover:bg-jaggery-soft transition-colors"
+        disabled={sending}
+        className="group mt-1 inline-flex items-center justify-center gap-2.5 px-7 py-4 rounded-full bg-jaggery text-cream label-caps hover:bg-jaggery-soft transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
       >
-        Send enquiry
-        <Send className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" strokeWidth={1.75} />
+        {sending ? (
+          <>
+            Sending…
+            <Loader2 className="w-4 h-4 animate-spin" strokeWidth={1.75} />
+          </>
+        ) : (
+          <>
+            Send enquiry
+            <Send className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" strokeWidth={1.75} />
+          </>
+        )}
       </button>
 
       <p className="text-center text-[13px] text-jaggery/50">
