@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { Send, Check, Loader2 } from "lucide-react";
 
 const PHONE = "9779860149199";
-const EMAIL = "hello@sakharsansar.com";
+const EMAIL = "sakharsansar@gmail.com";
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
 
 // value = backend EnquiryType enum, label = what the customer sees.

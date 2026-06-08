@@ -44,12 +44,12 @@ export default function PrivacyPolicyPage() {
 
             <section className="bg-white rounded-2xl p-8 sm:p-10">
               <h2 className="font-poppins text-xl sm:text-2xl font-semibold text-[#2C1500] mb-4">Your Rights</h2>
-              <p className="text-base sm:text-lg text-[#2C1500]/70 leading-[1.8]">You have the right to access, correct, or delete your personal data. You may also opt out of marketing communications at any time by contacting us at hello@sakharsansar.com.</p>
+              <p className="text-base sm:text-lg text-[#2C1500]/70 leading-[1.8]">You have the right to access, correct, or delete your personal data. You may also opt out of marketing communications at any time by contacting us at sakharsansar@gmail.com.</p>
             </section>
 
             <section className="bg-white rounded-2xl p-8 sm:p-10">
               <h2 className="font-poppins text-xl sm:text-2xl font-semibold text-[#2C1500] mb-4">Contact Us</h2>
-              <p className="text-base sm:text-lg text-[#2C1500]/70 leading-[1.8]">If you have questions about this Privacy Policy, please contact us at <a href="mailto:hello@sakharsansar.com" className="text-[#C17A2A] font-medium underline underline-offset-4">hello@sakharsansar.com</a>.</p>
+              <p className="text-base sm:text-lg text-[#2C1500]/70 leading-[1.8]">If you have questions about this Privacy Policy, please contact us at <a href="mailto:sakharsansar@gmail.com" className="text-[#C17A2A] font-medium underline underline-offset-4">sakharsansar@gmail.com</a>.</p>
             </section>
           </div>
         </div>

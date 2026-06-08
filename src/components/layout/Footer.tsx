@@ -19,7 +19,7 @@ const SOCIAL: { icon: SocialIcon; href: string; label: string }[] = [
   { icon: Instagram, href: "https://instagram.com/sakharsansar", label: "Instagram" },
   { icon: TikTok, href: "https://tiktok.com/@sakharsansar", label: "TikTok" },
   { icon: Youtube, href: "https://youtube.com/@sakharsansar", label: "YouTube" },
-  { icon: Mail, href: "mailto:hello@sakharsansar.com", label: "Email" },
+  { icon: Mail, href: "mailto:sakharsansar@gmail.com", label: "Email" },
 ];
 
 const COLUMNS: { title: string; links: { label: string; href: string }[] }[] = [

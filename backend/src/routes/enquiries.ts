@@ -1,6 +1,7 @@
 import { Router, Request, Response } from "express";
 import prisma from "../lib/prisma";
 import { requireAuth, AuthRequest } from "../middleware/auth";
+import { sendEnquiryNotification } from "../lib/mailer";
 import { EnquiryStatus, EnquiryType, Prisma } from "@prisma/client";
 
 const router = Router();
@@ -38,6 +39,14 @@ router.post("/", async (req: Request, res: Response): Promise<void> => {
       type: safeType,
       message: String(message).slice(0, 5000),
     },
+  });
+
+  // Notify the shop inbox. Fire-and-forget: the mailer never throws.
+  void sendEnquiryNotification({
+    name: enquiry.name,
+    contact: enquiry.contact,
+    type: enquiry.type,
+    message: enquiry.message,
   });
 
   res.status(201).json(enquiry);

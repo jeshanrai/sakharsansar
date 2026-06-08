@@ -6,7 +6,7 @@ import ContactForm from "./ContactForm";
 
 const PHONE_DISPLAY = "+977 98-6014-9199";
 const PHONE = "9779860149199";
-const EMAIL = "hello@sakharsansar.com";
+const EMAIL = "sakharsansar@gmail.com";
 const WA_MESSAGE = "Hi SakharSansar! I'd like to know more about your jaggery.";
 
 const CHANNELS = [

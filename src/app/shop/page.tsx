@@ -45,7 +45,7 @@ export default function ShopPage() {
   return (
     <>
       <OrderDrawer />
-      <main className="overflow-x-hidden">
+      <main className="overflow-x-hidden pt-10">
         <ShopContent />
       </main>
       <Footer />

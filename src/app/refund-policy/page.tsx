@@ -24,7 +24,7 @@ export default function RefundPolicyPage() {
 
             <section className="bg-white rounded-2xl p-8 sm:p-10">
               <h2 className="font-poppins text-xl sm:text-2xl font-semibold text-[#2C1500] mb-4">How to Request a Return</h2>
-              <p className="text-base sm:text-lg text-[#2C1500]/70 leading-[1.8]">Contact us at <a href="mailto:hello@sakharsansar.com" className="text-[#C17A2A] font-medium underline underline-offset-4">hello@sakharsansar.com</a> with your order number and photos of the damaged or incorrect product. Our team will review and respond within 24 hours.</p>
+              <p className="text-base sm:text-lg text-[#2C1500]/70 leading-[1.8]">Contact us at <a href="mailto:sakharsansar@gmail.com" className="text-[#C17A2A] font-medium underline underline-offset-4">sakharsansar@gmail.com</a> with your order number and photos of the damaged or incorrect product. Our team will review and respond within 24 hours.</p>
             </section>
 
             <section className="bg-white rounded-2xl p-8 sm:p-10">
@@ -44,7 +44,7 @@ export default function RefundPolicyPage() {
 
             <section className="bg-white rounded-2xl p-8 sm:p-10">
               <h2 className="font-poppins text-xl sm:text-2xl font-semibold text-[#2C1500] mb-4">Contact</h2>
-              <p className="text-base sm:text-lg text-[#2C1500]/70 leading-[1.8]">For any refund or return inquiries, email us at <a href="mailto:hello@sakharsansar.com" className="text-[#C17A2A] font-medium underline underline-offset-4">hello@sakharsansar.com</a> or call +977-0000000000.</p>
+              <p className="text-base sm:text-lg text-[#2C1500]/70 leading-[1.8]">For any refund or return inquiries, email us at <a href="mailto:sakharsansar@gmail.com" className="text-[#C17A2A] font-medium underline underline-offset-4">sakharsansar@gmail.com</a> or call +977-0000000000.</p>
             </section>
           </div>
         </div>

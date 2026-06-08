@@ -56,7 +56,7 @@ ${guides}
 - [Terms](${BASE_URL}/terms)
 
 ## Contact
-- Email: hello@sakharsansar.com
+- Email: sakharsansar@gmail.com
 - Location: Sankhuwasabha, Koshi Province, Nepal
 `;
 

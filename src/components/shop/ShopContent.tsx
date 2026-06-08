@@ -14,7 +14,6 @@ import {
   ArrowRight,
   SlidersHorizontal,
   Check,
-  ChevronRight,
   Sparkles,
 } from "lucide-react";
 import data from "@/data/content.json";
@@ -253,74 +252,11 @@ export default function ShopContent() {
 
   return (
     <>
-      {/* ─── Editorial header ─────────────────────────── */}
-      <section className="relative bg-cream pt-10 sm:pt-14 pb-2 px-5 sm:px-8 lg:px-12 overflow-hidden">
-        {/* Soft honey halo */}
-        <div
-          aria-hidden
-          className="absolute -top-32 -right-32 w-[34rem] h-[34rem] rounded-full bg-honey/15 blur-3xl pointer-events-none"
-        />
-
-        <div className="relative max-w-7xl mx-auto">
-          {/* Breadcrumb */}
-          <nav aria-label="Breadcrumb" className="mb-6">
-            <ol className="flex items-center gap-1.5 text-[11px] font-medium text-jaggery/50">
-              <li>
-                <Link href="/" className="hover:text-jaggery transition-colors">
-                  Home
-                </Link>
-              </li>
-              <li aria-hidden>
-                <ChevronRight className="w-3 h-3" strokeWidth={2} />
-              </li>
-              <li className="text-jaggery font-semibold">Shop</li>
-            </ol>
-          </nav>
-
-          {/* Headline block */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-end">
-            <div className="lg:col-span-8">
-              <div className="flex items-center gap-2.5 mb-4">
-                <span className="w-6 h-px bg-caramel" />
-                <span className="text-[10px] font-bold tracking-[0.22em] uppercase text-caramel">
-                  Shop pure sakhar
-                </span>
-              </div>
-              <h1 className="font-display font-bold text-jaggery tracking-tight text-balance leading-[0.95]">
-                <span className="block text-[clamp(2.75rem,7vw,5.5rem)]">
-                  Every form of
-                </span>
-                <span className="block text-[clamp(2.75rem,7vw,5.5rem)] text-caramel-deep">
-                  <span className="font-serif italic font-normal">honest</span> sakhar.
-                </span>
-              </h1>
-            </div>
-
-            {/* Right info card */}
-            <div className="lg:col-span-4">
-              <div className="bg-white/60 backdrop-blur-sm border border-jaggery/8 rounded-3xl p-5 sm:p-6">
-                <p className="text-[14px] text-jaggery/70 leading-relaxed">
-                  100% organic. Wood-fired in Sankhuwasabha. Hand-poured by farmers
-                  for <em className="font-serif italic text-jaggery">seven generations</em>.
-                </p>
-                <div className="mt-5 pt-5 border-t border-jaggery/10 flex items-center gap-5">
-                  <Stat value={String(data.products.length)} label="Forms" />
-                  <span className="w-px h-8 bg-jaggery/12" />
-                  <Stat value="4.9★" label="Rating" />
-                  <span className="w-px h-8 bg-jaggery/12" />
-                  <Stat value="100%" label="Organic" />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* ─── Sticky filter bar ────────────────────────── */}
-      <div className="sticky top-29 z-30 bg-cream/95 backdrop-blur-md mt-8 sm:mt-10">
+      <div className="sticky top-29 z-30 bg-cream border-b border-jaggery/10 shadow-[0_6px_16px_-12px_rgba(26,20,16,0.25)]">
         <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
           {/* Filter controls */}
-          <div className="border-t border-jaggery/10 pt-4 pb-3.5 flex items-center gap-3">
+          <div className="pt-4 pb-3.5 flex items-center gap-3">
             {/* Category pills */}
             <div className="flex-1 min-w-0 overflow-x-auto scrollbar-hide -mx-1 px-1">
               <ul className="flex items-center gap-1">
@@ -545,7 +481,7 @@ export default function ShopContent() {
             >
               <div className="p-7">
                 <div className="flex items-center justify-between mb-8">
-                  <h2 className="font-display font-bold text-2xl text-jaggery tracking-tight">Filter</h2>
+                  <h2 className="font-marker uppercase text-2xl text-jaggery tracking-tight">Filter</h2>
                   <button
                     onClick={() => setFiltersOpen(false)}
                     aria-label="Close filters"
@@ -635,20 +571,6 @@ export default function ShopContent() {
   );
 }
 
-/* ─── Stat (header) ─── */
-function Stat({ value, label }: { value: string; label: string }) {
-  return (
-    <div className="flex flex-col leading-none">
-      <span className="font-display font-bold text-jaggery text-[18px] tabular-nums">
-        {value}
-      </span>
-      <span className="text-[9px] font-bold tracking-[0.18em] uppercase text-jaggery/45 mt-1.5">
-        {label}
-      </span>
-    </div>
-  );
-}
-
 /* ─── Removable chip ─── */
 function Chip({ children, onRemove }: { children: React.ReactNode; onRemove: () => void }) {
   return (
@@ -673,7 +595,7 @@ function EmptyState({ onReset }: { onReset: () => void }) {
       <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-honey/15 mb-6">
         <Sparkles className="w-7 h-7 text-caramel-deep" strokeWidth={1.5} />
       </div>
-      <p className="font-display font-bold text-jaggery text-[clamp(1.75rem,3.5vw,2.75rem)] tracking-tight leading-tight">
+      <p className="font-marker uppercase text-jaggery text-[clamp(1.75rem,3.5vw,2.75rem)] tracking-tight leading-tight">
         No sakhar found.
       </p>
       <p className="text-[14px] text-jaggery/55 mt-3 max-w-sm mx-auto leading-relaxed">

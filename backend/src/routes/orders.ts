@@ -1,6 +1,7 @@
 import { Router, Request, Response } from "express";
 import prisma from "../lib/prisma";
 import { requireAuth, AuthRequest } from "../middleware/auth";
+import { sendOrderNotification } from "../lib/mailer";
 
 import { OrderStatus } from "@prisma/client";
 
@@ -24,6 +25,17 @@ router.post("/", async (req: Request, res: Response): Promise<void> => {
       quantity: Number(quantity),
       amount: Number(amount) || 0,
     },
+  });
+
+  // Notify the shop inbox. Fire-and-forget: the mailer never throws, so a mail
+  // hiccup can't fail the order the customer just placed.
+  void sendOrderNotification({
+    customer: order.customer,
+    phone: order.phone,
+    address: order.address,
+    product: order.product,
+    quantity: order.quantity,
+    amount: order.amount,
   });
 
   res.status(201).json(order);
