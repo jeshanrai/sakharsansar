@@ -1,7 +1,7 @@
 import React from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { SlideInLeft, SlideInRight } from "@/components/ui/Animations";
+import VideoFrame from "@/components/ui/VideoFrame";
 
 /**
  * "Pure is in our nature" frame — green band with a large product image and a
@@ -14,18 +14,17 @@ export default function StoryNatureSection() {
       className="relative bg-grove text-cream px-6 sm:px-10 lg:px-16 py-16 sm:py-24 overflow-hidden"
     >
       <div className="max-w-[1180px] mx-auto grid grid-cols-1 lg:grid-cols-12 items-center gap-8 lg:gap-0">
-        {/* Image */}
+        {/* Ambient jaggery-block film — muted, looping autoplay. The existing
+            still doubles as the poster, so it shows instantly and never looks
+            broken if the clip is slow to paint. */}
         <SlideInLeft className="lg:col-span-7">
-          <div className="relative aspect-[5/4] w-full overflow-hidden rounded-[1.75rem] ring-1 ring-cream/10 shadow-2xl shadow-grove-deep/40">
-            <Image
-              src="/products/jaggery-block.jpg"
-              alt="A hand-poured block of pure amber jaggery, set in a wooden mould"
-              fill
-              loading="lazy"
-              sizes="(max-width: 1024px) 100vw, 60vw"
-              className="object-cover"
-            />
-          </div>
+          <VideoFrame
+            variant="ambient"
+            src="/media/jaggery-block.mp4"
+            poster="/products/jaggery-block.jpg"
+            posterAlt="A hand-poured block of pure amber jaggery, set in a wooden mould"
+            className="aspect-[5/4] w-full ring-1 ring-cream/10 shadow-2xl shadow-grove-deep/40"
+          />
         </SlideInLeft>
 
         {/* Overlapping card */}

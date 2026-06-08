@@ -1,5 +1,5 @@
 import React from 'react';
-import { FadeUp, SlideInLeft } from "@/components/ui/Animations";
+import { FadeUp, SlideInLeft, SlideInRight } from "@/components/ui/Animations";
 import VideoFrame from "@/components/ui/VideoFrame";
 import { Sprout, Flame, Hand, Package } from "lucide-react";
 
@@ -25,30 +25,35 @@ export default function StoryProcessSection() {
       className="relative bg-peach px-6 sm:px-10 lg:px-16 py-16 sm:py-24 overflow-hidden"
     >
       <div className="max-w-[1180px] mx-auto">
-        <SlideInLeft>
-          <div className="max-w-2xl mb-10 sm:mb-14">
-            <span className="label-caps text-caramel mb-4 block">How it&rsquo;s made</span>
-            <h2 className="font-marker uppercase text-jaggery leading-[0.95] text-[clamp(2rem,4vw,3.25rem)]">
-              Four steps. No shortcuts.
-            </h2>
-            <p className="text-jaggery/70 text-lede mt-6">
-              The same method our grandparents used — slow, smoky, and stubbornly free of
-              the chemicals modern factories rely on. Press play and watch a batch come to life.
-            </p>
-          </div>
-        </SlideInLeft>
+        {/* Text on the left, vertical making-process film on the right. */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 items-center gap-10 lg:gap-12">
+          <SlideInLeft className="lg:col-span-7">
+            <div className="max-w-2xl">
+              <span className="label-caps text-caramel mb-4 block">How it&rsquo;s made</span>
+              <h2 className="font-marker uppercase text-jaggery leading-[0.95] text-[clamp(2rem,4vw,3.25rem)]">
+                Four steps. No shortcuts.
+              </h2>
+              <p className="text-jaggery/70 text-lede mt-6">
+                The same method our grandparents used — slow, smoky, and stubbornly free of
+                the chemicals modern factories rely on. Press play and watch a batch come to life.
+              </p>
+            </div>
+          </SlideInLeft>
 
-        {/* Making-process film */}
-        <FadeUp delay={0.1}>
-          <VideoFrame
-            variant="play"
-            src="/media/making-process.mp4"
-            poster="/farmers/farmer1.jpg"
-            posterAlt="A SakharSansar farmer stirring jaggery over a wood fire"
-            label="Watch: from cane to block"
-            className="aspect-video w-full ring-1 ring-jaggery/10 shadow-xl shadow-jaggery/15"
-          />
-        </FadeUp>
+          {/* A vertical, phone-shot clip of a batch reducing in the iron
+              kadhai. Width-capped so the portrait frame sits without cropping;
+              hugs the right edge on large screens. Plays with sound. */}
+          <SlideInRight className="lg:col-span-5">
+            <VideoFrame
+              variant="play"
+              src="/media/making-process.mp4"
+              poster="/media/making-process-poster.jpg"
+              posterAlt="Cane juice reducing in an iron kadhai over wood fire, stirred by hand"
+              label="Watch: from cane to block"
+              className="aspect-[9/16] w-full max-w-[360px] mx-auto lg:ml-auto lg:mr-0 ring-1 ring-jaggery/10 shadow-xl shadow-jaggery/15"
+            />
+          </SlideInRight>
+        </div>
 
         {/* The four steps */}
         <div className="relative mt-14 sm:mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-6">

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { Play } from "lucide-react";
 
@@ -8,7 +8,10 @@ import { Play } from "lucide-react";
  * Self-hosted video frame for the brand pages.
  *
  * Two variants:
- *  - "ambient": muted, looping autoplay — for atmosphere (e.g. the farm loop).
+ *  - "ambient": muted, looping — for atmosphere (e.g. the farm loop). It does
+ *               NOT download or play until scrolled into view, and pauses again
+ *               when it leaves, to save bandwidth, CPU and battery. Honours
+ *               `prefers-reduced-motion` by holding on the poster.
  *  - "play":    shows the poster with a play button; loads the video with sound
  *               on click — for narrative films (e.g. the making-process film).
  *
@@ -16,15 +19,7 @@ import { Play } from "lucide-react";
  * so until the `.mp4` at `src` is added the frame simply shows the poster and
  * nothing looks broken. Drop the real file at `src` and it just works.
  */
-export default function VideoFrame({
-  src,
-  poster,
-  posterAlt = "",
-  variant = "play",
-  className = "",
-  rounded = "rounded-[1.75rem]",
-  label,
-}: {
+type VideoFrameProps = {
   src: string;
   poster: string;
   posterAlt?: string;
@@ -32,28 +27,84 @@ export default function VideoFrame({
   className?: string;
   rounded?: string;
   label?: string;
-}) {
-  const [playing, setPlaying] = useState(false);
+};
 
-  if (variant === "ambient") {
-    return (
-      <div className={`relative overflow-hidden ${rounded} ${className}`}>
-        {/* Poster underlay — visible until the video paints (or if it's missing) */}
-        <Image src={poster} alt={posterAlt} fill sizes="100vw" className="object-cover" />
-        <video
-          className="absolute inset-0 h-full w-full object-cover"
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="metadata"
-          poster={poster}
-        >
-          <source src={src} type="video/mp4" />
-        </video>
-      </div>
+export default function VideoFrame(props: VideoFrameProps) {
+  if (props.variant === "ambient") return <AmbientFrame {...props} />;
+  return <PlayFrame {...props} />;
+}
+
+/**
+ * Lazy ambient loop. `preload="none"` keeps the network idle until the frame
+ * nears the viewport, at which point we call play(); we pause it on the way
+ * out so an off-screen clip never burns CPU. The poster underlay (optimised
+ * via next/image) covers the transparent video until it paints its first frame,
+ * so there is no second, unoptimised poster fetch.
+ */
+function AmbientFrame({
+  src,
+  poster,
+  posterAlt = "",
+  className = "",
+  rounded = "rounded-[1.75rem]",
+}: VideoFrameProps) {
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const wrap = wrapRef.current;
+    const video = videoRef.current;
+    if (!wrap || !video) return;
+
+    const reduceMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+    if (reduceMotion) return; // hold on the poster, never autoplay
+
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          video.play().catch(() => {}); // ignore autoplay rejections
+        } else {
+          video.pause();
+        }
+      },
+      { rootMargin: "200px" } // begin fetching just before it scrolls in
     );
-  }
+
+    io.observe(wrap);
+    return () => io.disconnect();
+  }, []);
+
+  return (
+    <div ref={wrapRef} className={`relative overflow-hidden ${rounded} ${className}`}>
+      {/* Poster underlay — visible until the video paints (or if it's missing). */}
+      <Image src={poster} alt={posterAlt} fill sizes="100vw" className="object-cover" />
+      <video
+        ref={videoRef}
+        className="absolute inset-0 h-full w-full object-cover"
+        muted
+        loop
+        playsInline
+        preload="none"
+      >
+        <source src={src} type="video/mp4" />
+      </video>
+    </div>
+  );
+}
+
+/** Click-to-play narrative film. Nothing but the (optimised) poster loads until
+ *  the visitor presses play. */
+function PlayFrame({
+  src,
+  poster,
+  posterAlt = "",
+  className = "",
+  rounded = "rounded-[1.75rem]",
+  label,
+}: VideoFrameProps) {
+  const [playing, setPlaying] = useState(false);
 
   return (
     <div className={`relative overflow-hidden ${rounded} ${className}`}>
