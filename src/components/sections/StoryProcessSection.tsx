@@ -35,21 +35,21 @@ export default function StoryProcessSection() {
               </h2>
               <p className="text-jaggery/70 text-lede mt-6">
                 The same method our grandparents used — slow, smoky, and stubbornly free of
-                the chemicals modern factories rely on. Press play and watch a batch come to life.
+                the chemicals modern factories rely on. Watch a batch come to life.
               </p>
             </div>
           </SlideInLeft>
 
           {/* A vertical, phone-shot clip of a batch reducing in the iron
-              kadhai. Width-capped so the portrait frame sits without cropping;
-              hugs the right edge on large screens. Plays with sound. */}
+              kadhai. Ambient: muted, auto-looping, lazy-loaded — no controls,
+              not clickable. Width-capped so the portrait frame sits without
+              cropping; hugs the right edge on large screens. */}
           <SlideInRight className="lg:col-span-5">
             <VideoFrame
-              variant="play"
+              variant="ambient"
               src="/media/making-process.mp4"
               poster="/media/making-process-poster.jpg"
               posterAlt="Cane juice reducing in an iron kadhai over wood fire, stirred by hand"
-              label="Watch: from cane to block"
               className="aspect-[9/16] w-full max-w-[360px] mx-auto lg:ml-auto lg:mr-0 ring-1 ring-jaggery/10 shadow-xl shadow-jaggery/15"
             />
           </SlideInRight>
