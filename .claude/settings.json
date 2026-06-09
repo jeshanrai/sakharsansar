@@ -58,7 +58,12 @@
       "Bash(command -v ffprobe)",
       "Bash(command -v gst-discoverer-1.0)",
       "Bash(gst-discoverer-1.0 IMG_1393.MOV)",
-      "Bash(vlc --version)"
+      "Bash(vlc --version)",
+      "Bash(echo \"=== EXIT: $? ===\")",
+      "Bash(echo \"=== BACKEND EXIT: $? ===\")",
+      "Bash(echo \"=== FRONTEND EXIT: $? ===\")",
+      "Bash(node -e \"const d=require\\('./src/data/content.json'\\); console.log\\('products:', JSON.stringify\\(d.products,null,1\\).slice\\(0,1200\\)\\); console.log\\('keys:', Object.keys\\(d\\)\\);\")",
+      "Bash(node -e \"const d=require\\('./src/data/content.json'\\); console.log\\(JSON.stringify\\(d.products.map\\(p=>\\({name:p.name,price:p.price,weight:p.weight,slug:p.slug,image:p.image}\\)\\),null,1\\)\\); console.log\\('brand:',JSON.stringify\\(d.brand\\)\\);\")"
     ],
     "additionalDirectories": [
       "/home/jeshanrai/Downloads"

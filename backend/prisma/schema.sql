@@ -66,6 +66,32 @@ CREATE TABLE "Enquiry" (
 CREATE INDEX "Enquiry_status_idx" ON "Enquiry"("status");
 CREATE INDEX "Enquiry_createdAt_idx" ON "Enquiry"("createdAt");
 
+-- B2B enum
+CREATE TYPE "B2BType" AS ENUM ('RETAILER', 'WHOLESALER', 'DISTRIBUTOR', 'CAFE_RESTAURANT', 'SUPERMARKET', 'OTHER');
+
+-- B2B clients table (wholesale/retail shops we supply)
+CREATE TABLE "B2BClient" (
+    "id"            TEXT NOT NULL DEFAULT gen_random_uuid()::text,
+    "shopName"      TEXT NOT NULL,
+    "contactPerson" TEXT,
+    "phone"         TEXT NOT NULL,
+    "altPhone"      TEXT,
+    "email"         TEXT,
+    "type"          "B2BType" NOT NULL DEFAULT 'RETAILER',
+    "address"       TEXT NOT NULL,
+    "mapUrl"        TEXT,
+    "notes"         TEXT,
+    "createdAt"     TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt"     TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "createdBy"     TEXT,
+    "updatedBy"     TEXT,
+    "deletedAt"     TIMESTAMP(3),
+    "deletedBy"     TEXT,
+    CONSTRAINT "B2BClient_pkey" PRIMARY KEY ("id")
+);
+CREATE INDEX "B2BClient_type_idx" ON "B2BClient"("type");
+CREATE INDEX "B2BClient_createdAt_idx" ON "B2BClient"("createdAt");
+
 -- Seed: 3 Admin users (password: Sakhar123)
 INSERT INTO "Admin" ("id", "email", "password", "name") VALUES
   (gen_random_uuid()::text, 'jeshan@sakharsansar.com',  crypt('Sakhar123', gen_salt('bf', 10)), 'Jeshan Rai'),

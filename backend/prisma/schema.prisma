@@ -26,6 +26,9 @@ model Admin {
   salesDeleted    Sale[]    @relation("SaleDeletedBy")
   enquiriesUpdated Enquiry[] @relation("EnquiryUpdatedBy")
   enquiriesDeleted Enquiry[] @relation("EnquiryDeletedBy")
+  b2bCreated      B2BClient[] @relation("B2BCreatedBy")
+  b2bUpdated      B2BClient[] @relation("B2BUpdatedBy")
+  b2bDeleted      B2BClient[] @relation("B2BDeletedBy")
 }
 
 model Order {
@@ -112,6 +115,40 @@ model Enquiry {
 
   updatedByAdmin Admin? @relation("EnquiryUpdatedBy", fields: [updatedBy], references: [id])
   deletedByAdmin Admin? @relation("EnquiryDeletedBy", fields: [deletedBy], references: [id])
+}
+
+model B2BClient {
+  id            String   @id @default(cuid())
+  shopName      String
+  contactPerson String?
+  phone         String   // main contact number
+  altPhone      String?
+  email         String?
+  type          B2BType  @default(RETAILER)
+  address       String
+  mapUrl        String?  // Google Maps link to the shop's pin
+  notes         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Audit fields
+  createdBy String?
+  updatedBy String?
+  deletedAt DateTime?
+  deletedBy String?
+
+  createdByAdmin Admin? @relation("B2BCreatedBy", fields: [createdBy], references: [id])
+  updatedByAdmin Admin? @relation("B2BUpdatedBy", fields: [updatedBy], references: [id])
+  deletedByAdmin Admin? @relation("B2BDeletedBy", fields: [deletedBy], references: [id])
+}
+
+enum B2BType {
+  RETAILER
+  WHOLESALER
+  DISTRIBUTOR
+  CAFE_RESTAURANT
+  SUPERMARKET
+  OTHER
 }
 
 enum OrderStatus {

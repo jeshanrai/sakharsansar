@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import {
   Plus,
@@ -16,6 +16,7 @@ import {
   Navigation,
   Building2,
 } from "lucide-react";
+import { apiFetch } from "@/lib/api";
 import {
   Card,
   SectionHeading,
@@ -30,12 +31,6 @@ import {
 } from "../_components/primitives";
 import { B2B_TONES, B2B_TYPES, type B2BClient, type B2BType } from "../_data/types";
 
-const daysAgo = (d: number) => {
-  const dt = new Date();
-  dt.setDate(dt.getDate() - d);
-  return dt.toISOString();
-};
-
 /** Build a Google Maps link for a shop — prefer a saved pin, else search the address. */
 const mapsLink = (c: Pick<B2BClient, "mapUrl" | "address" | "shopName">) =>
   c.mapUrl?.trim()
@@ -45,75 +40,6 @@ const mapsLink = (c: Pick<B2BClient, "mapUrl" | "address" | "shopName">) =>
 /** Keyless embeddable map — works off the address/pin with no API key. */
 const mapsEmbed = (c: Pick<B2BClient, "address" | "shopName">) =>
   `https://maps.google.com/maps?q=${encodeURIComponent(`${c.shopName} ${c.address}`)}&z=14&output=embed`;
-
-// Frontend-only seed. Edits stay in local state.
-const SEED: B2BClient[] = [
-  {
-    id: "b2b_1",
-    shopName: "Himalayan Organics Mart",
-    contactPerson: "Suresh Maharjan",
-    phone: "9841123456",
-    altPhone: "01-4412233",
-    email: "himalayanorganics@gmail.com",
-    type: "RETAILER",
-    address: "Jhamsikhel, Lalitpur",
-    mapUrl: "https://maps.app.goo.gl/8xQ2",
-    notes: "Orders ~40kg/month. Prefers delivery on Sundays.",
-    createdAt: daysAgo(40),
-  },
-  {
-    id: "b2b_2",
-    shopName: "Annapurna Wholesale Suppliers",
-    contactPerson: "Bhim Gurung",
-    phone: "9856023344",
-    altPhone: null,
-    email: null,
-    type: "WHOLESALER",
-    address: "Pokhara — Mahendrapul",
-    mapUrl: null,
-    notes: "Bulk blocks only. Pays on 15-day credit.",
-    createdAt: daysAgo(28),
-  },
-  {
-    id: "b2b_3",
-    shopName: "Everest Distribution Pvt. Ltd.",
-    contactPerson: "Anita Shrestha",
-    phone: "9801556677",
-    altPhone: "9818002211",
-    email: "sales@everestdist.com.np",
-    type: "DISTRIBUTOR",
-    address: "Biratnagar, Morang",
-    mapUrl: null,
-    notes: "Covers eastern Nepal. Monthly standing order.",
-    createdAt: daysAgo(21),
-  },
-  {
-    id: "b2b_4",
-    shopName: "Roadhouse Café",
-    contactPerson: "Niraj Lama",
-    phone: "9803344556",
-    altPhone: null,
-    email: null,
-    type: "CAFE_RESTAURANT",
-    address: "Thamel, Kathmandu",
-    mapUrl: null,
-    notes: "Uses jaggery powder for desserts.",
-    createdAt: daysAgo(12),
-  },
-  {
-    id: "b2b_5",
-    shopName: "Bhatbhateni Supermarket — Krishna Galli",
-    contactPerson: "Procurement Desk",
-    phone: "9851000111",
-    altPhone: "01-5453000",
-    email: "vendors@bbsm.com.np",
-    type: "SUPERMARKET",
-    address: "Krishna Galli, Lalitpur",
-    mapUrl: null,
-    notes: "Listed on shelf. Needs barcoded retail packs.",
-    createdAt: daysAgo(7),
-  },
-];
 
 const emptyForm = {
   shopName: "",
@@ -127,45 +53,45 @@ const emptyForm = {
   notes: "",
 };
 
+type Stats = { total: number; retailers: number; wholesale: number; pinned: number };
+
 export default function B2BPage({ onToast }: { onToast: (msg: string) => void }) {
-  const [clients, setClients] = useState<B2BClient[]>(SEED);
+  const [clients, setClients] = useState<B2BClient[]>([]);
+  const [stats, setStats] = useState<Stats>({ total: 0, retailers: 0, wholesale: 0, pinned: 0 });
+  const [totalPages, setTotalPages] = useState(1);
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState<"ALL" | B2BType>("ALL");
   const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(true);
   const perPage = 8;
 
   const [formOpen, setFormOpen] = useState(false);
   const [editing, setEditing] = useState<B2BClient | null>(null);
   const [viewing, setViewing] = useState<B2BClient | null>(null);
   const [confirmDel, setConfirmDel] = useState<B2BClient | null>(null);
+  const [submitting, setSubmitting] = useState(false);
   const [form, setForm] = useState(emptyForm);
 
-  const filtered = useMemo(() => {
-    return clients.filter((c) => {
-      const fMatch = filter === "ALL" || c.type === filter;
-      const q = search.toLowerCase();
-      const sMatch =
-        !search ||
-        c.shopName.toLowerCase().includes(q) ||
-        (c.contactPerson ?? "").toLowerCase().includes(q) ||
-        c.address.toLowerCase().includes(q) ||
-        c.phone.includes(search);
-      return fMatch && sMatch;
-    });
-  }, [clients, filter, search]);
+  const fetchClients = useCallback(async (p: number, f: "ALL" | B2BType, s: string) => {
+    setLoading(true);
+    const qs = new URLSearchParams({ page: String(p), limit: String(perPage) });
+    if (f !== "ALL") qs.set("type", f);
+    if (s.trim()) qs.set("search", s.trim());
+    const res = await apiFetch(`/b2b?${qs.toString()}`);
+    if (res.ok) {
+      const data = await res.json();
+      setClients(data.clients || []);
+      setTotalPages(data.totalPages || 1);
+      if (data.stats) setStats(data.stats);
+    }
+    setLoading(false);
+  }, []);
 
-  const totalPages = Math.max(1, Math.ceil(filtered.length / perPage));
-  const pageItems = filtered.slice((page - 1) * perPage, page * perPage);
-
-  const kpis = useMemo(() => {
-    const by = (t: B2BType) => clients.filter((c) => c.type === t).length;
-    return {
-      total: clients.length,
-      retailers: by("RETAILER"),
-      wholesale: by("WHOLESALER") + by("DISTRIBUTOR"),
-      pinned: clients.filter((c) => c.mapUrl?.trim()).length,
-    };
-  }, [clients]);
+  // Debounce so typing in the search box doesn't fire a request per keystroke.
+  useEffect(() => {
+    const t = setTimeout(() => fetchClients(page, filter, search), 250);
+    return () => clearTimeout(t);
+  }, [page, filter, search, fetchClients]);
 
   const openAdd = () => {
     setEditing(null);
@@ -189,8 +115,9 @@ export default function B2BPage({ onToast }: { onToast: (msg: string) => void })
     setFormOpen(true);
   };
 
-  const submit = (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSubmitting(true);
     const payload = {
       shopName: form.shopName.trim(),
       contactPerson: form.contactPerson.trim() || null,
@@ -203,29 +130,38 @@ export default function B2BPage({ onToast }: { onToast: (msg: string) => void })
       notes: form.notes.trim() || null,
     };
 
-    if (editing) {
-      setClients((prev) => prev.map((c) => (c.id === editing.id ? { ...c, ...payload } : c)));
-      onToast(`${payload.shopName} updated`);
+    const res = editing
+      ? await apiFetch(`/b2b/${editing.id}`, { method: "PATCH", body: JSON.stringify(payload) })
+      : await apiFetch("/b2b", { method: "POST", body: JSON.stringify(payload) });
+    setSubmitting(false);
+
+    if (res.ok) {
+      onToast(editing ? `${payload.shopName} updated` : `${payload.shopName} added`);
+      setFormOpen(false);
+      setEditing(null);
+      setForm(emptyForm);
+      const nextPage = editing ? page : 1;
+      setPage(nextPage);
+      fetchClients(nextPage, filter, search);
     } else {
-      const next: B2BClient = {
-        id: `b2b_${Date.now()}`,
-        ...payload,
-        createdAt: new Date().toISOString(),
-      };
-      setClients((prev) => [next, ...prev]);
-      onToast(`${payload.shopName} added`);
-      setPage(1);
+      onToast("Save failed");
     }
-    setFormOpen(false);
-    setEditing(null);
-    setForm(emptyForm);
   };
 
-  const remove = () => {
+  const remove = async () => {
     if (!confirmDel) return;
-    setClients((prev) => prev.filter((c) => c.id !== confirmDel.id));
-    onToast(`${confirmDel.shopName} removed`);
+    const target = confirmDel;
     setConfirmDel(null);
+    const res = await apiFetch(`/b2b/${target.id}`, { method: "DELETE" });
+    if (res.ok) {
+      onToast(`${target.shopName} removed`);
+      // If we just removed the last row on a page, step back so we don't land on an empty page.
+      const nextPage = clients.length === 1 && page > 1 ? page - 1 : page;
+      setPage(nextPage);
+      fetchClients(nextPage, filter, search);
+    } else {
+      onToast("Delete failed");
+    }
   };
 
   return (
@@ -242,10 +178,10 @@ export default function B2BPage({ onToast }: { onToast: (msg: string) => void })
       />
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-        <KPI label="Total Shops" value={String(kpis.total)} icon={Store} />
-        <KPI label="Retailers" value={String(kpis.retailers)} tone="sky" icon={Building2} />
-        <KPI label="Wholesale / Dist." value={String(kpis.wholesale)} tone="violet" icon={Navigation} />
-        <KPI label="Map Pinned" value={String(kpis.pinned)} tone="emerald" icon={MapPin} />
+        <KPI label="Total Shops" value={String(stats.total)} icon={Store} />
+        <KPI label="Retailers" value={String(stats.retailers)} tone="sky" icon={Building2} />
+        <KPI label="Wholesale / Dist." value={String(stats.wholesale)} tone="violet" icon={Navigation} />
+        <KPI label="Map Pinned" value={String(stats.pinned)} tone="emerald" icon={MapPin} />
       </div>
 
       {/* Search + filter bar */}
@@ -294,7 +230,7 @@ export default function B2BPage({ onToast }: { onToast: (msg: string) => void })
               </tr>
             </thead>
             <tbody>
-              {pageItems.map((c) => (
+              {clients.map((c) => (
                 <motion.tr
                   key={c.id}
                   initial={{ opacity: 0 }}
@@ -371,16 +307,18 @@ export default function B2BPage({ onToast }: { onToast: (msg: string) => void })
             </tbody>
           </table>
         </div>
-        {pageItems.length === 0 && <EmptyState icon={Store} title="No shops found" message="Try a different filter or add one." />}
+        {clients.length === 0 && (
+          <EmptyState icon={Store} title={loading ? "Loading…" : "No shops found"} message={loading ? "Fetching your directory." : "Try a different filter or add one."} />
+        )}
         {totalPages > 1 && <Pagination page={page} totalPages={totalPages} onPage={setPage} />}
       </Card>
 
       {/* Mobile cards */}
       <div className="md:hidden space-y-3">
-        {pageItems.length === 0 ? (
-          <Card><EmptyState icon={Store} title="No shops" message="Tap + to add one." /></Card>
+        {clients.length === 0 ? (
+          <Card><EmptyState icon={Store} title={loading ? "Loading…" : "No shops"} message={loading ? "Fetching your directory." : "Tap + to add one."} /></Card>
         ) : (
-          pageItems.map((c) => (
+          clients.map((c) => (
             <motion.div key={c.id} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}>
               <Card className="p-4">
                 <div className="flex items-start justify-between gap-3">
@@ -517,8 +455,8 @@ export default function B2BPage({ onToast }: { onToast: (msg: string) => void })
             <Button variant="secondary" type="button" onClick={() => setFormOpen(false)} className="flex-1">
               Cancel
             </Button>
-            <Button type="submit" className="flex-1">
-              {editing ? "Save Changes" : "Add Shop"}
+            <Button type="submit" disabled={submitting} className="flex-1">
+              {submitting ? "Saving…" : editing ? "Save Changes" : "Add Shop"}
             </Button>
           </div>
         </form>
