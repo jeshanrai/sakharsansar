@@ -1,13 +1,31 @@
 -- SakharSansar Database Schema
 -- Run: psql -U postgres -d sakharsansar -f schema.sql
+--
+-- This script is idempotent — safe to run repeatedly against an existing
+-- database. Postgres has no "CREATE TYPE IF NOT EXISTS", so enums are guarded
+-- with DO blocks that ignore the "already exists" error.
 
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
--- Create enum
-CREATE TYPE "OrderStatus" AS ENUM ('PENDING', 'CONFIRMED', 'SHIPPED', 'DELIVERED', 'CANCELLED');
+-- Enums
+DO $$ BEGIN
+  CREATE TYPE "OrderStatus" AS ENUM ('PENDING', 'CONFIRMED', 'SHIPPED', 'DELIVERED', 'CANCELLED');
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+
+DO $$ BEGIN
+  CREATE TYPE "EnquiryType" AS ENUM ('B2C', 'B2B', 'GIFTING', 'PARTNERSHIP', 'OTHER');
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+
+DO $$ BEGIN
+  CREATE TYPE "EnquiryStatus" AS ENUM ('NEW', 'READ', 'REPLIED', 'ARCHIVED');
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+
+DO $$ BEGIN
+  CREATE TYPE "B2BType" AS ENUM ('RETAILER', 'WHOLESALER', 'DISTRIBUTOR', 'CAFE_RESTAURANT', 'SUPERMARKET', 'OTHER');
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;
 
 -- Admin table
-CREATE TABLE "Admin" (
+CREATE TABLE IF NOT EXISTS "Admin" (
     "id"        TEXT NOT NULL DEFAULT gen_random_uuid()::text,
     "email"     TEXT NOT NULL,
     "password"  TEXT NOT NULL,
@@ -15,10 +33,10 @@ CREATE TABLE "Admin" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT "Admin_pkey" PRIMARY KEY ("id")
 );
-CREATE UNIQUE INDEX "Admin_email_key" ON "Admin"("email");
+CREATE UNIQUE INDEX IF NOT EXISTS "Admin_email_key" ON "Admin"("email");
 
 -- Order table
-CREATE TABLE "Order" (
+CREATE TABLE IF NOT EXISTS "Order" (
     "id"        TEXT NOT NULL DEFAULT gen_random_uuid()::text,
     "customer"  TEXT NOT NULL,
     "phone"     TEXT NOT NULL,
@@ -33,7 +51,7 @@ CREATE TABLE "Order" (
 );
 
 -- Expense table
-CREATE TABLE "Expense" (
+CREATE TABLE IF NOT EXISTS "Expense" (
     "id"          TEXT NOT NULL DEFAULT gen_random_uuid()::text,
     "title"       TEXT NOT NULL,
     "amount"      DOUBLE PRECISION NOT NULL,
@@ -44,12 +62,8 @@ CREATE TABLE "Expense" (
     CONSTRAINT "Expense_pkey" PRIMARY KEY ("id")
 );
 
--- Enquiry enums
-CREATE TYPE "EnquiryType" AS ENUM ('B2C', 'B2B', 'GIFTING', 'PARTNERSHIP', 'OTHER');
-CREATE TYPE "EnquiryStatus" AS ENUM ('NEW', 'READ', 'REPLIED', 'ARCHIVED');
-
 -- Enquiry table (storefront contact form)
-CREATE TABLE "Enquiry" (
+CREATE TABLE IF NOT EXISTS "Enquiry" (
     "id"        TEXT NOT NULL DEFAULT gen_random_uuid()::text,
     "name"      TEXT NOT NULL,
     "contact"   TEXT NOT NULL,
@@ -63,14 +77,11 @@ CREATE TABLE "Enquiry" (
     "deletedBy" TEXT,
     CONSTRAINT "Enquiry_pkey" PRIMARY KEY ("id")
 );
-CREATE INDEX "Enquiry_status_idx" ON "Enquiry"("status");
-CREATE INDEX "Enquiry_createdAt_idx" ON "Enquiry"("createdAt");
-
--- B2B enum
-CREATE TYPE "B2BType" AS ENUM ('RETAILER', 'WHOLESALER', 'DISTRIBUTOR', 'CAFE_RESTAURANT', 'SUPERMARKET', 'OTHER');
+CREATE INDEX IF NOT EXISTS "Enquiry_status_idx" ON "Enquiry"("status");
+CREATE INDEX IF NOT EXISTS "Enquiry_createdAt_idx" ON "Enquiry"("createdAt");
 
 -- B2B clients table (wholesale/retail shops we supply)
-CREATE TABLE "B2BClient" (
+CREATE TABLE IF NOT EXISTS "B2BClient" (
     "id"            TEXT NOT NULL DEFAULT gen_random_uuid()::text,
     "shopName"      TEXT NOT NULL,
     "contactPerson" TEXT,
@@ -89,11 +100,13 @@ CREATE TABLE "B2BClient" (
     "deletedBy"     TEXT,
     CONSTRAINT "B2BClient_pkey" PRIMARY KEY ("id")
 );
-CREATE INDEX "B2BClient_type_idx" ON "B2BClient"("type");
-CREATE INDEX "B2BClient_createdAt_idx" ON "B2BClient"("createdAt");
+CREATE INDEX IF NOT EXISTS "B2BClient_type_idx" ON "B2BClient"("type");
+CREATE INDEX IF NOT EXISTS "B2BClient_createdAt_idx" ON "B2BClient"("createdAt");
 
 -- Seed: 3 Admin users (password: Sakhar123)
+-- ON CONFLICT keeps re-runs from failing on the unique email index.
 INSERT INTO "Admin" ("id", "email", "password", "name") VALUES
   (gen_random_uuid()::text, 'jeshan@sakharsansar.com',  crypt('Sakhar123', gen_salt('bf', 10)), 'Jeshan Rai'),
   (gen_random_uuid()::text, 'nishan@sakharsansar.com',  crypt('Sakhar123', gen_salt('bf', 10)), 'Nishan Magar'),
-  (gen_random_uuid()::text, 'rasu@sakharsansar.com',    crypt('Sakhar123', gen_salt('bf', 10)), 'Rasu Bhandari');
+  (gen_random_uuid()::text, 'rasu@sakharsansar.com',    crypt('Sakhar123', gen_salt('bf', 10)), 'Rasu Bhandari')
+ON CONFLICT ("email") DO NOTHING;
