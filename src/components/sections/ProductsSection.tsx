@@ -60,7 +60,7 @@ export default function ProductsSection() {
             </h2>
           </div>
           <p className="text-jaggery/60 text-[15px] leading-relaxed max-w-sm sm:text-right">
-            100% organic sakhar — eight pure forms, one chemical-free harvest. Direct from Sankhuwasabha farmers.
+            100% organic sakhar in eight pure forms, one chemical-free harvest. Direct from Sankhuwasabha farmers.
           </p>
         </div>
 
@@ -217,11 +217,11 @@ const ProductCard = memo(function ProductCard({
           <Link
             href={`/products/${product.slug}`}
             className="block absolute inset-0"
-            aria-label={`${product.name} — ${product.price}`}
+            aria-label={`${product.name}, ${product.price}`}
           >
             <Image
               src={product.image}
-              alt={`${product.name} — ${product.weight}`}
+              alt={`${product.name}, ${product.weight}`}
               fill
               loading={index < 4 ? "eager" : "lazy"}
               sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"

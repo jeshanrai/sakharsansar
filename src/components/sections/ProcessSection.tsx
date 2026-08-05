@@ -11,7 +11,7 @@ const steps = [
   },
   {
     title: "Wood-Fire",
-    desc: "Cane juice slowly reduces in iron kadhais over open wood-fire — never gas, never sulphur.",
+    desc: "Cane juice slowly reduces in iron kadhais over open wood-fire. Never gas, never sulphur.",
     icon: Flame,
     season: "Same day",
   },
@@ -23,7 +23,7 @@ const steps = [
   },
   {
     title: "Pack",
-    desc: "Sealed in compostable kraft paper from our village cooperative — never plastic.",
+    desc: "Sealed in compostable kraft paper from our village cooperative. Never plastic.",
     icon: Package,
     season: "Within 48 hrs",
   },

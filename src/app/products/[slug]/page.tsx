@@ -8,8 +8,11 @@ import ProductActions from "@/components/product/ProductActions";
 import ProductDetailSections from "@/components/product/ProductDetailSections";
 import { AnimatedWave } from "@/components/ui/StoryArt";
 import { Daisy } from "@/components/ui/Doodles";
+import JsonLd from "@/components/seo/JsonLd";
 import data from "@/data/content.json";
+import { breadcrumbLd, faqLd, productLd } from "@/lib/seo";
 import { ArrowLeft, ArrowRight, Leaf, ShieldCheck, Truck } from "lucide-react";
+import { openGraph, twitter } from "@/lib/metadata";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -27,21 +30,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: `${product.name} | SakharSansar`,
     description: product.longDescription.slice(0, 160),
-    alternates: { canonical: `https://sakharsansar.com/products/${product.slug}` },
-    openGraph: {
-      title: `${product.name} — ${product.price}`,
+    alternates: { canonical: `/products/${product.slug}` },
+    openGraph: openGraph({
+      title: `${product.name} · ${product.price}`,
       description: product.description,
-      url: `https://sakharsansar.com/products/${product.slug}`,
-      siteName: "SakharSansar",
-      images: [{ url: product.image, width: 800, height: 800, alt: product.name }],
+      url: `/products/${product.slug}`,
+      // Images come from the colocated opengraph-image.tsx, which renders the
+      // product photo at a true 1200×630 with its name and price on it.
       type: "website",
-    },
-    twitter: {
-      card: "summary_large_image",
+    }),
+    twitter: twitter({
       title: product.name,
       description: product.description,
-      images: [product.image],
-    },
+    }),
   };
 }
 
@@ -52,34 +53,20 @@ export default async function ProductPage({ params }: Props) {
 
   const related = data.products.filter((p) => p.slug !== slug).slice(0, 3);
 
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Product",
-    "name": product.name,
-    "description": product.longDescription,
-    "image": `https://sakharsansar.com${product.image}`,
-    "brand": { "@type": "Brand", "name": "SakharSansar" },
-    "offers": {
-      "@type": "Offer",
-      "price": product.price.replace(/[^0-9]/g, ''),
-      "priceCurrency": "NPR",
-      "availability": "https://schema.org/InStock",
-      "seller": { "@type": "Organization", "name": "SakharSansar" }
-    },
-    "weight": {
-      "@type": "QuantitativeValue",
-      "value": product.weight.replace(/[^0-9.]/g, ''),
-      "unitText": product.weight.replace(/[0-9.]/g, '')
-    },
-    "category": product.category,
-    "countryOfOrigin": { "@type": "Country", "name": "Nepal" }
-  };
+  // Full Product + Offer markup, including the shipping and return terms
+  // Google needs to show a merchant listing rather than a bare snippet.
+  const jsonLd = productLd(product);
+
+  const breadcrumbJsonLd = breadcrumbLd([
+    { name: "Shop", path: "/shop" },
+    { name: product.name, path: `/products/${product.slug}` },
+  ]);
 
   // FAQ — answered from real product data so the schema matches what renders.
   const faqs = [
     {
       q: `Is ${product.name} chemical-free?`,
-      a: `Yes. ${product.name} is made only from slow-cooked sugarcane juice — no bleach, no sulphur, no anti-caking agents and no artificial colour. Ingredients: ${product.ingredients}.`,
+      a: `Yes. ${product.name} is made only from slow-cooked sugarcane juice, with no bleach, no sulphur, no anti-caking agents and no artificial colour. Ingredients: ${product.ingredients}.`,
     },
     {
       q: `Where is ${product.name} made?`,
@@ -87,7 +74,7 @@ export default async function ProductPage({ params }: Props) {
     },
     {
       q: "How should I store it and how long does it keep?",
-      a: `${product.shelfLife}. Keep it away from direct sunlight and humidity — a little natural crystallisation over time is a sign of purity, not spoilage.`,
+      a: `${product.shelfLife}. Keep it away from direct sunlight and humidity. A little natural crystallisation over time is a sign of purity, not spoilage.`,
     },
     {
       q: "How is jaggery different from refined white sugar?",
@@ -95,19 +82,11 @@ export default async function ProductPage({ params }: Props) {
     },
     {
       q: "Do you deliver across Nepal?",
-      a: "Yes — we ship pan-Nepal, packed in compostable kraft paper, direct from our Sankhuwasabha cooperative.",
+      a: "Yes. We ship pan-Nepal, packed in compostable kraft paper, direct from our Sankhuwasabha cooperative.",
     },
   ];
 
-  const faqJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": faqs.map((f) => ({
-      "@type": "Question",
-      "name": f.q,
-      "acceptedAnswer": { "@type": "Answer", "text": f.a },
-    })),
-  };
+  const faqJsonLd = faqLd(faqs);
 
   // Expandable detail sections
   const sections = [
@@ -116,7 +95,7 @@ export default async function ProductPage({ params }: Props) {
       body: (
         <p>
           A long, slow-burn caramel that opens with toasted molasses and finishes with a
-          gentle smoke from the wood-fire — never sharp, never one-note. Mineral-rich,
+          gentle smoke from the wood-fire, never sharp, never one-note. Mineral-rich,
           with the faintest earth-and-jaggery scent of Sankhuwasabha&rsquo;s autumn cane.
         </p>
       ),
@@ -128,7 +107,7 @@ export default async function ProductPage({ params }: Props) {
           <li>Stir into morning chiya in place of refined sugar.</li>
           <li>Fold into sel roti, kheer, or halwa for traditional depth.</li>
           <li>Drizzle over yogurt, oats, or warm milk before bed.</li>
-          <li>Eat a small piece after meals — Ayurveda&rsquo;s digestive ritual.</li>
+          <li>Eat a small piece after meals, Ayurveda&rsquo;s digestive ritual.</li>
         </ul>
       ),
     },
@@ -137,7 +116,7 @@ export default async function ProductPage({ params }: Props) {
       body: (
         <p>
           Sourced from {product.origin}. Cane is harvested at first light, pressed
-          within hours, and reduced over open wood-fire in iron kadhais — the same
+          within hours, and reduced over open wood-fire in iron kadhais, the same
           method used in our village for seven generations. Hand-poured into wooden
           moulds, rested overnight, then sealed in compostable kraft paper.
           <br /><br />
@@ -159,14 +138,9 @@ export default async function ProductPage({ params }: Props) {
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
-      />
+      <JsonLd data={jsonLd} />
+      <JsonLd data={faqJsonLd} />
+      <JsonLd data={breadcrumbJsonLd} />
 
       <OrderDrawer />
 
@@ -195,7 +169,7 @@ export default async function ProductPage({ params }: Props) {
               <div className="relative aspect-square w-full overflow-hidden rounded-3xl bg-ivory ring-1 ring-jaggery/8 shadow-xl shadow-jaggery/10">
                 <Image
                   src={product.image}
-                  alt={`${product.name} — ${product.weight} of pure Himalayan jaggery`}
+                  alt={`${product.name}, ${product.weight} of pure Himalayan jaggery`}
                   fill
                   priority
                   sizes="(max-width: 1024px) 100vw, 60vw"
@@ -305,7 +279,7 @@ export default async function ProductPage({ params }: Props) {
                     <div className="relative aspect-[4/5] w-full overflow-hidden rounded-2xl bg-ivory ring-1 ring-jaggery/8 mb-5">
                       <Image
                         src={r.image}
-                        alt={`${r.name} — ${r.weight}`}
+                        alt={`${r.name}, ${r.weight}`}
                         fill
                         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                         className="object-cover group-hover:scale-[1.04] transition-transform duration-[1.4s] ease-out"

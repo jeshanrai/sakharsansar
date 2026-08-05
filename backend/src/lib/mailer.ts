@@ -110,7 +110,7 @@ export async function sendOrderNotification(order: OrderEmail): Promise<void> {
     ]),
   );
   await send(
-    `🛒 New order — ${order.product} ×${order.quantity}`,
+    `🛒 New order: ${order.product} ×${order.quantity}`,
     html,
   );
 }
@@ -133,7 +133,7 @@ export async function sendEnquiryNotification(enquiry: EnquiryEmail): Promise<vo
     ]),
   );
   await send(
-    `✉️ New enquiry (${enquiry.type}) — ${enquiry.name}`,
+    `✉️ New enquiry (${enquiry.type}) from ${enquiry.name}`,
     html,
     looksLikeEmail(enquiry.contact) ? enquiry.contact : undefined,
   );

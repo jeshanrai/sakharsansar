@@ -1,18 +1,22 @@
 import { Metadata } from "next";
-import Script from "next/script";
 import dynamic from "next/dynamic";
 import ContactHero from "@/components/contact/ContactHero";
 import ContactReach from "@/components/contact/ContactReach";
+import JsonLd from "@/components/seo/JsonLd";
+import { ORG_ID, WEBSITE_ID, breadcrumbLd } from "@/lib/seo";
+import { SITE, absoluteUrl } from "@/lib/site";
+import { openGraph, twitter } from "@/lib/metadata";
 
 const Footer = dynamic(() => import("@/components/layout/Footer"));
 const OrderDrawer = dynamic(() => import("@/components/layout/OrderDrawer"));
 
-const PAGE_URL = "https://sakharsansar.com/contact";
+const PAGE_PATH = "/contact";
+const PAGE_URL = absoluteUrl(PAGE_PATH);
 const PAGE_DESC =
   "Get in touch with SakharSansar. We sell both retail (B2C) home delivery across Nepal and wholesale (B2B) bulk supply for shops, cafés and hotels. WhatsApp, call or email our farming cooperative in Sankhuwasabha.";
 
 export const metadata: Metadata = {
-  title: "Contact Us — B2B Wholesale & B2C Orders",
+  title: "Contact Us: B2B Wholesale & B2C Orders",
   description: PAGE_DESC,
   keywords: [
     "contact SakharSansar",
@@ -24,86 +28,42 @@ export const metadata: Metadata = {
     "jaggery reseller Nepal",
     "Sankhuwasabha jaggery contact",
   ],
-  alternates: { canonical: PAGE_URL },
-  openGraph: {
+  alternates: { canonical: PAGE_PATH },
+  openGraph: openGraph({
     title: "Contact SakharSansar | B2B Wholesale & B2C Orders",
     description: PAGE_DESC,
-    url: PAGE_URL,
-    siteName: "SakharSansar",
-    images: [{ url: "/hero.jpg", width: 1200, height: 630, alt: "Contact SakharSansar" }],
-    locale: "en_US",
+    url: PAGE_PATH,
     type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
+  }),
+  twitter: twitter({
     title: "Contact SakharSansar | Wholesale & Retail",
     description: PAGE_DESC,
-    images: ["/hero.jpg"],
-  },
+  }),
 };
 
 export default function ContactPage() {
+  // The Organization's own details live in the sitewide graph; this page's
+  // node just points at it, so the phone number and address are stated once.
   const contactJsonLd = {
     "@context": "https://schema.org",
     "@type": "ContactPage",
-    "name": "Contact | SakharSansar",
-    "description": PAGE_DESC,
-    "url": PAGE_URL,
-    "mainEntity": {
-      "@type": "Organization",
-      "name": "SakharSansar",
-      "url": "https://sakharsansar.com",
-      "email": "sakharsansar@gmail.com",
-      "telephone": "+977-9860149199",
-      "address": {
-        "@type": "PostalAddress",
-        "addressLocality": "Sankhuwasabha",
-        "addressRegion": "Koshi Province",
-        "addressCountry": "NP",
-      },
-      "contactPoint": [
-        {
-          "@type": "ContactPoint",
-          "contactType": "sales",
-          "telephone": "+977-9860149199",
-          "email": "sakharsansar@gmail.com",
-          "areaServed": "NP",
-          "availableLanguage": ["en", "ne"],
-        },
-        {
-          "@type": "ContactPoint",
-          "contactType": "wholesale",
-          "telephone": "+977-9860149199",
-          "email": "sakharsansar@gmail.com",
-          "areaServed": "NP",
-        },
-      ],
-    },
+    "@id": `${PAGE_URL}#webpage`,
+    name: "Contact | SakharSansar",
+    description: PAGE_DESC,
+    url: PAGE_URL,
+    isPartOf: { "@id": WEBSITE_ID },
+    inLanguage: SITE.lang,
+    mainEntity: { "@id": ORG_ID },
   };
 
-  const breadcrumbJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    "itemListElement": [
-      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://sakharsansar.com" },
-      { "@type": "ListItem", "position": 2, "name": "Contact", "item": PAGE_URL },
-    ],
-  };
+  const breadcrumbJsonLd = breadcrumbLd([
+    { name: "Contact", path: PAGE_PATH },
+  ]);
 
   return (
     <>
-      <Script
-        id="ld-contact"
-        type="application/ld+json"
-        strategy="afterInteractive"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(contactJsonLd) }}
-      />
-      <Script
-        id="ld-breadcrumb-contact"
-        type="application/ld+json"
-        strategy="afterInteractive"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
-      />
+      <JsonLd data={contactJsonLd} />
+      <JsonLd data={breadcrumbJsonLd} />
 
       <OrderDrawer />
       <main className="overflow-x-hidden">

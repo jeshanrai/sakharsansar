@@ -1,6 +1,5 @@
 import type { MetadataRoute } from "next";
-
-const BASE_URL = "https://sakharsansar.com";
+import { SITE_URL } from "@/lib/site";
 
 // Search + AI/answer-engine crawlers we explicitly welcome (GEO / AI SEO).
 // They're already covered by the "*" rule, but listing them documents intent
@@ -34,7 +33,7 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
       disallow: ["/portfolio", "/portfolio/"],
     })),
-    sitemap: `${BASE_URL}/sitemap.xml`,
-    host: BASE_URL,
+    sitemap: `${SITE_URL}/sitemap.xml`,
+    host: SITE_URL,
   };
 }

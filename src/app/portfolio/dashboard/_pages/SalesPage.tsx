@@ -144,7 +144,7 @@ export default function SalesPage({ onToast }: { onToast: (msg: string) => void 
       <SectionHeading
         eyebrow="Daily Log"
         title="Sales"
-        description="Every in-store sale, repeat order, and walk-in — captured here."
+        description="Every in-store sale, repeat order, and walk-in, all captured here."
         action={
           <Button onClick={() => openForm()}>
             <Plus className="w-4 h-4" /> Record Sale

@@ -34,7 +34,7 @@ export default function StoryNatureSection() {
               Pure is in our nature
             </h2>
             <p className="text-jaggery/75 text-body mt-5">
-              Wood fire, an iron kadhai, a wooden spoon and a wooden mould — nothing else.
+              Wood fire, an iron kadhai, a wooden spoon and a wooden mould. Nothing else.
               No bleach, no sulphur, no anti-caking agents. Our jaggery is amber because
               the fire made it amber, and sweet because the cane was sweet. It is the very
               best of what these Himalayan terraces have to give.

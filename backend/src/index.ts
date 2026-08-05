@@ -17,9 +17,13 @@ const PORT = process.env.PORT || 5000;
 // Allow the production frontend, all Vercel preview deploys, and localhost.
 // Extra origins can be added via CORS_ORIGINS env (comma-separated).
 const STATIC_ALLOWED = [
-  "https://sakharsansar.vercel.app",
+  // Official domain — www is canonical, apex is kept for the redirect hop.
+  "https://www.sakharsansar.com.np",
+  "https://sakharsansar.com.np",
+  // Legacy domains, still allowed while old links and redirects drain.
   "https://sakharsansar.com",
   "https://www.sakharsansar.com",
+  "https://sakharsansar.vercel.app",
   "http://localhost:3000",
   "http://localhost:3001",
 ];

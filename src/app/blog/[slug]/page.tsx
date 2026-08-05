@@ -6,8 +6,12 @@ import Footer from "@/components/layout/Footer";
 import OrderDrawer from "@/components/layout/OrderDrawer";
 import { AnimatedWave, Bee } from "@/components/ui/StoryArt";
 import { Daisy } from "@/components/ui/Doodles";
+import JsonLd from "@/components/seo/JsonLd";
 import blogData from "@/data/blog.json";
+import { ORG_ID, breadcrumbLd } from "@/lib/seo";
+import { SITE, absoluteUrl } from "@/lib/site";
 import { ArrowRight, ChevronRight, Clock, Twitter, Facebook, Linkedin } from "lucide-react";
+import { openGraph, twitter } from "@/lib/metadata";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -25,24 +29,24 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: `${post.title} | SakharSansar Journal`,
     description: post.description,
-    alternates: { canonical: `https://sakharsansar.com/blog/${post.slug}` },
-    openGraph: {
+    alternates: { canonical: `/blog/${post.slug}` },
+    keywords: post.tags,
+    openGraph: openGraph({
       title: post.title,
       description: post.description,
-      url: `https://sakharsansar.com/blog/${post.slug}`,
-      siteName: "SakharSansar",
-      images: [{ url: post.image, width: 1200, height: 630, alt: post.title }],
+      url: `/blog/${post.slug}`,
+      // Card art comes from the colocated opengraph-image.tsx, which sets the
+      // headline over the post's photo at a true 1200×630.
       type: "article",
       publishedTime: post.date,
+      modifiedTime: post.date,
       authors: [post.author],
       tags: post.tags,
-    },
-    twitter: {
-      card: "summary_large_image",
+    }),
+    twitter: twitter({
       title: post.title,
       description: post.description,
-      images: [post.image],
-    },
+    }),
   };
 }
 
@@ -51,31 +55,9 @@ export default async function BlogPost({ params }: Props) {
   const post = blogData.find((p) => p.slug === resolvedParams.slug);
   if (!post) notFound();
 
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "BlogPosting",
-    "headline": post.title,
-    "description": post.description,
-    "image": `https://sakharsansar.com${post.image}`,
-    "author": { "@type": "Organization", "name": post.author },
-    "publisher": {
-      "@type": "Organization",
-      "name": "SakharSansar",
-      "logo": { "@type": "ImageObject", "url": "https://sakharsansar.com/hero.jpg" }
-    },
-    "datePublished": post.date,
-    "dateModified": post.date,
-    "inLanguage": "en",
-    "articleSection": post.tags[0],
-    "keywords": post.tags.join(', '),
-    "mainEntityOfPage": {
-      "@type": "WebPage",
-      "@id": `https://sakharsansar.com/blog/${post.slug}`
-    }
-  };
-
   const paragraphs = post.content.split('\n\n');
-  const readingMins = Math.max(1, Math.round(post.content.split(/\s+/).length / 200));
+  const wordCount = post.content.split(/\s+/).length;
+  const readingMins = Math.max(1, Math.round(wordCount / 200));
   const authorInitials = post.author
     .split(" ")
     .map((p) => p[0])
@@ -84,18 +66,46 @@ export default async function BlogPost({ params }: Props) {
     .toUpperCase();
   const related = blogData.filter((p) => p.slug !== post.slug).slice(0, 2);
 
+  const postUrl = absoluteUrl(`/blog/${post.slug}`);
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "@id": `${postUrl}#post`,
+    headline: post.title,
+    description: post.description,
+    image: absoluteUrl(post.image),
+    url: postUrl,
+    // Both point at the sitewide Organization node instead of redeclaring it,
+    // so the publisher stays one entity across the whole site.
+    author: { "@id": ORG_ID },
+    publisher: { "@id": ORG_ID },
+    isPartOf: { "@id": absoluteUrl("/blog#blog") },
+    datePublished: post.date,
+    dateModified: post.date,
+    inLanguage: SITE.lang,
+    articleSection: post.tags[0],
+    keywords: post.tags.join(", "),
+    wordCount,
+    timeRequired: `PT${readingMins}M`,
+    mainEntityOfPage: { "@type": "WebPage", "@id": postUrl },
+  };
+
+  const breadcrumbJsonLd = breadcrumbLd([
+    { name: "Journal", path: "/blog" },
+    { name: post.title, path: `/blog/${post.slug}` },
+  ]);
+
   const shareLinks = [
-    { name: "Twitter", Icon: Twitter, href: `https://twitter.com/intent/tweet?url=https://sakharsansar.com/blog/${post.slug}&text=${encodeURIComponent(post.title)}` },
-    { name: "Facebook", Icon: Facebook, href: `https://www.facebook.com/sharer/sharer.php?u=https://sakharsansar.com/blog/${post.slug}` },
-    { name: "LinkedIn", Icon: Linkedin, href: `https://www.linkedin.com/sharing/share-offsite/?url=https://sakharsansar.com/blog/${post.slug}` },
+    { name: "Twitter", Icon: Twitter, href: `https://twitter.com/intent/tweet?url=${encodeURIComponent(postUrl)}&text=${encodeURIComponent(post.title)}` },
+    { name: "Facebook", Icon: Facebook, href: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(postUrl)}` },
+    { name: "LinkedIn", Icon: Linkedin, href: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(postUrl)}` },
   ];
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <JsonLd data={jsonLd} />
+      <JsonLd data={breadcrumbJsonLd} />
 
       <OrderDrawer />
 
@@ -271,7 +281,7 @@ export default async function BlogPost({ params }: Props) {
           <div className="relative z-10 max-w-2xl mx-auto text-center">
             <span className="label-caps text-honey mb-5 block">From page to pantry</span>
             <h2 className="font-marker uppercase text-cream leading-[0.98] text-[clamp(2rem,4.4vw,3.4rem)] text-balance">
-              Now — taste the story
+              Now, taste the story
             </h2>
             <p className="text-cream/80 text-lede mt-6 max-w-xl mx-auto">
               Every block, powder and pour ships directly from our Sankhuwasabha

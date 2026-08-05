@@ -16,7 +16,7 @@ const rituals = [
   {
     eyebrow: "Festive",
     title: "Sel roti, sweetened with the harvest",
-    desc: "Liquid jaggery folded into rice-flour batter — a Tihar table classic from Sankhuwasabha kitchens.",
+    desc: "Liquid jaggery folded into rice-flour batter, a Tihar table classic from Sankhuwasabha kitchens.",
     image: "/products/liquid-jaggery.jpg",
     nepali: "उत्सव",
     href: "/blog",
@@ -47,7 +47,7 @@ export default function WaysToEnjoySection() {
           </SlideInLeft>
           <FadeUp delay={0.2} className="md:col-span-5">
             <p className="text-jaggery/70 text-lede max-w-md md:ml-auto">
-              Jaggery isn&rsquo;t a substitute for sugar — it&rsquo;s its own ingredient,
+              Jaggery isn&rsquo;t a substitute for sugar. It&rsquo;s its own ingredient,
               with its own grammar. Here&rsquo;s how Nepali kitchens use it.
             </p>
           </FadeUp>

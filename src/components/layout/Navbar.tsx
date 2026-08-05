@@ -62,7 +62,7 @@ export default function Navbar() {
             {/* Logo */}
             <Link
               href="/"
-              aria-label="SakharSansar — home"
+              aria-label="SakharSansar home"
               onClick={closeMobile}
               className="group shrink-0 inline-flex items-center"
             >

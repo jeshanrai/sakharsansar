@@ -61,7 +61,7 @@ export default function UsersPage() {
       <SectionHeading
         eyebrow="Team"
         title="Staff Activity"
-        description="Who's selling, who's spending — performance at a glance."
+        description="Who's selling, who's spending. Performance at a glance."
         action={<Button variant="secondary">Invite Member</Button>}
       />
 

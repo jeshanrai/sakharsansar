@@ -1,9 +1,17 @@
 import { Metadata } from "next";
 import Footer from "@/components/layout/Footer";
+import { openGraph } from "@/lib/metadata";
 
 export const metadata: Metadata = {
   title: "Privacy Policy | SakharSansar",
   description: "Learn how SakharSansar collects, uses, and protects your personal information.",
+  alternates: { canonical: "/privacy-policy" },
+  openGraph: openGraph({
+    title: "Privacy Policy | SakharSansar",
+    description: "Learn how SakharSansar collects, uses, and protects your personal information.",
+    url: "/privacy-policy",
+    type: "website",
+  }),
 };
 
 export default function PrivacyPolicyPage() {

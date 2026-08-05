@@ -62,7 +62,7 @@ export default function ContactHero() {
 
           <FadeUp delay={0.15}>
             <p className="text-jaggery/75 text-lede mt-6 max-w-xl mx-auto text-balance">
-              We sell both ways — straight to your kitchen, and by the crate to the shops,
+              We sell both ways: straight to your kitchen, and by the crate to the shops,
               cafés and hotels that share our love for honest sweetness. Whichever you are,
               there&rsquo;s a real farming family on the other end.
             </p>
@@ -76,7 +76,7 @@ export default function ContactHero() {
               tag="B2C · Retail"
               icon={<Home className="w-6 h-6" strokeWidth={1.75} />}
               title="For your home"
-              copy="Order pure, wood-fired jaggery for everyday tea, cooking and gifting — delivered to your door anywhere in Nepal."
+              copy="Order pure, wood-fired jaggery for everyday tea, cooking and gifting, delivered to your door anywhere in Nepal."
               points={B2C_POINTS}
               ctaLabel="Shop the collection"
               ctaHref="/shop"
@@ -89,7 +89,7 @@ export default function ContactHero() {
               tag="B2B · Wholesale"
               icon={<Store className="w-6 h-6" strokeWidth={1.75} />}
               title="For your business"
-              copy="Stock your store, café or hotel with consistent, certified, chemical-free jaggery — at wholesale rates, with packaging built around your brand."
+              copy="Stock your store, café or hotel with consistent, certified, chemical-free jaggery at wholesale rates, with packaging built around your brand."
               points={B2B_POINTS}
               ctaLabel="Request a wholesale quote"
               ctaHref="#contact-form"

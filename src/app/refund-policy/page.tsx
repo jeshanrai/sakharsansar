@@ -1,9 +1,17 @@
 import { Metadata } from "next";
 import Footer from "@/components/layout/Footer";
+import { openGraph } from "@/lib/metadata";
 
 export const metadata: Metadata = {
   title: "Refund & Returns Policy | SakharSansar",
   description: "Understand SakharSansar's refund and return policy for jaggery products.",
+  alternates: { canonical: "/refund-policy" },
+  openGraph: openGraph({
+    title: "Refund & Returns Policy | SakharSansar",
+    description: "Understand SakharSansar's refund and return policy for jaggery products.",
+    url: "/refund-policy",
+    type: "website",
+  }),
 };
 
 export default function RefundPolicyPage() {
@@ -44,7 +52,7 @@ export default function RefundPolicyPage() {
 
             <section className="bg-white rounded-2xl p-8 sm:p-10">
               <h2 className="font-poppins text-xl sm:text-2xl font-semibold text-[#2C1500] mb-4">Contact</h2>
-              <p className="text-base sm:text-lg text-[#2C1500]/70 leading-[1.8]">For any refund or return inquiries, email us at <a href="mailto:sakharsansar@gmail.com" className="text-[#C17A2A] font-medium underline underline-offset-4">sakharsansar@gmail.com</a> or call +977-0000000000.</p>
+              <p className="text-base sm:text-lg text-[#2C1500]/70 leading-[1.8]">For any refund or return inquiries, email us at <a href="mailto:sakharsansar@gmail.com" className="text-[#C17A2A] font-medium underline underline-offset-4">sakharsansar@gmail.com</a> or call +977-9860149199.</p>
             </section>
           </div>
         </div>

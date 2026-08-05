@@ -28,7 +28,7 @@ export default function StoryMissionSection() {
         <FadeUp delay={0.1}>
           <p className="text-cream/85 text-lede mt-6 max-w-xl mx-auto text-balance">
             Our mineral-rich jaggery tastes great and keeps the iron, magnesium and
-            potassium that nature put in the cane — as part of a balanced, honest diet.
+            potassium that nature put in the cane, as part of a balanced, honest diet.
             We wanted to share the goodness of slow, unrefined sweetness, and let you in
             on the wonderful world of wood-fired jaggery.
           </p>

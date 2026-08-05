@@ -118,7 +118,7 @@ export default function EnquiriesPage({ onToast }: { onToast: (msg: string) => v
       <SectionHeading
         eyebrow="Inbox"
         title="Customer Enquiries"
-        description="Every message from the storefront contact form — retail (B2C) and wholesale (B2B) alike."
+        description="Every message from the storefront contact form, retail (B2C) and wholesale (B2B) alike."
       />
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">

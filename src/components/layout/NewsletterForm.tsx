@@ -51,7 +51,7 @@ export default function NewsletterForm() {
       </div>
       <p className="text-meta text-cream/45">
         {submitted
-          ? "Thank you — your first letter from the Himalayas is on its way."
+          ? "Thank you! Your first letter from the Himalayas is on its way."
           : "No spam. Unsubscribe with a single click."}
       </p>
     </form>

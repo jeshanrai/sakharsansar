@@ -6,31 +6,78 @@ import Footer from "@/components/layout/Footer";
 import OrderDrawer from "@/components/layout/OrderDrawer";
 import BlogEditorsPicks from "@/components/sections/blog/BlogEditorsPicks";
 import BlogCategories from "@/components/sections/blog/BlogCategories";
+import JsonLd from "@/components/seo/JsonLd";
 import blogData from "@/data/blog.json";
+import { ORG_ID, WEBSITE_ID, breadcrumbLd } from "@/lib/seo";
+import { SITE, absoluteUrl } from "@/lib/site";
 import { Bee, Ladybug, AnimatedWave } from "@/components/ui/StoryArt";
 import { Daisy } from "@/components/ui/Doodles";
 import { ArrowRight } from "lucide-react";
+import { openGraph, twitter } from "@/lib/metadata";
 
 export const metadata: Metadata = {
   title: "Blogs | SakharSansar",
-  description: "Letters from Sankhuwasabha — recipes, rituals, and the slow stories behind every block of pure Himalayan jaggery.",
-  alternates: { canonical: "https://sakharsansar.com/blog" },
-  openGraph: {
-    title: "Blogs | SakharSansar",
-    description: "Letters from Sankhuwasabha — recipes, rituals, and harvest notes.",
-    url: "https://sakharsansar.com/blog",
-    siteName: "SakharSansar",
-    images: ["/hero.jpg"],
-    type: "website",
+  description: "Letters from Sankhuwasabha: recipes, rituals, and the slow stories behind every block of pure Himalayan jaggery.",
+  keywords: [
+    "jaggery recipes",
+    "jaggery health benefits",
+    "gur vs sugar",
+    "Himalayan jaggery guide",
+    "Sankhuwasabha farming stories",
+    "how jaggery is made",
+  ],
+  alternates: {
+    canonical: "/blog",
+    types: {
+      "application/rss+xml": [{ url: "/feed", title: "SakharSansar Journal" }],
+    },
   },
+  openGraph: openGraph({
+    title: "Blogs | SakharSansar",
+    description: "Letters from Sankhuwasabha: recipes, rituals, and harvest notes.",
+    url: "/blog",
+    type: "website",
+  }),
+  twitter: twitter({
+    title: "Blogs | SakharSansar",
+    description: "Letters from Sankhuwasabha: recipes, rituals, and harvest notes.",
+  }),
 };
 
 export default function BlogList() {
   const featured = blogData[0];
   const categories = [...new Set(blogData.flatMap((p) => p.tags ?? []))];
 
+  // Typing the index as a Blog (rather than a generic WebPage) is what links
+  // the individual BlogPosting pages to a single publication.
+  const blogJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Blog",
+    "@id": absoluteUrl("/blog#blog"),
+    url: absoluteUrl("/blog"),
+    name: "SakharSansar Journal",
+    description:
+      "Letters from Sankhuwasabha: recipes, rituals, and the slow stories behind every block of pure Himalayan jaggery.",
+    isPartOf: { "@id": WEBSITE_ID },
+    publisher: { "@id": ORG_ID },
+    inLanguage: SITE.lang,
+    blogPost: blogData.map((post) => ({
+      "@type": "BlogPosting",
+      "@id": absoluteUrl(`/blog/${post.slug}#post`),
+      headline: post.title,
+      description: post.description,
+      url: absoluteUrl(`/blog/${post.slug}`),
+      datePublished: post.date,
+      image: absoluteUrl(post.image),
+      author: { "@type": "Organization", name: post.author },
+    })),
+  };
+
   return (
     <>
+      <JsonLd data={blogJsonLd} />
+      <JsonLd data={breadcrumbLd([{ name: "Blog", path: "/blog" }])} />
+
       <OrderDrawer />
 
       <main className="overflow-x-hidden">

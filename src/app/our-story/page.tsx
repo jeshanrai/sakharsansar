@@ -1,5 +1,7 @@
 import { Metadata } from "next";
-import Script from "next/script";
+import JsonLd from "@/components/seo/JsonLd";
+import { ORG_ID, WEBSITE_ID, breadcrumbLd } from "@/lib/seo";
+import { SITE, absoluteUrl } from "@/lib/site";
 import OrderDrawer from "@/components/layout/OrderDrawer";
 import Footer from "@/components/layout/Footer";
 import StorySection from "@/components/sections/StorySection";
@@ -11,13 +13,15 @@ import StoryRootsSection from "@/components/sections/StoryRootsSection";
 import FarmersSection from "@/components/sections/FarmersSection";
 import StoryFaqsSection from "@/components/sections/StoryFaqsSection";
 import StoryCtaSection from "@/components/sections/StoryCtaSection";
+import { openGraph, twitter } from "@/lib/metadata";
 
-const PAGE_URL = "https://sakharsansar.com/our-story";
+const PAGE_PATH = "/our-story";
+const PAGE_URL = absoluteUrl(PAGE_PATH);
 const PAGE_DESC =
   "Seven generations of slow sweetness from Sankhuwasabha. Meet the 42 farming families, the wood-fire craft, and the chemical-free promise behind SakharSansar's pure Himalayan jaggery (sakhar).";
 
 export const metadata: Metadata = {
-  title: "Our Story — Wood-Fired Jaggery from Sankhuwasabha",
+  title: "Our Story: Wood-Fired Jaggery from Sankhuwasabha",
   description: PAGE_DESC,
   keywords: [
     "SakharSansar story",
@@ -30,95 +34,49 @@ export const metadata: Metadata = {
     "organic jaggery farmers Nepal",
     "direct from farmers jaggery",
   ],
-  alternates: { canonical: PAGE_URL },
-  openGraph: {
+  alternates: { canonical: PAGE_PATH },
+  openGraph: openGraph({
     title: "Our Story | SakharSansar",
     description:
-      "Seven generations of slow sweetness from Sankhuwasabha — the land, the farmers, the wood-fire craft, and the promise behind every block of pure Himalayan jaggery.",
-    url: PAGE_URL,
-    siteName: "SakharSansar",
-    images: [
-      {
-        url: "/hero.jpg",
-        width: 1200,
-        height: 630,
-        alt: "The Sankhuwasabha valley at first light, home of SakharSansar's wood-fired jaggery",
-      },
-    ],
-    locale: "en_US",
+      "Seven generations of slow sweetness from Sankhuwasabha: the land, the farmers, the wood-fire craft, and the promise behind every block of pure Himalayan jaggery.",
+    url: PAGE_PATH,
     type: "article",
-  },
-  twitter: {
-    card: "summary_large_image",
+  }),
+  twitter: twitter({
     title: "Our Story | SakharSansar",
     description:
-      "Seven generations of slow sweetness from Sankhuwasabha — the land, the farmers, the craft, the promise.",
-    images: ["/hero.jpg"],
-  },
+      "Seven generations of slow sweetness from Sankhuwasabha: the land, the farmers, the craft, the promise.",
+  }),
 };
 
 export default function OurStory() {
   const aboutJsonLd = {
     "@context": "https://schema.org",
     "@type": "AboutPage",
-    "name": "Our Story | SakharSansar",
-    "description": PAGE_DESC,
-    "url": PAGE_URL,
-    "primaryImageOfPage": "https://sakharsansar.com/hero.jpg",
-    "about": {
-      "@type": "Organization",
-      "name": "SakharSansar",
-      "alternateName": ["Sakhar Sansar", "Sakhar"],
-      "url": "https://sakharsansar.com",
-      "logo": "https://sakharsansar.com/word-logo.svg",
-      "description":
-        "SakharSansar makes 100% organic, chemical-free Himalayan jaggery (sakhar), wood-fired by a cooperative of 42 farming families in Sankhuwasabha, Nepal.",
-      "foundingLocation": {
-        "@type": "Place",
-        "name": "Sankhuwasabha, Koshi Province, Nepal",
-      },
-      "address": {
-        "@type": "PostalAddress",
-        "addressLocality": "Sankhuwasabha",
-        "addressRegion": "Koshi Province",
-        "addressCountry": "NP",
-      },
+    "@id": `${PAGE_URL}#webpage`,
+    name: "Our Story | SakharSansar",
+    description: PAGE_DESC,
+    url: PAGE_URL,
+    isPartOf: { "@id": WEBSITE_ID },
+    inLanguage: SITE.lang,
+    primaryImageOfPage: {
+      "@type": "ImageObject",
+      url: absoluteUrl("/hero.jpg"),
     },
+    // The Organization is fully described once, sitewide; this is the page
+    // Google should treat as the authoritative page *about* that entity.
+    about: { "@id": ORG_ID },
+    mainEntity: { "@id": ORG_ID },
   };
 
-  const breadcrumbJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    "itemListElement": [
-      {
-        "@type": "ListItem",
-        "position": 1,
-        "name": "Home",
-        "item": "https://sakharsansar.com",
-      },
-      {
-        "@type": "ListItem",
-        "position": 2,
-        "name": "Our Story",
-        "item": PAGE_URL,
-      },
-    ],
-  };
+  const breadcrumbJsonLd = breadcrumbLd([
+    { name: "Our Story", path: PAGE_PATH },
+  ]);
 
   return (
     <>
-      <Script
-        id="ld-about"
-        type="application/ld+json"
-        strategy="afterInteractive"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(aboutJsonLd) }}
-      />
-      <Script
-        id="ld-breadcrumb"
-        type="application/ld+json"
-        strategy="afterInteractive"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
-      />
+      <JsonLd data={aboutJsonLd} />
+      <JsonLd data={breadcrumbJsonLd} />
 
       <OrderDrawer />
       <main className="overflow-x-hidden">

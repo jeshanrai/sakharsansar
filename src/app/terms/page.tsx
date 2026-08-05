@@ -1,9 +1,17 @@
 import { Metadata } from "next";
 import Footer from "@/components/layout/Footer";
+import { openGraph } from "@/lib/metadata";
 
 export const metadata: Metadata = {
   title: "Terms & Conditions | SakharSansar",
   description: "Read the terms and conditions governing the use of SakharSansar products and services.",
+  alternates: { canonical: "/terms" },
+  openGraph: openGraph({
+    title: "Terms & Conditions | SakharSansar",
+    description: "Read the terms and conditions governing the use of SakharSansar products and services.",
+    url: "/terms",
+    type: "website",
+  }),
 };
 
 export default function TermsPage() {
@@ -19,7 +27,7 @@ export default function TermsPage() {
           <div className="space-y-10">
             <section className="bg-white rounded-2xl p-8 sm:p-10">
               <h2 className="font-poppins text-xl sm:text-2xl font-semibold text-[#2C1500] mb-4">Acceptance of Terms</h2>
-              <p className="text-base sm:text-lg text-[#2C1500]/70 leading-[1.8]">By accessing and using sakharsansar.com, you agree to be bound by these Terms and Conditions. If you do not agree, please do not use our website or purchase our products.</p>
+              <p className="text-base sm:text-lg text-[#2C1500]/70 leading-[1.8]">By accessing and using www.sakharsansar.com.np, you agree to be bound by these Terms and Conditions. If you do not agree, please do not use our website or purchase our products.</p>
             </section>
 
             <section className="bg-white rounded-2xl p-8 sm:p-10">
@@ -34,7 +42,7 @@ export default function TermsPage() {
 
             <section className="bg-white rounded-2xl p-8 sm:p-10">
               <h2 className="font-poppins text-xl sm:text-2xl font-semibold text-[#2C1500] mb-4">Intellectual Property</h2>
-              <p className="text-base sm:text-lg text-[#2C1500]/70 leading-[1.8]">All content on this website — including text, images, logos, and design — is the property of SakharSansar and is protected by applicable intellectual property laws. Reproduction or distribution without written consent is prohibited.</p>
+              <p className="text-base sm:text-lg text-[#2C1500]/70 leading-[1.8]">All content on this website, including text, images, logos, and design, is the property of SakharSansar and is protected by applicable intellectual property laws. Reproduction or distribution without written consent is prohibited.</p>
             </section>
 
             <section className="bg-white rounded-2xl p-8 sm:p-10">

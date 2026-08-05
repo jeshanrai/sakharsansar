@@ -45,7 +45,7 @@
       "weight": "1kg",
       "image": "/products/jaggery-block.jpg",
       "description": "Natural, rich in minerals, and slowly cooked over wood-fire for a distinct earthy flavor.",
-      "longDescription": "Our signature Organic Jaggery Block is the purest form of traditional gur from Sankhuwasabha. Each block is hand-poured from slow-cooked sugarcane juice over open wood fires, preserving every mineral and nutrient that refined sugar strips away. The deep amber color and complex caramel flavor come entirely from nature — zero additives, zero bleach, zero compromise. Perfect for daily tea, cooking, or enjoying as a wholesome after-meal treat.",
+      "longDescription": "Our signature Organic Jaggery Block is the purest form of traditional gur from Sankhuwasabha. Each block is hand-poured from slow-cooked sugarcane juice over open wood fires, preserving every mineral and nutrient that refined sugar strips away. The deep amber color and complex caramel flavor come entirely from nature: zero additives, zero bleach, zero compromise. Perfect for daily tea, cooking, or enjoying as a wholesome after-meal treat.",
       "ingredients": "100% pure sugarcane juice",
       "shelfLife": "6-12 months when stored in a cool, dry place",
       "origin": "Sankhuwasabha, Koshi Province, Nepal",
@@ -70,8 +70,8 @@
       "price": "Rs. 350",
       "weight": "500g",
       "image": "/products/jaggery-cubes.jpg",
-      "description": "Pre-portioned bite-sized cubes for effortless sweetening — drop one in your cup and enjoy.",
-      "longDescription": "Perfectly portioned for convenience, our Jaggery Cubes take the guesswork out of sweetening. Each cube is hand-cut from our signature jaggery blocks to a consistent size, so you get the same rich sweetness every time. Drop one into your tea or coffee, pack a few as a travel snack, or crush them over desserts. The compact format also makes them an ideal gift — a taste of the Himalayas, ready to share.",
+      "description": "Pre-portioned bite-sized cubes for effortless sweetening. Drop one in your cup and enjoy.",
+      "longDescription": "Perfectly portioned for convenience, our Jaggery Cubes take the guesswork out of sweetening. Each cube is hand-cut from our signature jaggery blocks to a consistent size, so you get the same rich sweetness every time. Drop one into your tea or coffee, pack a few as a travel snack, or crush them over desserts. The compact format also makes them an ideal gift, a taste of the Himalayas, ready to share.",
       "ingredients": "100% pure sugarcane jaggery",
       "shelfLife": "6-12 months when stored in a cool, dry place",
       "origin": "Sankhuwasabha, Koshi Province, Nepal",
@@ -83,7 +83,7 @@
       "price": "Rs. 600",
       "weight": "750ml",
       "image": "/products/liquid-jaggery.jpg",
-      "description": "A smooth, pourable syrup of pure jaggery — drizzle over pancakes, yogurt, or warm milk.",
+      "description": "A smooth, pourable syrup of pure jaggery. Drizzle over pancakes, yogurt, or warm milk.",
       "longDescription": "Our Liquid Jaggery is a velvety, golden syrup made by gently reducing fresh sugarcane juice to a thick, pourable consistency. Unlike commercial syrups loaded with corn starch and artificial flavoring, ours is single-ingredient and chemical-free. Drizzle it over pancakes, swirl it into yogurt, mix it into warm milk before bed, or use it as a natural glaze for roasted vegetables. The bottle comes with a controlled-pour cap for mess-free use.",
       "ingredients": "100% pure concentrated sugarcane juice",
       "shelfLife": "4 months refrigerated after opening",
@@ -109,8 +109,8 @@
       "price": "Rs. 250",
       "weight": "250g",
       "image": "/products/jaggery-cubes.jpg",
-      "description": "Individually wrapped bite-sized jaggery candies — a healthy, on-the-go natural sweet treat.",
-      "longDescription": "Our Jaggery Candy is the perfect guilt-free snack for anyone with a sweet tooth. Each candy is a small, individually wrapped piece of pure jaggery, lightly flavored with cardamom and ginger for a warming, aromatic bite. Toss a few in your bag for work, school, or travel — they provide a quick energy boost without the crash of refined sugar. Kids love them too, making it easy to swap out artificial candies for something truly wholesome.",
+      "description": "Individually wrapped bite-sized jaggery candies, a healthy on-the-go natural sweet treat.",
+      "longDescription": "Our Jaggery Candy is the perfect guilt-free snack for anyone with a sweet tooth. Each candy is a small, individually wrapped piece of pure jaggery, lightly flavored with cardamom and ginger for a warming, aromatic bite. Toss a few in your bag for work, school, or travel. They provide a quick energy boost without the crash of refined sugar. Kids love them too, making it easy to swap out artificial candies for something truly wholesome.",
       "ingredients": "Pure sugarcane jaggery, cardamom, ginger",
       "shelfLife": "4 months when stored in a cool, dry place",
       "origin": "Sankhuwasabha, Koshi Province, Nepal",
@@ -123,7 +123,7 @@
       "weight": "300g",
       "image": "/products/jaggery-powder.jpg",
       "description": "A warming blend of jaggery powder with turmeric, ginger, and black pepper for golden milk.",
-      "longDescription": "Our Spiced Jaggery Mix is a ready-to-use blend crafted for the perfect cup of golden milk or spiced tea. We combine our finest jaggery powder with organic turmeric, dried ginger, black pepper, and a hint of cinnamon — all measured in traditional proportions for maximum flavor and wellness benefits. Simply stir a spoonful into warm milk or water and enjoy a soothing, immunity-boosting drink any time of day.",
+      "longDescription": "Our Spiced Jaggery Mix is a ready-to-use blend crafted for the perfect cup of golden milk or spiced tea. We combine our finest jaggery powder with organic turmeric, dried ginger, black pepper, and a hint of cinnamon, all measured in traditional proportions for maximum flavor and wellness benefits. Simply stir a spoonful into warm milk or water and enjoy a soothing, immunity-boosting drink any time of day.",
       "ingredients": "Jaggery powder, turmeric, ginger, black pepper, cinnamon",
       "shelfLife": "6 months when stored in an airtight container",
       "origin": "Sankhuwasabha, Koshi Province, Nepal",
@@ -136,7 +136,7 @@
       "weight": "400g",
       "image": "/products/liquid-jaggery.jpg",
       "description": "A thick, creamy jaggery spread perfect for toast, roti, and parathas.",
-      "longDescription": "Our Jaggery Spread takes the goodness of liquid jaggery and thickens it into a rich, creamy consistency that stays put on your bread. Made by slowly reducing fresh sugarcane juice with a touch of ghee, this spread has a deep, buttery-caramel flavor that elevates any breakfast. Slather it on warm toast, roll it inside a roti, or use it as a filling for homemade pastries. No preservatives, no artificial thickeners — just pure, spreadable sweetness.",
+      "longDescription": "Our Jaggery Spread takes the goodness of liquid jaggery and thickens it into a rich, creamy consistency that stays put on your bread. Made by slowly reducing fresh sugarcane juice with a touch of ghee, this spread has a deep, buttery-caramel flavor that elevates any breakfast. Slather it on warm toast, roll it inside a roti, or use it as a filling for homemade pastries. No preservatives, no artificial thickeners, just pure, spreadable sweetness.",
       "ingredients": "Pure sugarcane juice, clarified butter (ghee)",
       "shelfLife": "3 months refrigerated after opening",
       "origin": "Sankhuwasabha, Koshi Province, Nepal",
@@ -162,7 +162,7 @@
     {
       "name": "Priya Adhikari",
       "location": "Pokhara",
-      "review": "I use the jaggery powder for all my baking. My sel roti has never tasted better — customers keep asking for the secret!"
+      "review": "I use the jaggery powder for all my baking. My sel roti has never tasted better. Customers keep asking for the secret!"
     },
     {
       "name": "Rajesh Karki",
@@ -172,7 +172,7 @@
     {
       "name": "Anisha Gurung",
       "location": "Chitwan",
-      "review": "Love that it comes straight from the farmers. You can taste the difference — no chemical aftertaste, just pure sweetness."
+      "review": "Love that it comes straight from the farmers. You can taste the difference. No chemical aftertaste, just pure sweetness."
     }
   ],
   "process": [

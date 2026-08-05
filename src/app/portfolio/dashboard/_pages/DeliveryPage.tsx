@@ -65,7 +65,7 @@ const SEED: Delivery[] = [
     customer: "Priya Thapa",
     phone: "9802288412",
     address: "Pulchowk, Lalitpur",
-    product: "Gift Box — Trio",
+    product: "Gift Box Trio",
     quantity: 1,
     courier: "Aramex Nepal",
     cost: 250,
@@ -96,7 +96,7 @@ const SEED: Delivery[] = [
     trackingId: "SS-2026-0538",
     customer: "Anjali Gurung",
     phone: "9818445120",
-    address: "Pokhara — Lakeside",
+    address: "Pokhara, Lakeside",
     product: "Himalayan Jaggery 500g",
     quantity: 3,
     courier: "Daraz Logistics",
@@ -581,7 +581,7 @@ export default function DeliveryPage({ onToast }: { onToast: (msg: string) => vo
             />
           </div>
           <Input
-            label="COD Amount (Rs.) — what the courier collects"
+            label="COD Amount (Rs.) the courier collects"
             type="number"
             min="0"
             placeholder="0 for prepaid"

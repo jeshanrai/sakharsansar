@@ -29,7 +29,7 @@ export default function StoryRootsSection() {
             <p className="text-jaggery/75 text-body mt-5">
               The cane is a celebrity around here, but the real VIP is the soil beneath it.
               Grown without chemicals on living Himalayan terraces, our cane carries the
-              full mineral richness of the land — and our whole craft is about adding
+              full mineral richness of the land, and our whole craft is about adding
               nothing and taking nothing away. Honest, ground-up stuff.
             </p>
             <Link

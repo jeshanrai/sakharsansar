@@ -150,11 +150,11 @@ const FavouriteCard = memo(function FavouriteCard({
           <Link
             href={`/products/${product.slug}`}
             className="block absolute inset-0"
-            aria-label={`${product.name} — ${product.price}`}
+            aria-label={`${product.name}, ${product.price}`}
           >
             <Image
               src={product.image}
-              alt={`${product.name} — ${product.weight} of pure organic sakhar`}
+              alt={`${product.name}, ${product.weight} of pure organic sakhar`}
               fill
               loading={index < 6 ? "eager" : "lazy"}
               sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"

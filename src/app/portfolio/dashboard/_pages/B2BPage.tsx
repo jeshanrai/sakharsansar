@@ -169,7 +169,7 @@ export default function B2BPage({ onToast }: { onToast: (msg: string) => void })
       <SectionHeading
         eyebrow="Wholesale · B2B"
         title="B2B Shops"
-        description="Your directory of shops and businesses you supply — main contact and location for each."
+        description="Your directory of shops and businesses you supply, with main contact and location for each."
         action={
           <Button onClick={openAdd}>
             <Plus className="w-4 h-4" /> Add Shop

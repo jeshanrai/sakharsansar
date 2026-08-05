@@ -26,7 +26,7 @@ export default function FindUsSection() {
               </h2>
             </div>
             <p className="text-jaggery/65 text-body max-w-sm">
-              Stocked by the retailers Nepal already trusts — online and on the shelf.
+              Stocked by the retailers Nepal already trusts, online and on the shelf.
             </p>
           </div>
         </FadeUp>

@@ -121,7 +121,7 @@ export default function ExpensesPage({ onToast }: { onToast: (msg: string) => vo
       <SectionHeading
         eyebrow="Outflow"
         title="Expenses"
-        description="Materials, packaging, logistics — track every rupee leaving the workshop."
+        description="Materials, packaging, logistics. Track every rupee leaving the workshop."
         action={
           <Button onClick={() => setFormOpen(true)}>
             <Plus className="w-4 h-4" /> Add Expense
@@ -348,7 +348,7 @@ export default function ExpensesPage({ onToast }: { onToast: (msg: string) => vo
           <Input
             label="Title"
             required
-            placeholder="e.g. Sugarcane batch — Sankhuwasabha"
+            placeholder="e.g. Sugarcane batch from Sankhuwasabha"
             value={form.title}
             onChange={(e) => setForm({ ...form, title: e.target.value })}
           />

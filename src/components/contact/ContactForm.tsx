@@ -100,8 +100,8 @@ export default function ContactForm() {
         </h3>
         <p className="text-jaggery/75 text-body mt-4 max-w-md mx-auto">
           {savedToInbox
-            ? "Thanks for reaching out — we've got your enquiry and will reply soon."
-            : "We've opened WhatsApp with your enquiry ready to send — just hit send and we'll reply soon."}{" "}
+            ? "Thanks for reaching out. We've got your enquiry and will reply soon."
+            : "We've opened WhatsApp with your enquiry ready to send. Just hit send and we'll reply soon."}{" "}
           Want a faster reply?{" "}
           <a href={waHref} target="_blank" rel="noopener noreferrer" className="text-grove font-medium underline underline-offset-2">
             Ping us on WhatsApp
@@ -169,7 +169,7 @@ export default function ContactForm() {
           rows={4}
           value={form.message}
           onChange={update("message")}
-          placeholder="Tell us what you need — quantities, timelines, anything."
+          placeholder="Tell us what you need: quantities, timelines, anything."
           className="w-full bg-white border border-jaggery/15 rounded-xl px-4 py-3 text-[15px] text-jaggery placeholder:text-jaggery/40 focus:outline-none focus:border-grove transition-colors resize-none"
         />
       </Field>

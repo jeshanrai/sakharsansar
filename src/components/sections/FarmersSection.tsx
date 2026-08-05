@@ -51,7 +51,7 @@ export default function FarmersSection() {
             <p className="text-jaggery/75 text-body mt-5">
               SakharSansar is Rashmita Bhandari&rsquo;s work, start to finish. She grows the
               cane on her terraces in Sankhuwasabha, tends the wood fire, pours the moulds
-              and packs every block by hand — chemical-free, with no middleman between her
+              and packs every block by hand, chemical-free, with no middleman between her
               fire and your kitchen. One pair of hands, one honest recipe.
             </p>
             <Link

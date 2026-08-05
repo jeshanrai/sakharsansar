@@ -16,7 +16,7 @@ export default function OriginStorySection() {
           <div className="relative aspect-[4/5] sm:aspect-[5/6] lg:aspect-[6/7] w-full overflow-hidden bg-beige/40">
             <Image
               src="/hero.jpg"
-              alt="Sankhuwasabha landscape — terraced fields below the Himalayas"
+              alt="Sankhuwasabha landscape with terraced fields below the Himalayas"
               fill
               loading="lazy"
               sizes="(max-width: 1024px) 100vw, 60vw"
@@ -44,7 +44,7 @@ export default function OriginStorySection() {
             <p className="text-jaggery/75 text-lede mb-7 max-w-xl has-dropcap">
               Cradled between the Arun valley and the foothills of Makalu, our village
               has been pouring jaggery from sugarcane juice since long before the road
-              reached it. The recipe is unwritten — passed from grandmother to
+              reached it. The recipe is unwritten, passed from grandmother to
               grandson across seven generations.
             </p>
 

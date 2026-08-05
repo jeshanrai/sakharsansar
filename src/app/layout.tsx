@@ -4,6 +4,9 @@ import "./globals.css";
 import PromoBar from "@/components/layout/PromoBar";
 import Navbar from "@/components/layout/Navbar";
 import FloatingContact from "@/components/layout/FloatingContact";
+import JsonLd from "@/components/seo/JsonLd";
+import { siteGraphLd } from "@/lib/seo";
+import { SITE, SITE_URL } from "@/lib/site";
 
 // Body sans — Söhne-adjacent. Use 400 for body, 500 for emphasis.
 const inter = Inter({
@@ -56,19 +59,59 @@ const gochiHand = Gochi_Hand({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://sakharsansar.com"),
+  // Every relative URL in page metadata (canonicals, OG images) resolves
+  // against this, so the canonical host is declared in exactly one place.
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "SakharSansar | 100% Organic Sakhar from Sankhuwasabha",
     template: "%s | SakharSansar",
   },
   description:
-    "100% organic Sakhar (Himalayan jaggery) — wood-fired, chemical-free, direct from Sankhuwasabha farmers.",
-  applicationName: "SakharSansar",
-  authors: [{ name: "SakharSansar" }],
-  creator: "SakharSansar",
-  publisher: "SakharSansar",
+    "100% organic Sakhar (Himalayan jaggery). Wood-fired, chemical-free, direct from Sankhuwasabha farmers.",
+  applicationName: SITE.name,
+  authors: [{ name: SITE.name, url: SITE_URL }],
+  creator: SITE.name,
+  publisher: SITE.name,
+  category: "Food & Beverage",
   formatDetection: { telephone: false },
-  robots: { index: true, follow: true, googleBot: { index: true, follow: true } },
+  alternates: {
+    canonical: "/",
+    types: {
+      "application/rss+xml": [{ url: "/feed", title: "SakharSansar Journal" }],
+    },
+  },
+  // Defaults every page inherits and may narrow. `images` is deliberately
+  // absent — the generated opengraph-image.tsx supplies it sitewide.
+  openGraph: {
+    type: "website",
+    siteName: SITE.name,
+    locale: SITE.ogLocale,
+    url: SITE_URL,
+    title: "SakharSansar | 100% Organic Sakhar from Sankhuwasabha",
+    description: SITE.description,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "SakharSansar | 100% Organic Sakhar from Sankhuwasabha",
+    description: SITE.description,
+  },
+  robots: {
+    index: true,
+    follow: true,
+    // Without these, Google caps result snippets and shows only a thumbnail.
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
+  // Set GOOGLE_SITE_VERIFICATION in the host's env after claiming the new
+  // domain in Search Console; the tag stays off until then.
+  ...(process.env.GOOGLE_SITE_VERIFICATION
+    ? { verification: { google: process.env.GOOGLE_SITE_VERIFICATION } }
+    : {}),
 };
 
 export const viewport: Viewport = {
@@ -88,7 +131,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="scroll-smooth">
+    <html lang={SITE.lang} className="scroll-smooth">
       <head>
         {/* Preconnect to Google Fonts origin so the font CSS resolves earlier */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -100,6 +143,9 @@ export default function RootLayout({
           href="/hero-cane-bg.jpg"
           fetchPriority="high"
         />
+        {/* Publisher + site identity, emitted once for every page so crawlers
+            resolve all our Organization references to a single entity. */}
+        <JsonLd data={siteGraphLd()} />
       </head>
       <body
         className={`${inter.variable} ${fraunces.variable} ${tiroDevanagari.variable} ${fredoka.variable} ${gochiHand.variable} font-sans antialiased bg-cream text-jaggery`}

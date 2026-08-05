@@ -32,7 +32,7 @@ export default function StoryWelcomeSection() {
               Welcome to the valley. For seven generations, our families have farmed the
               terraces of Sankhuwasabha, pressing sugarcane and reducing it slowly over
               wood fire to make jaggery the right way. On our hillside farms we still do
-              things by hand — and you can taste it. From dense amber blocks to golden
+              things by hand, and you can taste it. From dense amber blocks to golden
               liquid pours, every batch is made with care, as sweet as nature intended.
             </p>
           </div>

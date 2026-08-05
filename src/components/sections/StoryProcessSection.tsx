@@ -5,9 +5,9 @@ import { Sprout, Flame, Hand, Package } from "lucide-react";
 
 const steps = [
   { title: "Harvest", season: "Oct – Dec", desc: "Cane is cut at first light, when the juice is sweetest and coolest.", icon: Sprout },
-  { title: "Wood-fire", season: "Same day", desc: "The juice reduces slowly in iron kadhais over open wood-fire — never gas, never sulphur.", icon: Flame },
+  { title: "Wood-fire", season: "Same day", desc: "The juice reduces slowly in iron kadhais over open wood-fire. Never gas, never sulphur.", icon: Flame },
   { title: "Hand-mould", season: "Cooled overnight", desc: "Once amber and pliable, it is poured by hand into wooden moulds and rested.", icon: Hand },
-  { title: "Pack", season: "Within 48 hrs", desc: "Sealed in compostable kraft paper from our village cooperative — never plastic.", icon: Package },
+  { title: "Pack", season: "Within 48 hrs", desc: "Sealed in compostable kraft paper from our village cooperative. Never plastic.", icon: Package },
 ];
 
 /**
@@ -34,7 +34,7 @@ export default function StoryProcessSection() {
                 Four steps. No shortcuts.
               </h2>
               <p className="text-jaggery/70 text-lede mt-6">
-                The same method our grandparents used — slow, smoky, and stubbornly free of
+                The same method our grandparents used: slow, smoky, and stubbornly free of
                 the chemicals modern factories rely on. Watch a batch come to life.
               </p>
             </div>

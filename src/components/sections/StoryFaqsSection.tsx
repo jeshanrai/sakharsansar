@@ -8,17 +8,17 @@ const faqs = [
   {
     question: "Where does SakharSansar jaggery come from?",
     answer:
-      "Every block, powder and pour is made in Sankhuwasabha, in the Koshi Province of eastern Nepal, where the Arun river meets the Makalu foothills. Our cooperative of forty-two families across six villages grows the cane and makes the jaggery by hand — there is no middleman between their fire and your kitchen.",
+      "Every block, powder and pour is made in Sankhuwasabha, in the Koshi Province of eastern Nepal, where the Arun river meets the Makalu foothills. Our cooperative of forty-two families across six villages grows the cane and makes the jaggery by hand. There is no middleman between their fire and your kitchen.",
   },
   {
     question: "What makes your jaggery chemical-free?",
     answer:
-      "We use nothing but slow-cooked sugarcane juice. No bleach, no sulphur, no anti-caking agents and no artificial colour — the shortcuts factories use to sell pale jaggery cheaply year-round. Our jaggery is naturally amber because the wood fire made it that way, which is why it keeps the full mineral profile of the cane.",
+      "We use nothing but slow-cooked sugarcane juice. No bleach, no sulphur, no anti-caking agents and no artificial colour. Those are the shortcuts factories use to sell pale jaggery cheaply year-round. Our jaggery is naturally amber because the wood fire made it that way, which is why it keeps the full mineral profile of the cane.",
   },
   {
     question: "How is traditional Himalayan jaggery made?",
     answer:
-      "Cane is harvested by hand, pressed, and the juice is reduced over an open wood fire in an iron kadhai for around thirty hours. It is stirred with a wooden spoon and set in wooden moulds to cool. It is the same method our farmers' grandparents used — patient, unhurried, and entirely natural.",
+      "Cane is harvested by hand, pressed, and the juice is reduced over an open wood fire in an iron kadhai for around thirty hours. It is stirred with a wooden spoon and set in wooden moulds to cool. It is the same method our farmers' grandparents used: patient, unhurried, and entirely natural.",
   },
   {
     question: "How is jaggery different from refined white sugar?",

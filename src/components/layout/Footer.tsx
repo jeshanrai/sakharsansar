@@ -71,7 +71,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-12 gap-y-12 gap-x-8">
           {/* ─── Brand + social + address ─────────────── */}
           <div className="md:col-span-6">
-            <Link href="/" aria-label="SakharSansar — home" className="inline-flex items-center gap-3.5">
+            <Link href="/" aria-label="SakharSansar home" className="inline-flex items-center gap-3.5">
               <span className="relative block h-12 w-12 rounded-full overflow-hidden border-2 border-jaggery/10">
                 <Image src="/logo-mark.webp" alt="" fill sizes="48px" className="object-cover scale-[1.02]" />
               </span>
@@ -99,7 +99,7 @@ export default function Footer() {
             {/* Address */}
             <div className="mt-9 space-y-4 text-[15px] leading-relaxed text-jaggery/70 max-w-sm">
               <p>
-                SakharSansar — wood-fired Himalayan jaggery, made by a cooperative of
+                SakharSansar: wood-fired Himalayan jaggery, made by a cooperative of
                 42 farming families in Sankhuwasabha, Koshi Province, Nepal.
               </p>
               <p>100% organic &amp; chemical-free. Direct from farmers, since seven generations.</p>
@@ -126,7 +126,7 @@ export default function Footer() {
         {/* ─── Bottom bar ───────────────────────────── */}
         <div className="mt-14 pt-6 border-t border-jaggery/10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
           <p className="text-[13px] text-jaggery/55">
-            © {new Date().getFullYear()} SakharSansar — Crafted in the Himalayas.
+            © {new Date().getFullYear()} SakharSansar · Crafted in the Himalayas.
           </p>
           <p className="text-[13px] text-jaggery/55">Sankhuwasabha · Koshi Province · Nepal</p>
         </div>

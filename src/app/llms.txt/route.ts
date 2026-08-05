@@ -1,7 +1,6 @@
 import content from "@/data/content.json";
 import blog from "@/data/blog.json";
-
-const BASE_URL = "https://sakharsansar.com";
+import { SITE_URL as BASE_URL } from "@/lib/site";
 
 // Prerender at build time and serve as a static, CDN-cacheable asset.
 export const dynamic = "force-static";
@@ -28,10 +27,10 @@ export async function GET() {
 
   const body = `# SakharSansar
 
-> ${content.brand.tagline}. SakharSansar makes 100% organic, chemical-free Himalayan jaggery (sakhar/gur), wood-fired by a cooperative of 42 farming families across six villages in Sankhuwasabha, Koshi Province, Nepal — sold direct from farmers, with no middleman.
+> ${content.brand.tagline}. SakharSansar makes 100% organic, chemical-free Himalayan jaggery (sakhar/gur), wood-fired by a cooperative of 42 farming families across six villages in Sankhuwasabha, Koshi Province, Nepal. Sold direct from farmers, with no middleman.
 
 ## Key facts
-- Product: pure, unrefined jaggery (sakhar) — no bleach, no sulphur, no anti-caking agents, no artificial colour.
+- Product: pure, unrefined jaggery (sakhar) with no bleach, no sulphur, no anti-caking agents, no artificial colour.
 - Origin: Sankhuwasabha, Koshi Province, Nepal (Himalayan foothills near the Arun river and Makalu peaks).
 - Method: sugarcane juice slow-reduced over open wood fire in an iron kadhai, set in wooden moulds.
 - Made by: a cooperative of 42 farming families, paid above market for chemical-free cane.
@@ -42,6 +41,7 @@ export async function GET() {
 - [Shop](${BASE_URL}/shop): full product range.
 - [Our Story](${BASE_URL}/our-story): origin, farmers, craft and chemical-free promise.
 - [Blog](${BASE_URL}/blog): guides on jaggery, health and sourcing.
+- [Contact](${BASE_URL}/contact): retail (B2C) orders and wholesale (B2B) enquiries.
 
 ## Products
 ${products}
@@ -57,7 +57,9 @@ ${guides}
 
 ## Contact
 - Email: sakharsansar@gmail.com
+- Phone / WhatsApp: +977-9860149199
 - Location: Sankhuwasabha, Koshi Province, Nepal
+- Ships: pan-Nepal. Free shipping over Rs. 1,500.
 `;
 
   return new Response(body, {

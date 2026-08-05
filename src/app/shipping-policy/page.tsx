@@ -1,9 +1,17 @@
 import { Metadata } from "next";
 import Footer from "@/components/layout/Footer";
+import { openGraph } from "@/lib/metadata";
 
 export const metadata: Metadata = {
   title: "Shipping Policy | SakharSansar",
   description: "Learn about SakharSansar shipping methods, delivery times, and charges across Nepal.",
+  alternates: { canonical: "/shipping-policy" },
+  openGraph: openGraph({
+    title: "Shipping Policy | SakharSansar",
+    description: "Learn about SakharSansar shipping methods, delivery times, and charges across Nepal.",
+    url: "/shipping-policy",
+    type: "website",
+  }),
 };
 
 export default function ShippingPolicyPage() {

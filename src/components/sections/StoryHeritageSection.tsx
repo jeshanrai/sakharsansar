@@ -26,7 +26,7 @@ export default function StoryHeritageSection() {
               single kitchen fire into a family of forty-two households across six
               villages: farmers, fire-tenders, packers, neighbours. We&rsquo;re as
               determined today as ever to share honest, wood-fired sweetness and keep an
-              ancient Himalayan craft alive — harvest after harvest, forever.
+              ancient Himalayan craft alive, harvest after harvest, forever.
             </p>
             <Link
               href="/shop"

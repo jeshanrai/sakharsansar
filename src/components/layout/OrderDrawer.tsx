@@ -221,7 +221,7 @@ export default function OrderDrawer() {
                 >
                   <option value="" disabled>Choose a product</option>
                   {PRODUCTS.map((p) => (
-                    <option key={p.name} value={p.name}>{p.name} — {p.price}</option>
+                    <option key={p.name} value={p.name}>{p.name} · {p.price}</option>
                   ))}
                   <option value={CUSTOM}>Custom / Bulk Order</option>
                 </select>
