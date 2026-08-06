@@ -7,12 +7,14 @@ import { usePathname } from "next/navigation";
 import { ShoppingBag, Heart, Menu, X } from "lucide-react";
 import { openOrderDrawer } from "./OrderDrawer";
 import { useFavouritesCount } from "@/lib/favourites";
+import { BLOG_ENABLED } from "@/lib/blog";
 
+// "Blogs" appears only while the journal has posts — see @/lib/blog.
 const NAV = [
   { href: "/", label: "Home" },
   { href: "/shop", label: "Shop" },
   { href: "/our-story", label: "Our Story" },
-  { href: "/blog", label: "Blogs" },
+  ...(BLOG_ENABLED ? [{ href: "/blog", label: "Blogs" }] : []),
   { href: "/contact", label: "Contact" },
 ];
 

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Footer from "@/components/layout/Footer";
+import { BLOG_ENABLED } from "@/lib/blog";
 import { ArrowRight } from "lucide-react";
 
 /**
@@ -24,7 +25,9 @@ export const metadata: Metadata = {
 const LINKS = [
   { href: "/shop", label: "Shop all sakhar", hint: "Eight pure forms, blocks to liquid" },
   { href: "/our-story", label: "Our story", hint: "Seven generations in Sankhuwasabha" },
-  { href: "/blog", label: "The journal", hint: "Recipes, benefits and farm notes" },
+  ...(BLOG_ENABLED
+    ? [{ href: "/blog", label: "The journal", hint: "Recipes, benefits and farm notes" }]
+    : []),
   { href: "/contact", label: "Contact us", hint: "Wholesale and retail orders" },
 ];
 

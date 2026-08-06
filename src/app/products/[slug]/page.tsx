@@ -9,10 +9,11 @@ import ProductDetailSections from "@/components/product/ProductDetailSections";
 import { AnimatedWave } from "@/components/ui/StoryArt";
 import { Daisy } from "@/components/ui/Doodles";
 import JsonLd from "@/components/seo/JsonLd";
+import { BLOG_ENABLED } from "@/lib/blog";
 import data from "@/data/content.json";
 import { breadcrumbLd, faqLd, productLd } from "@/lib/seo";
 import { ArrowLeft, ArrowRight, Leaf, ShieldCheck, Truck } from "lucide-react";
-import { openGraph, twitter } from "@/lib/metadata";
+import { alternates, openGraph, twitter } from "@/lib/metadata";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -21,6 +22,14 @@ interface Props {
 export async function generateStaticParams() {
   return data.products.map((product) => ({ slug: product.slug }));
 }
+
+/**
+ * The catalogue is fully enumerated above, so an unlisted slug is invalid.
+ * Without this, a mistyped or retired product URL returned HTTP 200 with the
+ * 404 page inside it — a soft 404, which Google flags as an error rather than
+ * dropping the URL. `false` makes those a real 404.
+ */
+export const dynamicParams = false;
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
@@ -33,7 +42,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     // real qualifier people search on ("jaggery powder 500g").
     title: `${product.name} — ${product.weight} Pure Himalayan Sakhar`,
     description: product.longDescription.slice(0, 160),
-    alternates: { canonical: `/products/${product.slug}` },
+    alternates: alternates({ canonical: `/products/${product.slug}` }),
     openGraph: openGraph({
       title: `${product.name} · ${product.price}`,
       description: product.description,
@@ -316,7 +325,9 @@ export default async function ProductPage({ params }: Props) {
         >
           <AnimatedWave aria-hidden flip className="absolute top-0 left-0 w-full h-[48px] sm:h-[68px] text-cream" />
           <div className="relative z-10 max-w-3xl mx-auto text-center">
-            <span className="label-caps text-honey mb-5 block">From the Journal</span>
+            <span className="label-caps text-honey mb-5 block">
+              {BLOG_ENABLED ? "From the Journal" : "From the Cooperative"}
+            </span>
             <h2 className="font-serif text-h2 text-cream tracking-display mb-7 text-balance">
               The hands behind <span className="italic font-light">{product.name}</span>.
             </h2>
@@ -324,8 +335,11 @@ export default async function ProductPage({ params }: Props) {
               Read the recipe, the harvest notes, and the people who pour every batch
               by hand in our Sankhuwasabha cooperative.
             </p>
+            {/* With the journal empty this band would send every product page
+                into a 404, so it points at Our Story — which tells the same
+                farmers-and-craft story the copy above promises. */}
             <Link
-              href="/blog"
+              href={BLOG_ENABLED ? "/blog" : "/our-story"}
               className="group inline-flex items-center gap-3 rounded-full bg-cream text-jaggery label-caps px-9 py-4 hover:bg-honey transition-colors"
             >
               Read stories from Sankhuwasabha

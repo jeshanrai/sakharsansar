@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 import content from "@/data/content.json";
-import blog from "@/data/blog.json";
+import { BLOG_ENABLED, posts as blog } from "@/lib/blog";
 import { SITE_URL, absoluteUrl } from "@/lib/site";
 
 /**
@@ -19,7 +19,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const staticRoutes: MetadataRoute.Sitemap = [
     { url: SITE_URL, lastModified: now, changeFrequency: "weekly", priority: 1 },
     { url: `${SITE_URL}/shop`, lastModified: now, changeFrequency: "weekly", priority: 0.9 },
-    { url: `${SITE_URL}/blog`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
+    // Listing an empty /blog would submit a page that redirects — a Search
+    // Console error. It returns as soon as there is a post to show.
+    ...(BLOG_ENABLED
+      ? ([{ url: `${SITE_URL}/blog`, lastModified: now, changeFrequency: "weekly", priority: 0.8 }] as MetadataRoute.Sitemap)
+      : []),
     { url: `${SITE_URL}/our-story`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
     { url: `${SITE_URL}/contact`, lastModified: now, changeFrequency: "monthly", priority: 0.6 },
     { url: `${SITE_URL}/privacy-policy`, lastModified: now, changeFrequency: "yearly", priority: 0.3 },

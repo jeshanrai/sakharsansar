@@ -1,4 +1,4 @@
-import blogData from "@/data/blog.json";
+import { BLOG_ENABLED, sortedPosts } from "@/lib/blog";
 import { SITE, SITE_URL, absoluteUrl } from "@/lib/site";
 
 // Prerender at build time and serve as a static, CDN-cacheable asset.
@@ -12,9 +12,16 @@ export const dynamic = "force-static";
  * some aggregators) reject a bare name there.
  */
 export async function GET() {
-  const posts = [...blogData].sort(
-    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
-  );
+  // A feed with zero items is valid XML but a dead subscription: readers that
+  // poll it show an empty, broken-looking channel. 404 until there is content.
+  if (!BLOG_ENABLED) {
+    return new Response("Not Found", {
+      status: 404,
+      headers: { "Content-Type": "text/plain; charset=utf-8" },
+    });
+  }
+
+  const posts = sortedPosts();
 
   const items = posts
     .map(

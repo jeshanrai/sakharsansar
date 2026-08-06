@@ -5,7 +5,7 @@ import ContactReach from "@/components/contact/ContactReach";
 import JsonLd from "@/components/seo/JsonLd";
 import { ORG_ID, WEBSITE_ID, breadcrumbLd } from "@/lib/seo";
 import { SITE, absoluteUrl } from "@/lib/site";
-import { openGraph, twitter } from "@/lib/metadata";
+import { alternates, openGraph, twitter } from "@/lib/metadata";
 
 const Footer = dynamic(() => import("@/components/layout/Footer"));
 const OrderDrawer = dynamic(() => import("@/components/layout/OrderDrawer"));
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     "jaggery reseller Nepal",
     "Sankhuwasabha jaggery contact",
   ],
-  alternates: { canonical: PAGE_PATH },
+  alternates: alternates({ canonical: PAGE_PATH }),
   openGraph: openGraph({
     title: "Contact SakharSansar | B2B Wholesale & B2C Orders",
     description: PAGE_DESC,

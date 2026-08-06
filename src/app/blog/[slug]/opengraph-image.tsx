@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
-import blogData from "@/data/blog.json";
+import { posts as blogData } from "@/lib/blog";
 import { SITE } from "@/lib/site";
 
 /** Per-post social card — the headline is the thing that earns the click. */

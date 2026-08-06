@@ -2,6 +2,7 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { FadeUp, SlideInLeft, SlideInRight } from "@/components/ui/Animations";
+import { BLOG_ENABLED } from "@/lib/blog";
 import { ArrowRight } from "lucide-react";
 
 type Chapter = {
@@ -25,7 +26,11 @@ const chapters: Chapter[] = [
     image: "/hero.jpg",
     imageAlt: "Terraced sugarcane fields in the Sankhuwasabha valley below the Makalu peaks",
     align: "right",
-    cta: { label: "Read the journal", href: "/blog" },
+    // Falls back to the shop while the journal has no posts, so the chapter
+    // keeps its call to action instead of linking into a 404.
+    cta: BLOG_ENABLED
+      ? { label: "Read the journal", href: "/blog" }
+      : { label: "Shop the harvest", href: "/shop" },
   },
   {
     eyebrow: "The Farmers",

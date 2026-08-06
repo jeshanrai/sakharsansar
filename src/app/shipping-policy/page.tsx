@@ -2,12 +2,12 @@ import { Metadata } from "next";
 import Footer from "@/components/layout/Footer";
 import JsonLd from "@/components/seo/JsonLd";
 import { breadcrumbLd, webPageLd } from "@/lib/seo";
-import { openGraph, DEFAULT_OG_IMAGE } from "@/lib/metadata";
+import { alternates, openGraph, DEFAULT_OG_IMAGE } from "@/lib/metadata";
 
 export const metadata: Metadata = {
   title: "Shipping Policy",
   description: "Learn about SakharSansar shipping methods, delivery times, and charges across Nepal.",
-  alternates: { canonical: "/shipping-policy" },
+  alternates: alternates({ canonical: "/shipping-policy" }),
   openGraph: openGraph({
     title: "Shipping Policy | SakharSansar",
     description: "Learn about SakharSansar shipping methods, delivery times, and charges across Nepal.",

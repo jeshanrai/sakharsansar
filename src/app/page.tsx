@@ -6,7 +6,7 @@ import TrustStrip from "@/components/sections/TrustStrip";
 import JsonLd from "@/components/seo/JsonLd";
 import { ORG_ID, WEBSITE_ID, itemListLd } from "@/lib/seo";
 import { SITE, absoluteUrl } from "@/lib/site";
-import { openGraph, twitter } from "@/lib/metadata";
+import { alternates, openGraph, twitter } from "@/lib/metadata";
 
 // Below-the-fold — split out of the initial JS bundle
 const ProductsSection = dynamic(
@@ -35,9 +35,9 @@ export const metadata: Metadata = {
     "Direct from Farmers",
     "Natural Sweetener",
   ],
-  alternates: {
+  alternates: alternates({
     canonical: "/",
-  },
+  }),
   openGraph: openGraph({
     title: "Sakhar: 100% Organic Jaggery from Sankhuwasabha",
     description:

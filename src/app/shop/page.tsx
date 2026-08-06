@@ -5,7 +5,7 @@ import JsonLd from "@/components/seo/JsonLd";
 import data from "@/data/content.json";
 import { WEBSITE_ID, breadcrumbLd, itemListLd } from "@/lib/seo";
 import { SITE, absoluteUrl } from "@/lib/site";
-import { openGraph, twitter } from "@/lib/metadata";
+import { alternates, openGraph, twitter } from "@/lib/metadata";
 
 const Footer = dynamic(() => import("@/components/layout/Footer"));
 const OrderDrawer = dynamic(() => import("@/components/layout/OrderDrawer"));
@@ -27,9 +27,9 @@ export const metadata: Metadata = {
     "Wood-fired Jaggery",
     "Premium Gur Nepal",
   ],
-  alternates: {
+  alternates: alternates({
     canonical: "/shop",
-  },
+  }),
   openGraph: openGraph({
     title: "Shop Pure Sakhar: Organic Himalayan Jaggery",
     description:

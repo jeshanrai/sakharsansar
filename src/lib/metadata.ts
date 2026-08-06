@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { BLOG_ENABLED } from "./blog";
 import { SITE } from "./site";
 
 /**
@@ -16,6 +17,28 @@ import { SITE } from "./site";
 
 type OpenGraph = NonNullable<Metadata["openGraph"]>;
 type Twitter = NonNullable<Metadata["twitter"]>;
+type Alternates = NonNullable<Metadata["alternates"]>;
+
+/**
+ * `alternates` replaces wholesale too — and every page sets a canonical, so
+ * the root layout's feed-discovery `<link rel="alternate">` was being dropped
+ * everywhere except /blog. Routing canonicals through here restores it, and
+ * only while the journal actually has posts to serve.
+ */
+export function alternates(overrides: Alternates): Alternates {
+  return {
+    ...(BLOG_ENABLED
+      ? {
+          types: {
+            "application/rss+xml": [
+              { url: "/feed", title: "SakharSansar Journal" },
+            ],
+          },
+        }
+      : {}),
+    ...overrides,
+  };
+}
 
 /**
  * The sitewide card, for pages that don't warrant bespoke artwork.

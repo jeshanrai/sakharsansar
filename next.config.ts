@@ -1,4 +1,21 @@
 import type { NextConfig } from "next";
+import blogPosts from "./src/data/blog.json";
+
+/**
+ * The three original journal posts, retired as outdated.
+ *
+ * Their URLs may have picked up links or rankings, so they 301 to the closest
+ * live page rather than 404 — a permanent redirect passes that value on, which
+ * matters most right after the move to www.sakharsansar.com.np.
+ *
+ * These are permanent by design. If a future post ever reuses one of these
+ * exact slugs, delete its entry here or the redirect will shadow the new post.
+ */
+const RETIRED_POSTS = [
+  { slug: "health-benefits-of-pure-himalayan-jaggery", to: "/our-story" },
+  { slug: "why-sankhuwasabha-produces-the-best-jaggery", to: "/our-story" },
+  { slug: "how-to-use-jaggery-in-daily-cooking", to: "/shop" },
+];
 
 const nextConfig: NextConfig = {
   // Surface potential problems in dev; harmless in prod.
@@ -28,6 +45,24 @@ const nextConfig: NextConfig = {
   // Tree-shake the parts of these libs we never touch
   experimental: {
     optimizePackageImports: ["lucide-react", "framer-motion"],
+  },
+
+  async redirects() {
+    return [
+      ...RETIRED_POSTS.map(({ slug, to }) => ({
+        source: `/blog/${slug}`,
+        destination: to,
+        permanent: true, // 308 — the content is gone for good
+      })),
+      // /blog itself is only *temporarily* empty: new posts are planned, so
+      // this is a 307. A permanent redirect here would hand /blog's identity
+      // to /shop in the index and be cached by browsers, which is painful to
+      // undo. Delete this entry when the journal is republished — the rest of
+      // the blog wiring re-enables itself from src/data/blog.json.
+      ...(blogPosts.length === 0
+        ? [{ source: "/blog", destination: "/shop", permanent: false }]
+        : []),
+    ];
   },
 
   async headers() {

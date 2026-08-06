@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Facebook, Instagram, Youtube, Mail } from "lucide-react";
+import { BLOG_ENABLED } from "@/lib/blog";
 
 // lucide-react has no brand TikTok glyph, so we use a filled inline SVG that
 // matches the size/colour API of the lucide icons used alongside it.
@@ -28,7 +29,7 @@ const COLUMNS: { title: string; links: { label: string; href: string }[] }[] = [
     links: [
       { label: "Shop", href: "/shop" },
       { label: "Our Story", href: "/our-story" },
-      { label: "Blogs", href: "/blog" },
+      ...(BLOG_ENABLED ? [{ label: "Blogs", href: "/blog" }] : []),
     ],
   },
   {

@@ -2,12 +2,12 @@ import { Metadata } from "next";
 import Footer from "@/components/layout/Footer";
 import JsonLd from "@/components/seo/JsonLd";
 import { breadcrumbLd, webPageLd } from "@/lib/seo";
-import { openGraph, DEFAULT_OG_IMAGE } from "@/lib/metadata";
+import { alternates, openGraph, DEFAULT_OG_IMAGE } from "@/lib/metadata";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
   description: "Learn how SakharSansar collects, uses, and protects your personal information.",
-  alternates: { canonical: "/privacy-policy" },
+  alternates: alternates({ canonical: "/privacy-policy" }),
   openGraph: openGraph({
     title: "Privacy Policy | SakharSansar",
     description: "Learn how SakharSansar collects, uses, and protects your personal information.",

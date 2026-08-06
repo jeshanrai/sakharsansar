@@ -1,5 +1,5 @@
 import content from "@/data/content.json";
-import blog from "@/data/blog.json";
+import { BLOG_ENABLED, posts as blog } from "@/lib/blog";
 import { SITE_URL as BASE_URL } from "@/lib/site";
 
 // Prerender at build time and serve as a static, CDN-cacheable asset.
@@ -18,12 +18,20 @@ export async function GET() {
     )
     .join("\n");
 
-  const guides = blog
-    .map(
-      (post) =>
-        `- [${post.title}](${BASE_URL}/blog/${post.slug}): ${post.description}`,
-    )
-    .join("\n");
+  // Pointing an answer engine at a blog that has no posts is worse than
+  // omitting it — both the section and the /blog link drop out while empty.
+  const guides = BLOG_ENABLED
+    ? `\n## Guides\n${blog
+        .map(
+          (post) =>
+            `- [${post.title}](${BASE_URL}/blog/${post.slug}): ${post.description}`,
+        )
+        .join("\n")}\n`
+    : "";
+
+  const blogLink = BLOG_ENABLED
+    ? `\n- [Blog](${BASE_URL}/blog): guides on jaggery, health and sourcing.`
+    : "";
 
   const body = `# SakharSansar
 
@@ -39,16 +47,12 @@ export async function GET() {
 ## Pages
 - [Home](${BASE_URL}/): brand overview and bestsellers.
 - [Shop](${BASE_URL}/shop): full product range.
-- [Our Story](${BASE_URL}/our-story): origin, farmers, craft and chemical-free promise.
-- [Blog](${BASE_URL}/blog): guides on jaggery, health and sourcing.
+- [Our Story](${BASE_URL}/our-story): origin, farmers, craft and chemical-free promise.${blogLink}
 - [Contact](${BASE_URL}/contact): retail (B2C) orders and wholesale (B2B) enquiries.
 
 ## Products
 ${products}
-
-## Guides
 ${guides}
-
 ## Policies
 - [Shipping Policy](${BASE_URL}/shipping-policy)
 - [Refund Policy](${BASE_URL}/refund-policy)

@@ -7,11 +7,11 @@ import OrderDrawer from "@/components/layout/OrderDrawer";
 import { AnimatedWave, Bee } from "@/components/ui/StoryArt";
 import { Daisy } from "@/components/ui/Doodles";
 import JsonLd from "@/components/seo/JsonLd";
-import blogData from "@/data/blog.json";
+import { posts as blogData } from "@/lib/blog";
 import { ORG_ID, breadcrumbLd } from "@/lib/seo";
 import { SITE, absoluteUrl } from "@/lib/site";
 import { ArrowRight, ChevronRight, Clock, Twitter, Facebook, Linkedin } from "lucide-react";
-import { openGraph, twitter } from "@/lib/metadata";
+import { alternates, openGraph, twitter } from "@/lib/metadata";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -20,6 +20,15 @@ interface Props {
 export async function generateStaticParams() {
   return blogData.map((post) => ({ slug: post.slug }));
 }
+
+/**
+ * Every valid slug is known at build time from src/data/blog.json, so any
+ * other slug is simply wrong. Without this, Next renders unknown slugs
+ * on demand and `notFound()` inside the page yields a *soft* 404 — HTTP 200
+ * carrying 404 content, which Google reports as an error and may index.
+ * `false` makes the router return a real 404 before rendering anything.
+ */
+export const dynamicParams = false;
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const resolvedParams = await params;
@@ -31,7 +40,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     // are long enough already without a second brand token after it.
     title: post.title,
     description: post.description,
-    alternates: { canonical: `/blog/${post.slug}` },
+    alternates: alternates({ canonical: `/blog/${post.slug}` }),
     keywords: post.tags,
     openGraph: openGraph({
       title: post.title,

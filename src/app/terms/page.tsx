@@ -2,12 +2,12 @@ import { Metadata } from "next";
 import Footer from "@/components/layout/Footer";
 import JsonLd from "@/components/seo/JsonLd";
 import { breadcrumbLd, webPageLd } from "@/lib/seo";
-import { openGraph, DEFAULT_OG_IMAGE } from "@/lib/metadata";
+import { alternates, openGraph, DEFAULT_OG_IMAGE } from "@/lib/metadata";
 
 export const metadata: Metadata = {
   title: "Terms & Conditions",
   description: "Read the terms and conditions governing the use of SakharSansar products and services.",
-  alternates: { canonical: "/terms" },
+  alternates: alternates({ canonical: "/terms" }),
   openGraph: openGraph({
     title: "Terms & Conditions | SakharSansar",
     description: "Read the terms and conditions governing the use of SakharSansar products and services.",

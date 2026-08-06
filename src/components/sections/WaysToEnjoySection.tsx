@@ -11,7 +11,7 @@ const rituals = [
     desc: "A spoon of jaggery powder dissolves into hot milk-tea and turns the whole cup amber.",
     image: "/products/jaggery-powder.jpg",
     nepali: "मिठो",
-    href: "/blog",
+    href: "/products/jaggery-powder",
   },
   {
     eyebrow: "Festive",
@@ -19,7 +19,7 @@ const rituals = [
     desc: "Liquid jaggery folded into rice-flour batter, a Tihar table classic from Sankhuwasabha kitchens.",
     image: "/products/liquid-jaggery.jpg",
     nepali: "उत्सव",
-    href: "/blog",
+    href: "/products/liquid-jaggery",
   },
   {
     eyebrow: "Ayurvedic",
@@ -27,7 +27,7 @@ const rituals = [
     desc: "Tradition holds it aids digestion and replaces refined sugar's late-day crash with quiet warmth.",
     image: "/products/jaggery-cubes.jpg",
     nepali: "आरोग्य",
-    href: "/blog",
+    href: "/products/jaggery-cubes",
   },
 ];
 

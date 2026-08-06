@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import dynamic from "next/dynamic";
 import FavouritesContent from "@/components/favourites/FavouritesContent";
+import { alternates } from "@/lib/metadata";
 
 const Footer = dynamic(() => import("@/components/layout/Footer"));
 const OrderDrawer = dynamic(() => import("@/components/layout/OrderDrawer"));
@@ -12,9 +13,9 @@ export const metadata: Metadata = {
   // Personalised, client-state page — nothing here is worth indexing, but the
   // links out to product pages still are, hence follow: true.
   robots: { index: false, follow: true },
-  alternates: {
+  alternates: alternates({
     canonical: "/favourites",
-  },
+  }),
 };
 
 export default function FavouritesPage() {

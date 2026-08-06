@@ -1,7 +1,9 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import blogData from "@/data/blog.json";
+// Typed via @/lib/blog rather than the raw JSON: with no posts the JSON infers
+// as never[], which breaks every field access below.
+import { posts as blogData } from "@/lib/blog";
 import { FadeUp, SlideInRight } from "@/components/ui/Animations";
 import { ArrowRight } from "lucide-react";
 

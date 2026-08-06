@@ -5,6 +5,7 @@ import PromoBar from "@/components/layout/PromoBar";
 import Navbar from "@/components/layout/Navbar";
 import FloatingContact from "@/components/layout/FloatingContact";
 import JsonLd from "@/components/seo/JsonLd";
+import { BLOG_ENABLED } from "@/lib/blog";
 import { siteGraphLd } from "@/lib/seo";
 import { SITE, SITE_URL } from "@/lib/site";
 
@@ -76,9 +77,17 @@ export const metadata: Metadata = {
   formatDetection: { telephone: false },
   alternates: {
     canonical: "/",
-    types: {
-      "application/rss+xml": [{ url: "/feed", title: "SakharSansar Journal" }],
-    },
+    // Advertising a feed that 404s makes readers show a broken subscription,
+    // so discovery is tied to the journal actually having posts.
+    ...(BLOG_ENABLED
+      ? {
+          types: {
+            "application/rss+xml": [
+              { url: "/feed", title: "SakharSansar Journal" },
+            ],
+          },
+        }
+      : {}),
   },
   // Defaults every page inherits and may narrow. `images` is deliberately
   // absent — the generated opengraph-image.tsx supplies it sitewide.

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import Footer from "@/components/layout/Footer";
@@ -7,13 +8,13 @@ import OrderDrawer from "@/components/layout/OrderDrawer";
 import BlogEditorsPicks from "@/components/sections/blog/BlogEditorsPicks";
 import BlogCategories from "@/components/sections/blog/BlogCategories";
 import JsonLd from "@/components/seo/JsonLd";
-import blogData from "@/data/blog.json";
+import { BLOG_ENABLED, posts as blogData } from "@/lib/blog";
 import { ORG_ID, WEBSITE_ID, breadcrumbLd } from "@/lib/seo";
 import { SITE, absoluteUrl } from "@/lib/site";
 import { Bee, Ladybug, AnimatedWave } from "@/components/ui/StoryArt";
 import { Daisy } from "@/components/ui/Doodles";
 import { ArrowRight } from "lucide-react";
-import { openGraph, twitter } from "@/lib/metadata";
+import { alternates, openGraph, twitter } from "@/lib/metadata";
 
 export const metadata: Metadata = {
   // The root layout's `title.template` appends "| SakharSansar", so the brand
@@ -29,12 +30,12 @@ export const metadata: Metadata = {
     "Sankhuwasabha farming stories",
     "how jaggery is made",
   ],
-  alternates: {
+  alternates: alternates({
     canonical: "/blog",
     types: {
       "application/rss+xml": [{ url: "/feed", title: "SakharSansar Journal" }],
     },
-  },
+  }),
   openGraph: openGraph({
     title: "Blogs | SakharSansar",
     description: "Letters from Sankhuwasabha: recipes, rituals, and harvest notes.",
@@ -48,6 +49,11 @@ export const metadata: Metadata = {
 };
 
 export default function BlogList() {
+  // With no posts the page renders as an empty shell — a hero over nothing.
+  // Google reads that as thin content, so it 404s instead. Publishing a post
+  // brings the page straight back with no code change.
+  if (!BLOG_ENABLED) notFound();
+
   const featured = blogData[0];
   const categories = [...new Set(blogData.flatMap((p) => p.tags ?? []))];
 

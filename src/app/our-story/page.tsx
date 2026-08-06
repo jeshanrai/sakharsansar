@@ -13,7 +13,7 @@ import StoryRootsSection from "@/components/sections/StoryRootsSection";
 import FarmersSection from "@/components/sections/FarmersSection";
 import StoryFaqsSection from "@/components/sections/StoryFaqsSection";
 import StoryCtaSection from "@/components/sections/StoryCtaSection";
-import { openGraph, twitter } from "@/lib/metadata";
+import { alternates, openGraph, twitter } from "@/lib/metadata";
 
 const PAGE_PATH = "/our-story";
 const PAGE_URL = absoluteUrl(PAGE_PATH);
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     "organic jaggery farmers Nepal",
     "direct from farmers jaggery",
   ],
-  alternates: { canonical: PAGE_PATH },
+  alternates: alternates({ canonical: PAGE_PATH }),
   openGraph: openGraph({
     title: "Our Story | SakharSansar",
     description:

@@ -186,6 +186,9 @@ export async function renderOgCard({
             padding: 56,
           }}
         >
+          {/* Satori renders this, not the browser — next/image has no effect
+              inside ImageResponse, so the raw <img> is required here. */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={src}
             alt=""
