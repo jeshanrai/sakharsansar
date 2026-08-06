@@ -1,9 +1,11 @@
 import { Metadata } from "next";
 import Footer from "@/components/layout/Footer";
-import { openGraph } from "@/lib/metadata";
+import JsonLd from "@/components/seo/JsonLd";
+import { breadcrumbLd, webPageLd } from "@/lib/seo";
+import { openGraph, DEFAULT_OG_IMAGE } from "@/lib/metadata";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy | SakharSansar",
+  title: "Privacy Policy",
   description: "Learn how SakharSansar collects, uses, and protects your personal information.",
   alternates: { canonical: "/privacy-policy" },
   openGraph: openGraph({
@@ -11,12 +13,25 @@ export const metadata: Metadata = {
     description: "Learn how SakharSansar collects, uses, and protects your personal information.",
     url: "/privacy-policy",
     type: "website",
+    images: [DEFAULT_OG_IMAGE],
   }),
 };
 
 export default function PrivacyPolicyPage() {
+  const pageJsonLd = webPageLd({
+    name: "Privacy Policy",
+    path: "/privacy-policy",
+    description:
+      "Learn how SakharSansar collects, uses, and protects your personal information.",
+    dateModified: "2026-03-27",
+  });
+
   return (
     <>
+      <JsonLd data={pageJsonLd} />
+      <JsonLd
+        data={breadcrumbLd([{ name: "Privacy Policy", path: "/privacy-policy" }])}
+      />
 
       <main className="pt-36 pb-24 px-6 bg-[#FBF4E8] min-h-screen">
         <div className="max-w-3xl mx-auto">

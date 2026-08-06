@@ -303,6 +303,38 @@ export function productLd(product: ProductLike): Json {
   };
 }
 
+/**
+ * A plain WebPage node, for pages whose content has no richer type.
+ *
+ * The policy pages had only the sitewide graph on them, so crawlers saw the
+ * publisher but nothing describing the page itself. That matters more than it
+ * looks for a shop: Google cross-checks the shipping and return terms in a
+ * product's Offer against the pages that state them, and an unidentified page
+ * is a weaker corroboration than a named one.
+ */
+export function webPageLd(opts: {
+  name: string;
+  path: string;
+  description: string;
+  /** ISO date the terms last changed, when the page states one. */
+  dateModified?: string;
+}): Json {
+  const url = absoluteUrl(opts.path);
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "@id": `${url}#webpage`,
+    url,
+    name: opts.name,
+    description: opts.description,
+    isPartOf: { "@id": WEBSITE_ID },
+    about: { "@id": ORG_ID },
+    publisher: { "@id": ORG_ID },
+    inLanguage: SITE.lang,
+    ...(opts.dateModified ? { dateModified: opts.dateModified } : {}),
+  };
+}
+
 /** Collection pages (shop, blog index) rank better with an explicit ItemList. */
 export function itemListLd(
   name: string,

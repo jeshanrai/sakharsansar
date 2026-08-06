@@ -16,7 +16,10 @@ import { ArrowRight } from "lucide-react";
 import { openGraph, twitter } from "@/lib/metadata";
 
 export const metadata: Metadata = {
-  title: "Blogs | SakharSansar",
+  // The root layout's `title.template` appends "| SakharSansar", so the brand
+  // is left off here. "Blogs" alone also carried no keyword — the page ranks
+  // for what it's actually about instead.
+  title: "Journal: Jaggery Recipes, Benefits & Farm Stories",
   description: "Letters from Sankhuwasabha: recipes, rituals, and the slow stories behind every block of pure Himalayan jaggery.",
   keywords: [
     "jaggery recipes",

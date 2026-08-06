@@ -1,9 +1,11 @@
 import { Metadata } from "next";
 import Footer from "@/components/layout/Footer";
-import { openGraph } from "@/lib/metadata";
+import JsonLd from "@/components/seo/JsonLd";
+import { breadcrumbLd, webPageLd } from "@/lib/seo";
+import { openGraph, DEFAULT_OG_IMAGE } from "@/lib/metadata";
 
 export const metadata: Metadata = {
-  title: "Terms & Conditions | SakharSansar",
+  title: "Terms & Conditions",
   description: "Read the terms and conditions governing the use of SakharSansar products and services.",
   alternates: { canonical: "/terms" },
   openGraph: openGraph({
@@ -11,12 +13,25 @@ export const metadata: Metadata = {
     description: "Read the terms and conditions governing the use of SakharSansar products and services.",
     url: "/terms",
     type: "website",
+    images: [DEFAULT_OG_IMAGE],
   }),
 };
 
 export default function TermsPage() {
+  const pageJsonLd = webPageLd({
+    name: "Terms & Conditions",
+    path: "/terms",
+    description:
+      "Read the terms and conditions governing the use of SakharSansar products and services.",
+    dateModified: "2026-03-27",
+  });
+
   return (
     <>
+      <JsonLd data={pageJsonLd} />
+      <JsonLd
+        data={breadcrumbLd([{ name: "Terms & Conditions", path: "/terms" }])}
+      />
 
       <main className="pt-36 pb-24 px-6 bg-[#FBF4E8] min-h-screen">
         <div className="max-w-3xl mx-auto">

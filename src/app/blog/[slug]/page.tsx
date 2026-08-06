@@ -24,10 +24,12 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const resolvedParams = await params;
   const post = blogData.find((p) => p.slug === resolvedParams.slug);
-  if (!post) return { title: "Post Not Found" };
+  if (!post) return { title: "Post Not Found", robots: { index: false } };
 
   return {
-    title: `${post.title} | SakharSansar Journal`,
+    // The root layout's `title.template` appends "| SakharSansar"; post titles
+    // are long enough already without a second brand token after it.
+    title: post.title,
     description: post.description,
     alternates: { canonical: `/blog/${post.slug}` },
     keywords: post.tags,

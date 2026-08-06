@@ -1,9 +1,11 @@
 import { Metadata } from "next";
 import Footer from "@/components/layout/Footer";
-import { openGraph } from "@/lib/metadata";
+import JsonLd from "@/components/seo/JsonLd";
+import { breadcrumbLd, webPageLd } from "@/lib/seo";
+import { openGraph, DEFAULT_OG_IMAGE } from "@/lib/metadata";
 
 export const metadata: Metadata = {
-  title: "Refund & Returns Policy | SakharSansar",
+  title: "Refund & Returns Policy",
   description: "Understand SakharSansar's refund and return policy for jaggery products.",
   alternates: { canonical: "/refund-policy" },
   openGraph: openGraph({
@@ -11,12 +13,25 @@ export const metadata: Metadata = {
     description: "Understand SakharSansar's refund and return policy for jaggery products.",
     url: "/refund-policy",
     type: "website",
+    images: [DEFAULT_OG_IMAGE],
   }),
 };
 
 export default function RefundPolicyPage() {
+  const pageJsonLd = webPageLd({
+    name: "Refund & Returns Policy",
+    path: "/refund-policy",
+    description:
+      "Understand SakharSansar's refund and return policy for jaggery products.",
+    dateModified: "2026-03-27",
+  });
+
   return (
     <>
+      <JsonLd data={pageJsonLd} />
+      <JsonLd
+        data={breadcrumbLd([{ name: "Refund & Returns Policy", path: "/refund-policy" }])}
+      />
 
       <main className="pt-36 pb-24 px-6 bg-[#FBF4E8] min-h-screen">
         <div className="max-w-3xl mx-auto">

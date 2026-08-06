@@ -17,6 +17,24 @@ import { SITE } from "./site";
 type OpenGraph = NonNullable<Metadata["openGraph"]>;
 type Twitter = NonNullable<Metadata["twitter"]>;
 
+/**
+ * The sitewide card, for pages that don't warrant bespoke artwork.
+ *
+ * A colocated `opengraph-image.tsx` only fills in when a page leaves `images`
+ * unset, and it only covers its own route segment. Pages with neither — the
+ * legal pages — advertised no image at all and shared as a bare text link, so
+ * they point at the root card explicitly. Resolved against `metadataBase`.
+ *
+ * Do NOT make this a default inside `openGraph()`: it would override the
+ * colocated per-page cards on /shop, /products/* and /blog/*.
+ */
+export const DEFAULT_OG_IMAGE = {
+  url: "/opengraph-image",
+  width: 1200,
+  height: 630,
+  alt: "SakharSansar: 100% organic, wood-fired Himalayan jaggery from Sankhuwasabha, Nepal",
+} as const;
+
 export function openGraph(overrides: OpenGraph): OpenGraph {
   return {
     type: "website",

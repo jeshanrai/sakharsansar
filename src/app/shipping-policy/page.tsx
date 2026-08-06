@@ -1,9 +1,11 @@
 import { Metadata } from "next";
 import Footer from "@/components/layout/Footer";
-import { openGraph } from "@/lib/metadata";
+import JsonLd from "@/components/seo/JsonLd";
+import { breadcrumbLd, webPageLd } from "@/lib/seo";
+import { openGraph, DEFAULT_OG_IMAGE } from "@/lib/metadata";
 
 export const metadata: Metadata = {
-  title: "Shipping Policy | SakharSansar",
+  title: "Shipping Policy",
   description: "Learn about SakharSansar shipping methods, delivery times, and charges across Nepal.",
   alternates: { canonical: "/shipping-policy" },
   openGraph: openGraph({
@@ -11,12 +13,25 @@ export const metadata: Metadata = {
     description: "Learn about SakharSansar shipping methods, delivery times, and charges across Nepal.",
     url: "/shipping-policy",
     type: "website",
+    images: [DEFAULT_OG_IMAGE],
   }),
 };
 
 export default function ShippingPolicyPage() {
+  const pageJsonLd = webPageLd({
+    name: "Shipping Policy",
+    path: "/shipping-policy",
+    description:
+      "Learn about SakharSansar shipping methods, delivery times, and charges across Nepal.",
+    dateModified: "2026-03-27",
+  });
+
   return (
     <>
+      <JsonLd data={pageJsonLd} />
+      <JsonLd
+        data={breadcrumbLd([{ name: "Shipping Policy", path: "/shipping-policy" }])}
+      />
 
       <main className="pt-36 pb-24 px-6 bg-[#FBF4E8] min-h-screen">
         <div className="max-w-3xl mx-auto">
