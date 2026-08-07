@@ -4,12 +4,14 @@ import React, { useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Search, ArrowUpRight } from "lucide-react";
+import { formatPostDate } from "@/lib/blog";
 
 type Post = {
   slug: string;
   title: string;
   description: string;
   image: string;
+  imageAlt?: string;
   date: string;
   tags: string[];
 };
@@ -104,7 +106,7 @@ export default function BlogCategories({
                 <div className="relative aspect-[4/3] w-full overflow-hidden bg-jaggery-soft">
                   <Image
                     src={post.image}
-                    alt={post.title}
+                    alt={post.imageAlt ?? post.title}
                     fill
                     loading="lazy"
                     sizes="(max-width: 768px) 100vw, 33vw"
@@ -116,7 +118,7 @@ export default function BlogCategories({
                     <span className="label-caps text-caramel">{post.tags[0]}</span>
                     <span className="w-1 h-1 rounded-full bg-jaggery/30" />
                     <time dateTime={post.date} className="label-caps text-jaggery/45">
-                      {post.date}
+                      {formatPostDate(post.date)}
                     </time>
                   </div>
                   <h3 className="font-display font-bold text-jaggery text-h4 leading-snug tracking-tight mb-3 group-hover:text-grove transition-colors text-balance">

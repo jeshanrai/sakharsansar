@@ -4,13 +4,20 @@ import Image from 'next/image';
 import Link from 'next/link';
 import Footer from "@/components/layout/Footer";
 import OrderDrawer from "@/components/layout/OrderDrawer";
+import ArticleBody from "@/components/blog/ArticleBody";
 import { AnimatedWave, Bee } from "@/components/ui/StoryArt";
 import { Daisy } from "@/components/ui/Doodles";
 import JsonLd from "@/components/seo/JsonLd";
-import { posts as blogData } from "@/lib/blog";
-import { ORG_ID, breadcrumbLd } from "@/lib/seo";
+import { posts as blogData, formatPostDate } from "@/lib/blog";
+import {
+  faqEntries,
+  howToSteps,
+  parseArticle,
+  wordCount as countWords,
+} from "@/lib/article";
+import { ORG_ID, breadcrumbLd, faqLd, howToLd } from "@/lib/seo";
 import { SITE, absoluteUrl } from "@/lib/site";
-import { ArrowRight, ChevronRight, Clock, Twitter, Facebook, Linkedin } from "lucide-react";
+import { ArrowRight, ChevronRight, Clock, Twitter, Facebook, Linkedin, MapPin, Phone, RefreshCw } from "lucide-react";
 import { alternates, openGraph, twitter } from "@/lib/metadata";
 
 interface Props {
@@ -36,12 +43,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!post) return { title: "Post Not Found", robots: { index: false } };
 
   return {
-    // The root layout's `title.template` appends "| SakharSansar"; post titles
-    // are long enough already without a second brand token after it.
-    title: post.title,
+    // The root layout's `title.template` appends "| SakharSansar", which costs
+    // 15 of the ~60 characters Google shows. Posts whose headline needs the
+    // full width set `seoTitle` and opt out of the template entirely.
+    title: post.seoTitle ? { absolute: post.seoTitle } : post.title,
     description: post.description,
     alternates: alternates({ canonical: `/blog/${post.slug}` }),
     keywords: post.tags,
+    authors: [{ name: post.author }],
     openGraph: openGraph({
       title: post.title,
       description: post.description,
@@ -50,7 +59,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       // headline over the post's photo at a true 1200×630.
       type: "article",
       publishedTime: post.date,
-      modifiedTime: post.date,
+      modifiedTime: post.updated ?? post.date,
       authors: [post.author],
       tags: post.tags,
     }),
@@ -66,9 +75,15 @@ export default async function BlogPost({ params }: Props) {
   const post = blogData.find((p) => p.slug === resolvedParams.slug);
   if (!post) notFound();
 
-  const paragraphs = post.content.split('\n\n');
-  const wordCount = post.content.split(/\s+/).length;
+  const blocks = parseArticle(post.content);
+  const wordCount = countWords(blocks);
   const readingMins = Math.max(1, Math.round(wordCount / 200));
+
+  // Both derived from the parsed article rather than written alongside it, so
+  // the structured data can never describe a heading the page doesn't render.
+  const faqs = faqEntries(blocks);
+  const steps = howToSteps(blocks);
+
   const authorInitials = post.author
     .split(" ")
     .map((p) => p[0])
@@ -78,6 +93,7 @@ export default async function BlogPost({ params }: Props) {
   const related = blogData.filter((p) => p.slug !== post.slug).slice(0, 2);
 
   const postUrl = absoluteUrl(`/blog/${post.slug}`);
+  const modified = post.updated ?? post.date;
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -87,13 +103,20 @@ export default async function BlogPost({ params }: Props) {
     description: post.description,
     image: absoluteUrl(post.image),
     url: postUrl,
-    // Both point at the sitewide Organization node instead of redeclaring it,
-    // so the publisher stays one entity across the whole site.
-    author: { "@id": ORG_ID },
+    // A named human author is a first-hand-experience signal the publisher
+    // node can't carry on its own; the publisher stays the Organization.
+    author: {
+      "@type": "Person",
+      name: post.author,
+      ...(post.authorRole ? { jobTitle: post.authorRole } : {}),
+      ...(post.authorBio ? { description: post.authorBio } : {}),
+      ...(post.authorImage ? { image: absoluteUrl(post.authorImage) } : {}),
+      worksFor: { "@id": ORG_ID },
+    },
     publisher: { "@id": ORG_ID },
     isPartOf: { "@id": absoluteUrl("/blog#blog") },
     datePublished: post.date,
-    dateModified: post.date,
+    dateModified: modified,
     inLanguage: SITE.lang,
     articleSection: post.tags[0],
     keywords: post.tags.join(", "),
@@ -117,6 +140,21 @@ export default async function BlogPost({ params }: Props) {
     <>
       <JsonLd data={jsonLd} />
       <JsonLd data={breadcrumbJsonLd} />
+      {faqs.length > 0 && <JsonLd data={faqLd(faqs)} />}
+      {steps.length > 0 && (
+        <JsonLd
+          data={howToLd({
+            name: post.title,
+            description: post.description,
+            path: `/blog/${post.slug}`,
+            image: post.image,
+            totalTime: "PT10M",
+            supplies: ["Warm water", "Tincture of iodine", "A piece of sakhar (jaggery)"],
+            tools: ["A clear glass", "A spoon", "Daylight"],
+            steps,
+          })}
+        />
+      )}
 
       <OrderDrawer />
 
@@ -128,30 +166,41 @@ export default async function BlogPost({ params }: Props) {
           <Daisy aria-hidden className="pointer-events-none absolute top-24 right-[27%] w-14 h-14 text-peach-line/50 -rotate-12 hidden md:block" />
 
           <div className="relative z-10 max-w-[820px] mx-auto">
-            {/* Breadcrumb */}
+            {/* Breadcrumb — the trail matches the BreadcrumbList above it. */}
             <nav aria-label="Breadcrumb" className="mb-7">
-              <ol className="flex items-center gap-2 label-caps text-jaggery/45">
-                <li>
+              <ol className="flex items-center gap-2 label-caps text-jaggery/45 min-w-0">
+                <li className="shrink-0">
                   <Link href="/" className="hover:text-grove transition-colors">Home</Link>
                 </li>
-                <ChevronRight className="w-3 h-3 text-jaggery/30" strokeWidth={2.5} aria-hidden />
-                <li>
+                <ChevronRight className="w-3 h-3 shrink-0 text-jaggery/30" strokeWidth={2.5} aria-hidden />
+                <li className="shrink-0">
                   <Link href="/blog" className="hover:text-grove transition-colors">Journal</Link>
                 </li>
-                <ChevronRight className="w-3 h-3 text-jaggery/30" strokeWidth={2.5} aria-hidden />
-                <li aria-current="page" className="text-grove">Article</li>
+                <ChevronRight className="w-3 h-3 shrink-0 text-jaggery/30" strokeWidth={2.5} aria-hidden />
+                <li aria-current="page" className="text-grove truncate">{post.title}</li>
               </ol>
             </nav>
 
-            <div className="flex flex-wrap items-center gap-3 mb-6">
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-2 mb-6">
               <span className="inline-flex items-center rounded-full bg-grove/10 border border-grove/15 px-3.5 py-1.5 label-caps text-grove">
                 {post.tags[0]}
               </span>
-              <time dateTime={post.date} className="label-caps text-jaggery/45">{post.date}</time>
+              <time dateTime={post.date} className="label-caps text-jaggery/45">{formatPostDate(post.date)}</time>
               <span className="w-1 h-1 rounded-full bg-jaggery/25" />
               <span className="inline-flex items-center gap-1.5 label-caps text-jaggery/45">
                 <Clock className="w-3.5 h-3.5" strokeWidth={1.75} /> {readingMins} min read
               </span>
+              {/* Purity advice dates; showing when it was last checked is the
+                  point of re-checking it every six months. */}
+              {post.updated && post.updated !== post.date && (
+                <>
+                  <span className="w-1 h-1 rounded-full bg-jaggery/25" />
+                  <span className="inline-flex items-center gap-1.5 label-caps text-jaggery/45">
+                    <RefreshCw className="w-3.5 h-3.5" strokeWidth={1.75} aria-hidden />
+                    Updated <time dateTime={post.updated}>{formatPostDate(post.updated)}</time>
+                  </span>
+                </>
+              )}
             </div>
 
             {/* Title — hand-marker, consistent with every page hero */}
@@ -165,12 +214,24 @@ export default async function BlogPost({ params }: Props) {
 
             {/* Byline */}
             <div className="flex items-center gap-3">
-              <div className="h-11 w-11 rounded-full bg-gradient-to-br from-honey to-caramel flex items-center justify-center text-cream font-serif text-sm shadow-sm">
-                {authorInitials}
-              </div>
+              {post.authorImage ? (
+                <Image
+                  src={post.authorImage}
+                  alt=""
+                  width={44}
+                  height={44}
+                  className="h-11 w-11 rounded-full object-cover shadow-sm"
+                />
+              ) : (
+                <div className="h-11 w-11 rounded-full bg-gradient-to-br from-honey to-caramel flex items-center justify-center text-cream font-serif text-sm shadow-sm">
+                  {authorInitials}
+                </div>
+              )}
               <div>
                 <p className="font-medium text-jaggery text-sm">{post.author}</p>
-                <p className="label-caps text-jaggery/45">SakharSansar Journal</p>
+                <p className="label-caps text-jaggery/45">
+                  {post.authorRole ?? "SakharSansar Journal"}
+                </p>
               </div>
             </div>
           </div>
@@ -185,7 +246,9 @@ export default async function BlogPost({ params }: Props) {
             <div className="relative aspect-[16/9] w-full overflow-hidden rounded-3xl bg-ivory ring-1 ring-jaggery/8 shadow-xl shadow-jaggery/10">
               <Image
                 src={post.image}
-                alt={post.title}
+                // The headline is rarely a description of the photograph, and
+                // this is the one alt tag on the page worth writing by hand.
+                alt={post.imageAlt ?? post.title}
                 fill
                 priority
                 sizes="(max-width: 1000px) 100vw, 1000px"
@@ -198,29 +261,46 @@ export default async function BlogPost({ params }: Props) {
         {/* ─── Article body ───────────────────────────────────────── */}
         <article className="px-6 sm:px-10 lg:px-16 pt-14 sm:pt-20 pb-16">
           <div className="max-w-[720px] mx-auto">
-            {paragraphs.map((paragraph, index) => {
-              if (paragraph.startsWith('### ')) {
-                return (
-                  <h2
-                    key={index}
-                    className="font-serif text-h3 text-jaggery mt-14 mb-5 tracking-[-0.012em] text-balance"
-                  >
-                    {paragraph.replace('### ', '')}
-                  </h2>
-                );
-              }
-              return (
-                <p
-                  key={index}
-                  className={`text-jaggery/85 text-lede mb-7 ${index === 0 ? 'has-dropcap' : ''}`}
-                >
-                  {paragraph}
-                </p>
-              );
-            })}
+            <ArticleBody blocks={blocks} />
+
+            {/* Author — who wrote this and why they would know */}
+            {post.authorBio && (
+              <aside className="mt-16 rounded-2xl bg-ivory ring-1 ring-jaggery/8 px-6 sm:px-8 py-8 flex flex-col sm:flex-row gap-6">
+                {post.authorImage && (
+                  <Image
+                    src={post.authorImage}
+                    alt={`${post.author}, ${post.authorRole ?? "SakharSansar"}`}
+                    width={96}
+                    height={96}
+                    className="h-24 w-24 shrink-0 rounded-full object-cover"
+                  />
+                )}
+                <div>
+                  <span className="label-caps text-caramel mb-2 block">Written by</span>
+                  <p className="font-display font-bold text-jaggery text-h4">{post.author}</p>
+                  {post.authorRole && (
+                    <p className="label-caps text-jaggery/45 mt-1.5">{post.authorRole}</p>
+                  )}
+                  <p className="text-jaggery/75 text-body mt-4">{post.authorBio}</p>
+                  <div className="mt-5 flex flex-wrap gap-x-6 gap-y-2 text-jaggery/60 text-meta">
+                    <span className="inline-flex items-center gap-1.5">
+                      <MapPin className="w-3.5 h-3.5" strokeWidth={1.75} aria-hidden />
+                      {SITE.address.locality}, {SITE.address.region}, Nepal
+                    </span>
+                    <a
+                      href={`tel:${SITE.phone.replace(/[^+\d]/g, "")}`}
+                      className="inline-flex items-center gap-1.5 hover:text-grove transition-colors"
+                    >
+                      <Phone className="w-3.5 h-3.5" strokeWidth={1.75} aria-hidden />
+                      {SITE.phone}
+                    </a>
+                  </div>
+                </div>
+              </aside>
+            )}
 
             {/* Tags */}
-            <div className="mt-14 pt-8 border-t border-jaggery/12 flex flex-wrap gap-2.5">
+            <div className="mt-12 pt-8 border-t border-jaggery/12 flex flex-wrap gap-2.5">
               {post.tags.map((t) => (
                 <span
                   key={t}
@@ -266,7 +346,7 @@ export default async function BlogPost({ params }: Props) {
                     <div className="relative aspect-[16/10] w-full overflow-hidden rounded-2xl bg-ivory ring-1 ring-jaggery/8 mb-5">
                       <Image
                         src={r.image}
-                        alt={r.title}
+                        alt={r.imageAlt ?? r.title}
                         fill
                         sizes="(max-width: 640px) 100vw, 50vw"
                         className="object-cover group-hover:scale-[1.04] transition-transform duration-700 ease-out"

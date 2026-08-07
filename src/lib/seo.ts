@@ -150,6 +150,62 @@ export function faqLd(faqs: { q: string; a: string }[]): Json {
 }
 
 /**
+ * A procedure the page teaches, step by step.
+ *
+ * Google retired the HowTo *rich result* in 2023, so this no longer draws an
+ * illustrated block in the SERP. It is still worth emitting: the markup names
+ * the steps, their order and their photographs in a form answer engines and
+ * LLM crawlers read directly, and this site is already written for them (see
+ * /llms.txt). `steps` come straight out of the parsed article, so the schema
+ * can only ever describe headings the page actually renders.
+ */
+export function howToLd(opts: {
+  name: string;
+  description: string;
+  /** Path of the page teaching it — steps are anchored inside it. */
+  path: string;
+  image?: string;
+  /** ISO 8601 duration, e.g. "PT10M". */
+  totalTime?: string;
+  /** Consumables the reader needs. */
+  supplies?: string[];
+  /** Reusable equipment the reader needs. */
+  tools?: string[];
+  steps: { name: string; text: string; anchor: string; image?: string }[];
+}): Json {
+  const url = absoluteUrl(opts.path);
+  return {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "@id": `${url}#howto`,
+    name: opts.name,
+    description: opts.description,
+    inLanguage: SITE.lang,
+    ...(opts.image ? { image: absoluteUrl(opts.image) } : {}),
+    ...(opts.totalTime ? { totalTime: opts.totalTime } : {}),
+    ...(opts.supplies?.length
+      ? {
+          supply: opts.supplies.map((name) => ({
+            "@type": "HowToSupply",
+            name,
+          })),
+        }
+      : {}),
+    ...(opts.tools?.length
+      ? { tool: opts.tools.map((name) => ({ "@type": "HowToTool", name })) }
+      : {}),
+    step: opts.steps.map((step, i) => ({
+      "@type": "HowToStep",
+      position: i + 1,
+      name: step.name,
+      text: step.text,
+      url: `${url}#${step.anchor}`,
+      ...(step.image ? { image: absoluteUrl(step.image) } : {}),
+    })),
+  };
+}
+
+/**
  * Shipping terms, transcribed from /shipping-policy. Kathmandu Valley is the
  * slowest of the two named regions (3–5 days) and "other locations" runs to
  * 10, so the advertised transit window is 2–10 business days.

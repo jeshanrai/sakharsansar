@@ -8,7 +8,7 @@ import OrderDrawer from "@/components/layout/OrderDrawer";
 import BlogEditorsPicks from "@/components/sections/blog/BlogEditorsPicks";
 import BlogCategories from "@/components/sections/blog/BlogCategories";
 import JsonLd from "@/components/seo/JsonLd";
-import { BLOG_ENABLED, posts as blogData } from "@/lib/blog";
+import { BLOG_ENABLED, sortedPosts } from "@/lib/blog";
 import { ORG_ID, WEBSITE_ID, breadcrumbLd } from "@/lib/seo";
 import { SITE, absoluteUrl } from "@/lib/site";
 import { Bee, Ladybug, AnimatedWave } from "@/components/ui/StoryArt";
@@ -54,8 +54,11 @@ export default function BlogList() {
   // brings the page straight back with no code change.
   if (!BLOG_ENABLED) notFound();
 
-  const featured = blogData[0];
-  const categories = [...new Set(blogData.flatMap((p) => p.tags ?? []))];
+  // Newest first, and the featured post is dropped from the carousel below it —
+  // otherwise a journal with one post shows that post twice in a row.
+  const ordered = sortedPosts();
+  const [featured, ...rest] = ordered;
+  const categories = [...new Set(ordered.flatMap((p) => p.tags ?? []))];
 
   // Typing the index as a Blog (rather than a generic WebPage) is what links
   // the individual BlogPosting pages to a single publication.
@@ -70,7 +73,7 @@ export default function BlogList() {
     isPartOf: { "@id": WEBSITE_ID },
     publisher: { "@id": ORG_ID },
     inLanguage: SITE.lang,
-    blogPost: blogData.map((post) => ({
+    blogPost: ordered.map((post) => ({
       "@type": "BlogPosting",
       "@id": absoluteUrl(`/blog/${post.slug}#post`),
       headline: post.title,
@@ -135,7 +138,7 @@ export default function BlogList() {
               >
                 <Image
                   src={featured.image}
-                  alt={featured.title}
+                  alt={featured.imageAlt ?? featured.title}
                   fill
                   priority
                   sizes="(max-width: 1024px) 100vw, 50vw"
@@ -163,7 +166,7 @@ export default function BlogList() {
         )}
 
         {/* ─── 3 · Editor's Picks (green carousel) ──── */}
-        <BlogEditorsPicks posts={blogData} />
+        <BlogEditorsPicks posts={rest} />
 
         {/* ─── 4 · Blog Categories (peach) ──────────── */}
         <div className="relative bg-peach">
@@ -174,7 +177,7 @@ export default function BlogList() {
             className="absolute top-0 left-0 z-10 w-full h-[55px] sm:h-[80px] text-grove"
           />
           <div className="pt-10 sm:pt-16">
-            <BlogCategories posts={blogData} categories={categories} />
+            <BlogCategories posts={ordered} categories={categories} />
           </div>
         </div>
       </main>

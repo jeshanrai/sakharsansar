@@ -10,6 +10,7 @@ type Post = {
   title: string;
   description: string;
   image: string;
+  imageAlt?: string;
 };
 
 /**
@@ -75,7 +76,7 @@ export default function BlogEditorsPicks({ posts }: { posts: Post[] }) {
               <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[1.25rem] ring-1 ring-cream/10 shadow-xl shadow-grove-deep/40">
                 <Image
                   src={post.image}
-                  alt={post.title}
+                  alt={post.imageAlt ?? post.title}
                   fill
                   loading="lazy"
                   sizes="(max-width: 640px) 78vw, (max-width: 1024px) 44vw, 31vw"
