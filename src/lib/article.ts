@@ -253,7 +253,7 @@ export interface HowToStep {
 }
 
 /**
- * Every H2 of the form "Test 3 — The Taste Test" becomes a HowTo step.
+ * Every H2 of the form "Test 3: The Taste Test" becomes a HowTo step.
  *
  * Step text is the instruction paragraph plus the pure/adulterated pair —
  * what to do and how to read the result — which is what a step is. The
@@ -261,7 +261,9 @@ export interface HowToStep {
  * Google truncates long step text anyway.
  */
 export function howToSteps(blocks: Block[]): HowToStep[] {
-  const TEST_HEADING = /^Test\s+\d+\s*[—–-]\s*(.+)$/;
+  // The separator is a colon today; the dashes stay accepted so an older
+  // post, or one written in a different editor, still yields its steps.
+  const TEST_HEADING = /^Test\s+\d+\s*[:—–-]\s*(.+)$/;
 
   return sections(blocks).flatMap(({ heading, body }) => {
     const match = heading.text.match(TEST_HEADING);
