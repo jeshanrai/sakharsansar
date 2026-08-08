@@ -27,9 +27,9 @@ const CHANNELS = [
   {
     icon: MapPin,
     label: "Find us",
-    value: "Sankhuwasabha, Koshi Province, Nepal",
-    href: "https://maps.google.com/?q=Sankhuwasabha+Nepal",
-    note: "A cooperative of 42 farming families",
+    value: "Kapan, Kathmandu, Nepal",
+    href: "https://maps.google.com/?q=Kapan+Kathmandu+Nepal",
+    note: "Made in Sankhuwasabha by 42 farming families",
   },
 ];
 

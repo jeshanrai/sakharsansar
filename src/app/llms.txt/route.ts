@@ -62,7 +62,7 @@ ${guides}
 ## Contact
 - Email: sakharsansar@gmail.com
 - Phone / WhatsApp: +977-9860149199
-- Location: Sankhuwasabha, Koshi Province, Nepal
+- Location: Kapan, Kathmandu, Bagmati Province, Nepal (office and dispatch); jaggery made in Sankhuwasabha, Koshi Province.
 - Ships: pan-Nepal. Free shipping over Rs. 1,500.
 `;
 

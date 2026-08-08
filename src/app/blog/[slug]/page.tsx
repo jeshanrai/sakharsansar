@@ -285,7 +285,7 @@ export default async function BlogPost({ params }: Props) {
                   <div className="mt-5 flex flex-wrap gap-x-6 gap-y-2 text-jaggery/60 text-meta">
                     <span className="inline-flex items-center gap-1.5">
                       <MapPin className="w-3.5 h-3.5" strokeWidth={1.75} aria-hidden />
-                      {SITE.address.locality}, {SITE.address.region}, Nepal
+                      {SITE.origin.locality}, {SITE.origin.region}, Nepal
                     </span>
                     <a
                       href={`tel:${SITE.phone.replace(/[^+\d]/g, "")}`}

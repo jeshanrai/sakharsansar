@@ -36,10 +36,18 @@ export const SITE = {
   lang: "en-NP",
   ogLocale: "en_NP",
   foundingYear: "2024",
+  /** Where the business can be reached — office and dispatch point. */
   address: {
+    street: "Kapan",
+    locality: "Kathmandu",
+    region: "Bagmati Province",
+    country: "NP",
+  },
+  /** Where the jaggery is actually made. Kept apart from `address` so the
+   *  farm story and the contactable address never get conflated. */
+  origin: {
     locality: "Sankhuwasabha",
     region: "Koshi Province",
-    country: "NP",
   },
   social: [
     "https://facebook.com/sakharsansar",

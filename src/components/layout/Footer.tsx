@@ -1,7 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Facebook, Instagram, Youtube, Mail } from "lucide-react";
+import { Facebook, Instagram, Youtube, Mail, Phone, MapPin } from "lucide-react";
 import { BLOG_ENABLED } from "@/lib/blog";
+import { SITE } from "@/lib/site";
 
 // lucide-react has no brand TikTok glyph, so we use a filled inline SVG that
 // matches the size/colour API of the lucide icons used alongside it.
@@ -101,9 +102,31 @@ export default function Footer() {
             <div className="mt-9 space-y-4 text-[15px] leading-relaxed text-jaggery/70 max-w-sm">
               <p>
                 SakharSansar: wood-fired Himalayan jaggery, made by a cooperative of
-                42 farming families in Sankhuwasabha, Koshi Province, Nepal.
+                42 farming families in {SITE.origin.locality}, {SITE.origin.region}, Nepal.
               </p>
               <p>100% organic &amp; chemical-free. Direct from farmers, since seven generations.</p>
+
+              {/* Reach us — the two details people look for in a footer */}
+              <address className="not-italic space-y-2.5 pt-1">
+                <a
+                  href={`tel:${SITE.phone.replace(/[^+\d]/g, "")}`}
+                  className="flex items-center gap-2.5 hover:text-grove transition-colors"
+                >
+                  <Phone className="w-4 h-4 shrink-0" strokeWidth={1.7} aria-hidden />
+                  {SITE.phone}
+                </a>
+                <a
+                  href={`https://maps.google.com/?q=${encodeURIComponent(
+                    `${SITE.address.street} ${SITE.address.locality} Nepal`,
+                  )}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2.5 hover:text-grove transition-colors"
+                >
+                  <MapPin className="w-4 h-4 shrink-0" strokeWidth={1.7} aria-hidden />
+                  {SITE.address.street}, {SITE.address.locality}, Nepal
+                </a>
+              </address>
             </div>
           </div>
 
@@ -129,7 +152,9 @@ export default function Footer() {
           <p className="text-[13px] text-jaggery/55">
             © {new Date().getFullYear()} SakharSansar · Crafted in the Himalayas.
           </p>
-          <p className="text-[13px] text-jaggery/55">Sankhuwasabha · Koshi Province · Nepal</p>
+          <p className="text-[13px] text-jaggery/55">
+            {SITE.address.street}, {SITE.address.locality} · Made in {SITE.origin.locality} · Nepal
+          </p>
         </div>
       </div>
     </footer>

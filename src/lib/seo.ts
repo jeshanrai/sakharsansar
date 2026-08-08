@@ -30,7 +30,7 @@ function catalogPriceRange(): string {
  * The publisher node. Emitted once, sitewide, from the root layout.
  *
  * Multi-typed on purpose. The business is one entity — an online store that
- * is also a real place in Sankhuwasabha — and giving it one `@id` under all
+ * is also a real place in Kapan, Kathmandu — and giving it one `@id` under all
  * three types keeps the store signals and the local signals attached to the
  * same node instead of splitting them across competing entities.
  */
@@ -57,6 +57,7 @@ export function organizationLd(): Json {
     telephone: SITE.phone,
     address: {
       "@type": "PostalAddress",
+      streetAddress: SITE.address.street,
       addressLocality: SITE.address.locality,
       addressRegion: SITE.address.region,
       addressCountry: SITE.address.country,
