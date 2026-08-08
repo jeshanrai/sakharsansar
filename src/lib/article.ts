@@ -77,6 +77,7 @@ export type Block =
   | { kind: "list"; ordered: boolean; items: Inline[][] }
   | { kind: "note"; inline: Inline[] }
   | { kind: "compare"; rows: CompareRow[] }
+  | { kind: "table"; caption?: string; head: string[]; rows: Inline[][][] }
   | {
       kind: "figure";
       src: string;
@@ -142,6 +143,28 @@ export function parseArticle(markdown: string): Block[] {
       continue;
     }
 
+    // Side-by-side comparison grid. Deliberately a real <table>: Google can
+    // read one and may lift it into the result, and it cannot read a picture
+    // of one. First row is the header; the text after ":::table" is the
+    // caption, which is where the comparison keyword belongs.
+    if (raw.startsWith(":::table")) {
+      const caption = lines[0].slice(":::table".length).trim();
+      const cells = lines
+        .slice(1)
+        .filter((l) => l && l !== ":::")
+        .map((l) => l.split("|").map((c) => c.trim()));
+      const [head, ...body] = cells;
+      if (head && body.length) {
+        blocks.push({
+          kind: "table",
+          ...(caption ? { caption } : {}),
+          head,
+          rows: body.map((row) => row.map((cell) => parseInline(cell))),
+        });
+      }
+      continue;
+    }
+
     // Photograph
     const figure = raw.match(FIGURE);
     if (figure) {
@@ -198,6 +221,12 @@ export function wordCount(blocks: Block[]): number {
           return b.items.map(plainText).join(" ");
         case "compare":
           return b.rows.map((r) => `${r.label} ${plainText(r.inline)}`).join(" ");
+        case "table":
+          return [
+            b.caption ?? "",
+            b.head.join(" "),
+            ...b.rows.map((row) => row.map(plainText).join(" ")),
+          ].join(" ");
         default:
           return "";
       }

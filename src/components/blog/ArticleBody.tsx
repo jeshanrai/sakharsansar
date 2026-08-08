@@ -63,9 +63,83 @@ function BlockView({ block, lead }: { block: Block; lead: boolean }) {
     case "compare":
       return <CompareCard rows={block.rows} />;
 
+    case "table":
+      return <TableView block={block} />;
+
     case "figure":
       return <FigureView block={block} />;
   }
+}
+
+/**
+ * The side-by-side comparison table.
+ *
+ * Kept as a genuine <table> with a header row and row headers — that is what
+ * makes it eligible to be lifted into a search result, and what lets a screen
+ * reader announce "Calories, White sugar" instead of a loose grid of numbers.
+ * At 720px the body column is narrower than three readable columns, so the
+ * table scrolls inside its own focusable region rather than squeezing the
+ * words to one letter per line.
+ */
+function TableView({ block }: { block: Block & { kind: "table" } }) {
+  return (
+    <figure className="my-10 -mx-2 sm:mx-0">
+      {block.caption && (
+        <figcaption className="label-caps text-caramel mb-3 px-2 sm:px-0">
+          {block.caption}
+        </figcaption>
+      )}
+      <div
+        role="region"
+        aria-label={block.caption ?? "Comparison table"}
+        tabIndex={0}
+        className="overflow-x-auto rounded-2xl ring-1 ring-jaggery/10 bg-ivory"
+      >
+        <table className="w-full min-w-[34rem] border-collapse text-left">
+          <thead>
+            <tr className="bg-grove/[0.06]">
+              {block.head.map((cell, i) => (
+                <th
+                  key={i}
+                  scope="col"
+                  className="label-caps text-grove align-bottom px-5 sm:px-6 py-4"
+                >
+                  {cell}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {block.rows.map((row, i) => (
+              <tr key={i} className="border-t border-jaggery/10 align-top">
+                {row.map((cell, j) =>
+                  j === 0 ? (
+                    <th
+                      key={j}
+                      scope="row"
+                      className="font-medium text-jaggery text-body px-5 sm:px-6 py-4 text-left"
+                    >
+                      <InlineView nodes={cell} />
+                    </th>
+                  ) : (
+                    <td
+                      key={j}
+                      className="text-jaggery/80 text-body px-5 sm:px-6 py-4"
+                    >
+                      <InlineView nodes={cell} />
+                    </td>
+                  ),
+                )}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p className="sm:hidden mt-2.5 px-2 label-caps text-jaggery/40">
+        Scroll the table sideways →
+      </p>
+    </figure>
+  );
 }
 
 /**
