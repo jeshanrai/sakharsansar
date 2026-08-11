@@ -8,7 +8,7 @@ import ArticleBody from "@/components/blog/ArticleBody";
 import { AnimatedWave, Bee } from "@/components/ui/StoryArt";
 import { Daisy } from "@/components/ui/Doodles";
 import JsonLd from "@/components/seo/JsonLd";
-import { posts as blogData, formatPostDate } from "@/lib/blog";
+import { posts as blogData, formatPostDate, relatedPosts } from "@/lib/blog";
 import {
   faqEntries,
   howToSteps,
@@ -90,7 +90,7 @@ export default async function BlogPost({ params }: Props) {
     .slice(0, 2)
     .join("")
     .toUpperCase();
-  const related = blogData.filter((p) => p.slug !== post.slug).slice(0, 2);
+  const related = relatedPosts(post.slug);
 
   const postUrl = absoluteUrl(`/blog/${post.slug}`);
   const modified = post.updated ?? post.date;

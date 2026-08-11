@@ -57,6 +57,41 @@ export function sortedPosts(): BlogPost[] {
   );
 }
 
+/**
+ * The posts to offer at the foot of `slug`, most relevant first.
+ *
+ * Ranked by how many tags they share with the current post, then by recency.
+ * The previous rule — take the first two posts in file order — pointed every
+ * article at the same two pages no matter what it was about, which wastes the
+ * strongest internal links on the site: the ones a reader who finished the
+ * article is most likely to follow. Tag overlap is a blunt relevance measure,
+ * but it is the one the posts already carry, and it costs nothing to keep
+ * accurate.
+ *
+ * Falls back to the newest posts if the slug is unknown, so a caller can never
+ * end up with an empty rail.
+ */
+export function relatedPosts(slug: string, limit = 2): BlogPost[] {
+  const current = posts.find((p) => p.slug === slug);
+  if (!current) return sortedPosts().slice(0, limit);
+
+  const tags = new Set(current.tags);
+
+  return posts
+    .filter((p) => p.slug !== slug)
+    .map((post) => ({
+      post,
+      shared: post.tags.filter((t) => tags.has(t)).length,
+    }))
+    .sort(
+      (a, b) =>
+        b.shared - a.shared ||
+        new Date(b.post.date).getTime() - new Date(a.post.date).getTime(),
+    )
+    .slice(0, limit)
+    .map((scored) => scored.post);
+}
+
 const MONTHS = [
   "January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December",
