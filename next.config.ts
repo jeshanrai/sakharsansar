@@ -17,6 +17,31 @@ const RETIRED_POSTS = [
   { slug: "how-to-use-jaggery-in-daily-cooking", to: "/shop" },
 ];
 
+/**
+ * Every route that renders a social card via `opengraph-image` / `twitter-image`.
+ *
+ * Next advertises these as absolute URLs in `og:image` / `twitter:image`, and
+ * Googlebot follows them like any other link — so all ten of them turned up in
+ * Search Console under "Crawled - currently not indexed". They are 1200x630
+ * PNGs, not pages: there is nothing there to index, and the status will never
+ * resolve on its own. `noindex` moves them into "Excluded by noindex tag",
+ * which keeps the coverage report about actual pages.
+ *
+ * Safe for sharing: Facebook, WhatsApp, X and friends fetch the image directly
+ * and ignore X-Robots-Tag. Product rich results are unaffected too — those pull
+ * the photo named in the Product JSON-LD (`/products/*.jpg`), not this card.
+ *
+ * `:path+` is one-or-more segments, which covers both `/blog/opengraph-image`
+ * and `/products/date-palm-jaggery/opengraph-image`; the bare root card needs
+ * its own entry.
+ */
+const SOCIAL_CARD_ROUTES = [
+  "/opengraph-image",
+  "/twitter-image",
+  "/:path+/opengraph-image",
+  "/:path+/twitter-image",
+];
+
 const nextConfig: NextConfig = {
   // Surface potential problems in dev; harmless in prod.
   reactStrictMode: true,
@@ -67,6 +92,11 @@ const nextConfig: NextConfig = {
 
   async headers() {
     return [
+      // Social cards are images, not pages — keep them out of the index.
+      ...SOCIAL_CARD_ROUTES.map((source) => ({
+        source,
+        headers: [{ key: "X-Robots-Tag", value: "noindex" }],
+      })),
       // Static asset caching — long max-age, immutable
       {
         source: "/:all*(svg|jpg|jpeg|png|webp|avif|ico)",

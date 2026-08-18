@@ -74,20 +74,14 @@ export default async function ProductPage({ params }: Props) {
     { name: product.name, path: `/products/${product.slug}` },
   ]);
 
-  // FAQ — answered from real product data so the schema matches what renders.
+  // FAQ — the first three are written for this product specifically (its
+  // format, its ingredients, its storage behaviour); the last two are the
+  // genuinely sitewide questions. Previously all five were templated off the
+  // product name, which meant eight pages carrying the same five answers with
+  // one noun swapped — a large part of why Google read the catalogue as one
+  // page repeated and left most of it out of the index.
   const faqs = [
-    {
-      q: `Is ${product.name} chemical-free?`,
-      a: `Yes. ${product.name} is made only from slow-cooked sugarcane juice, with no bleach, no sulphur, no anti-caking agents and no artificial colour. Ingredients: ${product.ingredients}.`,
-    },
-    {
-      q: `Where is ${product.name} made?`,
-      a: `It is wood-fired by our farming cooperative in ${product.origin}, using methods unchanged for seven generations.`,
-    },
-    {
-      q: "How should I store it and how long does it keep?",
-      a: `${product.shelfLife}. Keep it away from direct sunlight and humidity. A little natural crystallisation over time is a sign of purity, not spoilage.`,
-    },
+    ...product.faqs,
     {
       q: "How is jaggery different from refined white sugar?",
       a: "Unlike refined sugar, our unrefined jaggery retains the iron, magnesium and potassium naturally present in sugarcane, and carries a deep caramel flavour refined sugar can't match.",
@@ -100,26 +94,25 @@ export default async function ProductPage({ params }: Props) {
 
   const faqJsonLd = faqLd(faqs);
 
-  // Expandable detail sections
+  // Expandable detail sections.
+  //
+  // Every one of these used to be hardcoded prose shared by all eight products
+  // — the same tasting notes, the same four serving suggestions, the same
+  // "cane is harvested at first light" sourcing paragraph. That was inaccurate
+  // as well as duplicative: Date Palm Jaggery is tapped sap, not pressed cane,
+  // and the Spread contains ghee. They now read from the product's own record.
   const sections = [
     {
       title: "Tasting Notes",
-      body: (
-        <p>
-          A long, slow-burn caramel that opens with toasted molasses and finishes with a
-          gentle smoke from the wood-fire, never sharp, never one-note. Mineral-rich,
-          with the faintest earth-and-jaggery scent of Sankhuwasabha&rsquo;s autumn cane.
-        </p>
-      ),
+      body: <p>{product.tastingNotes}</p>,
     },
     {
       title: "How to Use",
       body: (
         <ul className="list-disc pl-5 space-y-2">
-          <li>Stir into morning chiya in place of refined sugar.</li>
-          <li>Fold into sel roti, kheer, or halwa for traditional depth.</li>
-          <li>Drizzle over yogurt, oats, or warm milk before bed.</li>
-          <li>Eat a small piece after meals, Ayurveda&rsquo;s digestive ritual.</li>
+          {product.howToUse.map((use) => (
+            <li key={use}>{use}</li>
+          ))}
         </ul>
       ),
     },
@@ -127,10 +120,7 @@ export default async function ProductPage({ params }: Props) {
       title: "Sourcing & Process",
       body: (
         <p>
-          Sourced from {product.origin}. Cane is harvested at first light, pressed
-          within hours, and reduced over open wood-fire in iron kadhais, the same
-          method used in our village for seven generations. Hand-poured into wooden
-          moulds, rested overnight, then sealed in compostable kraft paper.
+          {product.sourcing}
           <br /><br />
           <strong className="font-serif text-jaggery not-italic">Ingredients:</strong>{" "}
           {product.ingredients}.
@@ -190,7 +180,7 @@ export default async function ProductPage({ params }: Props) {
                 {/* Harvest badge */}
                 <div className="absolute top-5 left-5 sm:top-6 sm:left-6 rounded-2xl bg-cream/95 backdrop-blur-sm px-4 py-3 shadow-lg shadow-jaggery/10">
                   <span className="label-caps text-jaggery/55 block mb-0.5">Harvested</span>
-                  <span className="font-serif text-meta text-jaggery nums-price">November 2025</span>
+                  <span className="font-serif text-meta text-jaggery nums-price">{product.harvest}</span>
                 </div>
               </div>
             </div>

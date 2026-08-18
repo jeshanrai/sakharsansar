@@ -49,7 +49,30 @@
       "ingredients": "100% pure sugarcane juice",
       "shelfLife": "6-12 months when stored in a cool, dry place",
       "origin": "Sankhuwasabha, Koshi Province, Nepal",
-      "category": "Blocks"
+      "category": "Blocks",
+      "harvest": "November 2025",
+      "tastingNotes": "The densest thing we make. It chips rather than crumbles, breaking to a dark amber face that catches the light. Toasted molasses lands first, then a long mineral finish carrying the faint smoke of the wood-fire it was reduced over. This is the reference flavour — the powder and the cubes are both cut from it.",
+      "howToUse": [
+        "Chip a thumbnail-sized piece straight into hot chiya and let it dissolve as you stir.",
+        "Grate over kheer, halwa or sel roti batter for a deeper, less sugary sweetness.",
+        "Melt with a splash of water into a pouring syrup for festival sweets.",
+        "Keep a small piece to eat after a heavy meal, the way it has always been eaten in the hills."
+      ],
+      "sourcing": "Cane is cut at first light and pressed within hours, before the juice can start to ferment. It is then reduced over open wood-fire in iron kadhais, skimmed by hand, and poured into wooden moulds while still molten. Each block rests overnight to set before it is wrapped in compostable kraft paper.",
+      "faqs": [
+        {
+          "q": "How do I break up a 1kg block?",
+          "a": "Rest it on a board and tap along one edge with the back of a heavy knife or a rolling pin; it splits along its own grain. Do not try to cut straight down through the middle. Many people break the whole block up once and keep the pieces in a jar."
+        },
+        {
+          "q": "Why is this block darker than the last one I bought?",
+          "a": "Colour shifts batch to batch with how late in the season the cane was cut and how long that particular kadhai ran. Darker generally means a longer reduction and a stronger molasses note. It is not a sign of age or of anything added."
+        },
+        {
+          "q": "Is this the same jaggery as the powder and the cubes?",
+          "a": "Yes. The Jaggery Powder is this block crushed and sieved, and the Jaggery Cubes are this block hand-cut to size. The block is the least processed of the three."
+        }
+      ]
     },
     {
       "slug": "jaggery-powder",
@@ -62,7 +85,30 @@
       "ingredients": "100% pure sugarcane jaggery",
       "shelfLife": "6 months when stored in an airtight container",
       "origin": "Sankhuwasabha, Koshi Province, Nepal",
-      "category": "Powder"
+      "category": "Powder",
+      "harvest": "November 2025",
+      "tastingNotes": "Lighter in the cup than the block it comes from — crushing exposes more surface, which softens the smoke and pushes the clean caramel forward. It dissolves without leaving a grain behind, hot or cold, which is exactly why it suits baking and cold drinks where the block never worked.",
+      "howToUse": [
+        "Spoon straight into tea, coffee or lassi; it dissolves cold, unlike the block.",
+        "Swap it one-for-one where a recipe asks for brown sugar.",
+        "Sprinkle over oats, yoghurt or cut fruit without any melting step.",
+        "Whisk into marinades and glazes, where it browns faster than refined sugar."
+      ],
+      "sourcing": "Made from our own Organic Jaggery Block once it has fully set — crushed, then sieved to an even grain so it pours and measures consistently. Nothing is added at this stage: no anti-caking agent, no starch, no flour. It goes into an airtight jar immediately, because loose jaggery pulls moisture out of the air within hours.",
+      "faqs": [
+        {
+          "q": "Can I substitute it one-for-one for sugar in baking?",
+          "a": "For brown sugar, yes, measure for measure. For white sugar, start at about three-quarters of the amount — jaggery reads sweeter and browns faster, so also check your bake a few minutes early."
+        },
+        {
+          "q": "My powder has clumped into a solid lump. Is it spoiled?",
+          "a": "No. Jaggery powder is hygroscopic, so it draws in humidity and cakes, which is common in Kathmandu through the monsoon. Break it up with a fork or a short pulse in a grinder and move it to a properly airtight jar; the flavour is unaffected."
+        },
+        {
+          "q": "Why choose the powder over the block?",
+          "a": "Convenience and cold solubility. The block keeps longer and has a slightly stronger smoke, but it has to be chipped or grated and it will not dissolve in a cold drink. If you sweeten daily, most people find the powder easier."
+        }
+      ]
     },
     {
       "slug": "jaggery-cubes",
@@ -75,7 +121,30 @@
       "ingredients": "100% pure sugarcane jaggery",
       "shelfLife": "6-12 months when stored in a cool, dry place",
       "origin": "Sankhuwasabha, Koshi Province, Nepal",
-      "category": "Cubes"
+      "category": "Cubes",
+      "harvest": "November 2025",
+      "tastingNotes": "The same wood-fired body as the block, but the smaller format melts faster and reads a little gentler as a result. One cube in a standard cup of chiya lands close to two teaspoons of sugar, so the sweetness is consistent from cup to cup without any measuring.",
+      "howToUse": [
+        "Drop one cube per cup of tea or coffee and stir until it goes.",
+        "Carry a few loose in a tin as a travel or hiking snack.",
+        "Crush a cube under a glass to scatter over ice cream or curd.",
+        "Set a bowl out after dinner instead of mints."
+      ],
+      "sourcing": "Hand-cut from our set jaggery blocks with a wire and a gauge, then edge-checked so every cube falls in the same weight range. Cutting by hand rather than casting them individually means the cubes have the block's dense structure rather than a softer moulded one — they hold their shape in a bag.",
+      "faqs": [
+        {
+          "q": "How many cubes should I use per cup?",
+          "a": "One cube per standard 200ml cup is the usual measure, roughly equivalent to two teaspoons of sugar. If you take your chiya lightly sweetened, half a cube is plenty."
+        },
+        {
+          "q": "Why aren't the cubes all exactly the same shape?",
+          "a": "They are cut by hand from set blocks, not pressed in a mould, so edges and corners vary a little. Weight is held to a consistent range even when the shape is not perfectly uniform."
+        },
+        {
+          "q": "Will they stick together in a bag?",
+          "a": "In hot or humid weather the surfaces can tack together. They separate with a light tap and are unaffected in taste. For a lunchbox or a trek, a small tin works better than a pouch."
+        }
+      ]
     },
     {
       "slug": "liquid-jaggery",
@@ -88,7 +157,30 @@
       "ingredients": "100% pure concentrated sugarcane juice",
       "shelfLife": "4 months refrigerated after opening",
       "origin": "Sankhuwasabha, Koshi Province, Nepal",
-      "category": "Liquid"
+      "category": "Liquid",
+      "harvest": "November 2025",
+      "tastingNotes": "Brighter and fresher than any of our solid jaggery, because it never goes through the final hard reduction that builds the smoky notes. What you get instead is the cane itself — grassy and floral at the front, caramel behind it — in a syrup that pours like warm honey.",
+      "howToUse": [
+        "Pour over pancakes, waffles or sel roti in place of maple or golden syrup.",
+        "Swirl a spoonful through plain curd or yoghurt.",
+        "Stir into warm milk at night, where it blends far more easily than a solid piece.",
+        "Brush over roasting vegetables or grilled meat in the last few minutes as a glaze."
+      ],
+      "sourcing": "Fresh cane juice reduced gently and stopped early, while it is still pourable, rather than being taken all the way to a set. Nothing is added to hold it there — no corn starch, no glucose syrup, no preservative — which is why the bottle has to go into the fridge once you open it.",
+      "faqs": [
+        {
+          "q": "Does it need to be refrigerated?",
+          "a": "Unopened, a cool dark cupboard is fine. Once opened, refrigerate it and use it within four months. There is no preservative in the bottle, so this matters more than it would for a commercial syrup."
+        },
+        {
+          "q": "It has gone thick and grainy in the fridge. Is it still good?",
+          "a": "Yes. Cold pushes natural sugars out of solution, so the syrup stiffens and can turn slightly crystalline. Stand the bottle in warm water for a few minutes and it comes back. This happens to pure syrups and not to stabilised ones."
+        },
+        {
+          "q": "Can I use it in place of honey?",
+          "a": "In most cooking and drinks, yes, at roughly the same quantity. It is thinner than set honey and has a cane character rather than a floral one, so it changes the flavour of anything delicate — but for tea, glazes and drizzling it swaps in directly."
+        }
+      ]
     },
     {
       "slug": "date-palm-jaggery",
@@ -101,7 +193,30 @@
       "ingredients": "100% pure date palm sap",
       "shelfLife": "6 months when stored in a cool, dry place",
       "origin": "Sankhuwasabha, Koshi Province, Nepal",
-      "category": "Blocks"
+      "category": "Blocks",
+      "harvest": "January 2026",
+      "tastingNotes": "Nothing like our cane jaggery, and the reason people seek it out. Date palm sap reduces to something closer to dark toffee — deeply smoky, almost fig-like, with a perfume that fills the room when you unwrap it. Softer to the bite than a cane block, and considerably more fragrant.",
+      "howToUse": [
+        "Break over chiura or puffed rice, the traditional winter pairing.",
+        "Use it as the sweetener in payesh, patishapta and other festival sweets, where its aroma is the point.",
+        "Shave thin slivers over warm rice pudding just before serving.",
+        "Eat a piece on its own; most people find it needs nothing else."
+      ],
+      "sourcing": "Tapped, not pressed. In the cool months an incision is opened in the crown of the date palm and the sap runs overnight into a clay pot, which is collected at dawn. Sap ferments within hours of collection, so it goes onto the fire the same morning it comes down. This is why the product is seasonal and why it costs more than cane jaggery.",
+      "faqs": [
+        {
+          "q": "Is it made from dates?",
+          "a": "No — it is made from the sap of the date palm tree, not from the fruit. The tree is tapped in the same way a rubber or maple tree is, and the sap is reduced down. There is no date fruit in it at all."
+        },
+        {
+          "q": "Why is it more expensive than the cane jaggery?",
+          "a": "A palm yields a limited amount of sap, only during the cool months, and it has to be tapped by climbing each tree. One tree produces a fraction of what a comparable area of cane does, and the whole harvest window is a few weeks long."
+        },
+        {
+          "q": "Why isn't it available all year?",
+          "a": "The sap only runs usefully in the cold season, and it cannot be stored unreduced. We make what that winter's tapping allows and sell it until it is gone, usually well before the next season starts."
+        }
+      ]
     },
     {
       "slug": "jaggery-candy",
@@ -114,7 +229,30 @@
       "ingredients": "Pure sugarcane jaggery, cardamom, ginger",
       "shelfLife": "4 months when stored in a cool, dry place",
       "origin": "Sankhuwasabha, Koshi Province, Nepal",
-      "category": "Cubes"
+      "category": "Cubes",
+      "harvest": "November 2025",
+      "tastingNotes": "Cardamom arrives first and stays; the ginger shows up at the back as a dry warmth once the piece has gone. Firm enough to suck rather than chew, and far less cloying than a boiled sweet because the jaggery underneath it is not pure sucrose.",
+      "howToUse": [
+        "Keep a few in a bag or a coat pocket for the middle of the afternoon.",
+        "Take one after a heavy meal; the ginger and cardamom are traditional digestives.",
+        "Useful on long bus journeys and at altitude, where a slow sugar helps.",
+        "Offer them to children in place of artificially coloured sweets."
+      ],
+      "sourcing": "Jaggery is remelted with ground cardamom and dried ginger folded through it, then set and cut into single pieces and wrapped individually so each one stays dry. The spices are the only additions — no glucose syrup, no colour, no flavouring, and no gelatin.",
+      "faqs": [
+        {
+          "q": "Are these suitable for children?",
+          "a": "Yes, and they are a common swap for artificial sweets. They are still a sweet, so treat them as one. For very young children, note that a firm piece this size is a choking risk and is better broken up."
+        },
+        {
+          "q": "Do they contain gelatin, artificial colour or flavouring?",
+          "a": "None of the three. The full ingredient list is pure sugarcane jaggery, cardamom and ginger, which makes them suitable for vegetarians and vegans."
+        },
+        {
+          "q": "Will they melt in warm weather?",
+          "a": "They soften above roughly 30°C and can stick inside the wrapper, though they do not liquefy. They firm up again once cool. In peak summer, a shelf away from the window is enough."
+        }
+      ]
     },
     {
       "slug": "spiced-jaggery-mix",
@@ -127,7 +265,30 @@
       "ingredients": "Jaggery powder, turmeric, ginger, black pepper, cinnamon",
       "shelfLife": "6 months when stored in an airtight container",
       "origin": "Sankhuwasabha, Koshi Province, Nepal",
-      "category": "Powder"
+      "category": "Powder",
+      "harvest": "November 2025",
+      "tastingNotes": "A golden-ochre powder that smells of turmeric and cinnamon before it hits the milk. Earthy and rounded rather than sharply sweet, with the black pepper arriving last as a slow warmth at the back of the throat. It sweetens and spices in a single spoon.",
+      "howToUse": [
+        "Stir a heaped teaspoon into a cup of hot milk for haldi doodh.",
+        "Use the same measure in hot water for a caffeine-free evening drink.",
+        "Add half a teaspoon to a brewing pot of chai alongside the tea leaves.",
+        "Dust over porridge or warm oats on a cold morning."
+      ],
+      "sourcing": "Our own jaggery powder blended with turmeric, dried ginger, black pepper and cinnamon in the proportions used for haldi doodh at home. The black pepper is not there for heat: piperine is what makes the curcumin in turmeric absorbable, and the two have been paired for exactly this reason for centuries.",
+      "faqs": [
+        {
+          "q": "How much should I use per cup?",
+          "a": "A heaped teaspoon to a standard cup of milk or water. Stir it into liquid that is hot but not boiling, and give it a moment — the turmeric needs a few seconds to come off the bottom."
+        },
+        {
+          "q": "Why is there black pepper in a sweet drink?",
+          "a": "It is functional rather than a flavouring. Piperine, the active compound in black pepper, substantially improves how much curcumin from the turmeric your body can absorb. The quantity is small enough that it reads as warmth, not heat."
+        },
+        {
+          "q": "Does it work with plant milk?",
+          "a": "Yes. It dissolves the same way in soy, almond or oat milk. Oat milk suits it best, since its own sweetness sits well with the cinnamon."
+        }
+      ]
     },
     {
       "slug": "jaggery-spread",
@@ -140,7 +301,30 @@
       "ingredients": "Pure sugarcane juice, clarified butter (ghee)",
       "shelfLife": "3 months refrigerated after opening",
       "origin": "Sankhuwasabha, Koshi Province, Nepal",
-      "category": "Liquid"
+      "category": "Liquid",
+      "harvest": "November 2025",
+      "tastingNotes": "The ghee changes everything. Where our liquid jaggery is bright and pourable, this is thick, buttery and closer to a dulce de leche — rounder, richer, and heavy enough to sit on toast without running off the edges. The finish is nutty in a way no cane-only jaggery gets to.",
+      "howToUse": [
+        "Spread thickly on hot toast, where it softens into the surface.",
+        "Roll inside a warm roti or paratha for the classic gur-and-ghee breakfast.",
+        "Use as a filling for pastries, buns and stuffed puri.",
+        "Stir a spoonful through porridge instead of butter and sugar."
+      ],
+      "sourcing": "Fresh cane juice reduced slowly with clarified butter folded in towards the end, which is what gives it both the body and the keeping behaviour of a dairy product. There are no added thickeners, emulsifiers or preservatives, so it separates and firms the way a real reduction does.",
+      "faqs": [
+        {
+          "q": "Is it vegan?",
+          "a": "No. This is the one product in our range that is not — it contains clarified butter (ghee), which is a dairy ingredient. If you want a dairy-free spread-style option, our Liquid Jaggery is the closest, though it is thinner."
+        },
+        {
+          "q": "Does it have to be refrigerated?",
+          "a": "Once opened, yes, and it keeps for three months from then. The ghee content is why the window is shorter than for our other products. Use a clean, dry spoon each time."
+        },
+        {
+          "q": "It sets hard in the fridge and won't spread. What do I do?",
+          "a": "That is the ghee firming up, exactly as butter does. Take the jar out ten to fifteen minutes before you need it, or warm a spoonful briefly. Do not microwave the whole jar, as reheating it repeatedly will split the spread."
+        }
+      ]
     }
   ],
   "testimonials": [
