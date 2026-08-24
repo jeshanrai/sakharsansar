@@ -5,6 +5,7 @@ import PromoBar from "@/components/layout/PromoBar";
 import Navbar from "@/components/layout/Navbar";
 import FloatingContact from "@/components/layout/FloatingContact";
 import JsonLd from "@/components/seo/JsonLd";
+import Analytics from "@/components/seo/Analytics";
 import { BLOG_ENABLED } from "@/lib/blog";
 import { siteGraphLd } from "@/lib/seo";
 import { SITE, SITE_URL } from "@/lib/site";
@@ -116,11 +117,14 @@ export const metadata: Metadata = {
       "max-video-preview": -1,
     },
   },
-  // Set GOOGLE_SITE_VERIFICATION in the host's env after claiming the new
-  // domain in Search Console; the tag stays off until then.
-  ...(process.env.GOOGLE_SITE_VERIFICATION
-    ? { verification: { google: process.env.GOOGLE_SITE_VERIFICATION } }
-    : {}),
+  // Search Console ownership token. It ships in the public HTML by design, so
+  // it lives here rather than in the host's env; GOOGLE_SITE_VERIFICATION can
+  // still override it if the property is ever re-verified.
+  verification: {
+    google:
+      process.env.GOOGLE_SITE_VERIFICATION ||
+      "EMvfP2UCrvxmGFIQCJiDm_Weqyp5ta5fY799Flplfno",
+  },
 };
 
 export const viewport: Viewport = {
@@ -163,6 +167,7 @@ export default function RootLayout({
         <Navbar />
         {children}
         <FloatingContact />
+        <Analytics />
       </body>
     </html>
   );

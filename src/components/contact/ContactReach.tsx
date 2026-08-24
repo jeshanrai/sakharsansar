@@ -1,7 +1,8 @@
 import React from "react";
-import { Phone, Mail, MapPin, Clock, Facebook, Instagram, Youtube } from "lucide-react";
+import { Phone, Mail, MapPin, Clock } from "lucide-react";
 import { SlideInLeft, SlideInRight, FadeUp } from "@/components/ui/Animations";
 import { AnimatedWave } from "@/components/ui/StoryArt";
+import { SOCIAL_LINKS } from "@/components/ui/SocialLinks";
 import ContactForm from "./ContactForm";
 import { SITE } from "@/lib/site";
 
@@ -32,12 +33,6 @@ const CHANNELS = [
     href: "https://maps.google.com/?q=Kapan+Kathmandu+Nepal",
     note: "Made in Sankhuwasabha by 42 farming families",
   },
-];
-
-const SOCIAL = [
-  { icon: Facebook, href: "https://facebook.com/sakharsansar", label: "Facebook" },
-  { icon: Instagram, href: "https://instagram.com/sakharsansar", label: "Instagram" },
-  { icon: Youtube, href: "https://youtube.com/@sakharsansar", label: "YouTube" },
 ];
 
 /**
@@ -110,7 +105,7 @@ export default function ContactReach() {
             {/* Socials */}
             <div className="flex items-center gap-3 pt-2">
               <span className="label-caps text-cream/60">Follow</span>
-              {SOCIAL.map(({ icon: Icon, href, label }) => (
+              {SOCIAL_LINKS.map(({ icon: Icon, href, label }) => (
                 <a
                   key={label}
                   href={href}

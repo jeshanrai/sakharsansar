@@ -49,13 +49,22 @@ export const SITE = {
     locality: "Sankhuwasabha",
     region: "Koshi Province",
   },
+  /** The accounts the brand actually runs. Every on-page follow link and the
+   *  `sameAs` in JSON-LD read from here — a profile listed that nobody posts
+   *  to is a dead link to a visitor and an unverifiable claim to a crawler. */
   social: [
-    "https://facebook.com/sakharsansar",
-    "https://instagram.com/sakharsansar",
-    "https://tiktok.com/@sakharsansar",
-    "https://youtube.com/@sakharsansar",
+    { label: "Facebook", href: "https://www.facebook.com/profile.php?id=61574743737954" },
+    { label: "TikTok", href: "https://www.tiktok.com/@sakharsansar" },
   ],
 } as const;
+
+/**
+ * The GA4 measurement ID for the `sakharsansar` web stream (property stream
+ * 15494414844). Not a secret — it ships in the page source of every tagged
+ * site — so it lives here beside the rest of the site's identity rather than
+ * in env, where an unset variable would silently stop all measurement.
+ */
+export const GA_MEASUREMENT_ID = "G-GTTK37319Z";
 
 /**
  * The commercial terms the storefront quotes back to the customer.

@@ -91,7 +91,7 @@ export function organizationLd(): Json {
         availableLanguage: ["en", "ne"],
       },
     ],
-    sameAs: [...SITE.social],
+    sameAs: SITE.social.map((s) => s.href),
   };
 }
 
