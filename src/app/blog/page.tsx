@@ -105,8 +105,17 @@ export default function BlogList() {
           />
 
           <div className="max-w-[1280px] mx-auto">
+            {/* The H1 here was the single word "Blog", which describes the
+                page but names nothing anyone searches for — on the hub that
+                holds eleven articles about jaggery. The display word stays as
+                it is; the subject matter goes in a second line at body scale,
+                the same shape as the /shop header above its intro paragraph. */}
             <h1 className="font-marker uppercase text-jaggery leading-[0.9] tracking-tight text-[clamp(3rem,9vw,6.5rem)]">
               Blog
+              <span className="block mt-4 font-sans normal-case font-medium tracking-normal text-jaggery/70 text-[clamp(0.95rem,1.6vw,1.15rem)] leading-snug max-w-2xl">
+                Jaggery recipes, health benefits and farm stories from
+                Sankhuwasabha.
+              </span>
             </h1>
           </div>
 
