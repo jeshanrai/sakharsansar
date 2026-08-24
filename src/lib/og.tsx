@@ -33,10 +33,9 @@ const LEAF = "#0F5A2C";
 /**
  * Read the MIME type from the file's own magic bytes, not its extension.
  *
- * Several images in `public/` are PNGs saved with a `.jpg` extension
- * (`products/jaggery-block.jpg`, `products/jaggery-cubes.jpg`). Trusting the
- * extension hands the renderer `data:image/jpeg` wrapping PNG bytes, which it
- * cannot decode — and it fails *silently*, dropping the photo and leaving a
+ * Some images in `public/` are PNGs saved with a `.jpg` extension. Trusting
+ * the extension hands the renderer `data:image/jpeg` wrapping PNG bytes, which
+ * it cannot decode — and it fails *silently*, dropping the photo and leaving a
  * blank half-card that still builds green. Sniffing is the only way to be sure.
  */
 function sniffMime(buf: Buffer): string {

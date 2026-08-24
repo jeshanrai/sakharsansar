@@ -39,8 +39,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     // No brand suffix — the root layout's `title.template` appends
     // "| SakharSansar". The weight is carried in the title because size is a
-    // real qualifier people search on ("jaggery powder 500g").
-    title: `${product.name} — ${product.weight} Pure Himalayan Sakhar`,
+    // real qualifier people search on ("jaggery powder 250g"). The trailing
+    // qualifier comes from the product's own record — the nut mix is not
+    // "Pure Himalayan Sakhar", it is dry fruit with sakhar on it.
+    title: `${product.name} — ${product.weight} ${product.seoQualifier}`,
     description: product.longDescription.slice(0, 160),
     alternates: alternates({ canonical: `/products/${product.slug}` }),
     openGraph: openGraph({
@@ -74,12 +76,12 @@ export default async function ProductPage({ params }: Props) {
     { name: product.name, path: `/products/${product.slug}` },
   ]);
 
-  // FAQ — the first three are written for this product specifically (its
-  // format, its ingredients, its storage behaviour); the last two are the
-  // genuinely sitewide questions. Previously all five were templated off the
-  // product name, which meant eight pages carrying the same five answers with
-  // one noun swapped — a large part of why Google read the catalogue as one
-  // page repeated and left most of it out of the index.
+  // FAQ — the product's own questions come first (its format, its ingredients,
+  // its storage behaviour); the last two are the genuinely sitewide ones.
+  // These were once templated off the product name, which meant every page
+  // carried the same five answers with one noun swapped — a large part of why
+  // Google read the catalogue as one page repeated and left most of it out of
+  // the index.
   const faqs = [
     ...product.faqs,
     {
@@ -96,11 +98,11 @@ export default async function ProductPage({ params }: Props) {
 
   // Expandable detail sections.
   //
-  // Every one of these used to be hardcoded prose shared by all eight products
-  // — the same tasting notes, the same four serving suggestions, the same
-  // "cane is harvested at first light" sourcing paragraph. That was inaccurate
-  // as well as duplicative: Date Palm Jaggery is tapped sap, not pressed cane,
-  // and the Spread contains ghee. They now read from the product's own record.
+  // Every one of these used to be hardcoded prose shared by every product —
+  // the same tasting notes, the same four serving suggestions, the same "cane
+  // is harvested at first light" sourcing paragraph. That was inaccurate as
+  // well as duplicative: the dry fruit mix is coated, not pressed and moulded.
+  // They now read from the product's own record.
   const sections = [
     {
       title: "Tasting Notes",

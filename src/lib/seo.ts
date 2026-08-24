@@ -8,8 +8,8 @@ import { SITE, absoluteUrl } from "./site";
  * render, so the markup can never drift from what a visitor actually sees —
  * which is exactly what Google penalises. Entities are given stable `@id`
  * values and cross-referenced, so crawlers merge the Organization mentioned
- * on eight different pages into one node in their knowledge graph instead of
- * eight competing ones.
+ * on every product page into one node in their knowledge graph instead of a
+ * set of competing ones.
  */
 
 export const ORG_ID = absoluteUrl("/#organization");

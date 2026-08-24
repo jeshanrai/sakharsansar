@@ -49,8 +49,8 @@ const chapters: Chapter[] = [
     body:
       "Wood-fire, iron kadhai, wooden spoon, wooden mould. Nothing else. No bleach, no sulphur, no anti-caking agents, none of the shortcuts that let factories sell cheap, pale jaggery year-round. Ours is amber because the fire made it amber, and sweet because the cane was sweet.",
     quote: "Anything you add to it is something you have to take out of yourself.",
-    image: "/products/jaggery-block.jpg",
-    imageAlt: "A hand-poured block of pure amber jaggery, set in a wooden mould",
+    image: "/products/sakhar-block.jpg",
+    imageAlt: "Hand-poured discs of pure amber sakhar, set in open air",
     align: "right",
     cta: { label: "Shop the harvest", href: "/shop" },
   },
@@ -60,8 +60,8 @@ const chapters: Chapter[] = [
     body:
       "We pay our farmers above market for chemical-free cane. We pack only what we can ship within forty-eight hours. We use compostable kraft paper from a women's cooperative in the next valley. None of this scales easily, and that is exactly the point.",
     quote: "Sweetness should not cost the land. It should cost only patience.",
-    image: "/products/liquid-jaggery.jpg",
-    imageAlt: "Golden liquid jaggery being poured, packed in compostable kraft paper",
+    image: "/products/sakhar-powder.jpg",
+    imageAlt: "Sakhar powder packed in a compostable kraft pouch",
     align: "left",
     cta: { label: "Browse the range", href: "/shop" },
   },

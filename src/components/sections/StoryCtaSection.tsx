@@ -14,21 +14,21 @@ type RangeCard = {
 const cards: RangeCard[] = [
   {
     label: "Block",
-    image: "/products/jaggery-block.jpg",
-    alt: "Pure amber jaggery blocks, set in wooden moulds",
-    href: "/shop",
+    image: "/products/sakhar-block.jpg",
+    alt: "Pure amber sakhar discs, hand-poured and set in open air",
+    href: "/products/organic-jaggery-block",
   },
   {
     label: "Powder",
-    image: "/products/jaggery-powder.jpg",
-    alt: "Soft golden jaggery powder, stone-ground from wood-fired blocks",
-    href: "/shop",
+    image: "/products/sakhar-powder.jpg",
+    alt: "Soft golden sakhar powder, crushed from wood-fired blocks",
+    href: "/products/jaggery-powder",
   },
   {
-    label: "Liquid",
-    image: "/products/liquid-jaggery.jpg",
-    alt: "Golden liquid jaggery, slow-poured and chemical-free",
-    href: "/shop",
+    label: "Dry Fruits",
+    image: "/products/dry-fruits-mixed.jpg",
+    alt: "Mixed dry fruits coated in wood-fired sakhar",
+    href: "/products/mixed-dry-fruits",
   },
 ];
 

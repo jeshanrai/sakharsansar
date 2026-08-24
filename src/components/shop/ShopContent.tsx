@@ -35,8 +35,7 @@ function ratingFor(slug: string) {
 
 function badgeFor(slug: string, index: number): { label: string; tone: string } | null {
   if (index === 0) return { label: "Bestseller", tone: "bg-jaggery text-cream" };
-  if (slug === "jaggery-spread" || slug === "spiced-jaggery-mix")
-    return { label: "New", tone: "bg-honey text-jaggery" };
+  if (slug === "mixed-dry-fruits") return { label: "New", tone: "bg-honey text-jaggery" };
   return null;
 }
 
@@ -55,9 +54,9 @@ const SORT_OPTIONS = [
 
 const PRICE_RANGES = [
   { label: "Any Price", min: 0, max: Infinity },
-  { label: "Under Rs. 300", min: 0, max: 299 },
-  { label: "Rs. 300 – 500", min: 300, max: 500 },
-  { label: "Above Rs. 500", min: 501, max: Infinity },
+  { label: "Under Rs. 200", min: 0, max: 199 },
+  { label: "Rs. 200 – 300", min: 200, max: 300 },
+  { label: "Above Rs. 300", min: 301, max: Infinity },
 ];
 
 /* ─────────────────────────── Product Card (unchanged) ─────────────────────────── */
@@ -71,10 +70,6 @@ const ShopProductCard = memo(function ShopProductCard({
   const { rating, count } = ratingFor(product.slug);
   const isWishlisted = useIsFavourite(product.slug);
   const badge = badgeFor(product.slug, index);
-  const hasDiscount = index < 2;
-  const originalPrice = hasDiscount
-    ? `Rs. ${Math.round(parsePrice(product.price) * 1.25)}`
-    : null;
 
   return (
     <motion.article
@@ -160,10 +155,8 @@ const ShopProductCard = memo(function ShopProductCard({
           <span className="font-display font-bold text-cream text-[24px] sm:text-[26px] tracking-tight nums-price leading-none">
             {product.price}
           </span>
-          {originalPrice && (
-            <span className="text-[13px] text-cream/60 line-through nums-price font-medium">
-              {originalPrice}
-            </span>
+          {product.weight === "1kg" && (
+            <span className="text-[12px] text-cream/70 font-medium">per kg</span>
           )}
         </div>
       </div>

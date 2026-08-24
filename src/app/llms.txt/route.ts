@@ -42,7 +42,7 @@ export async function GET() {
 - Origin: Sankhuwasabha, Koshi Province, Nepal (Himalayan foothills near the Arun river and Makalu peaks).
 - Method: sugarcane juice slow-reduced over open wood fire in an iron kadhai, set in wooden moulds.
 - Made by: a cooperative of 42 farming families, paid above market for chemical-free cane.
-- Forms sold: blocks, powder, cubes, liquid jaggery and related products.
+- Forms sold: 1kg sakhar blocks, 250g sakhar powder, and 100g mixed dry fruits coated in sakhar.
 
 ## Pages
 - [Home](${BASE_URL}/): brand overview and bestsellers.

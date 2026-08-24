@@ -21,8 +21,8 @@ export default function StoryNatureSection() {
           <VideoFrame
             variant="ambient"
             src="/media/jaggery-block.mp4"
-            poster="/products/jaggery-block.jpg"
-            posterAlt="A hand-poured block of pure amber jaggery, set in a wooden mould"
+            poster="/products/sakhar-block.jpg"
+            posterAlt="Hand-poured discs of pure amber sakhar, set in open air"
             className="aspect-[5/4] w-full ring-1 ring-cream/10 shadow-2xl shadow-grove-deep/40"
           />
         </SlideInLeft>

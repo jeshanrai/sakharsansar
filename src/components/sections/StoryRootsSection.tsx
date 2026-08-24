@@ -45,8 +45,8 @@ export default function StoryRootsSection() {
         <SlideInRight className="lg:col-span-7 lg:order-last">
           <div className="relative aspect-[5/4] w-full overflow-hidden rounded-[1.75rem] ring-1 ring-jaggery/10 shadow-xl shadow-jaggery/15">
             <Image
-              src="/products/jaggery-powder.jpg"
-              alt="Mineral-rich amber jaggery, ground from chemical-free Himalayan cane"
+              src="/products/sakhar-powder.jpg"
+              alt="Mineral-rich amber sakhar powder, crushed from chemical-free Himalayan cane"
               fill
               loading="lazy"
               sizes="(max-width: 1024px) 100vw, 60vw"

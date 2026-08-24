@@ -23,7 +23,7 @@ export const metadata: Metadata = {
 };
 
 const LINKS = [
-  { href: "/shop", label: "Shop all sakhar", hint: "Eight pure forms, blocks to liquid" },
+  { href: "/shop", label: "Shop all sakhar", hint: "Blocks, powder and dry fruits" },
   { href: "/our-story", label: "Our story", hint: "Seven generations in Sankhuwasabha" },
   ...(BLOG_ENABLED
     ? [{ href: "/blog", label: "The journal", hint: "Recipes, benefits and farm notes" }]

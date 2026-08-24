@@ -21,12 +21,16 @@ function ratingFor(slug: string) {
 
 function badgeFor(slug: string, index: number): { label: string; tone: string } | null {
   if (index === 0) return { label: "Bestseller", tone: "bg-jaggery text-cream" };
-  if (slug === "jaggery-spread" || slug === "spiced-jaggery-mix")
-    return { label: "New", tone: "bg-honey text-jaggery" };
+  if (slug === "mixed-dry-fruits") return { label: "New", tone: "bg-honey text-jaggery" };
   return null;
 }
 
-const CATEGORIES = ["All", "Blocks", "Powder", "Cubes", "Liquid"] as const;
+// Derived from the data so adding or retiring a product never leaves a filter
+// pointing at an empty shelf.
+const CATEGORIES = [
+  "All",
+  ...Array.from(new Set(data.products.map((p) => p.category))),
+] as const;
 type Category = (typeof CATEGORIES)[number];
 
 // Card backdrop — matches the hero sugarcane bg for visual continuity
@@ -60,7 +64,7 @@ export default function ProductsSection() {
             </h2>
           </div>
           <p className="text-jaggery/60 text-[15px] leading-relaxed max-w-sm sm:text-right">
-            100% organic sakhar in eight pure forms, one chemical-free harvest. Direct from Sankhuwasabha farmers.
+            100% organic sakhar in three pure forms, one chemical-free harvest. Direct from Sankhuwasabha farmers.
           </p>
         </div>
 
@@ -116,7 +120,7 @@ export default function ProductsSection() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -2 }}
             transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-7"
+            className="grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-7"
           >
             {filtered.map((product, i) => (
               <ProductCard
@@ -142,7 +146,7 @@ export default function ProductsSection() {
             href="/shop"
             className="group inline-flex items-center gap-2 label-caps text-[10px] text-jaggery border-b border-jaggery/30 pb-1.5"
           >
-            View all 8 forms
+            View all {data.products.length} forms
             <ArrowRight
               className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform"
               strokeWidth={1.75}
@@ -165,10 +169,6 @@ const ProductCard = memo(function ProductCard({
   const { rating, count } = ratingFor(product.slug);
   const isWishlisted = useIsFavourite(product.slug);
   const badge = badgeFor(product.slug, index);
-  const hasDiscount = index < 2;
-  const originalPrice = hasDiscount
-    ? `Rs. ${Math.round(Number(product.price.replace(/[^0-9]/g, "")) * 1.25)}`
-    : null;
 
   return (
     <motion.article
@@ -276,10 +276,8 @@ const ProductCard = memo(function ProductCard({
           <span className="font-display font-bold text-cream text-[24px] sm:text-[26px] tracking-tight nums-price leading-none">
             {product.price}
           </span>
-          {originalPrice && (
-            <span className="text-[13px] text-cream/60 line-through nums-price font-medium">
-              {originalPrice}
-            </span>
+          {product.weight === "1kg" && (
+            <span className="text-[12px] text-cream/70 font-medium">per kg</span>
           )}
         </div>
       </div>

@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   // "| SakharSansar" to every child segment's title.
   title: "Shop Pure Sakhar: Organic Himalayan Jaggery",
   description:
-    "Shop 100% organic Sakhar, wood-fired Himalayan jaggery from Sankhuwasabha. Eight pure forms (blocks, powder, cubes, liquid) direct from farmers. Chemical-free, premium quality.",
+    "Shop 100% organic Sakhar, wood-fired Himalayan jaggery from Sankhuwasabha. Blocks, powder and sakhar-coated dry fruits, direct from farmers. Chemical-free, premium quality.",
   keywords: [
     "Buy Sakhar Online",
     "Shop Organic Sakhar",
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
   openGraph: openGraph({
     title: "Shop Pure Sakhar: Organic Himalayan Jaggery",
     description:
-      "100% organic sakhar from Sankhuwasabha: eight pure forms, direct from farmers, shipped pan-Nepal.",
+      "100% organic sakhar from Sankhuwasabha: blocks, powder and dry fruits, direct from farmers, shipped pan-Nepal.",
     url: "/shop",
     type: "website",
   }),
@@ -86,9 +86,9 @@ export default function ShopPage() {
             Shop Pure Sakhar
           </h1>
           <p className="mt-4 max-w-2xl text-[15px] sm:text-base text-jaggery/70 leading-relaxed">
-            Eight forms of 100% organic Himalayan jaggery — blocks, powder,
-            cubes and liquid — wood-fired without chemicals by our farming
-            cooperative in Sankhuwasabha, and shipped across Nepal.
+            Three forms of 100% organic Himalayan jaggery — blocks, powder
+            and sakhar-coated dry fruits — wood-fired without chemicals by our
+            farming cooperative in Sankhuwasabha, and shipped across Nepal.
           </p>
         </header>
         <ShopContent />

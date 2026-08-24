@@ -1,21 +1,20 @@
 import { renderOgCard, OG_SIZE, OG_CONTENT_TYPE } from "@/lib/og";
 
 export const alt =
-  "Shop pure Sakhar: eight forms of organic, wood-fired Himalayan jaggery from Sankhuwasabha";
+  "Shop pure Sakhar: blocks, powder and dry fruits, wood-fired in Sankhuwasabha";
 export const size = OG_SIZE;
 export const contentType = OG_CONTENT_TYPE;
 
 export default async function Image() {
   return renderOgCard({
     eyebrow: "SHOP · SANKHUWASABHA",
-    title: "Eight Forms of Pure Sakhar",
+    title: "Three Forms of Pure Sakhar",
     subtitle:
-      "Blocks, powder, cubes and liquid jaggery, direct from farmers.",
+      "Blocks, powder and sakhar-coated dry fruits, direct from farmers.",
     chips: ["Chemical Free", "Wood-Fired", "Ships Pan-Nepal"],
-    // Deliberately NOT a /products/* photo: every image in that folder is a
-    // "gudworld"-branded packshot from another company, so putting one on the
-    // shop's social card would advertise a competitor's packaging. Swap this
-    // for a real SakharSansar product shot once one exists.
-    image: "/hero.jpg",
+    // Now a real SakharSansar shot — our own kraft pouch with our own sticker
+    // on it. The note that used to sit here warned that this folder held
+    // another company's branded packshots; those have been removed.
+    image: "/products/sakhar-powder.jpg",
   });
 }

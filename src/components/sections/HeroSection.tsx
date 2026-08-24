@@ -19,9 +19,6 @@ type Slide = {
   eyebrowTone: "honey" | "terracotta" | "forest";
   headlineTop: string;
   headlineAccent: string;
-  price: string;
-  strike: string;
-  badge: string;
   ctaLabel: string;
   ctaHref: string;
   product: string;
@@ -30,17 +27,14 @@ type Slide = {
 
 const SLIDES: Slide[] = [
   {
-    id: "harvest",
+    id: "block",
     eyebrow: "100% Organic · No Chemicals",
     eyebrowTone: "honey",
     headlineTop: "Pure Sakhar.",
     headlineAccent: "Wood-fired.",
-    price: "Rs. 500",
-    strike: "Rs. 650",
-    badge: "Save 23%",
     ctaLabel: "Shop sakhar",
     ctaHref: "/products/organic-jaggery-block",
-    product: "/products/jaggery-block.jpg",
+    product: "/products/sakhar-block.jpg",
     imageBg: "from-honey/55 via-honey/15 to-transparent",
   },
   {
@@ -49,26 +43,20 @@ const SLIDES: Slide[] = [
     eyebrowTone: "terracotta",
     headlineTop: "Organic Sakhar.",
     headlineAccent: "Ready to brew.",
-    price: "Rs. 450",
-    strike: "Rs. 560",
-    badge: "20% Off",
     ctaLabel: "Shop powder",
     ctaHref: "/products/jaggery-powder",
-    product: "/products/jaggery-powder.jpg",
+    product: "/products/sakhar-powder.jpg",
     imageBg: "from-caramel/45 via-caramel/15 to-transparent",
   },
   {
-    id: "gift",
-    eyebrow: "Premium · Festive Trio",
+    id: "dry-fruits",
+    eyebrow: "Nuts · Set in Sakhar",
     eyebrowTone: "forest",
-    headlineTop: "Farmer's Sakhar.",
-    headlineAccent: "Hand-tied.",
-    price: "Rs. 1,290",
-    strike: "Rs. 1,600",
-    badge: "Free Ship",
-    ctaLabel: "Send gift",
-    ctaHref: "/shop",
-    product: "/products/jaggery-cubes.jpg",
+    headlineTop: "Dry Fruits.",
+    headlineAccent: "Sakhar-coated.",
+    ctaLabel: "Shop dry fruits",
+    ctaHref: "/products/mixed-dry-fruits",
+    product: "/products/dry-fruits-mixed.jpg",
     imageBg: "from-forest/35 via-honey/15 to-transparent",
   },
 ];

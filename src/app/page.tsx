@@ -55,7 +55,7 @@ export default function Home() {
   // The business itself is described once in the root layout's sitewide graph.
   // What the home page adds is the WebPage node and the catalogue listing.
   //
-  // Note this is an ItemList of links, not eight full Product blocks. Each
+  // Note this is an ItemList of links, not full Product blocks. Each
   // product's own page carries the authoritative Product + Offer markup;
   // repeating it here would put two pages in competition to be the result
   // Google shows for the same item.

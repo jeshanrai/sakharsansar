@@ -41,8 +41,8 @@ export default function StoryHeritageSection() {
         <SlideInRight className="lg:col-span-7 lg:order-last">
           <div className="relative aspect-[5/4] w-full overflow-hidden rounded-[1.75rem] ring-1 ring-jaggery/10 shadow-xl shadow-jaggery/15">
             <Image
-              src="/products/jaggery1.jpg"
-              alt="Blocks of wood-fired jaggery, made the same way for seven generations"
+              src="/products/sakhar-block-2.jpg"
+              alt="A disc of wood-fired sakhar, made the same way for seven generations"
               fill
               loading="lazy"
               sizes="(max-width: 1024px) 100vw, 60vw"
