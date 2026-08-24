@@ -18,6 +18,35 @@ const RETIRED_POSTS = [
 ];
 
 /**
+ * The six fictional products retired when the catalogue was cut to the three
+ * we actually sell.
+ *
+ * Same reasoning as RETIRED_POSTS, and it applies harder here: these were in
+ * the sitemap, carried Product + Offer structured data, and were linked from
+ * the home page, the shop and several articles. Letting them 404 throws away
+ * whatever ranking and links they had picked up, and leaves Search Console
+ * reporting six errors against URLs we submitted ourselves.
+ *
+ * Each goes to the nearest thing we still sell. Where nothing is close, /shop
+ * is the honest destination rather than a product the visitor did not ask for.
+ */
+const RETIRED_PRODUCTS = [
+  // Hand-cut from the block, sold as a portioned everyday sweetener. The
+  // powder is what fills that role now.
+  { slug: "jaggery-cubes", to: "/products/jaggery-powder" },
+  // Jaggery powder blended with turmeric, ginger and pepper. Same base.
+  { slug: "spiced-jaggery-mix", to: "/products/jaggery-powder" },
+  // A set block, seasonal. The nearest live product is the block.
+  { slug: "date-palm-jaggery", to: "/products/organic-jaggery-block" },
+  // A small sweet snack in a pouch, which is what the dry fruit mix is.
+  { slug: "jaggery-candy", to: "/products/mixed-dry-fruits" },
+  // Nothing pourable or spreadable is left in the range, so these two go to
+  // the shop rather than to a solid block the visitor was not looking for.
+  { slug: "liquid-jaggery", to: "/shop" },
+  { slug: "jaggery-spread", to: "/shop" },
+];
+
+/**
  * Every route that renders a social card via `opengraph-image` / `twitter-image`.
  *
  * Next advertises these as absolute URLs in `og:image` / `twitter:image`, and
@@ -32,8 +61,8 @@ const RETIRED_POSTS = [
  * the photo named in the Product JSON-LD (`/products/*.jpg`), not this card.
  *
  * `:path+` is one-or-more segments, which covers both `/blog/opengraph-image`
- * and `/products/date-palm-jaggery/opengraph-image`; the bare root card needs
- * its own entry.
+ * and `/products/organic-jaggery-block/opengraph-image`; the bare root card
+ * needs its own entry.
  */
 const SOCIAL_CARD_ROUTES = [
   "/opengraph-image",
@@ -78,6 +107,11 @@ const nextConfig: NextConfig = {
         source: `/blog/${slug}`,
         destination: to,
         permanent: true, // 308 — the content is gone for good
+      })),
+      ...RETIRED_PRODUCTS.map(({ slug, to }) => ({
+        source: `/products/${slug}`,
+        destination: to,
+        permanent: true, // 308 — these products are not coming back
       })),
       // /blog itself is only *temporarily* empty: new posts are planned, so
       // this is a 307. A permanent redirect here would hand /blog's identity
