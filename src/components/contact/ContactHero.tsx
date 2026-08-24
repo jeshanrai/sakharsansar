@@ -3,8 +3,9 @@ import Link from "next/link";
 import { ChevronRight, Home, Store, Check, ArrowRight } from "lucide-react";
 import { FadeUp, SlideInLeft, SlideInRight } from "@/components/ui/Animations";
 import { HeartScribble } from "@/components/ui/StoryArt";
+import { SITE } from "@/lib/site";
 
-const PHONE = "9779860149199";
+const PHONE = SITE.phoneDigits;
 const WA_B2B =
   "Hi SakharSansar! I'm interested in wholesale / bulk (B2B) supply of your jaggery.";
 const WA_B2C = "Hi SakharSansar! I'd like to order jaggery for my home.";

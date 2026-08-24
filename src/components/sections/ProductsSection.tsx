@@ -4,20 +4,12 @@ import { memo, useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { Star, Plus, ArrowRight, Heart } from "lucide-react";
+import { Plus, ArrowRight, Heart } from "lucide-react";
 import data from "@/data/content.json";
 import { useIsFavourite, toggleFavourite } from "@/lib/favourites";
 
 type Product = (typeof data.products)[number];
 
-// Deterministic mock rating per product (no Math.random — keeps SSR stable)
-function ratingFor(slug: string) {
-  let h = 0;
-  for (let i = 0; i < slug.length; i++) h = (h * 31 + slug.charCodeAt(i)) & 0xffff;
-  const rating = (4.5 + (h % 5) / 10).toFixed(1);
-  const count = 120 + (h % 400);
-  return { rating, count };
-}
 
 function badgeFor(slug: string, index: number): { label: string; tone: string } | null {
   if (index === 0) return { label: "Bestseller", tone: "bg-jaggery text-cream" };
@@ -166,7 +158,6 @@ const ProductCard = memo(function ProductCard({
   product: Product;
   index: number;
 }) {
-  const { rating, count } = ratingFor(product.slug);
   const isWishlisted = useIsFavourite(product.slug);
   const badge = badgeFor(product.slug, index);
 
@@ -243,20 +234,11 @@ const ProductCard = memo(function ProductCard({
 
       {/* Info */}
       <div className="relative z-10 pt-5 px-1.5 pb-1 flex flex-col [text-shadow:0_1px_2px_rgba(26,20,16,0.28)]">
-        {/* Top meta — category + rating */}
+        {/* Top meta — category */}
         <div className="flex items-center justify-between gap-2 mb-3">
           <span className="text-[10px] font-bold tracking-[0.22em] uppercase text-honey">
             {product.category}
           </span>
-          <div className="flex items-center gap-1.5">
-            <Star className="w-3.5 h-3.5 fill-honey stroke-honey" />
-            <span className="text-[13px] font-bold text-cream tabular-nums leading-none">
-              {rating}
-            </span>
-            <span className="text-[11px] text-cream/75 font-medium leading-none">
-              ({count})
-            </span>
-          </div>
         </div>
 
         {/* Product name — chunky display, locked to two lines so prices align */}

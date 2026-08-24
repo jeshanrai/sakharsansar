@@ -55,9 +55,11 @@ export default function TrustStrip() {
             <span className="label-caps text-honey">Why our sakhar</span>
             <span className="w-8 h-px bg-honey/60" />
           </div>
+          {/* Same adjacent-span problem as the hero H1: without the {" "}
+              this heading parsed as "100% organicPure sakhar". */}
           <h2 className="font-marker uppercase text-cream text-balance leading-[0.95]">
-            <span className="block text-[clamp(2rem,4.5vw,3.5rem)]">100% organic</span>
-            <span className="block text-[clamp(2.5rem,5.5vw,4.5rem)] text-honey mt-1 sm:mt-2">Pure sakhar</span>
+            <span className="block text-[clamp(2rem,4.5vw,3.5rem)]">100% organic.</span>{" "}
+            <span className="block text-[clamp(2.5rem,5.5vw,4.5rem)] text-honey mt-1 sm:mt-2">Pure sakhar.</span>
           </h2>
         </motion.div>
 

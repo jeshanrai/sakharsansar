@@ -15,18 +15,7 @@ export const metadata: Metadata = {
   // "| SakharSansar" to every child segment's title.
   title: "Shop Pure Sakhar: Organic Himalayan Jaggery",
   description:
-    "Shop 100% organic Sakhar, wood-fired Himalayan jaggery from Sankhuwasabha. Blocks, powder and sakhar-coated dry fruits, direct from farmers. Chemical-free, premium quality.",
-  keywords: [
-    "Buy Sakhar Online",
-    "Shop Organic Sakhar",
-    "Pure Sakhar Nepal",
-    "Himalayan Jaggery Shop",
-    "Organic Jaggery Online",
-    "Sankhuwasabha Sakhar",
-    "Chemical-Free Sakhar",
-    "Wood-fired Jaggery",
-    "Premium Gur Nepal",
-  ],
+    "Shop wood-fired organic sakhar from Sankhuwasabha: blocks, powder and sakhar-coated dry fruits. Chemical-free, direct from farmers, shipped pan-Nepal.",
   alternates: alternates({
     canonical: "/shop",
   }),

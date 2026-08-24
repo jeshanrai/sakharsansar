@@ -19,6 +19,7 @@ type OpenGraph = NonNullable<Metadata["openGraph"]>;
 type Twitter = NonNullable<Metadata["twitter"]>;
 type Alternates = NonNullable<Metadata["alternates"]>;
 
+
 /**
  * `alternates` replaces wholesale too — and every page sets a canonical, so
  * the root layout's feed-discovery `<link rel="alternate">` was being dropped
@@ -58,9 +59,24 @@ export const DEFAULT_OG_IMAGE = {
   alt: "SakharSansar: 100% organic, wood-fired Himalayan jaggery from Sankhuwasabha, Nepal",
 } as const;
 
-export function openGraph(overrides: OpenGraph): OpenGraph {
+/**
+ * `omitType` means "this page emits its own og:type, leave it out".
+ *
+ * The product pages need og:type=product, which Next cannot express: its
+ * OpenGraph type is a closed union with no 'product' member, and the resolver
+ * throws on anything outside it. They render the tag themselves and need this
+ * helper to stay quiet, but simply omitting `type` from the overrides falls
+ * back to the "website" default below and ships two competing og:type tags.
+ * Passing `undefined` is no good either — the resolver keys off `'type' in og`,
+ * so the key would still be there and switch(undefined) throws. Hence a
+ * separate flag rather than a sentinel value in the overrides.
+ */
+export function openGraph(
+  overrides: OpenGraph,
+  opts?: { omitType?: boolean },
+): OpenGraph {
   return {
-    type: "website",
+    ...(opts?.omitType ? {} : { type: "website" }),
     siteName: SITE.name,
     locale: SITE.ogLocale,
     ...overrides,

@@ -19,9 +19,19 @@ type Slide = {
   eyebrowTone: "honey" | "terracotta" | "forest";
   headlineTop: string;
   headlineAccent: string;
+  /** Third H1 line. The two display lines above are set at 6–7.5rem and have
+   *  to stay short to hold the layout, which left the site's only H1 naming
+   *  neither the product category nor the country. This line carries both at
+   *  body scale, in the whitespace that already sat between the headline and
+   *  the CTA. */
+  headlineContext: string;
   ctaLabel: string;
   ctaHref: string;
   product: string;
+  /** Alt for the product photo. It was empty, which tells a screen reader the
+   *  image is decorative — but it is the product, and it is the only picture
+   *  of it above the fold. */
+  productAlt: string;
   imageBg: string;
 };
 
@@ -32,9 +42,11 @@ const SLIDES: Slide[] = [
     eyebrowTone: "honey",
     headlineTop: "Pure Sakhar.",
     headlineAccent: "Wood-fired.",
+    headlineContext: "Organic jaggery from Sankhuwasabha, Nepal.",
     ctaLabel: "Shop sakhar",
     ctaHref: "/products/organic-jaggery-block",
     product: "/products/sakhar-block.jpg",
+    productAlt: "A disc of wood-fired organic sakhar from Sankhuwasabha",
     imageBg: "from-honey/55 via-honey/15 to-transparent",
   },
   {
@@ -43,9 +55,11 @@ const SLIDES: Slide[] = [
     eyebrowTone: "terracotta",
     headlineTop: "Organic Sakhar.",
     headlineAccent: "Ready to brew.",
+    headlineContext: "Ground jaggery powder from Sankhuwasabha, Nepal.",
     ctaLabel: "Shop powder",
     ctaHref: "/products/jaggery-powder",
     product: "/products/sakhar-powder.jpg",
+    productAlt: "A pouch of sakhar powder, crushed and sieved from the block",
     imageBg: "from-caramel/45 via-caramel/15 to-transparent",
   },
   {
@@ -54,9 +68,11 @@ const SLIDES: Slide[] = [
     eyebrowTone: "forest",
     headlineTop: "Dry Fruits.",
     headlineAccent: "Sakhar-coated.",
+    headlineContext: "Nuts set in wood-fired jaggery from Sankhuwasabha, Nepal.",
     ctaLabel: "Shop dry fruits",
     ctaHref: "/products/mixed-dry-fruits",
     product: "/products/dry-fruits-mixed.jpg",
+    productAlt: "Mixed nuts coated in wood-fired sakhar",
     imageBg: "from-forest/35 via-honey/15 to-transparent",
   },
 ];
@@ -176,12 +192,22 @@ export default function HeroSection() {
                 </div>
 
                 {/* Headline — chunky display with sticker-cut accent */}
+                {/* The two lines are separate <span>s so each can carry its
+                    own size and colour, but adjacent elements leave no
+                    whitespace between their text nodes: the H1 parsed as
+                    "Pure Sakhar.Wood-fired." for every crawler and screen
+                    reader. The {" "} restores the word break in the accessible
+                    name without affecting the layout, since the spans are
+                    `block` and the space collapses at the line end. */}
                 <h1 className="mt-5 font-display font-bold text-cream tracking-tight text-balance leading-[0.95]">
                   <span className="block text-[clamp(2.75rem,7.5vw,6rem)] drop-shadow-[0_3px_0_rgba(26,20,16,0.18)]">
                     {slide.headlineTop}
-                  </span>
+                  </span>{" "}
                   <span className="block text-[clamp(3.25rem,9vw,7.5rem)] text-forest text-sticker leading-[1.05] mt-2 sm:mt-3">
                     {slide.headlineAccent}
+                  </span>{" "}
+                  <span className="block mt-4 font-sans font-medium tracking-normal text-cream/80 text-[clamp(0.95rem,1.6vw,1.15rem)] leading-snug">
+                    {slide.headlineContext}
                   </span>
                 </h1>
 
@@ -216,7 +242,7 @@ export default function HeroSection() {
                   <div className="relative w-full h-full rounded-[40%_60%_55%_45%/55%_45%_60%_40%] overflow-hidden bg-ivory shadow-2xl shadow-jaggery/20 ring-1 ring-jaggery/5">
                     <Image
                       src={slide.product}
-                      alt=""
+                      alt={slide.productAlt}
                       fill
                       priority={index === 0}
                       sizes="(max-width: 1024px) 80vw, 40vw"

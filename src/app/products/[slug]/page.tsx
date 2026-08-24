@@ -11,7 +11,7 @@ import { Daisy } from "@/components/ui/Doodles";
 import JsonLd from "@/components/seo/JsonLd";
 import { BLOG_ENABLED } from "@/lib/blog";
 import data from "@/data/content.json";
-import { breadcrumbLd, faqLd, productLd } from "@/lib/seo";
+import { breadcrumbLd, faqLd, parsePrice, productLd } from "@/lib/seo";
 import { ArrowLeft, ArrowRight, Leaf, ShieldCheck, Truck } from "lucide-react";
 import { alternates, openGraph, twitter } from "@/lib/metadata";
 
@@ -43,7 +43,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     // qualifier comes from the product's own record — the nut mix is not
     // "Pure Himalayan Sakhar", it is dry fruit with sakhar on it.
     title: `${product.name} — ${product.weight} ${product.seoQualifier}`,
-    description: product.longDescription.slice(0, 160),
+    // Hand-written per product, not sliced out of the body copy. The old
+    // `longDescription.slice(0, 160)` cut every one of these mid-word — the
+    // block's ended "...skimmed by hand and poure" — which is what Google
+    // showed in the result. A description is a piece of copy with a job, not
+    // the first 160 characters of a different piece of copy.
+    description: product.metaDescription,
     alternates: alternates({ canonical: `/products/${product.slug}` }),
     openGraph: openGraph({
       title: `${product.name} · ${product.price}`,
@@ -51,8 +56,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       url: `/products/${product.slug}`,
       // Images come from the colocated opengraph-image.tsx, which renders the
       // product photo at a true 1200×630 with its name and price on it.
-      type: "website",
-    }),
+      //
+      // These pages need og:type=product, which Next cannot express: its
+      // OpenGraph type is a closed union without a 'product' member, and the
+      // resolver throws "Invalid OpenGraph type" on anything outside it.
+      // `other` is no help either — it emits <meta name="og:type">, and Open
+      // Graph parsers only read property=. So the product tags are rendered as
+      // elements in the page body and React hoists them into <head>.
+      //
+      // `omitType` suppresses the helper's "website" default. Without it the
+      // page ships two competing og:type tags.
+    }, { omitType: true }),
     twitter: twitter({
       title: product.name,
       description: product.description,
@@ -140,8 +154,22 @@ export default async function ProductPage({ params }: Props) {
     },
   ];
 
+  // Open Graph product tags. React 19 hoists <meta> rendered anywhere in the
+  // tree up into <head>, which is the only route to `property="og:type"` with
+  // a value Next's metadata union does not carry. See generateMetadata above.
+  // parsePrice, not a fresh regex: "Rs. 400" through `[^0-9.]` leaves the dot
+  // from "Rs." and yields ".400". The Offer schema already learned this.
+  const ogPrice = parsePrice(product.price);
+
   return (
     <>
+      <meta property="og:type" content="product" />
+      <meta property="product:price:amount" content={ogPrice} />
+      <meta property="product:price:currency" content="NPR" />
+      <meta property="product:availability" content="in stock" />
+      <meta property="product:condition" content="new" />
+      <meta property="product:retailer_item_id" content={product.slug} />
+
       <JsonLd data={jsonLd} />
       <JsonLd data={faqJsonLd} />
       <JsonLd data={breadcrumbJsonLd} />

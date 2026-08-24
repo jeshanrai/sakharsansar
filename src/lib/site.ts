@@ -58,6 +58,35 @@ export const SITE = {
 } as const;
 
 /**
+ * The commercial terms the storefront quotes back to the customer.
+ *
+ * These were previously written out longhand wherever they appeared — the
+ * promo bar, /shipping-policy and /llms.txt each carried their own copy of the
+ * free-shipping figure. They agreed, but only by luck: nothing connected them,
+ * so the first person to run a promotion would have moved one and left the
+ * other two contradicting it. A shop that advertises two different thresholds
+ * is a shop that argues with its own customers at checkout.
+ *
+ * `formatRs` is here rather than at each call site so the thousands separator
+ * is decided once. "Rs. 1500" and "Rs. 1,500" on the same page look like two
+ * different numbers to a reader skimming.
+ */
+export const COMMERCE = {
+  /** Order value above which delivery is free, in NPR. */
+  freeShippingThreshold: 1500,
+  discountCode: "SAKHAR10",
+  discountPercent: 10,
+  /** Order value the discount code needs to clear, in NPR. */
+  discountMinimum: 1500,
+} as const;
+
+/** 1500 -> "Rs. 1,500". Nepali grouping is 3-digit up to 5 figures, which is
+ *  where every number we quote sits, so plain en-US grouping is correct here. */
+export function formatRs(amount: number): string {
+  return `Rs. ${amount.toLocaleString("en-US")}`;
+}
+
+/**
  * Turn a site-relative path into an absolute URL.
  * JSON-LD has no `metadataBase` equivalent — every URL inside it must be
  * absolute — so schema builders route through here.

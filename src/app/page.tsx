@@ -19,22 +19,6 @@ export const metadata: Metadata = {
   title: "Sakhar: 100% Organic Jaggery from Sankhuwasabha | SakharSansar",
   description:
     "Buy 100% organic Sakhar (pure Himalayan jaggery) direct from farmers in Sankhuwasabha. Wood-fired, chemical-free, premium quality, shipped pan-Nepal.",
-  keywords: [
-    "Sakhar",
-    "Organic Sakhar",
-    "Pure Sakhar",
-    "Buy Sakhar Online",
-    "100% Organic Jaggery",
-    "Sankhuwasabha Sakhar",
-    "Chemical-Free Sakhar",
-    "Premium Sakhar Nepal",
-    "Sakhar Sansar",
-    "Wood-fired Jaggery",
-    "Himalayan Jaggery",
-    "Organic Gur Nepal",
-    "Direct from Farmers",
-    "Natural Sweetener",
-  ],
   alternates: alternates({
     canonical: "/",
   }),

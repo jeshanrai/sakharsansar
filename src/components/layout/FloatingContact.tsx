@@ -2,14 +2,10 @@
 
 import { usePathname } from "next/navigation";
 import { Phone } from "lucide-react";
+import { SITE } from "@/lib/site";
 
-/**
- * Floating WhatsApp + Call buttons, bottom-right on every public page.
- *
- * ⚠️ Replace PHONE with the real number in international format, digits only
- *    (country code + number, no "+" or spaces). Nepal example: 97798XXXXXXXX.
- */
-const PHONE = "9779860149199";
+/** Floating WhatsApp + Call buttons, bottom-right on every public page. */
+const PHONE = SITE.phoneDigits;
 const WA_MESSAGE =
   "Hi SakharSansar! I'd like to know more about your jaggery.";
 

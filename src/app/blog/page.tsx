@@ -22,14 +22,6 @@ export const metadata: Metadata = {
   // for what it's actually about instead.
   title: "Journal: Jaggery Recipes, Benefits & Farm Stories",
   description: "Letters from Sankhuwasabha: recipes, rituals, and the slow stories behind every block of pure Himalayan jaggery.",
-  keywords: [
-    "jaggery recipes",
-    "jaggery health benefits",
-    "gur vs sugar",
-    "Himalayan jaggery guide",
-    "Sankhuwasabha farming stories",
-    "how jaggery is made",
-  ],
   alternates: alternates({
     canonical: "/blog",
     types: {

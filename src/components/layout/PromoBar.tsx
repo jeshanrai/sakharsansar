@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { Tag, Truck, Sparkles, Flame } from "lucide-react";
+import { COMMERCE, formatRs } from "@/lib/site";
 
 type Msg = {
   icon: typeof Tag;
@@ -10,9 +11,16 @@ type Msg = {
 };
 
 const MESSAGES: Msg[] = [
-  { icon: Tag, text: "Flat 10% off on pure sakhar above Rs. 1,500 with code", highlight: "SAKHAR10" },
+  {
+    icon: Tag,
+    text: `Flat ${COMMERCE.discountPercent}% off on pure sakhar above ${formatRs(COMMERCE.discountMinimum)} with code`,
+    highlight: COMMERCE.discountCode,
+  },
   { icon: Sparkles, text: "100% organic sakhar · No chemicals · Direct from farmers" },
-  { icon: Truck, text: "Free shipping pan-Nepal on orders above Rs. 1,500" },
+  {
+    icon: Truck,
+    text: `Free shipping pan-Nepal on orders above ${formatRs(COMMERCE.freeShippingThreshold)}`,
+  },
   { icon: Flame, text: "Wood-fired sakhar from Sankhuwasabha · Shipped within 24h" },
 ];
 

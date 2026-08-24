@@ -1,6 +1,6 @@
 import content from "@/data/content.json";
 import { BLOG_ENABLED, posts as blog } from "@/lib/blog";
-import { SITE_URL as BASE_URL } from "@/lib/site";
+import { COMMERCE, SITE, SITE_URL as BASE_URL, formatRs } from "@/lib/site";
 
 // Prerender at build time and serve as a static, CDN-cacheable asset.
 export const dynamic = "force-static";
@@ -60,10 +60,10 @@ ${guides}
 - [Terms](${BASE_URL}/terms)
 
 ## Contact
-- Email: sakharsansar@gmail.com
-- Phone / WhatsApp: +977-9860149199
-- Location: Kapan, Kathmandu, Bagmati Province, Nepal (office and dispatch); jaggery made in Sankhuwasabha, Koshi Province.
-- Ships: pan-Nepal. Free shipping over Rs. 1,500.
+- Email: ${SITE.email}
+- Phone / WhatsApp: ${SITE.phone}
+- Location: ${SITE.address.street}, ${SITE.address.locality}, ${SITE.address.region}, Nepal (office and dispatch); jaggery made in ${SITE.origin.locality}, ${SITE.origin.region}.
+- Ships: pan-Nepal. Free shipping over ${formatRs(COMMERCE.freeShippingThreshold)}.
 `;
 
   return new Response(body, {

@@ -18,22 +18,11 @@ import { alternates, openGraph, twitter } from "@/lib/metadata";
 const PAGE_PATH = "/our-story";
 const PAGE_URL = absoluteUrl(PAGE_PATH);
 const PAGE_DESC =
-  "Seven generations of slow sweetness from Sankhuwasabha. Meet the 42 farming families, the wood-fire craft, and the chemical-free promise behind SakharSansar's pure Himalayan jaggery (sakhar).";
+  "Seven generations of wood-fired sakhar in Sankhuwasabha. Meet the 42 farming families, the iron kadhai and the chemical-free method behind it.";
 
 export const metadata: Metadata = {
   title: "Our Story: Wood-Fired Jaggery from Sankhuwasabha",
   description: PAGE_DESC,
-  keywords: [
-    "SakharSansar story",
-    "about Sakhar Sansar",
-    "Sankhuwasabha jaggery",
-    "Himalayan jaggery makers",
-    "wood-fired jaggery Nepal",
-    "chemical-free gur",
-    "traditional jaggery making",
-    "organic jaggery farmers Nepal",
-    "direct from farmers jaggery",
-  ],
   alternates: alternates({ canonical: PAGE_PATH }),
   openGraph: openGraph({
     title: "Our Story | SakharSansar",

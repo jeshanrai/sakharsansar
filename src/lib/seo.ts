@@ -345,7 +345,7 @@ export interface ProductLike {
  * the "." in the "Rs." prefix would otherwise survive as a leading decimal
  * point and produce a price of ".500".
  */
-function parsePrice(price: string): string {
+export function parsePrice(price: string): string {
   const match = price.replace(/,/g, "").match(/\d+(?:\.\d+)?/);
   return match ? match[0] : "";
 }

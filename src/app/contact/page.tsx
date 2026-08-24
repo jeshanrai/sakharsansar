@@ -13,21 +13,11 @@ const OrderDrawer = dynamic(() => import("@/components/layout/OrderDrawer"));
 const PAGE_PATH = "/contact";
 const PAGE_URL = absoluteUrl(PAGE_PATH);
 const PAGE_DESC =
-  "Get in touch with SakharSansar. We sell both retail (B2C) home delivery across Nepal and wholesale (B2B) bulk supply for shops, cafés and hotels. WhatsApp, call or email our farming cooperative in Sankhuwasabha.";
+  "Talk to SakharSansar about retail delivery anywhere in Nepal, or wholesale supply for shops, cafés and hotels. WhatsApp, call or email us.";
 
 export const metadata: Metadata = {
   title: "Contact Us: B2B Wholesale & B2C Orders",
   description: PAGE_DESC,
-  keywords: [
-    "contact SakharSansar",
-    "jaggery wholesale Nepal",
-    "buy jaggery bulk Nepal",
-    "B2B jaggery supplier",
-    "B2C jaggery delivery",
-    "sakhar wholesale",
-    "jaggery reseller Nepal",
-    "Sankhuwasabha jaggery contact",
-  ],
   alternates: alternates({ canonical: PAGE_PATH }),
   openGraph: openGraph({
     title: "Contact SakharSansar | B2B Wholesale & B2C Orders",

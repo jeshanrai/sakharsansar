@@ -3,10 +3,11 @@ import { Phone, Mail, MapPin, Clock, Facebook, Instagram, Youtube } from "lucide
 import { SlideInLeft, SlideInRight, FadeUp } from "@/components/ui/Animations";
 import { AnimatedWave } from "@/components/ui/StoryArt";
 import ContactForm from "./ContactForm";
+import { SITE } from "@/lib/site";
 
 const PHONE_DISPLAY = "+977 98-6014-9199";
-const PHONE = "9779860149199";
-const EMAIL = "sakharsansar@gmail.com";
+const PHONE = SITE.phoneDigits;
+const EMAIL = SITE.email;
 const WA_MESSAGE = "Hi SakharSansar! I'd like to know more about your jaggery.";
 
 const CHANNELS = [

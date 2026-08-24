@@ -4,7 +4,7 @@ import { memo, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { Star, Plus, Heart, X, ChevronRight, ArrowRight, Sparkles } from "lucide-react";
+import { Plus, Heart, X, ChevronRight, ArrowRight, Sparkles } from "lucide-react";
 import data from "@/data/content.json";
 import { useFavourites, useIsFavourite, toggleFavourite, clearFavourites } from "@/lib/favourites";
 import { openOrderDrawer } from "@/components/layout/OrderDrawer";
@@ -13,13 +13,6 @@ type Product = (typeof data.products)[number];
 
 const CARD_BG = "bg-[#2D9577] bg-[url('/hero-cane-bg.jpg')] bg-cover bg-center";
 
-function ratingFor(slug: string) {
-  let h = 0;
-  for (let i = 0; i < slug.length; i++) h = (h * 31 + slug.charCodeAt(i)) & 0xffff;
-  const rating = (4.5 + (h % 5) / 10).toFixed(1);
-  const count = 120 + (h % 400);
-  return { rating, count };
-}
 
 export default function FavouritesContent() {
   const favourites = useFavourites();
@@ -115,7 +108,6 @@ const FavouriteCard = memo(function FavouriteCard({
   product: Product;
   index: number;
 }) {
-  const { rating, count } = ratingFor(product.slug);
   const favourited = useIsFavourite(product.slug);
 
   return (
@@ -180,11 +172,6 @@ const FavouriteCard = memo(function FavouriteCard({
           <span className="text-[10px] font-bold tracking-[0.22em] uppercase text-honey">
             {product.category}
           </span>
-          <div className="flex items-center gap-1.5">
-            <Star className="w-3.5 h-3.5 fill-honey stroke-honey" />
-            <span className="text-[13px] font-bold text-cream tabular-nums leading-none">{rating}</span>
-            <span className="text-[11px] text-cream/75 font-medium leading-none">({count})</span>
-          </div>
         </div>
 
         <Link href={`/products/${product.slug}`} className="block">

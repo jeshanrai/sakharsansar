@@ -3,6 +3,7 @@ import Footer from "@/components/layout/Footer";
 import JsonLd from "@/components/seo/JsonLd";
 import { breadcrumbLd, webPageLd } from "@/lib/seo";
 import { alternates, openGraph, DEFAULT_OG_IMAGE } from "@/lib/metadata";
+import { COMMERCE, formatRs } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Shipping Policy",
@@ -71,7 +72,7 @@ export default function ShippingPolicyPage() {
 
             <section className="bg-white rounded-2xl p-8 sm:p-10">
               <h2 className="font-poppins text-xl sm:text-2xl font-semibold text-[#2C1500] mb-4">Shipping Charges</h2>
-              <p className="text-base sm:text-lg text-[#2C1500]/70 leading-[1.8]">Shipping charges are calculated at checkout based on your delivery location and order weight. <strong className="text-[#2C1500]">Orders above Rs. 1,500 qualify for free shipping</strong> within Nepal.</p>
+              <p className="text-base sm:text-lg text-[#2C1500]/70 leading-[1.8]">Shipping charges are calculated at checkout based on your delivery location and order weight. <strong className="text-[#2C1500]">Orders above {formatRs(COMMERCE.freeShippingThreshold)} qualify for free shipping</strong> within Nepal.</p>
             </section>
 
             <section className="bg-white rounded-2xl p-8 sm:p-10">

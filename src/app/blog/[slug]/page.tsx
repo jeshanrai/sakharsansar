@@ -38,6 +38,38 @@ export async function generateStaticParams() {
  */
 export const dynamicParams = false;
 
+/**
+ * The post's social card, named with the post's own alt text.
+ *
+ * The card art itself still comes from the colocated opengraph-image.tsx —
+ * this only points at that same route and attaches a description of it. It has
+ * to be done here because `export const alt` in that file is a single string
+ * for the whole `[slug]` segment, so all eleven posts advertised one
+ * og:image:alt: "SakharSansar Journal: stories from Sankhuwasabha", which
+ * describes no particular post. `generateImageMetadata` is the documented way
+ * to vary it per slug, but it cannot coexist with the `generateStaticParams` +
+ * `dynamicParams = false` pair that keeps unknown slugs from rendering a card,
+ * and 404ing bad slugs is worth more than a per-slug URL.
+ *
+ * `post.imageAlt` is the alt already written for the hero photo, and the card
+ * is built from that photo, so it describes the image accurately rather than
+ * inventing a second description of the same picture.
+ *
+ * Next appends a content hash to the generated URL for cache busting; the
+ * route serves the same image without it.
+ */
+function socialCard(
+  post: (typeof blogData)[number],
+  route: "opengraph-image" | "twitter-image",
+) {
+  return {
+    url: `/blog/${post.slug}/${route}`,
+    width: 1200,
+    height: 630,
+    alt: post.imageAlt,
+  };
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const resolvedParams = await params;
   const post = blogData.find((p) => p.slug === resolvedParams.slug);
@@ -65,23 +97,22 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
           }
         : {}),
     }),
-    keywords: post.tags,
     authors: [{ name: post.author }],
     openGraph: openGraph({
       title: post.title,
       description: post.description,
       url: `/blog/${post.slug}`,
-      // Card art comes from the colocated opengraph-image.tsx, which sets the
-      // headline over the post's photo at a true 1200×630.
       type: "article",
       publishedTime: post.date,
       modifiedTime: post.updated ?? post.date,
       authors: [post.author],
       tags: post.tags,
+      images: [socialCard(post, "opengraph-image")],
     }),
     twitter: twitter({
       title: post.title,
       description: post.description,
+      images: [socialCard(post, "twitter-image")],
     }),
   };
 }
