@@ -67,6 +67,33 @@ export const SITE = {
 export const GA_MEASUREMENT_ID = "G-GTTK37319Z";
 
 /**
+ * The origin story, in one place.
+ *
+ * The site used to tell two incompatible versions of it. The footer, /contact
+ * and /our-story described "a cooperative of 42 farming families" working
+ * "since seven generations"; the Meet the Maker section and the author bio on
+ * all eleven blog posts said Rashmita "pours every block herself", "one pair
+ * of hands", and founded the business in 2024. Both cannot be true, and a food
+ * brand whose whole argument is honesty cannot afford to be caught choosing.
+ *
+ * The reconciliation, confirmed with the owner: the business is hers and was
+ * founded in 2024; she makes the sakhar; the 42 households across six villages
+ * grow and supply the cane, and have made it this way for seven generations.
+ * The generations belong to the families and the craft, not to the company.
+ *
+ * `summary` is the canonical sentence. Prose elsewhere may be longer, but it
+ * must not contradict this.
+ */
+export const STORY = {
+  founded: "2024",
+  households: 42,
+  villages: 6,
+  generations: "seven",
+  summary:
+    "Founded in 2024 by Rashmita Bhandari, working with 42 farming families in Sankhuwasabha who have made sakhar this way for seven generations.",
+} as const;
+
+/**
  * The commercial terms the storefront quotes back to the customer.
  *
  * These were previously written out longhand wherever they appeared — the

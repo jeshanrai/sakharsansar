@@ -90,7 +90,7 @@ export default function ContactHero() {
               tag="B2B · Wholesale"
               icon={<Store className="w-6 h-6" strokeWidth={1.75} />}
               title="For your business"
-              copy="Stock your store, café or hotel with consistent, certified, chemical-free jaggery at wholesale rates, with packaging built around your brand."
+              copy="Stock your store, café or hotel with consistent, chemical-free jaggery at wholesale rates, made without sulphur, clarifiers or added colour, with packaging built around your brand."
               points={B2B_POINTS}
               ctaLabel="Request a wholesale quote"
               ctaHref="#contact-form"

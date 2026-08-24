@@ -22,11 +22,12 @@ export default function StoryHeritageSection() {
               Seven generations
             </h2>
             <p className="text-jaggery/75 text-body mt-5">
-              Now we&rsquo;re seven generations deep, our cooperative has grown from a
-              single kitchen fire into a family of forty-two households across six
-              villages: farmers, fire-tenders, packers, neighbours. We&rsquo;re as
-              determined today as ever to share honest, wood-fired sweetness and keep an
-              ancient Himalayan craft alive, harvest after harvest, forever.
+              Seven generations have made sakhar on these terraces, long before there
+              was a name on the wrapper. SakharSansar is the newest part of that: founded
+              in 2024, and working now with forty-two households across six villages —
+              farmers, fire-tenders, packers, neighbours. We&rsquo;re as determined today
+              as ever to share honest, wood-fired sweetness and keep an ancient Himalayan
+              craft alive, harvest after harvest.
             </p>
             <Link
               href="/shop"

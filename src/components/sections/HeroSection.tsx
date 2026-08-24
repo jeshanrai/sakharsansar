@@ -265,22 +265,6 @@ export default function HeroSection() {
                   </motion.div>
 
                   {/* Floating mini-stat */}
-                  <motion.div
-                    initial={{ opacity: 0, y: 12 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.7, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
-                    className="absolute -bottom-3 -left-2 sm:-bottom-2 sm:-left-6 bg-cream border border-jaggery/10 rounded-2xl px-3.5 py-2.5 shadow-xl shadow-jaggery/15 flex items-center gap-2.5"
-                  >
-                    <div className="flex -space-x-1.5">
-                      {["bg-honey", "bg-caramel", "bg-terracotta"].map((c, i) => (
-                        <span key={i} className={`w-6 h-6 rounded-full ${c} border-2 border-cream`} />
-                      ))}
-                    </div>
-                    <div className="leading-tight">
-                      <p className="font-serif text-jaggery text-[13px] tracking-tight">12,000+ homes</p>
-                      <p className="text-[10px] text-jaggery/55">love it daily</p>
-                    </div>
-                  </motion.div>
                 </div>
               </div>
             </motion.div>

@@ -1,6 +1,6 @@
 import content from "@/data/content.json";
 import { BLOG_ENABLED, posts as blog } from "@/lib/blog";
-import { COMMERCE, SITE, SITE_URL as BASE_URL, formatRs } from "@/lib/site";
+import { COMMERCE, SITE, SITE_URL as BASE_URL, STORY, formatRs } from "@/lib/site";
 
 // Prerender at build time and serve as a static, CDN-cacheable asset.
 export const dynamic = "force-static";
@@ -35,13 +35,14 @@ export async function GET() {
 
   const body = `# SakharSansar
 
-> ${content.brand.tagline}. SakharSansar makes 100% organic, chemical-free Himalayan jaggery (sakhar/gur), wood-fired by a cooperative of 42 farming families across six villages in Sankhuwasabha, Koshi Province, Nepal. Sold direct from farmers, with no middleman.
+> ${content.brand.tagline}. SakharSansar makes 100% organic, chemical-free Himalayan jaggery (sakhar/gur), wood-fired in Sankhuwasabha, Koshi Province, Nepal. ${STORY.summary} Sold direct, with no middleman.
 
 ## Key facts
 - Product: pure, unrefined jaggery (sakhar) with no bleach, no sulphur, no anti-caking agents, no artificial colour.
 - Origin: Sankhuwasabha, Koshi Province, Nepal (Himalayan foothills near the Arun river and Makalu peaks).
 - Method: sugarcane juice slow-reduced over open wood fire in an iron kadhai, set in wooden moulds.
-- Made by: a cooperative of 42 farming families, paid above market for chemical-free cane.
+- Made by: Rashmita Bhandari, who founded SakharSansar in ${STORY.founded} and makes the sakhar herself.
+- Cane from: ${STORY.households} farming families across ${STORY.villages} villages, paid above market for chemical-free cane.
 - Forms sold: 1kg sakhar blocks, 250g sakhar powder, and 100g mixed dry fruits coated in sakhar.
 
 ## Pages

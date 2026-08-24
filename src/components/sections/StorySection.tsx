@@ -36,8 +36,8 @@ export default function StorySection() {
 
           <FadeUp delay={0.15}>
             <p className="text-jaggery/75 text-lede mt-6 max-w-xl mx-auto text-balance">
-              Come harvest or hard winter, we&rsquo;ve been making honest, wood-fired
-              jaggery from the heart of the Sankhuwasabha hills for seven generations.
+              Come harvest or hard winter, the families we work with have been making
+              honest, wood-fired jaggery in the Sankhuwasabha hills for seven generations.
               After all, there is no greater sweetness than the kind nature makes herself.
             </p>
           </FadeUp>

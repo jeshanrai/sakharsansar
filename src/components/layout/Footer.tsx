@@ -2,7 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Mail, Phone, MapPin } from "lucide-react";
 import { BLOG_ENABLED } from "@/lib/blog";
-import { SITE } from "@/lib/site";
+import { SITE, STORY } from "@/lib/site";
 import { SOCIAL_LINKS } from "@/components/ui/SocialLinks";
 
 const SOCIAL = [
@@ -87,10 +87,14 @@ export default function Footer() {
             {/* Address */}
             <div className="mt-9 space-y-4 text-[15px] leading-relaxed text-jaggery/70 max-w-sm">
               <p>
-                SakharSansar: wood-fired Himalayan jaggery, made by a cooperative of
-                42 farming families in {SITE.origin.locality}, {SITE.origin.region}, Nepal.
+                SakharSansar: wood-fired Himalayan jaggery, founded in {STORY.founded} by
+                Rashmita Bhandari and made with {STORY.households} farming families in{" "}
+                {SITE.origin.locality}, {SITE.origin.region}, Nepal.
               </p>
-              <p>100% organic &amp; chemical-free. Direct from farmers, since seven generations.</p>
+              <p>
+                Chemical-free, and made the way those families have made it for{" "}
+                {STORY.generations} generations.
+              </p>
 
               {/* Reach us — the two details people look for in a footer */}
               <address className="not-italic space-y-2.5 pt-1">
