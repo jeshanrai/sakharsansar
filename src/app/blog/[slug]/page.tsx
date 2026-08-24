@@ -8,14 +8,15 @@ import ArticleBody from "@/components/blog/ArticleBody";
 import { AnimatedWave, Bee } from "@/components/ui/StoryArt";
 import { Daisy } from "@/components/ui/Doodles";
 import JsonLd from "@/components/seo/JsonLd";
-import { posts as blogData, formatPostDate, relatedPosts } from "@/lib/blog";
+import { posts as blogData, formatPostDate, relatedPosts, translationPair } from "@/lib/blog";
 import {
   faqEntries,
   howToSteps,
   parseArticle,
+  recipeParts,
   wordCount as countWords,
 } from "@/lib/article";
-import { ORG_ID, breadcrumbLd, faqLd, howToLd } from "@/lib/seo";
+import { ORG_ID, breadcrumbLd, faqLd, howToLd, recipeLd } from "@/lib/seo";
 import { SITE, absoluteUrl } from "@/lib/site";
 import { ArrowRight, ChevronRight, Clock, Twitter, Facebook, Linkedin, MapPin, Phone, RefreshCw } from "lucide-react";
 import { alternates, openGraph, twitter } from "@/lib/metadata";
@@ -41,6 +42,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const resolvedParams = await params;
   const post = blogData.find((p) => p.slug === resolvedParams.slug);
   if (!post) return { title: "Post Not Found", robots: { index: false } };
+  const pair = translationPair(post.slug);
 
   return {
     // The root layout's `title.template` appends "| SakharSansar", which costs
@@ -48,7 +50,21 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     // full width set `seoTitle` and opt out of the template entirely.
     title: post.seoTitle ? { absolute: post.seoTitle } : post.title,
     description: post.description,
-    alternates: alternates({ canonical: `/blog/${post.slug}` }),
+    alternates: alternates({
+      canonical: `/blog/${post.slug}`,
+      // A translated pair covers one topic in two languages. Without
+      // reciprocal hreflang Google picks one and treats the other as a
+      // near-duplicate; with it, each is served to the audience it was
+      // written for. Both posts declare the pair, so both sides match.
+      ...(pair
+        ? {
+            languages: {
+              [post.lang ?? SITE.lang]: `/blog/${post.slug}`,
+              [pair.lang ?? SITE.lang]: `/blog/${pair.slug}`,
+            },
+          }
+        : {}),
+    }),
     keywords: post.tags,
     authors: [{ name: post.author }],
     openGraph: openGraph({
@@ -83,6 +99,8 @@ export default async function BlogPost({ params }: Props) {
   // the structured data can never describe a heading the page doesn't render.
   const faqs = faqEntries(blocks);
   const steps = howToSteps(blocks);
+  const recipe = post.recipe ? recipeParts(blocks) : null;
+  const lang = post.lang ?? SITE.lang;
 
   const authorInitials = post.author
     .split(" ")
@@ -117,7 +135,7 @@ export default async function BlogPost({ params }: Props) {
     isPartOf: { "@id": absoluteUrl("/blog#blog") },
     datePublished: post.date,
     dateModified: modified,
-    inLanguage: SITE.lang,
+    inLanguage: lang,
     articleSection: post.tags[0],
     keywords: post.tags.join(", "),
     wordCount,
@@ -148,10 +166,27 @@ export default async function BlogPost({ params }: Props) {
             description: post.description,
             path: `/blog/${post.slug}`,
             image: post.image,
-            totalTime: "PT10M",
-            supplies: ["Warm water", "Tincture of iodine", "A piece of sakhar (jaggery)"],
-            tools: ["A clear glass", "A spoon", "Daylight"],
+            totalTime: post.howTo?.totalTime ?? "PT10M",
+            supplies: post.howTo?.supplies,
+            tools: post.howTo?.tools,
             steps,
+          })}
+        />
+      )}
+      {post.recipe && recipe && (
+        <JsonLd
+          data={recipeLd({
+            name: post.title,
+            description: post.description,
+            path: `/blog/${post.slug}`,
+            image: post.image,
+            author: post.author,
+            datePublished: post.date,
+            dateModified: modified,
+            keywords: post.tags,
+            inLanguage: lang,
+            ...post.recipe,
+            ...recipe,
           })}
         />
       )}
@@ -259,7 +294,10 @@ export default async function BlogPost({ params }: Props) {
         </div>
 
         {/* ─── Article body ───────────────────────────────────────── */}
-        <article className="px-6 sm:px-10 lg:px-16 pt-14 sm:pt-20 pb-16">
+        <article
+          lang={lang}
+          className="px-6 sm:px-10 lg:px-16 pt-14 sm:pt-20 pb-16"
+        >
           <div className="max-w-[720px] mx-auto">
             <ArticleBody blocks={blocks} />
 

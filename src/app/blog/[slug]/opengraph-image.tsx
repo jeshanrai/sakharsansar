@@ -21,7 +21,13 @@ export default async function Image({
   const { slug } = await params;
   const post = blogData.find((p) => p.slug === slug) ?? blogData[0];
 
-  const file = await readFile(join(process.cwd(), "public", post.image));
+  // A post whose hero has not been shot yet must not take the build down with
+  // it. The article body already degrades this way — a figure with no file
+  // simply doesn't render — and the social card should behave the same, since
+  // both are downstream of a photographer rather than of the code.
+  const file = await readFile(
+    join(process.cwd(), "public", post.image),
+  ).catch(() => readFile(join(process.cwd(), "public", "hero.jpg")));
   const src = `data:image/jpeg;base64,${file.toString("base64")}`;
 
   const published = new Date(post.date).toLocaleDateString("en-GB", {

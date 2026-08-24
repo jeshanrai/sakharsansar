@@ -87,14 +87,33 @@ export type Block =
       height: number;
     };
 
-/** Heading → anchor id. Must stay stable: HowTo schema points at these. */
+/**
+ * Heading → anchor id. Must stay stable: HowTo and Recipe schema point at these.
+ *
+ * The character class is Unicode-aware rather than `a-z0-9`. On the English
+ * posts the two are identical, because an English heading has nothing in it
+ * but ASCII letters, digits and punctuation. On the Nepali posts they are not:
+ * stripping to `a-z0-9` reduced every Devanagari heading to the empty string,
+ * so a page ended up with several `id=""` anchors, no working in-page links
+ * and no way to tell one section from another.
+ */
 export function slugifyHeading(text: string): string {
   return text
     .toLowerCase()
     .replace(/['’"“”]/g, "")
-    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/[^\p{L}\p{N}]+/gu, "-")
     .replace(/^-+|-+$/g, "");
 }
+
+/**
+ * The heading that opens a post's Q&A, in each language we publish.
+ * FAQPage schema is keyed off it, so a Nepali post has to be able to say it
+ * in Nepali and still be marked up.
+ */
+const FAQ_HEADINGS = new Set([
+  slugifyHeading("Frequently Asked Questions"),
+  slugifyHeading("बारम्बार सोधिने प्रश्नहरू"),
+]);
 
 const FIGURE = /^!\[([^\]]*)\]\(([^)\s]+)(?:\s+"([^"]*)")?\)$/;
 const ORDERED_ITEM = /^\d+\.\s+/;
@@ -292,11 +311,64 @@ export function howToSteps(blocks: Block[]): HowToStep[] {
   });
 }
 
+export interface RecipeParts {
+  ingredients: string[];
+  steps: HowToStep[];
+}
+
+/**
+ * Ingredient lines and named method steps, for Recipe schema.
+ *
+ * Same contract as `howToSteps`: the markup is a function of the prose, so a
+ * recipe card can never promise Google a step the page does not render.
+ * Ingredients are the bullet list under the "Ingredients" H2; steps are the
+ * H3s under the "Method" H2, each carrying its own paragraphs as the
+ * instruction text. Anything else in either section — an aside about which
+ * pan to use, a note on why a batch fails — is left out of the schema and
+ * still renders normally.
+ *
+ * Returns null when the article is not laid out as a recipe, which is what
+ * keeps this off the other posts.
+ */
+export function recipeParts(blocks: Block[]): RecipeParts | null {
+  const all = sections(blocks);
+  const ingredientSection = all.find((s) =>
+    slugifyHeading(s.heading.text).startsWith("ingredients"),
+  );
+  const methodSection = all.find((s) =>
+    slugifyHeading(s.heading.text).startsWith("method"),
+  );
+  if (!ingredientSection || !methodSection) return null;
+
+  const ingredients = ingredientSection.body.flatMap((b) =>
+    b.kind === "list" && !b.ordered ? b.items.map(plainText) : [],
+  );
+
+  // Walk the method section in order, opening a new step at every H3 and
+  // appending the paragraphs that follow it.
+  const steps: HowToStep[] = [];
+  for (const block of methodSection.body) {
+    if (block.kind === "h3") {
+      steps.push({ name: block.text, text: "", anchor: block.id });
+      continue;
+    }
+    const current = steps[steps.length - 1];
+    if (!current) continue;
+    if (block.kind === "p") {
+      current.text = `${current.text} ${plainText(block.inline)}`.trim();
+    } else if (block.kind === "figure" && !current.image) {
+      current.image = block.src;
+    }
+  }
+
+  const named = steps.filter((s) => s.text);
+  if (!ingredients.length || !named.length) return null;
+  return { ingredients, steps: named };
+}
+
 /** The Q&A under the "Frequently Asked Questions" H2, for FAQPage schema. */
 export function faqEntries(blocks: Block[]): { q: string; a: string }[] {
-  const faq = sections(blocks).find(
-    (s) => slugifyHeading(s.heading.text) === "frequently-asked-questions",
-  );
+  const faq = sections(blocks).find((s) => FAQ_HEADINGS.has(slugifyHeading(s.heading.text)));
   if (!faq) return [];
 
   const out: { q: string; a: string }[] = [];

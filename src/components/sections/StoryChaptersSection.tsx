@@ -52,7 +52,16 @@ const chapters: Chapter[] = [
     image: "/products/sakhar-block.jpg",
     imageAlt: "Hand-poured discs of pure amber sakhar, set in open air",
     align: "right",
-    cta: { label: "Shop the harvest", href: "/shop" },
+    // Points at the pillar rather than the shop: this chapter is the claim,
+    // and that article is where the claim is actually argued. Same
+    // BLOG_ENABLED fallback as the first chapter, so an empty journal never
+    // leaves the chapter linking into a 404.
+    cta: BLOG_ENABLED
+      ? {
+          label: "What makes hill sakhar different",
+          href: "/blog/himalayan-jaggery-sankhuwasabha",
+        }
+      : { label: "Shop the harvest", href: "/shop" },
   },
   {
     eyebrow: "The Promise",

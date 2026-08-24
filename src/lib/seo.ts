@@ -207,6 +207,72 @@ export function howToLd(opts: {
 }
 
 /**
+ * Recipe rich result.
+ *
+ * Worth its own builder rather than a HowTo because Recipe is the only schema
+ * type eligible for the image carousel at the top of a recipe SERP, which is
+ * where nearly all the clicks on a query like "chaku recipe" go.
+ *
+ * `nutrition` is deliberately not a parameter. We have not had anything lab
+ * tested, and a guessed calorie count is exactly the kind of invented number
+ * this codebase refuses elsewhere. Google shows the card fine without it.
+ */
+export function recipeLd(opts: {
+  name: string;
+  description: string;
+  /** Path of the page carrying the recipe — steps are anchored inside it. */
+  path: string;
+  image?: string;
+  author: string;
+  datePublished: string;
+  dateModified?: string;
+  /** ISO 8601 durations, e.g. "PT20M". */
+  prepTime?: string;
+  cookTime?: string;
+  totalTime?: string;
+  recipeYield?: string;
+  recipeCategory?: string;
+  recipeCuisine?: string;
+  keywords?: string[];
+  ingredients: string[];
+  steps: { name: string; text: string; anchor: string; image?: string }[];
+  inLanguage?: string;
+}): Json {
+  const url = absoluteUrl(opts.path);
+  return {
+    "@context": "https://schema.org",
+    "@type": "Recipe",
+    "@id": `${url}#recipe`,
+    name: opts.name,
+    description: opts.description,
+    url,
+    inLanguage: opts.inLanguage ?? SITE.lang,
+    ...(opts.image ? { image: absoluteUrl(opts.image) } : {}),
+    author: { "@type": "Person", name: opts.author, worksFor: { "@id": ORG_ID } },
+    publisher: { "@id": ORG_ID },
+    datePublished: opts.datePublished,
+    ...(opts.dateModified ? { dateModified: opts.dateModified } : {}),
+    ...(opts.prepTime ? { prepTime: opts.prepTime } : {}),
+    ...(opts.cookTime ? { cookTime: opts.cookTime } : {}),
+    ...(opts.totalTime ? { totalTime: opts.totalTime } : {}),
+    ...(opts.recipeYield ? { recipeYield: opts.recipeYield } : {}),
+    ...(opts.recipeCategory ? { recipeCategory: opts.recipeCategory } : {}),
+    ...(opts.recipeCuisine ? { recipeCuisine: opts.recipeCuisine } : {}),
+    ...(opts.keywords?.length ? { keywords: opts.keywords.join(", ") } : {}),
+    recipeIngredient: opts.ingredients,
+    recipeInstructions: opts.steps.map((step, i) => ({
+      "@type": "HowToStep",
+      position: i + 1,
+      name: step.name,
+      text: step.text,
+      url: `${url}#${step.anchor}`,
+      ...(step.image ? { image: absoluteUrl(step.image) } : {}),
+    })),
+    mainEntityOfPage: { "@type": "WebPage", "@id": url },
+  };
+}
+
+/**
  * Shipping terms, transcribed from /shipping-policy. Kathmandu Valley is the
  * slowest of the two named regions (3–5 days) and "other locations" runs to
  * 10, so the advertised transit window is 2–10 business days.

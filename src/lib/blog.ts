@@ -43,9 +43,48 @@ export interface BlogPost {
   /** Hero alt text. Falls back to the title, which is rarely descriptive enough. */
   imageAlt?: string;
   tags: string[];
+  /**
+   * BCP-47 language of the body, when it is not the site default. The Nepali
+   * posts set "ne" so the rendered `<article lang>`, the `inLanguage` in the
+   * schema and the hreflang pair all agree — without it Google reads a
+   * Devanagari page as badly written English and ranks it accordingly.
+   */
+  lang?: string;
+  /**
+   * The same topic written in another language, as a slug in this journal.
+   * Declared on BOTH posts of a pair; the page turns it into reciprocal
+   * hreflang links, which is what stops the two being read as duplicates.
+   */
+  translationOf?: string;
+  /**
+   * Consumables and equipment for a post whose H2s are numbered tests, feeding
+   * HowTo schema. Per-post because these were once hardcoded to the iodine
+   * purity test and would have been attached to any post that grew a
+   * "Test 1:" heading.
+   */
+  howTo?: { supplies?: string[]; tools?: string[]; totalTime?: string };
+  /**
+   * Present only on a recipe post. The ingredients and steps come from the
+   * prose (see `recipeParts`); these are the facts the prose cannot carry.
+   */
+  recipe?: {
+    prepTime?: string;
+    cookTime?: string;
+    totalTime?: string;
+    recipeYield?: string;
+    recipeCategory?: string;
+    recipeCuisine?: string;
+  };
 }
 
 export const posts: BlogPost[] = blogData as BlogPost[];
+
+/** The other half of a translation pair, if this post declares one. */
+export function translationPair(slug: string): BlogPost | undefined {
+  const current = posts.find((p) => p.slug === slug);
+  if (!current?.translationOf) return undefined;
+  return posts.find((p) => p.slug === current.translationOf);
+}
 
 /** True once there is at least one post to show. */
 export const BLOG_ENABLED = posts.length > 0;
