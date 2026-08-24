@@ -1,4 +1,5 @@
 import { ImageResponse } from "next/og";
+import { notFound } from "next/navigation";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import data from "@/data/content.json";
@@ -13,6 +14,19 @@ export const alt = "SakharSansar product: pure Himalayan jaggery";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
+/**
+ * Only the slugs that exist. Without this, `/products/<anything>/opengraph-image`
+ * returned HTTP 200 and rendered the *first* product's card, so every typo,
+ * every scraped bad link and every retired slug became a fresh crawlable URL
+ * that never resolved to an error. Search Console caught one:
+ * `/products/date-palm-jaggery/opengraph-image`, crawled on 13 August, for a
+ * product that no longer exists.
+ *
+ * `false` makes the router 404 an unknown slug before this file runs, which is
+ * what `page.tsx` in this segment already does.
+ */
+export const dynamicParams = false;
+
 export function generateStaticParams() {
   return data.products.map((product) => ({ slug: product.slug }));
 }
@@ -23,8 +37,10 @@ export default async function Image({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const product =
-    data.products.find((p) => p.slug === slug) ?? data.products[0];
+  // dynamicParams above means this cannot miss; falling back to another
+  // product's photo would quietly ship the wrong card if it ever did.
+  const product = data.products.find((p) => p.slug === slug);
+  if (!product) notFound();
 
   const file = await readFile(join(process.cwd(), "public", product.image));
   const src = `data:image/jpeg;base64,${file.toString("base64")}`;

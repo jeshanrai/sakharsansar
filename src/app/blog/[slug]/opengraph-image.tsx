@@ -1,4 +1,5 @@
 import { ImageResponse } from "next/og";
+import { notFound } from "next/navigation";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { posts as blogData } from "@/lib/blog";
@@ -8,6 +9,18 @@ import { SITE } from "@/lib/site";
 export const alt = "SakharSansar Journal: stories from Sankhuwasabha";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
+
+/**
+ * Only the slugs that exist. Without this, `/blog/<anything>/opengraph-image`
+ * returned HTTP 200 and rendered the *first* post's card, so every typo,
+ * every scraped bad link and every retired slug became a fresh crawlable URL
+ * that never resolved to an error. The three retired post slugs redirect, but
+ * their card routes did not.
+ *
+ * `false` makes the router 404 an unknown slug before this file runs, which is
+ * what `page.tsx` in this segment already does.
+ */
+export const dynamicParams = false;
 
 export function generateStaticParams() {
   return blogData.map((post) => ({ slug: post.slug }));
@@ -19,7 +32,8 @@ export default async function Image({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const post = blogData.find((p) => p.slug === slug) ?? blogData[0];
+  const post = blogData.find((p) => p.slug === slug);
+  if (!post) notFound();
 
   // A post whose hero has not been shot yet must not take the build down with
   // it. The article body already degrades this way — a figure with no file
