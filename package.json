@@ -5,14 +5,15 @@
   "scripts": {
     "dev": "next dev",
     "dev:backend": "cd backend && npm run dev",
-    "build": "next build && npm run check:meta",
+    "build": "next build && npm run check:meta && npm run check:schema",
     "check:meta": "node scripts/check-meta-descriptions.mjs",
     "smoke:build": "node scripts/smoke-build.mjs",
     "start": "next start",
     "lint": "eslint",
     "db:push": "cd backend && npx prisma db push",
     "db:seed": "cd backend && npm run db:seed",
-    "db:studio": "cd backend && npx prisma studio"
+    "db:studio": "cd backend && npx prisma studio",
+    "check:schema": "node scripts/validate-schema.mjs"
   },
   "dependencies": {
     "framer-motion": "^12.38.0",

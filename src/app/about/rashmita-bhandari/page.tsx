@@ -57,10 +57,12 @@ export default function AuthorPage() {
     // The page is *about* her, and she is its main entity — the pairing that
     // tells a crawler this is a profile rather than a page mentioning a name.
     about: { "@id": AUTHOR_ID },
+    // `founder: {@id: organization}` used to sit here too, which says the
+    // Person was founded by the company. The edge belongs on the Organization
+    // and now lives there (see organizationLd), pointing the other way.
     mainEntity: {
       ...authorLd(),
       worksFor: { "@id": ORG_ID },
-      founder: { "@id": ORG_ID },
     },
   };
 

@@ -7,7 +7,7 @@ import OrderDrawer from "@/components/layout/OrderDrawer";
 import ShopContent from "@/components/shop/ShopContent";
 import JsonLd from "@/components/seo/JsonLd";
 import { CATEGORIES, findCategory, productsIn } from "@/lib/categories";
-import { breadcrumbLd, itemListLd } from "@/lib/seo";
+import { breadcrumbLd, itemListLd, productNodeId } from "@/lib/seo";
 import { alternates, openGraph, twitter } from "@/lib/metadata";
 
 /**
@@ -78,7 +78,11 @@ export default async function ShopCategoryPage({ params }: Props) {
       <JsonLd
         data={itemListLd(
           cat.heading,
-          products.map((p) => ({ name: p.name, path: `/products/${p.slug}` })),
+          products.map((p) => ({
+            name: p.name,
+            path: `/products/${p.slug}`,
+            id: productNodeId(p.slug),
+          })),
         )}
       />
       <JsonLd

@@ -4,7 +4,7 @@ import Link from "next/link";
 import ShopContent from "@/components/shop/ShopContent";
 import JsonLd from "@/components/seo/JsonLd";
 import data from "@/data/content.json";
-import { WEBSITE_ID, breadcrumbLd, faqLd, itemListLd } from "@/lib/seo";
+import { WEBSITE_ID, breadcrumbLd, faqLd, itemListLd, productNodeId } from "@/lib/seo";
 import { SITE, absoluteUrl } from "@/lib/site";
 import { alternates, openGraph, twitter } from "@/lib/metadata";
 
@@ -87,7 +87,11 @@ export default function ShopPage() {
 
   const listJsonLd = itemListLd(
     "SakharSansar product range",
-    data.products.map((p) => ({ name: p.name, path: `/products/${p.slug}` })),
+    data.products.map((p) => ({
+      name: p.name,
+      path: `/products/${p.slug}`,
+      id: productNodeId(p.slug),
+    })),
   );
 
   return (

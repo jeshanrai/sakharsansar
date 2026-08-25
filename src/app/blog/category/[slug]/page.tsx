@@ -14,7 +14,7 @@ import {
   postsTagged,
 } from "@/lib/blog-categories";
 import { formatPostDate, postPath } from "@/lib/blog";
-import { WEBSITE_ID, ORG_ID, breadcrumbLd, itemListLd } from "@/lib/seo";
+import { WEBSITE_ID, ORG_ID, breadcrumbLd, itemListLd, postNodeId } from "@/lib/seo";
 import { SITE, absoluteUrl } from "@/lib/site";
 import { alternates, openGraph, twitter } from "@/lib/metadata";
 
@@ -89,7 +89,11 @@ export default async function BlogCategoryPage({ params }: Props) {
       <JsonLd
         data={itemListLd(
           cat.heading,
-          tagged.map((p) => ({ name: p.title, path: postPath(p) })),
+          tagged.map((p) => ({
+            name: p.title,
+            path: postPath(p),
+            id: postNodeId(postPath(p)),
+          })),
         )}
       />
       <JsonLd

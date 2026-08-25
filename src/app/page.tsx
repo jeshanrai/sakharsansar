@@ -4,7 +4,7 @@ import contentData from "@/data/content.json";
 import HeroSection from "@/components/sections/HeroSection";
 import TrustStrip from "@/components/sections/TrustStrip";
 import JsonLd from "@/components/seo/JsonLd";
-import { ORG_ID, WEBSITE_ID, itemListLd } from "@/lib/seo";
+import { ORG_ID, WEBSITE_ID, itemListLd, productNodeId } from "@/lib/seo";
 import { SITE, absoluteUrl } from "@/lib/site";
 import { alternates, openGraph, twitter } from "@/lib/metadata";
 
@@ -64,6 +64,7 @@ export default function Home() {
     contentData.products.map((p) => ({
       name: p.name,
       path: `/products/${p.slug}`,
+      id: productNodeId(p.slug),
     })),
   );
 

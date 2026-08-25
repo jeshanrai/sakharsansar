@@ -1,4 +1,6 @@
 import content from "@/data/content.json";
+import { AUTHOR, AUTHOR_ID } from "./author";
+import { LOCALES } from "./hreflang";
 import { SITE, absoluteUrl } from "./site";
 
 /**
@@ -16,6 +18,20 @@ export const ORG_ID = absoluteUrl("/#organization");
 export const WEBSITE_ID = absoluteUrl("/#website");
 
 type Json = Record<string, unknown>;
+
+/**
+ * The `@id` of the node a page's own schema gives its subject.
+ *
+ * Exported so a collection page can point its `ItemList` entries at the same
+ * node the detail page defines, rather than naming a bare URL. A `ListItem`
+ * with only a `url` is a link; a `ListItem` whose `item` resolves to the
+ * `Product` node is a statement that this list contains that product, which is
+ * what lets the shop page corroborate the product pages instead of sitting
+ * beside them.
+ */
+export const productNodeId = (slug: string) =>
+  `${absoluteUrl(`/products/${slug}`)}#product`;
+export const postNodeId = (path: string) => `${absoluteUrl(path)}#post`;
 
 /** Read the real catalogue range rather than hardcoding one that goes stale. */
 function catalogPriceRange(): string {
@@ -63,6 +79,14 @@ export function organizationLd(): Json {
       addressCountry: SITE.address.country,
     },
     areaServed: { "@type": "Country", name: "Nepal" },
+    // The Person node lives on her page; this is the edge that makes the
+    // business and the woman making the sakhar one connected pair of entities
+    // rather than two. It used to be written the wrong way round — the Person
+    // node carried `founder: {@id: organization}`, which reads "Rashmita was
+    // founded by SakharSansar". `founder` is a property of Organization; a
+    // Person has no such property, so the claim the site actually wanted to
+    // make was never being made.
+    founder: { "@id": AUTHOR_ID },
     priceRange: catalogPriceRange(),
     currenciesAccepted: "NPR",
     knowsAbout: [
@@ -104,15 +128,38 @@ export function websiteLd(): Json {
     name: SITE.name,
     description: SITE.description,
     publisher: { "@id": ORG_ID },
-    inLanguage: SITE.lang,
+    // Both, not just the default. The site publishes natively-written Nepali
+    // articles under /ne; declaring only en-NP told crawlers the Devanagari
+    // pages were the same publication speaking a language it does not have.
+    inLanguage: [LOCALES.en.hreflang, LOCALES.ne.hreflang],
   };
 }
 
-/** Sitewide graph: one script, two linked entities. */
+/**
+ * The founder, as a stub.
+ *
+ * The full `Person` — bio, portrait, expertise — is emitted on her own page and
+ * in every post's byline. This is the minimum needed for `Organization.founder`
+ * to resolve into a real node on the other thirty-odd pages, so a crawler that
+ * never reaches /about/rashmita-bhandari still merges the reference instead of
+ * dropping it. Same `@id`, so the two are one entity, and the fuller node wins
+ * wherever it appears.
+ */
+function founderStubLd(): Json {
+  return {
+    "@type": "Person",
+    "@id": AUTHOR_ID,
+    name: AUTHOR.name,
+    url: absoluteUrl(AUTHOR.path),
+    worksFor: { "@id": ORG_ID },
+  };
+}
+
+/** Sitewide graph: one script, three linked entities. */
 export function siteGraphLd(): Json {
   return {
     "@context": "https://schema.org",
-    "@graph": [organizationLd(), websiteLd()],
+    "@graph": [organizationLd(), websiteLd(), founderStubLd()],
   };
 }
 
@@ -313,14 +360,29 @@ function shippingDetailsLd(): Json {
   };
 }
 
-/** Return terms, transcribed from /refund-policy: 48 hours, by mail, free. */
+/**
+ * Return terms, transcribed from /refund-policy.
+ *
+ * The window is the 48 hours the page states, expressed in days.
+ *
+ * `returnMethod` was `ReturnByMail`, which the policy does not describe. Read
+ * it again: the customer emails an order number and photographs, and an
+ * approved claim is refunded or replaced. Nothing is ever posted back — these
+ * are perishable food products, and asking someone to mail a damaged block of
+ * jaggery across Nepal would cost more than the block. `KeepProduct` is what
+ * the page actually says, and Merchant Center cross-checks the two.
+ *
+ * `FreeReturn` stays and is now unambiguous: with nothing to send back, the
+ * customer pays no return shipping, which is the question that property
+ * answers.
+ */
 function returnPolicyLd(): Json {
   return {
     "@type": "MerchantReturnPolicy",
     applicableCountry: "NP",
     returnPolicyCategory: "https://schema.org/MerchantReturnFiniteReturnWindow",
     merchantReturnDays: 2,
-    returnMethod: "https://schema.org/ReturnByMail",
+    returnMethod: "https://schema.org/KeepProduct",
     returnFees: "https://schema.org/FreeReturn",
     merchantReturnLink: absoluteUrl("/refund-policy"),
   };
@@ -458,10 +520,19 @@ export function webPageLd(opts: {
   };
 }
 
-/** Collection pages (shop, blog index) rank better with an explicit ItemList. */
+/**
+ * Collection pages (shop, categories, journal hubs) rank better with an
+ * explicit ItemList.
+ *
+ * Pass `id` — from `productNodeId` / `postNodeId` — wherever the listed thing
+ * has a node of its own on its detail page. Without it a `ListItem` says only
+ * "there is a link here called X"; with it, the entry resolves to the very
+ * `Product` or `BlogPosting` the other page describes, and the two pages stop
+ * being separate mentions of the same thing.
+ */
 export function itemListLd(
   name: string,
-  items: { name: string; path: string }[],
+  items: { name: string; path: string; id?: string }[],
 ): Json {
   return {
     "@context": "https://schema.org",
@@ -473,6 +544,7 @@ export function itemListLd(
       position: i + 1,
       name: item.name,
       url: absoluteUrl(item.path),
+      ...(item.id ? { item: { "@id": item.id } } : {}),
     })),
   };
 }
