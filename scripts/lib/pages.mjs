@@ -71,6 +71,24 @@ async function fromLive(base) {
   return pages;
 }
 
+/**
+ * Every path listed in the sitemap.
+ *
+ * Read from the prerendered sitemap rather than re-derived, so the reachability
+ * check is measured against the file crawlers are actually handed. If the two
+ * ever disagree, the sitemap is right by definition — it is the thing being
+ * submitted.
+ */
+export async function sitemapPaths(liveBase = null) {
+  const xml = liveBase
+    ? await (await fetch(`${liveBase}/sitemap.xml`)).text()
+    : await readFile(join(BUILD_ROOT, "sitemap.xml.body"), "utf8");
+  return [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => {
+    const path = new URL(m[1].trim()).pathname;
+    return path.length > 1 ? path.replace(/\/$/, "") : "/";
+  });
+}
+
 /** `[{ route, html }]` for every page the checks should look at. */
 export async function loadPages(liveBase = null) {
   const pages = liveBase ? await fromLive(liveBase) : await fromBuild();

@@ -6,6 +6,7 @@ import ArticleBody from "@/components/blog/ArticleBody";
 import { AnimatedWave, Bee } from "@/components/ui/StoryArt";
 import { Daisy } from "@/components/ui/Doodles";
 import JsonLd from "@/components/seo/JsonLd";
+import Breadcrumbs from "@/components/layout/Breadcrumbs";
 import { AUTHOR, authorLd } from "@/lib/author";
 import { type BlogPost, formatPostDate, postPath, relatedPosts, translationPair } from "@/lib/blog";
 import {
@@ -15,9 +16,9 @@ import {
   recipeParts,
   wordCount as countWords,
 } from "@/lib/article";
-import { ORG_ID, breadcrumbLd, faqLd, howToLd, recipeLd } from "@/lib/seo";
+import { ORG_ID, faqLd, howToLd, recipeLd } from "@/lib/seo";
 import { SITE, absoluteUrl } from "@/lib/site";
-import { ArrowRight, ChevronRight, Clock, Languages, Twitter, Facebook, Linkedin, MapPin, Phone, RefreshCw } from "lucide-react";
+import { ArrowRight, Clock, Languages, Twitter, Facebook, Linkedin, MapPin, Phone, RefreshCw } from "lucide-react";
 
 /**
  * One journal article, rendered.
@@ -86,10 +87,13 @@ export default function PostView({ post }: { post: BlogPost }) {
     mainEntityOfPage: { "@type": "WebPage", "@id": postUrl },
   };
 
-  const breadcrumbJsonLd = breadcrumbLd([
-    { name: "Journal", path: "/blog" },
+  // One trail, named once. The visible crumb localised "Journal" to "जर्नल"
+  // on the Nepali articles while the BreadcrumbList went on saying "Journal" —
+  // a trail shown in one language and described to Google in another.
+  const trail = [
+    { name: post.lang === "ne" ? "जर्नल" : "Journal", path: "/blog" },
     { name: post.title, path: postPath(post) },
-  ]);
+  ];
 
   const shareLinks = [
     { name: "Twitter", Icon: Twitter, href: `https://twitter.com/intent/tweet?url=${encodeURIComponent(postUrl)}&text=${encodeURIComponent(post.title)}` },
@@ -100,7 +104,6 @@ export default function PostView({ post }: { post: BlogPost }) {
   return (
     <>
       <JsonLd data={jsonLd} />
-      <JsonLd data={breadcrumbJsonLd} />
       {faqs.length > 0 && <JsonLd data={faqLd(faqs)} />}
       {steps.length > 0 && (
         <JsonLd
@@ -145,21 +148,7 @@ export default function PostView({ post }: { post: BlogPost }) {
 
           <div className="relative z-10 max-w-[820px] mx-auto">
             {/* Breadcrumb — the trail matches the BreadcrumbList above it. */}
-            <nav aria-label="Breadcrumb" className="mb-7">
-              <ol className="flex items-center gap-2 label-caps text-jaggery/70 min-w-0">
-                <li className="shrink-0">
-                  <Link href="/" className="hover:text-grove transition-colors">Home</Link>
-                </li>
-                <ChevronRight className="w-3 h-3 shrink-0 text-jaggery/30" strokeWidth={2.5} aria-hidden />
-                <li className="shrink-0">
-                  <Link href="/blog" className="hover:text-grove transition-colors">
-                    {post.lang === "ne" ? "जर्नल" : "Journal"}
-                  </Link>
-                </li>
-                <ChevronRight className="w-3 h-3 shrink-0 text-jaggery/30" strokeWidth={2.5} aria-hidden />
-                <li aria-current="page" className="text-grove truncate">{post.title}</li>
-              </ol>
-            </nav>
+            <Breadcrumbs trail={trail} className="mb-7" />
 
             {/* Language switcher. Rendered only where a translation actually
                 exists — one of the Nepali articles has no English counterpart,

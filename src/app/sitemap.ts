@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 import content from "@/data/content.json";
-import { BLOG_ENABLED, posts as blog, postPath } from "@/lib/blog";
+import { BLOG_ENABLED, pageCount, posts as blog, postPath } from "@/lib/blog";
 import { BLOG_CATEGORIES } from "@/lib/blog-categories";
 import { AUTHOR } from "@/lib/author";
 import { CATEGORIES } from "@/lib/categories";
@@ -72,6 +72,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.5,
   }));
 
+  // Pages 2..N of the journal. Empty while the archive fits on one page,
+  // which is the state today — derived from the same helper the route uses, so
+  // a page cannot exist and be missing from here.
+  const blogPageRoutes: MetadataRoute.Sitemap = Array.from(
+    { length: Math.max(0, pageCount() - 1) },
+    (_, i) => ({
+      url: `${SITE_URL}/blog/page/${i + 2}`,
+      changeFrequency: "weekly" as const,
+      priority: 0.4,
+    }),
+  );
+
   const blogRoutes: MetadataRoute.Sitemap = blog.map((post) => {
     // The Nepali and English halves of a translation pair each declare the
     // other. Annotating them here as well as in the page's <link rel=alternate>
@@ -114,6 +126,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...categoryRoutes,
     ...productRoutes,
     ...blogCategoryRoutes,
+    ...blogPageRoutes,
     ...blogRoutes,
   ];
 }

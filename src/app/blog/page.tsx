@@ -8,8 +8,9 @@ import OrderDrawer from "@/components/layout/OrderDrawer";
 import BlogEditorsPicks from "@/components/sections/blog/BlogEditorsPicks";
 import BlogCategories from "@/components/sections/blog/BlogCategories";
 import JsonLd from "@/components/seo/JsonLd";
-import { BLOG_ENABLED, sortedPosts, postPath } from "@/lib/blog";
-import { ORG_ID, WEBSITE_ID, breadcrumbLd } from "@/lib/seo";
+import Breadcrumbs from "@/components/layout/Breadcrumbs";
+import { BLOG_ENABLED, pageCount, postPath, postsOnPage, sortedPosts } from "@/lib/blog";
+import { ORG_ID, WEBSITE_ID } from "@/lib/seo";
 import { SITE, absoluteUrl } from "@/lib/site";
 import { Bee, Ladybug, AnimatedWave } from "@/components/ui/StoryArt";
 import { Daisy } from "@/components/ui/Doodles";
@@ -50,8 +51,12 @@ export default function BlogList() {
 
   // Newest first, and the featured post is dropped from the carousel below it —
   // otherwise a journal with one post shows that post twice in a row.
-  const ordered = sortedPosts();
+  // Page one only. The index used to render the whole archive, which grows
+  // without bound; /blog/page/[n] carries the rest, and builds itself the day
+  // there is a rest to carry.
+  const ordered = postsOnPage(1);
   const [featured, ...rest] = ordered;
+  const totalPages = pageCount();
   const categories = [...new Set(ordered.flatMap((p) => p.tags ?? []))];
 
   // Typing the index as a Blog (rather than a generic WebPage) is what links
@@ -67,7 +72,7 @@ export default function BlogList() {
     isPartOf: { "@id": WEBSITE_ID },
     publisher: { "@id": ORG_ID },
     inLanguage: SITE.lang,
-    blogPost: ordered.map((post) => ({
+    blogPost: sortedPosts().map((post) => ({
       "@type": "BlogPosting",
       "@id": absoluteUrl(`${postPath(post)}#post`),
       headline: post.title,
@@ -82,7 +87,6 @@ export default function BlogList() {
   return (
     <>
       <JsonLd data={blogJsonLd} />
-      <JsonLd data={breadcrumbLd([{ name: "Blog", path: "/blog" }])} />
 
       <OrderDrawer />
 
@@ -107,6 +111,7 @@ export default function BlogList() {
           />
 
           <div className="max-w-[1280px] mx-auto">
+            <Breadcrumbs trail={[{ name: "Blog", path: "/blog" }]} />
             {/* The subject line below used to live *inside* this H1, to give
                 the hub a heading that named something people search for rather
                 than the bare word "Blog".
@@ -189,6 +194,27 @@ export default function BlogList() {
           <div className="pt-10 sm:pt-16">
             <BlogCategories posts={ordered} categories={categories} />
           </div>
+
+          {/* Renders only once the archive outgrows one page. A real link in
+              the server HTML, not a button — a crawler does not click, and a
+              reader cannot bookmark what has no address. */}
+          {totalPages > 1 && (
+            <nav
+              aria-label="Journal pagination"
+              className="max-w-[1280px] mx-auto px-6 sm:px-10 lg:px-16 pb-16 sm:pb-20 flex items-center justify-between gap-4"
+            >
+              <span className="label-caps text-jaggery/60">
+                Page 1 of {totalPages}
+              </span>
+              <Link
+                href="/blog/page/2"
+                className="inline-flex items-center gap-2 rounded-full bg-jaggery text-cream label-caps px-7 py-3.5 hover:bg-grove transition-colors"
+              >
+                Older articles
+                <ArrowRight className="w-4 h-4" strokeWidth={2} />
+              </Link>
+            </nav>
+          )}
         </div>
       </main>
 

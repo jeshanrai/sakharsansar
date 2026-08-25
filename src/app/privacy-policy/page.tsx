@@ -1,7 +1,8 @@
 import { Metadata } from "next";
 import Footer from "@/components/layout/Footer";
 import JsonLd from "@/components/seo/JsonLd";
-import { breadcrumbLd, webPageLd } from "@/lib/seo";
+import Breadcrumbs from "@/components/layout/Breadcrumbs";
+import { webPageLd } from "@/lib/seo";
 import { alternates, openGraph, DEFAULT_OG_IMAGE } from "@/lib/metadata";
 
 export const metadata: Metadata = {
@@ -29,12 +30,10 @@ export default function PrivacyPolicyPage() {
   return (
     <>
       <JsonLd data={pageJsonLd} />
-      <JsonLd
-        data={breadcrumbLd([{ name: "Privacy Policy", path: "/privacy-policy" }])}
-      />
 
       <main className="pt-36 pb-24 px-6 bg-[#FBF4E8] min-h-screen">
         <div className="max-w-3xl mx-auto">
+          <Breadcrumbs trail={[{ name: "Privacy Policy", path: "/privacy-policy" }]} className="mb-6" />
           <p className="text-sm font-medium tracking-[0.2em] uppercase text-[#C17A2A] mb-4">Legal</p>
           <h1 className="font-poppins text-4xl sm:text-5xl font-bold text-[#2C1500] mb-3">Privacy Policy</h1>
           <p className="text-base text-[#2C1500]/50 mb-14">Last updated: March 27, 2026</p>

@@ -3,8 +3,9 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import ShopContent from "@/components/shop/ShopContent";
 import JsonLd from "@/components/seo/JsonLd";
+import Breadcrumbs from "@/components/layout/Breadcrumbs";
 import data from "@/data/content.json";
-import { WEBSITE_ID, breadcrumbLd, faqLd, itemListLd, productNodeId } from "@/lib/seo";
+import { WEBSITE_ID, faqLd, itemListLd, productNodeId } from "@/lib/seo";
 import { SITE, absoluteUrl } from "@/lib/site";
 import { alternates, openGraph, twitter } from "@/lib/metadata";
 
@@ -105,7 +106,6 @@ export default function ShopPage() {
       <JsonLd data={collectionJsonLd} />
       <JsonLd data={listJsonLd} />
       <JsonLd data={faqLd(FAQS)} />
-      <JsonLd data={breadcrumbLd([{ name: "Shop", path: "/shop" }])} />
 
       <OrderDrawer />
       {/* The navbar is fixed and 108px tall, so pt-10 left the eyebrow and
@@ -117,6 +117,7 @@ export default function ShopPage() {
             the server, so the copy is in the first byte of HTML for the
             crawlers that never run JS. */}
         <header className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 pb-7 sm:pb-9">
+          <Breadcrumbs trail={[{ name: "Shop", path: "/shop" }]} />
           <p className="text-[11px] font-bold tracking-caps uppercase text-jaggery/70 mb-3">
             The Full Range
           </p>

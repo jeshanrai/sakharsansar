@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { ChevronRight, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import Footer from "@/components/layout/Footer";
 import OrderDrawer from "@/components/layout/OrderDrawer";
 import JsonLd from "@/components/seo/JsonLd";
@@ -9,7 +9,8 @@ import { AnimatedWave } from "@/components/ui/StoryArt";
 import { Daisy } from "@/components/ui/Doodles";
 import { AUTHOR, AUTHOR_ID, authorLd } from "@/lib/author";
 import { BLOG_ENABLED, formatPostDate, sortedPosts, postPath } from "@/lib/blog";
-import { ORG_ID, WEBSITE_ID, breadcrumbLd } from "@/lib/seo";
+import { ORG_ID, WEBSITE_ID } from "@/lib/seo";
+import Breadcrumbs from "@/components/layout/Breadcrumbs";
 import { SITE, STORY, absoluteUrl } from "@/lib/site";
 import { alternates, openGraph, twitter, DEFAULT_OG_IMAGE } from "@/lib/metadata";
 
@@ -69,13 +70,6 @@ export default function AuthorPage() {
   return (
     <>
       <JsonLd data={profile} />
-      <JsonLd
-        data={breadcrumbLd([
-          { name: "About", path: AUTHOR.path },
-          { name: AUTHOR.name, path: AUTHOR.path },
-        ])}
-      />
-
       <OrderDrawer />
 
       <main className="bg-cream overflow-x-hidden">
@@ -84,15 +78,11 @@ export default function AuthorPage() {
           <Daisy aria-hidden className="pointer-events-none absolute top-28 right-[12%] w-16 h-16 text-peach-line/50 -rotate-12 hidden md:block" />
 
           <div className="relative z-10 max-w-[900px] mx-auto">
-            <nav aria-label="Breadcrumb" className="mb-7">
-              <ol className="flex items-center gap-2 label-caps text-jaggery/70 min-w-0">
-                <li className="shrink-0">
-                  <Link href="/" className="hover:text-grove transition-colors">Home</Link>
-                </li>
-                <ChevronRight className="w-3 h-3 shrink-0 text-jaggery/30" strokeWidth={2.5} aria-hidden />
-                <li aria-current="page" className="text-grove truncate">{AUTHOR.name}</li>
-              </ol>
-            </nav>
+            {/* The BreadcrumbList used to name a middle crumb, "About",
+                pointing at this same URL — two consecutive ListItems with one
+                href between them, describing a /about index that does not
+                exist. The page never showed it, which is how it survived. */}
+            <Breadcrumbs trail={[{ name: AUTHOR.name, path: AUTHOR.path }]} className="mb-7" />
 
             <div className="flex flex-col sm:flex-row sm:items-center gap-7">
               <Image

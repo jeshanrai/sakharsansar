@@ -12,8 +12,10 @@ import JsonLd from "@/components/seo/JsonLd";
 import { BLOG_ENABLED } from "@/lib/blog";
 import { readingFor } from "@/lib/product-reading";
 import data from "@/data/content.json";
-import { breadcrumbLd, faqLd, parsePrice, productLd } from "@/lib/seo";
-import { ArrowLeft, ArrowRight, Leaf, ShieldCheck, Truck } from "lucide-react";
+import { faqLd, parsePrice, productLd } from "@/lib/seo";
+import { CATEGORIES } from "@/lib/categories";
+import Breadcrumbs from "@/components/layout/Breadcrumbs";
+import { ArrowRight, Leaf, ShieldCheck, Truck } from "lucide-react";
 import { alternates, openGraph, twitter } from "@/lib/metadata";
 import { OG_CONTENT_TYPE } from "@/lib/og";
 
@@ -105,10 +107,16 @@ export default async function ProductPage({ params }: Props) {
   // Google needs to show a merchant listing rather than a bare snippet.
   const jsonLd = productLd(product);
 
-  const breadcrumbJsonLd = breadcrumbLd([
+  // Home → Shop → Blocks → Sakhar Block. The category level was missing, from
+  // both the trail and the markup, because it had no URL to point at when this
+  // was written — it does now, and skipping it hid the one piece of structure
+  // the shop actually has.
+  const category = CATEGORIES.find((c) => c.name === product.category);
+  const trail = [
     { name: "Shop", path: "/shop" },
+    ...(category ? [{ name: category.name, path: `/shop/${category.slug}` }] : []),
     { name: product.name, path: `/products/${product.slug}` },
-  ]);
+  ];
 
   // FAQ — the product's own questions come first (its format, its ingredients,
   // its storage behaviour); the last two are the genuinely sitewide ones.
@@ -192,21 +200,18 @@ export default async function ProductPage({ params }: Props) {
 
       <JsonLd data={jsonLd} />
       <JsonLd data={faqJsonLd} />
-      <JsonLd data={breadcrumbJsonLd} />
 
       <OrderDrawer />
 
       <main className="overflow-x-hidden bg-cream">
-        {/* Breadcrumb */}
+        {/* Breadcrumb.
+            This was a single "Back to Collection" pill: one hop, to one place,
+            saying nothing about where the page sits. The trail supersedes it —
+            it still links back to the shop, and now also to the category, and
+            it is the thing Google shows in place of the raw URL in a result. */}
         <div className="pt-28 sm:pt-36 px-6 sm:px-10 lg:px-16">
           <div className="max-w-[1440px] mx-auto">
-            <Link
-              href="/shop"
-              className="inline-flex items-center gap-2.5 rounded-full bg-ivory border border-jaggery/10 px-4 py-2 label-caps text-jaggery/70 hover:text-jaggery hover:border-jaggery/25 transition-colors"
-            >
-              <ArrowLeft className="w-3.5 h-3.5" strokeWidth={2} />
-              Back to Collection
-            </Link>
+            <Breadcrumbs trail={trail} className="" />
           </div>
         </div>
 

@@ -123,6 +123,33 @@ export function translationPair(slug: string): BlogPost | undefined {
 export const BLOG_ENABLED = posts.length > 0;
 
 /** Newest first — the order the index and the feed both want. */
+/**
+ * How many articles one page of the journal holds.
+ *
+ * The index rendered every post ever published, which is fine at ten and a
+ * wall at fifty: one page carrying the whole archive gets slower with every
+ * post, dilutes what any single URL is about, and gives a crawler one enormous
+ * document instead of several focused ones.
+ *
+ * Twelve rather than six, because at ten posts a smaller page would split the
+ * journal in two for no reason and put half of it a click further from the
+ * home page. With the archive under this, `pageCount()` returns 1 and no
+ * /blog/page/N route is generated at all — the split happens by itself on the
+ * day the thirteenth post lands.
+ */
+export const POSTS_PER_PAGE = 12;
+
+/** How many pages the journal currently needs. Always at least 1. */
+export function pageCount(): number {
+  return Math.max(1, Math.ceil(posts.length / POSTS_PER_PAGE));
+}
+
+/** The slice of the archive shown on page `n` (1-based), newest first. */
+export function postsOnPage(n: number): BlogPost[] {
+  const start = (n - 1) * POSTS_PER_PAGE;
+  return sortedPosts().slice(start, start + POSTS_PER_PAGE);
+}
+
 export function sortedPosts(): BlogPost[] {
   return [...posts].sort(
     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),

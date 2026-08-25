@@ -20,7 +20,7 @@
  * phases add groups here rather than new scripts, so there is one command and
  * one report.
  */
-import { headingsOf, liveBaseFrom, loadPages, textOf } from "./lib/pages.mjs";
+import { headingsOf, liveBaseFrom, loadPages, sitemapPaths, textOf } from "./lib/pages.mjs";
 
 const SITE_URL = "https://www.sakharsansar.com.np";
 
@@ -183,9 +183,113 @@ function checkMeta(pages) {
   return problems;
 }
 
+/** Three clicks from the home page. Past that a page is, in practice, not part
+ *  of the site as far as a crawler's budget is concerned. */
+const MAX_DEPTH = 3;
+
+/** Every internal link on a page, normalised to a bare path. */
+function internalLinks(html) {
+  const body = html.replace(/<script[\s\S]*?<\/script>/gi, " ");
+  const hrefs = [...body.matchAll(/<a\b[^>]*?href="([^"]*)"/gi)].map((m) => m[1]);
+  const paths = new Set();
+  for (let href of hrefs) {
+    if (href.startsWith(SITE_URL)) href = href.slice(SITE_URL.length) || "/";
+    if (!href.startsWith("/")) continue; // external, mailto:, tel:, #anchor
+    const path = href.split("#")[0].split("?")[0];
+    paths.add(path.length > 1 ? path.replace(/\/$/, "") : "/");
+  }
+  return paths;
+}
+
+/**
+ * Architecture — Phase E.
+ *
+ * The orphan check is the one that cannot be done by looking at a page. A URL
+ * can be in the sitemap, render perfectly, carry flawless markup, and still be
+ * reachable from nowhere — which is what "orphan" means and why it survives
+ * every per-page review. The only way to see it is to walk the site from the
+ * home page the way a crawler does and diff what you reached against what you
+ * submitted.
+ *
+ * Breadcrumbs are checked as a pair rather than separately: a `BreadcrumbList`
+ * describing a trail the page does not display is markup Google is entitled to
+ * distrust, and a displayed trail with no markup earns nothing in a result.
+ */
+function checkArchitecture(pages, sitemap) {
+  const problems = [];
+  const byRoute = new Map(pages.map((p) => [p.route, p]));
+
+  // ── Reachability: breadth-first from the home page, exactly as a crawler.
+  const depth = new Map([["/", 0]]);
+  const queue = ["/"];
+  while (queue.length > 0) {
+    const route = queue.shift();
+    const d = depth.get(route);
+    if (d >= MAX_DEPTH) continue;
+    const page = byRoute.get(route);
+    if (!page) continue;
+    for (const link of internalLinks(page.html)) {
+      if (!depth.has(link)) {
+        depth.set(link, d + 1);
+        queue.push(link);
+      }
+    }
+  }
+
+  for (const path of sitemap) {
+    if (!depth.has(path)) {
+      problems.push([path, `in the sitemap but not reachable from / within ${MAX_DEPTH} clicks`]);
+    }
+  }
+
+  // ── Internal links have to go somewhere.
+  for (const { route, html } of pages) {
+    for (const link of internalLinks(html)) {
+      if (byRoute.has(link)) continue;
+      if (KNOWN_NON_PAGE.some((re) => re.test(link))) continue;
+      problems.push([route, `links to ${link}, which is not a page on this site`]);
+    }
+  }
+
+  // ── Breadcrumbs: shown and described, or neither.
+  for (const { route, html } of pages) {
+    if (route === "/") continue;
+    const noindex = /<meta name="robots" content="[^"]*noindex/i.test(html);
+    const visible = html
+      .replace(/<script[\s\S]*?<\/script>/gi, " ")
+      .match(/<nav aria-label="Breadcrumb"[\s\S]*?<\/nav>/i);
+    const schema = html.match(/"@type":"BreadcrumbList","itemListElement":\[([\s\S]*?)\]\}/);
+
+    if (!visible && !schema) {
+      problems.push([route, "no breadcrumb, visible or structured"]);
+      continue;
+    }
+    // A noindex page earns nothing from the markup, so it may show a trail
+    // without describing one.
+    if (visible && !schema && !noindex) problems.push([route, "shows a breadcrumb trail but emits no BreadcrumbList"]);
+    if (schema && !visible) problems.push([route, "emits a BreadcrumbList for a trail the page never shows"]);
+
+    if (visible && schema) {
+      const shown = textOf(visible[0]);
+      const named = [...schema[1].matchAll(/"name":"([^"]*)"/g)].map((m) => m[1]);
+      const missing = named.filter((n) => !shown.includes(n.replace(/&amp;/g, "&")));
+      if (missing.length > 0) {
+        problems.push([route, `BreadcrumbList names crumbs the page does not show: ${missing.join(", ")}`]);
+      }
+    }
+  }
+
+  return problems;
+}
+
+/** Paths that are real routes but not HTML pages, so the crawl will not find
+ *  a document for them. */
+const KNOWN_NON_PAGE = [/^\/feed$/, /^\/llms\.txt$/, /^\/sitemap\.xml$/, /^\/robots\.txt$/, /^\/portfolio/];
+
 const GROUPS = [
   ["headings", checkHeadings],
   ["meta", checkMeta],
+  ["architecture", checkArchitecture],
 ];
 
 // ─── Run ────────────────────────────────────────────────────────────────────
@@ -196,10 +300,12 @@ if (pages.length === 0) {
   process.exit(1);
 }
 
+const sitemap = await sitemapPaths(liveBaseFrom(process.argv.slice(2)));
+
 const problems = [];
 const ran = [];
 for (const [name, check] of GROUPS) {
-  const found = check(pages);
+  const found = check(pages, sitemap);
   ran.push(`${name} (${found.length === 0 ? "clean" : `${found.length} problem${found.length === 1 ? "" : "s"}`})`);
   problems.push(...found);
 }
