@@ -7,6 +7,7 @@ import FloatingContact from "@/components/layout/FloatingContact";
 import JsonLd from "@/components/seo/JsonLd";
 import Analytics from "@/components/seo/Analytics";
 import { BLOG_ENABLED } from "@/lib/blog";
+import { BUILD_ID } from "@/lib/build-id";
 import { siteGraphLd } from "@/lib/seo";
 import { SITE, SITE_URL } from "@/lib/site";
 
@@ -170,6 +171,18 @@ export default function RootLayout({
           HeroSection's <Image priority fetchPriority="high"> already emits a
           correct preload for the pages that need it.
         */}
+        {/*
+          Which build produced this page.
+
+          Written here rather than through `metadata.other` on purpose: page
+          metadata merges shallowly, so any route that later sets `other` for a
+          reason of its own would drop this tag and quietly blind the check
+          that depends on it. In the layout's own <head> it is unconditional.
+
+          `npm run smoke:build` reads it back off the live site and fails if two
+          routes disagree. See scripts/smoke-build.mjs.
+        */}
+        <meta name="x-build-id" content={BUILD_ID} />
         {/* Publisher + site identity, emitted once for every page so crawlers
             resolve all our Organization references to a single entity. */}
         <JsonLd data={siteGraphLd()} />
