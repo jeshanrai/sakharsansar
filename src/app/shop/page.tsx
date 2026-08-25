@@ -61,7 +61,9 @@ export default function ShopPage() {
       <JsonLd data={breadcrumbLd([{ name: "Shop", path: "/shop" }])} />
 
       <OrderDrawer />
-      <main className="overflow-x-hidden pt-10">
+      {/* The navbar is fixed and 108px tall, so pt-10 left the eyebrow and
+          the top of the H1 behind it. */}
+      <main className="overflow-x-hidden pt-32 sm:pt-36">
         {/* The shop had no <h1> at all — its first element was the sticky
             filter bar — so the site's main commercial page offered search
             engines no heading and screen readers no entry point. Rendered on

@@ -10,7 +10,7 @@ export default function StorySection() {
     <section
       id="story"
       aria-label="Our Story"
-      className="relative bg-peach overflow-hidden pt-20 sm:pt-24 pb-10 sm:pb-14 lg:pb-[10vw]"
+      className="relative bg-peach overflow-hidden pt-32 sm:pt-36 pb-10 sm:pb-14 lg:pb-[10vw]"
     >
       <div className="relative z-10 px-6 sm:px-10 lg:px-16">
         {/* Breadcrumb */}

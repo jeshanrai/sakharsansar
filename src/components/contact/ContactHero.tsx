@@ -93,7 +93,7 @@ export default function ContactHero() {
               copy="Stock your store, café or hotel with consistent, chemical-free jaggery at wholesale rates, made without sulphur, clarifiers or added colour, with packaging built around your brand."
               points={B2B_POINTS}
               ctaLabel="Request a wholesale quote"
-              ctaHref="#contact-form"
+              ctaHref="/wholesale"
               waHref={`https://wa.me/${PHONE}?text=${encodeURIComponent(WA_B2B)}`}
               featured
             />

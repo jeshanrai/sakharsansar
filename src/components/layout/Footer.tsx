@@ -15,6 +15,7 @@ const COLUMNS: { title: string; links: { label: string; href: string }[] }[] = [
     title: "Explore",
     links: [
       { label: "Shop", href: "/shop" },
+      { label: "Wholesale", href: "/wholesale" },
       { label: "Our Story", href: "/our-story" },
       ...(BLOG_ENABLED ? [{ label: "Blogs", href: "/blog" }] : []),
     ],

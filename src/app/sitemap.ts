@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import content from "@/data/content.json";
 import { BLOG_ENABLED, posts as blog } from "@/lib/blog";
+import { CATEGORIES } from "@/lib/categories";
 import { SITE, SITE_URL, absoluteUrl } from "@/lib/site";
 
 /**
@@ -29,6 +30,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...(BLOG_ENABLED
       ? ([{ url: `${SITE_URL}/blog`, changeFrequency: "weekly", priority: 0.8 }] as MetadataRoute.Sitemap)
       : []),
+    // Commercial intent, and the only page targeting the B2B queries, so it
+    // sits with /shop rather than with the informational pages.
+    { url: `${SITE_URL}/wholesale`, changeFrequency: "monthly", priority: 0.8 },
     { url: `${SITE_URL}/our-story`, changeFrequency: "monthly", priority: 0.7 },
     { url: `${SITE_URL}/contact`, changeFrequency: "monthly", priority: 0.6 },
     { url: `${SITE_URL}/privacy-policy`, changeFrequency: "yearly", priority: 0.3 },
@@ -36,6 +40,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${SITE_URL}/shipping-policy`, changeFrequency: "yearly", priority: 0.3 },
     { url: `${SITE_URL}/refund-policy`, changeFrequency: "yearly", priority: 0.3 },
   ];
+
+  // One entry per shop category. Derived from the same list that generates
+  // the routes, so a new category cannot appear on the site and be missing
+  // from the sitemap.
+  const categoryRoutes: MetadataRoute.Sitemap = CATEGORIES.map((c) => ({
+    url: `${SITE_URL}/shop/${c.slug}`,
+    changeFrequency: "weekly",
+    priority: 0.7,
+  }));
 
   const productRoutes: MetadataRoute.Sitemap = content.products.map((p) => ({
     url: `${SITE_URL}/products/${p.slug}`,
@@ -75,5 +88,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     };
   });
 
-  return [...staticRoutes, ...productRoutes, ...blogRoutes];
+  return [...staticRoutes, ...categoryRoutes, ...productRoutes, ...blogRoutes];
 }

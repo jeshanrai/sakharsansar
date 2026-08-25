@@ -47,6 +47,19 @@ const RETIRED_PRODUCTS = [
 ];
 
 /**
+ * Pages that moved out of the journal into a route of their own.
+ *
+ * The wholesale guide was written as a post, but a shop owner searching
+ * "jaggery wholesale supplier Nepal" is making a commercial decision, and a
+ * blog archive is the wrong shelf for it. The writing moved verbatim to
+ * /wholesale; this passes on whatever the post had already earned, and stops
+ * two URLs carrying the same 2,000 words from competing with each other.
+ */
+const PROMOTED_POSTS = [
+  { slug: "wholesale-jaggery-nepal", to: "/wholesale" },
+];
+
+/**
  * Every route that renders a social card via `opengraph-image` / `twitter-image`.
  *
  * Next advertises these as absolute URLs in `og:image` / `twitter:image`, and
@@ -112,6 +125,11 @@ const nextConfig: NextConfig = {
         source: `/products/${slug}`,
         destination: to,
         permanent: true, // 308 — these products are not coming back
+      })),
+      ...PROMOTED_POSTS.map(({ slug, to }) => ({
+        source: `/blog/${slug}`,
+        destination: to,
+        permanent: true, // 308 — the content lives at the new URL now
       })),
       // /blog itself is only *temporarily* empty: new posts are planned, so
       // this is a 307. A permanent redirect here would hand /blog's identity

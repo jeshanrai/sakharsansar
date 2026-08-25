@@ -3,6 +3,7 @@
 import React, { useState, useMemo, useEffect, useCallback, memo, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   X,
@@ -16,6 +17,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import data from "@/data/content.json";
+import { categorySlug, findCategory } from "@/lib/categories";
 import { useIsFavourite, toggleFavourite } from "@/lib/favourites";
 
 type Product = (typeof data.products)[number];
@@ -36,6 +38,23 @@ function parsePrice(price: string): number {
 }
 
 const CATEGORIES = ["All", ...Array.from(new Set(data.products.map((p) => p.category)))];
+
+/**
+ * Where a category pill points.
+ *
+ * These were buttons flipping client state, so a filtered shop had no address:
+ * it could not be linked, shared or crawled, and the site offered nothing for
+ * "jaggery powder Nepal" but a single product page. They are anchors now, which
+ * updates the URL the way router.push would *and* leaves a real href for a
+ * crawler that never runs the click handler.
+ *
+ * A category without a written intro has no route (see lib/categories.ts), so
+ * it stays on /shop and filters in place rather than linking to a 404.
+ */
+function categoryHref(cat: string): string | null {
+  if (cat === "All") return "/shop";
+  return findCategory(categorySlug(cat)) ? `/shop/${categorySlug(cat)}` : null;
+}
 
 const SORT_OPTIONS = [
   { label: "Featured", value: "default" },
@@ -151,8 +170,14 @@ const ShopProductCard = memo(function ShopProductCard({
 });
 
 /* ─────────────────────────── Page ─────────────────────────── */
-export default function ShopContent() {
-  const [activeCategory, setActiveCategory] = useState("All");
+export default function ShopContent({
+  /** Set by /shop/[category]; /shop leaves it at "All". */
+  initialCategory = "All",
+}: {
+  initialCategory?: string;
+} = {}) {
+  const router = useRouter();
+  const [activeCategory, setActiveCategory] = useState(initialCategory);
   const [activePriceRange, setActivePriceRange] = useState(0);
   const [sortBy, setSortBy] = useState("default");
   const [searchQuery, setSearchQuery] = useState("");
@@ -241,21 +266,36 @@ export default function ShopContent() {
               <ul className="flex items-center gap-1">
                 {CATEGORIES.map((cat) => {
                   const active = activeCategory === cat;
+                  const href = categoryHref(cat);
+                  const className = `relative inline-flex items-center gap-1.5 h-9 px-3.5 rounded-full text-[13px] font-medium tracking-tight whitespace-nowrap transition-all ${
+                    active
+                      ? "bg-jaggery text-cream shadow-[0_4px_12px_rgba(26,20,16,0.12)]"
+                      : "text-jaggery/65 hover:text-jaggery hover:bg-jaggery/[0.04]"
+                  }`;
+                  const label = (
+                    <>
+                      {cat}
+                      <span className={`text-[10px] tabular-nums ${active ? "text-cream/60" : "text-jaggery/35"}`}>
+                        {productCounts[cat] ?? 0}
+                      </span>
+                    </>
+                  );
                   return (
                     <li key={cat}>
-                      <button
-                        onClick={() => setActiveCategory(cat)}
-                        className={`relative inline-flex items-center gap-1.5 h-9 px-3.5 rounded-full text-[13px] font-medium tracking-tight whitespace-nowrap transition-all ${
-                          active
-                            ? "bg-jaggery text-cream shadow-[0_4px_12px_rgba(26,20,16,0.12)]"
-                            : "text-jaggery/65 hover:text-jaggery hover:bg-jaggery/[0.04]"
-                        }`}
-                      >
-                        {cat}
-                        <span className={`text-[10px] tabular-nums ${active ? "text-cream/60" : "text-jaggery/35"}`}>
-                          {productCounts[cat] ?? 0}
-                        </span>
-                      </button>
+                      {href ? (
+                        <Link
+                          href={href}
+                          scroll={false}
+                          aria-current={active ? "page" : undefined}
+                          className={className}
+                        >
+                          {label}
+                        </Link>
+                      ) : (
+                        <button onClick={() => setActiveCategory(cat)} className={className}>
+                          {label}
+                        </button>
+                      )}
                     </li>
                   );
                 })}
@@ -373,7 +413,9 @@ export default function ShopContent() {
               >
                 <div className="pb-4 flex items-center gap-2 flex-wrap">
                   {activeCategory !== "All" && (
-                    <Chip onRemove={() => setActiveCategory("All")}>{activeCategory}</Chip>
+                    <Chip onRemove={() => router.push("/shop", { scroll: false })}>
+                      {activeCategory}
+                    </Chip>
                   )}
                   {activePriceRange !== 0 && (
                     <Chip onRemove={() => setActivePriceRange(0)}>{PRICE_RANGES[activePriceRange].label}</Chip>
