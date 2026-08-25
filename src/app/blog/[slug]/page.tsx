@@ -8,6 +8,7 @@ import ArticleBody from "@/components/blog/ArticleBody";
 import { AnimatedWave, Bee } from "@/components/ui/StoryArt";
 import { Daisy } from "@/components/ui/Doodles";
 import JsonLd from "@/components/seo/JsonLd";
+import { AUTHOR, authorLd } from "@/lib/author";
 import { posts as blogData, formatPostDate, relatedPosts, translationPair } from "@/lib/blog";
 import {
   faqEntries,
@@ -154,12 +155,13 @@ export default async function BlogPost({ params }: Props) {
     url: postUrl,
     // A named human author is a first-hand-experience signal the publisher
     // node can't carry on its own; the publisher stays the Organization.
+    // Carries the same stable @id as /about/rashmita-bhandari, so a crawler
+    // merges eleven bylines and the profile page into one entity rather than
+    // twelve unrelated mentions of a name. `url` used to be absent, which left
+    // the Person as a dead end.
     author: {
-      "@type": "Person",
-      name: post.author,
-      ...(post.authorRole ? { jobTitle: post.authorRole } : {}),
+      ...authorLd(),
       ...(post.authorBio ? { description: post.authorBio } : {}),
-      ...(post.authorImage ? { image: absoluteUrl(post.authorImage) } : {}),
       worksFor: { "@id": ORG_ID },
     },
     publisher: { "@id": ORG_ID },
@@ -294,7 +296,12 @@ export default async function BlogPost({ params }: Props) {
                 </div>
               )}
               <div>
-                <p className="font-medium text-jaggery text-sm">{post.author}</p>
+                <Link
+                  href={AUTHOR.path}
+                  className="font-medium text-jaggery text-sm hover:text-grove transition-colors"
+                >
+                  {post.author}
+                </Link>
                 <p className="label-caps text-jaggery/45">
                   {post.authorRole ?? "SakharSansar Journal"}
                 </p>
@@ -346,7 +353,12 @@ export default async function BlogPost({ params }: Props) {
                 )}
                 <div>
                   <span className="label-caps text-caramel mb-2 block">Written by</span>
-                  <p className="font-display font-bold text-jaggery text-h4">{post.author}</p>
+                  <Link
+                    href={AUTHOR.path}
+                    className="font-display font-bold text-jaggery text-h4 hover:text-grove transition-colors"
+                  >
+                    {post.author}
+                  </Link>
                   {post.authorRole && (
                     <p className="label-caps text-jaggery/45 mt-1.5">{post.authorRole}</p>
                   )}

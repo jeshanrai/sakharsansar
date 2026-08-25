@@ -10,6 +10,7 @@ import { AnimatedWave } from "@/components/ui/StoryArt";
 import { Daisy } from "@/components/ui/Doodles";
 import JsonLd from "@/components/seo/JsonLd";
 import { BLOG_ENABLED } from "@/lib/blog";
+import { readingFor } from "@/lib/product-reading";
 import data from "@/data/content.json";
 import { breadcrumbLd, faqLd, parsePrice, productLd } from "@/lib/seo";
 import { ArrowLeft, ArrowRight, Leaf, ShieldCheck, Truck } from "lucide-react";
@@ -80,6 +81,9 @@ export default async function ProductPage({ params }: Props) {
   if (!product) notFound();
 
   const related = data.products.filter((p) => p.slug !== slug).slice(0, 3);
+
+  // Articles worth reading from this product specifically.
+  const reading = readingFor(slug);
 
   // Full Product + Offer markup, including the shipping and return terms
   // Google needs to show a merchant listing rather than a bare snippet.
@@ -355,16 +359,50 @@ export default async function ProductPage({ params }: Props) {
               Read the recipe, the harvest notes, and the people who pour every batch
               by hand in our Sankhuwasabha cooperative.
             </p>
-            {/* With the journal empty this band would send every product page
-                into a 404, so it points at Our Story — which tells the same
-                farmers-and-craft story the copy above promises. */}
-            <Link
-              href={BLOG_ENABLED ? "/blog" : "/our-story"}
-              className="group inline-flex items-center gap-3 rounded-full bg-cream text-jaggery label-caps px-9 py-4 hover:bg-honey transition-colors"
-            >
-              Read stories from Sankhuwasabha
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" strokeWidth={2} />
-            </Link>
+
+            {/* This was one button pointing at /blog — the weakest link on the
+                page, spent at the moment the reader is most interested, and
+                landing them on an index they then have to search. These name
+                the three articles that actually answer what someone reading
+                *this* product is likely to be wondering. `reading` is checked
+                against the journal, so it empties out rather than 404s. */}
+            {reading.length > 0 ? (
+              <ul className="text-left max-w-xl mx-auto divide-y divide-cream/15 border-y border-cream/15">
+                {reading.map((item) => (
+                  <li key={item.href}>
+                    <Link
+                      href={item.href}
+                      className="group flex items-start gap-4 py-5 hover:text-honey transition-colors"
+                    >
+                      <span className="flex-1">
+                        <span className="block font-medium text-cream group-hover:text-honey transition-colors text-balance">
+                          {item.anchor}
+                        </span>
+                        <span className="block text-cream/65 text-[14px] leading-relaxed mt-1">
+                          {item.note}
+                        </span>
+                      </span>
+                      <ArrowRight
+                        className="w-4 h-4 mt-1 shrink-0 text-cream/50 group-hover:text-honey group-hover:translate-x-1 transition-all"
+                        strokeWidth={2}
+                        aria-hidden
+                      />
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              /* With the journal empty this band would send every product page
+                 into a 404, so it points at Our Story — which tells the same
+                 farmers-and-craft story the copy above promises. */
+              <Link
+                href={BLOG_ENABLED ? "/blog" : "/our-story"}
+                className="group inline-flex items-center gap-3 rounded-full bg-cream text-jaggery label-caps px-9 py-4 hover:bg-honey transition-colors"
+              >
+                Read stories from Sankhuwasabha
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" strokeWidth={2} />
+              </Link>
+            )}
           </div>
         </section>
       </main>

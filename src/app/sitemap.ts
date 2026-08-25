@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import content from "@/data/content.json";
 import { BLOG_ENABLED, posts as blog } from "@/lib/blog";
+import { AUTHOR } from "@/lib/author";
 import { CATEGORIES } from "@/lib/categories";
 import { SITE, SITE_URL, absoluteUrl } from "@/lib/site";
 
@@ -34,6 +35,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     // sits with /shop rather than with the informational pages.
     { url: `${SITE_URL}/wholesale`, changeFrequency: "monthly", priority: 0.8 },
     { url: `${SITE_URL}/our-story`, changeFrequency: "monthly", priority: 0.7 },
+    // The author page. Every post's byline and Person schema resolve to it,
+    // so it needs to be crawlable in its own right.
+    ...(BLOG_ENABLED
+      ? ([{ url: `${SITE_URL}${AUTHOR.path}`, changeFrequency: "monthly", priority: 0.5 }] as MetadataRoute.Sitemap)
+      : []),
     { url: `${SITE_URL}/contact`, changeFrequency: "monthly", priority: 0.6 },
     { url: `${SITE_URL}/privacy-policy`, changeFrequency: "yearly", priority: 0.3 },
     { url: `${SITE_URL}/terms`, changeFrequency: "yearly", priority: 0.3 },
