@@ -16,7 +16,7 @@ export default function StorySection() {
         {/* Breadcrumb */}
         <FadeUp>
           <nav aria-label="Breadcrumb" className="mb-6 flex justify-center">
-            <ol className="flex items-center gap-2 label-caps text-jaggery/45">
+            <ol className="flex items-center gap-2 label-caps text-jaggery/70">
               <li><Link href="/" className="hover:text-grove transition-colors">Home</Link></li>
               <ChevronRight className="w-3 h-3 text-jaggery/30" strokeWidth={2.5} aria-hidden />
               <li aria-current="page" className="text-grove">Our Story</li>
@@ -52,11 +52,17 @@ export default function StorySection() {
         aria-hidden
         className="relative mt-8 lg:mt-0 lg:absolute lg:inset-x-0 lg:bottom-0 lg:z-0"
       >
+        {/* Was story-hero.png: a 4096x1024 photograph, with no transparency,
+            saved losslessly at 4.9 MB. next/image re-encodes it per request so
+            visitors never saw that number, but it was the source of every
+            optimisation pass and by far the largest file in the repository.
+            Same picture as a JPEG at 2560px — past the widest deviceSize we
+            generate — is 136 KB. */}
         <Image
-          src="/story-hero.png"
+          src="/story-hero.jpg"
           alt=""
-          width={4096}
-          height={1024}
+          width={2560}
+          height={640}
           priority
           fetchPriority="high"
           sizes="100vw"

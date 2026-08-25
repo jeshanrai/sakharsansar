@@ -25,10 +25,21 @@ export default function Analytics() {
 
   return (
     <>
+      {/*
+        `lazyOnload`, not the default `afterInteractive`.
+
+        gtag.js is 168 KB — the single largest download on any page here, larger
+        than every font and every photograph — and on a throttled mobile
+        connection it competes for bandwidth with the LCP image while it does.
+        Deferring it to the browser's idle time takes it out of that contest
+        entirely. The cost is that a visitor who leaves within the first second
+        or two may not be counted; the benefit is that fewer of them leave.
+      */}
       <Script
         src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+        strategy="lazyOnload"
       />
-      <Script id="ga4-init">
+      <Script id="ga4-init" strategy="lazyOnload">
         {`window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());

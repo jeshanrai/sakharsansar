@@ -20,12 +20,12 @@ export default function FindUsSection() {
         <FadeUp>
           <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-12 sm:mb-16">
             <div>
-              <span className="label-caps text-caramel mb-4 block">Where to Find Us</span>
+              <span className="label-caps text-caramel-deep mb-4 block">Where to Find Us</span>
               <h2 className="font-serif text-h2 text-jaggery">
                 In trusted aisles &amp; marketplaces.
               </h2>
             </div>
-            <p className="text-jaggery/65 text-body max-w-sm">
+            <p className="text-jaggery/70 text-body max-w-sm">
               Stocked by the retailers Nepal already trusts, online and on the shelf.
             </p>
           </div>

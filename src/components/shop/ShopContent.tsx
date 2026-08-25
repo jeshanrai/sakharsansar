@@ -82,11 +82,12 @@ const ShopProductCard = memo(function ShopProductCard({
   const badge = badgeFor(product.slug, index);
 
   return (
-    <motion.article
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, delay: (index % 9) * 0.04, ease: [0.16, 1, 0.3, 1] }}
-      className={`group relative flex flex-col rounded-3xl p-3 sm:p-4 transition-transform duration-500 hover:-translate-y-1 ${CARD_BG}`}
+    // CSS animation, not framer-motion. See `.animate-card-in` in globals.css:
+    // the motion version wrote opacity:0 into the server HTML, so the grid —
+    // this page's LCP element — could not paint until hydration finished.
+    <article
+      style={{ animationDelay: `${(index % 9) * 0.04}s` }}
+      className={`animate-card-in group relative flex flex-col rounded-3xl p-3 sm:p-4 transition-transform duration-500 hover:-translate-y-1 ${CARD_BG}`}
     >
       {/* Legibility scrim — darkens the photo behind the text so it reads consistently */}
       <span
@@ -107,7 +108,7 @@ const ShopProductCard = memo(function ShopProductCard({
             onClick={() => toggleFavourite(product.slug)}
             aria-label={isWishlisted ? "Remove from favourites" : "Add to favourites"}
             className={`absolute top-2.5 right-2.5 z-10 w-8 h-8 rounded-full bg-cream/90 backdrop-blur-sm flex items-center justify-center transition-colors ${
-              isWishlisted ? "text-terracotta" : "text-jaggery/45 hover:text-terracotta opacity-0 group-hover:opacity-100"
+              isWishlisted ? "text-terracotta" : "text-jaggery/70 hover:text-terracotta opacity-0 group-hover:opacity-100"
             }`}
           >
             <Heart className={`w-3.5 h-3.5 ${isWishlisted ? "fill-current" : ""}`} strokeWidth={1.75} />
@@ -141,15 +142,15 @@ const ShopProductCard = memo(function ShopProductCard({
 
       <div className="relative z-10 pt-5 px-1.5 pb-1 flex flex-col [text-shadow:0_1px_2px_rgba(26,20,16,0.28)]">
         <div className="flex items-center justify-between gap-2 mb-3">
-          <span className="text-[10px] font-bold tracking-[0.22em] uppercase text-honey">
+          <span className="text-[10px] font-bold tracking-[0.22em] uppercase text-honey-ink">
             {product.category}
           </span>
         </div>
 
         <Link href={`/products/${product.slug}`} className="block">
-          <h3 className="font-display font-bold text-cream text-[20px] sm:text-[22px] tracking-tight leading-[1.1] line-clamp-2 min-h-[2.2em] group-hover:text-honey transition-colors">
+          <h2 className="font-display font-bold text-cream text-[20px] sm:text-[22px] tracking-tight leading-[1.1] line-clamp-2 min-h-[2.2em] group-hover:text-honey transition-colors">
             {product.name}
-          </h3>
+          </h2>
         </Link>
 
         <p className="mt-2.5 text-[10px] font-bold tracking-[0.2em] uppercase text-cream/80">
@@ -161,11 +162,11 @@ const ShopProductCard = memo(function ShopProductCard({
             {product.price}
           </span>
           {product.weight === "1kg" && (
-            <span className="text-[12px] text-cream/70 font-medium">per kg</span>
+            <span className="text-[12px] text-cream/75 font-medium">per kg</span>
           )}
         </div>
       </div>
-    </motion.article>
+    </article>
   );
 });
 
@@ -270,12 +271,12 @@ export default function ShopContent({
                   const className = `relative inline-flex items-center gap-1.5 h-9 px-3.5 rounded-full text-[13px] font-medium tracking-tight whitespace-nowrap transition-all ${
                     active
                       ? "bg-jaggery text-cream shadow-[0_4px_12px_rgba(26,20,16,0.12)]"
-                      : "text-jaggery/65 hover:text-jaggery hover:bg-jaggery/[0.04]"
+                      : "text-jaggery/70 hover:text-jaggery hover:bg-jaggery/[0.04]"
                   }`;
                   const label = (
                     <>
                       {cat}
-                      <span className={`text-[10px] tabular-nums ${active ? "text-cream/60" : "text-jaggery/35"}`}>
+                      <span className={`text-[10px] tabular-nums ${active ? "text-cream/75" : "text-jaggery/35"}`}>
                         {productCounts[cat] ?? 0}
                       </span>
                     </>
@@ -306,19 +307,19 @@ export default function ShopContent({
             <div className="flex items-center gap-2 shrink-0">
               {/* Inline search (desktop) */}
               <div className="hidden md:block relative">
-                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-jaggery/40" />
+                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-jaggery/70" />
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Find sakhar…"
-                  className="h-9 w-[180px] lg:w-[220px] pl-9 pr-8 rounded-full bg-white border border-jaggery/12 text-[13px] text-jaggery placeholder:text-jaggery/40 focus:outline-none focus:border-jaggery/40 focus:w-[260px] transition-all"
+                  className="h-9 w-[180px] lg:w-[220px] pl-9 pr-8 rounded-full bg-white border border-jaggery/12 text-[13px] text-jaggery placeholder:text-jaggery/70 focus:outline-none focus:border-jaggery/40 focus:w-[260px] transition-all"
                 />
                 {searchQuery && (
                   <button
                     onClick={() => setSearchQuery("")}
                     aria-label="Clear search"
-                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-jaggery/45 hover:text-jaggery"
+                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-jaggery/70 hover:text-jaggery"
                   >
                     <X className="w-3.5 h-3.5" />
                   </button>
@@ -330,7 +331,7 @@ export default function ShopContent({
                 type="button"
                 onClick={() => setFiltersOpen(true)}
                 aria-label="Search and filters"
-                className="md:hidden h-9 w-9 inline-flex items-center justify-center rounded-full text-jaggery/65 hover:text-jaggery hover:bg-jaggery/[0.04] transition-colors"
+                className="md:hidden h-9 w-9 inline-flex items-center justify-center rounded-full text-jaggery/70 hover:text-jaggery hover:bg-jaggery/[0.04] transition-colors"
               >
                 <Search className="w-4 h-4" strokeWidth={1.6} />
               </button>
@@ -344,7 +345,7 @@ export default function ShopContent({
                   aria-expanded={sortOpen}
                   className="inline-flex items-center gap-1.5 h-9 px-3 sm:px-4 rounded-full text-jaggery hover:bg-jaggery/[0.04] transition-colors text-[12px] font-semibold tracking-tight border border-jaggery/12"
                 >
-                  <span className="hidden sm:inline text-jaggery/55">Sort</span>
+                  <span className="hidden sm:inline text-jaggery/70">Sort</span>
                   <span className="hidden sm:inline text-jaggery/25">·</span>
                   <span className="sm:hidden">Sort</span>
                   <span className="hidden sm:inline">{activeSortLabel.split(" · ")[0]}</span>
@@ -374,7 +375,7 @@ export default function ShopContent({
                               }`}
                             >
                               {opt.label}
-                              {active && <Check className="w-3.5 h-3.5 text-caramel" strokeWidth={2} />}
+                              {active && <Check className="w-3.5 h-3.5 text-caramel-deep" strokeWidth={2} />}
                             </button>
                           </li>
                         );
@@ -388,6 +389,9 @@ export default function ShopContent({
               <button
                 type="button"
                 onClick={() => setFiltersOpen(true)}
+                // The "Filter" label is `hidden sm:inline`, so below 640px this
+                // was an icon with no accessible name at all.
+                aria-label="Filters"
                 className="relative inline-flex items-center gap-1.5 h-9 px-3 sm:px-4 rounded-full text-jaggery hover:bg-jaggery/[0.04] transition-colors text-[12px] font-semibold tracking-tight border border-jaggery/12"
               >
                 <SlidersHorizontal className="w-3.5 h-3.5" strokeWidth={1.75} />
@@ -428,7 +432,7 @@ export default function ShopContent({
                   )}
                   <button
                     onClick={clearAll}
-                    className="ml-1 text-[11px] font-bold tracking-[0.15em] uppercase text-terracotta hover:text-jaggery transition-colors"
+                    className="ml-1 text-[11px] font-bold tracking-[0.15em] uppercase text-terracotta-ink hover:text-jaggery transition-colors"
                   >
                     Clear all
                   </button>
@@ -444,7 +448,7 @@ export default function ShopContent({
         <div className="max-w-7xl mx-auto">
           {/* Result count */}
           <div className="mb-7 flex items-center justify-between">
-            <p className="text-[12px] font-bold tracking-[0.18em] uppercase text-jaggery/55">
+            <p className="text-[12px] font-bold tracking-[0.18em] uppercase text-jaggery/70">
               Showing{" "}
               <span className="text-jaggery">{filteredProducts.length}</span>{" "}
               {filteredProducts.length === 1 ? "form" : "forms"}
@@ -514,23 +518,23 @@ export default function ShopContent({
 
                 {/* Mobile search */}
                 <div className="md:hidden mb-8">
-                  <h3 className="text-[10px] font-bold tracking-[0.22em] uppercase text-jaggery/55 mb-3">
+                  <h3 className="text-[10px] font-bold tracking-[0.22em] uppercase text-jaggery/70 mb-3">
                     Search
                   </h3>
                   <div className="relative">
-                    <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-jaggery/40" />
+                    <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-jaggery/70" />
                     <input
                       type="text"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       placeholder="Find sakhar…"
-                      className="w-full h-11 pl-10 pr-9 rounded-full bg-white border border-jaggery/12 text-[13px] text-jaggery placeholder:text-jaggery/40 focus:outline-none focus:border-jaggery/40"
+                      className="w-full h-11 pl-10 pr-9 rounded-full bg-white border border-jaggery/12 text-[13px] text-jaggery placeholder:text-jaggery/70 focus:outline-none focus:border-jaggery/40"
                     />
                     {searchQuery && (
                       <button
                         onClick={() => setSearchQuery("")}
                         aria-label="Clear"
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-jaggery/45 hover:text-jaggery"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-jaggery/70 hover:text-jaggery"
                       >
                         <X className="w-4 h-4" />
                       </button>
@@ -540,7 +544,7 @@ export default function ShopContent({
 
                 {/* Price */}
                 <div className="mb-8">
-                  <h3 className="text-[10px] font-bold tracking-[0.22em] uppercase text-jaggery/55 mb-3">
+                  <h3 className="text-[10px] font-bold tracking-[0.22em] uppercase text-jaggery/70 mb-3">
                     Price
                   </h3>
                   <ul className="flex flex-col gap-0.5">
@@ -551,7 +555,7 @@ export default function ShopContent({
                           <button
                             onClick={() => setActivePriceRange(idx)}
                             className={`w-full flex items-center gap-3 py-2 text-left transition-colors ${
-                              active ? "text-jaggery" : "text-jaggery/60 hover:text-jaggery"
+                              active ? "text-jaggery" : "text-jaggery/70 hover:text-jaggery"
                             }`}
                           >
                             <span className={`w-3.5 h-3.5 rounded-full border-2 flex items-center justify-center ${
@@ -619,7 +623,7 @@ function EmptyState({ onReset }: { onReset: () => void }) {
       <p className="font-marker uppercase text-jaggery text-[clamp(1.75rem,3.5vw,2.75rem)] tracking-tight leading-tight">
         No sakhar found.
       </p>
-      <p className="text-[14px] text-jaggery/55 mt-3 max-w-sm mx-auto leading-relaxed">
+      <p className="text-[14px] text-jaggery/70 mt-3 max-w-sm mx-auto leading-relaxed">
         We couldn&apos;t find a form matching your filters.
         Try adjusting your search or browse the full collection.
       </p>

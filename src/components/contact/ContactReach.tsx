@@ -56,7 +56,7 @@ export default function ContactReach() {
       <div className="relative z-10 max-w-[1180px] mx-auto">
         <FadeUp>
           <div className="text-center max-w-2xl mx-auto mb-14 sm:mb-18">
-            <span className="label-caps text-honey mb-4 block">Reach us</span>
+            <span className="label-caps text-honey-ink mb-4 block">Reach us</span>
             <h2 className="font-marker uppercase text-cream leading-[0.95] text-[clamp(2rem,4.4vw,3.25rem)]">
               Drop us a line
             </h2>
@@ -82,9 +82,9 @@ export default function ContactReach() {
                   <Icon className="w-5 h-5" strokeWidth={1.75} />
                 </span>
                 <span className="flex flex-col">
-                  <span className="label-caps text-caramel">{label}</span>
+                  <span className="label-caps text-caramel-deep">{label}</span>
                   <span className="text-jaggery font-medium text-[16px] mt-1 leading-snug">{value}</span>
-                  <span className="text-jaggery/55 text-[13px] mt-1 flex items-center gap-1.5">
+                  <span className="text-jaggery/70 text-[13px] mt-1 flex items-center gap-1.5">
                     {label === "Call us" && <Clock className="w-3 h-3" strokeWidth={2} />}
                     {note}
                   </span>
@@ -104,7 +104,7 @@ export default function ContactReach() {
 
             {/* Socials */}
             <div className="flex items-center gap-3 pt-2">
-              <span className="label-caps text-cream/60">Follow</span>
+              <span className="label-caps text-cream/75">Follow</span>
               {SOCIAL_LINKS.map(({ icon: Icon, href, label }) => (
                 <a
                   key={label}

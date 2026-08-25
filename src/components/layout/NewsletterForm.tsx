@@ -31,7 +31,7 @@ export default function NewsletterForm() {
         <button
           type="submit"
           disabled={submitted}
-          className="group inline-flex items-center justify-center gap-3 label-caps text-cream hover:text-honey transition-colors py-2 self-start sm:self-auto disabled:text-honey"
+          className="group inline-flex items-center justify-center gap-3 label-caps text-cream hover:text-honey-ink transition-colors py-2 self-start sm:self-auto disabled:text-honey"
         >
           {submitted ? (
             <>

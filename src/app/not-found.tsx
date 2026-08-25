@@ -36,7 +36,7 @@ export default function NotFound() {
     <>
       <main className="overflow-x-hidden pt-36 pb-24 px-5 sm:px-8 lg:px-12 min-h-[70vh]">
         <div className="max-w-3xl mx-auto">
-          <p className="text-[11px] font-bold tracking-caps uppercase text-jaggery/55 mb-3">
+          <p className="text-[11px] font-bold tracking-caps uppercase text-jaggery/70 mb-3">
             Error 404
           </p>
           <h1 className="font-marker uppercase text-jaggery leading-[0.9] tracking-tight text-[clamp(2.25rem,6vw,4rem)]">
@@ -58,11 +58,11 @@ export default function NotFound() {
                     <span className="block font-display font-bold text-jaggery tracking-tight">
                       {link.label}
                     </span>
-                    <span className="mt-1 block text-sm text-jaggery/60">
+                    <span className="mt-1 block text-sm text-jaggery/70">
                       {link.hint}
                     </span>
                   </span>
-                  <ArrowRight className="w-4 h-4 mt-1 shrink-0 text-jaggery/40 group-hover:text-jaggery group-hover:translate-x-0.5 transition-all" />
+                  <ArrowRight className="w-4 h-4 mt-1 shrink-0 text-jaggery/70 group-hover:text-jaggery group-hover:translate-x-0.5 transition-all" />
                 </Link>
               </li>
             ))}

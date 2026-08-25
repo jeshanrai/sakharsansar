@@ -56,8 +56,16 @@
   --color-jaggery: #3D2817;
   --color-jaggery-soft: #5A3B22;
   --color-caramel: #B8763E;
-  --color-caramel-deep: #9A5F2E;
+  /* Nudged from #9A5F2E. As a text colour it measured 4.46:1 on cream — just
+     under the 4.5 AA floor for small text, and every eyebrow on the site uses
+     it at 11px. This clears it on cream, ivory and peach alike. */
+  --color-caramel-deep: #8A582E;
   --color-honey: #E8A857;
+  /* Honey is 6.72:1 on jaggery but only 4.04:1 on grove, and the grove bands
+     are where it is used for small eyebrow text. This is honey lifted just far
+     enough to clear AA there; the original stays for fills, rules and icons,
+     where contrast minimums do not apply. */
+  --color-honey-ink: #EFB86E;
 
   --color-cream: #F5EDE0;
   --color-ivory: #FAF6EE;
@@ -65,6 +73,10 @@
 
   --color-forest: #4A5D3A;
   --color-terracotta: #C4623E;
+  /* Terracotta is 3.50:1 on cream, and it is used for the one destructive
+     control on the shop ("clear all"), which is exactly the text a user needs
+     to be able to read. Same hue, darkened until it clears AA. */
+  --color-terracotta-ink: #A75335;
   --color-ink: #1A1410;
 
   /* Our Story palette — deep "grove" green + warm peach bands, echoing the
@@ -179,6 +191,17 @@ em, i, .italic {
     letter-spacing: 0.01em;
   }
 
+  /* The three Nepali articles set `lang="ne"` on the <article>, but nothing
+     keyed off it — so a font chosen and downloaded for Devanagari was serving
+     one decorative span on the home page, while several thousand words of
+     actual Devanagari fell back to whatever the OS happened to have. Fraunces
+     and Inter carry no Devanagari glyphs at all, so that fallback was
+     arbitrary and, on some Android builds, ugly. */
+  :lang(ne) {
+    font-family: var(--font-devanagari);
+    letter-spacing: 0.01em;
+  }
+
   /* ── Display rounded sans — for hero/promo treatments ───── */
   .font-display {
     font-family: var(--font-display);
@@ -257,6 +280,28 @@ em, i, .italic {
   /* ── Marquee — used by the promo bar at the top of the site.
      The content is rendered twice in a row; the wrapper slides
      left by 50% of its total width to produce a seamless loop. */
+  /* ── Card entrance, without waiting for JS ─────────────────
+     The shop grid used framer-motion's `initial={{opacity: 0}}`, which is
+     written into the server HTML as an inline style. On a throttled mobile
+     connection that meant the product cards — the largest thing on the page,
+     and its LCP element — stayed invisible until the JS bundle had downloaded,
+     parsed and hydrated. Lighthouse measured the shop's LCP at 9.8s against
+     4.7s for a product page carrying a bigger photograph.
+
+     As a CSS animation it starts at first paint instead, and costs no
+     JavaScript at all. `both` keeps the pre-animation state so a staggered
+     card does not flash in before its delay. */
+  @keyframes card-in {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: none; }
+  }
+  .animate-card-in {
+    animation: card-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .animate-card-in { animation: none; }
+  }
+
   @keyframes marquee {
     from { transform: translateX(0); }
     to   { transform: translateX(-50%); }

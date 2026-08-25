@@ -52,7 +52,7 @@ export default function TrustStrip() {
         >
           <div className="inline-flex items-center gap-3 mb-4">
             <span className="w-8 h-px bg-honey/60" />
-            <span className="label-caps text-honey">Why our sakhar</span>
+            <span className="label-caps text-honey-ink">Why our sakhar</span>
             <span className="w-8 h-px bg-honey/60" />
           </div>
           {/* Same adjacent-span problem as the hero H1: without the {" "}

@@ -107,7 +107,7 @@ export default async function BlogCategoryPage({ params }: Props) {
 
           <div className="relative z-10 max-w-[820px] mx-auto">
             <nav aria-label="Breadcrumb" className="mb-7">
-              <ol className="flex items-center gap-2 label-caps text-jaggery/45 min-w-0">
+              <ol className="flex items-center gap-2 label-caps text-jaggery/70 min-w-0">
                 <li className="shrink-0">
                   <Link href="/" className="hover:text-grove transition-colors">Home</Link>
                 </li>
@@ -120,7 +120,7 @@ export default async function BlogCategoryPage({ params }: Props) {
               </ol>
             </nav>
 
-            <p className="label-caps text-jaggery/45 mb-4">
+            <p className="label-caps text-jaggery/70 mb-4">
               {tagged.length} {tagged.length === 1 ? "article" : "articles"}
             </p>
             <h1 className="font-marker uppercase text-jaggery leading-[0.95] tracking-tight text-[clamp(2.25rem,5.5vw,4rem)] text-balance">
@@ -150,7 +150,7 @@ export default async function BlogCategoryPage({ params }: Props) {
                     />
                   </div>
                   <div className="mt-4 flex items-center gap-2.5">
-                    <time dateTime={post.date} className="label-caps text-jaggery/45">
+                    <time dateTime={post.date} className="label-caps text-jaggery/70">
                       {formatPostDate(post.date)}
                     </time>
                   </div>
@@ -160,7 +160,7 @@ export default async function BlogCategoryPage({ params }: Props) {
                   >
                     {post.title}
                   </h2>
-                  <p className="text-jaggery/65 text-[15px] leading-relaxed mt-2 line-clamp-3">
+                  <p className="text-jaggery/70 text-[15px] leading-relaxed mt-2 line-clamp-3">
                     {post.description}
                   </p>
                   <span className="mt-3 inline-flex items-center gap-1.5 label-caps text-grove">
@@ -175,7 +175,7 @@ export default async function BlogCategoryPage({ params }: Props) {
           {/* Sideways links to the other hubs — the reason these pages are
               worth having is that they connect the journal to itself. */}
           <nav aria-label="Other categories" className="max-w-[1080px] mx-auto mt-16 pt-10 border-t border-jaggery/10">
-            <p className="label-caps text-jaggery/45 mb-4">More from the journal</p>
+            <p className="label-caps text-jaggery/70 mb-4">More from the journal</p>
             <ul className="flex flex-wrap gap-2.5">
               <li>
                 <Link

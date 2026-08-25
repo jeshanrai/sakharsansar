@@ -26,7 +26,7 @@ export default function TestimonialsSection() {
     >
       <div className="max-w-3xl mx-auto text-center">
         <FadeUp>
-          <span className="label-caps text-caramel mb-12 block">Voices</span>
+          <span className="label-caps text-caramel-deep mb-12 block">Voices</span>
         </FadeUp>
 
         <FadeUp delay={0.1}>
@@ -51,7 +51,7 @@ export default function TestimonialsSection() {
                 <cite className="not-italic font-serif text-base text-jaggery">
                   {t.name}
                 </cite>
-                <span className="label-caps text-jaggery/55">{t.location}</span>
+                <span className="label-caps text-jaggery/70">{t.location}</span>
               </div>
             </footer>
           </blockquote>
@@ -62,7 +62,7 @@ export default function TestimonialsSection() {
           <button
             onClick={prev}
             aria-label="Previous testimonial"
-            className="text-jaggery/50 hover:text-jaggery transition-colors p-1"
+            className="text-jaggery/70 hover:text-jaggery transition-colors p-1"
           >
             <ChevronLeft className="w-5 h-5" strokeWidth={1.5} />
           </button>
@@ -86,7 +86,7 @@ export default function TestimonialsSection() {
           <button
             onClick={next}
             aria-label="Next testimonial"
-            className="text-jaggery/50 hover:text-jaggery transition-colors p-1"
+            className="text-jaggery/70 hover:text-jaggery transition-colors p-1"
           >
             <ChevronRight className="w-5 h-5" strokeWidth={1.5} />
           </button>

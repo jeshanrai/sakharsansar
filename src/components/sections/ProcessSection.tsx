@@ -38,13 +38,13 @@ export default function ProcessSection() {
       <div className="max-w-[1440px] mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 mb-16 sm:mb-24 items-end">
           <SlideInLeft className="md:col-span-7">
-            <span className="label-caps text-honey mb-5 block">The Craft</span>
+            <span className="label-caps text-honey-ink mb-5 block">The Craft</span>
             <h2 className="font-serif text-h1 text-cream tracking-[-0.018em] text-balance">
               Four steps. <span className="italic font-light">No shortcuts.</span>
             </h2>
           </SlideInLeft>
           <FadeUp delay={0.2} className="md:col-span-5">
-            <p className="text-cream/70 text-lede max-w-md md:ml-auto">
+            <p className="text-cream/75 text-lede max-w-md md:ml-auto">
               The same method our grandparents used. Slow, smoky, and stubbornly free
               of the chemicals modern factories rely on to cut corners.
             </p>
@@ -78,10 +78,10 @@ export default function ProcessSection() {
                     <h3 className="font-serif text-h3 text-cream mb-2">
                       {step.title}
                     </h3>
-                    <span className="label-caps text-honey/85 mb-4 block">
+                    <span className="label-caps text-honey-ink/85 mb-4 block">
                       {step.season}
                     </span>
-                    <p className="text-cream/70 text-body max-w-xs">
+                    <p className="text-cream/75 text-body max-w-xs">
                       {step.desc}
                     </p>
                   </div>

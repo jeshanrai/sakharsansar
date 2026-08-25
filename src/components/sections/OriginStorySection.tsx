@@ -24,7 +24,7 @@ export default function OriginStorySection() {
             />
             {/* Tiny location label, Yolélé style */}
             <div className="absolute bottom-5 left-5 sm:bottom-8 sm:left-8 bg-cream/95 backdrop-blur-sm px-4 py-3 max-w-[220px]">
-              <span className="label-caps text-jaggery/60 block mb-1">Location</span>
+              <span className="label-caps text-jaggery/70 block mb-1">Location</span>
               <span className="font-serif text-meta text-jaggery">
                 Sankhuwasabha · Koshi · Nepal
               </span>
@@ -36,7 +36,7 @@ export default function OriginStorySection() {
         <SlideInRight delay={0.15} className="lg:col-span-5">
           <div className="flex flex-col">
             <FadeUp>
-              <span className="label-caps text-caramel mb-5 block">Our Origin</span>
+              <span className="label-caps text-caramel-deep mb-5 block">Our Origin</span>
             </FadeUp>
             <h2 className="font-serif text-h1 text-jaggery tracking-[-0.018em] mb-8 text-balance">
               A Place Called <span className="italic font-light">Sankhuwasabha</span>
@@ -53,7 +53,7 @@ export default function OriginStorySection() {
               <p className="pull-quote text-jaggery">
                 &ldquo;The cane remembers the soil. The jaggery remembers the fire.&rdquo;
               </p>
-              <footer className="label-caps text-jaggery/55 mt-4">
+              <footer className="label-caps text-jaggery/70 mt-4">
                 — Ram Bahadur, third-generation maker
               </footer>
             </blockquote>

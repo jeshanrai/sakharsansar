@@ -85,7 +85,7 @@ function TableView({ block }: { block: Block & { kind: "table" } }) {
   return (
     <figure className="my-10 -mx-2 sm:mx-0">
       {block.caption && (
-        <figcaption className="label-caps text-caramel mb-3 px-2 sm:px-0">
+        <figcaption className="label-caps text-caramel-deep mb-3 px-2 sm:px-0">
           {block.caption}
         </figcaption>
       )}
@@ -135,7 +135,7 @@ function TableView({ block }: { block: Block & { kind: "table" } }) {
           </tbody>
         </table>
       </div>
-      <p className="sm:hidden mt-2.5 px-2 label-caps text-jaggery/40">
+      <p className="sm:hidden mt-2.5 px-2 label-caps text-jaggery/70">
         Scroll the table sideways →
       </p>
     </figure>
@@ -152,7 +152,7 @@ function TableView({ block }: { block: Block & { kind: "table" } }) {
 function AnswerBox({ inline }: { inline: Inline[] }) {
   return (
     <aside className="my-10 rounded-2xl bg-ivory border border-jaggery/10 border-l-4 border-l-honey px-6 sm:px-8 py-7 shadow-sm">
-      <span className="label-caps text-caramel mb-3 block">The short answer</span>
+      <span className="label-caps text-caramel-deep mb-3 block">The short answer</span>
       <p className="text-jaggery/90 text-lede">
         <InlineView nodes={inline} />
       </p>
@@ -249,7 +249,7 @@ function FigureView({ block }: { block: Block & { kind: "figure" } }) {
         className="w-full h-auto max-h-[85vh] object-contain rounded-2xl bg-ivory ring-1 ring-jaggery/8"
       />
       {block.caption && (
-        <figcaption className="mt-3.5 px-2 sm:px-0 font-serif italic text-jaggery/55 text-meta">
+        <figcaption className="mt-3.5 px-2 sm:px-0 font-serif italic text-jaggery/70 text-meta">
           {block.caption}
         </figcaption>
       )}

@@ -19,14 +19,18 @@ const inter = Inter({
 });
 
 // Display serif — Fraunces is a variable font. We load the full variable
-// axis (covering 300–600 in CSS weight) plus its SOFT and WONK axes so we
-// can soften terminals on hero display text via `font-variation-settings`.
+// axis (covering 300–600 in CSS weight) plus its SOFT axis, which softens
+// terminals on display text via `font-variation-settings`.
 // Optical sizing (`opsz`) is enabled globally in CSS via `font-optical-sizing`.
+//
+// WONK was dropped: `.font-wonk` is defined in globals.css but applied nowhere
+// in the codebase, and every extra axis is carried in the variable font's
+// payload whether or not anything varies along it.
 const fraunces = Fraunces({
   subsets: ["latin"],
   weight: "variable",
   style: ["normal", "italic"],
-  axes: ["SOFT", "WONK"],
+  axes: ["SOFT"],
   variable: "--font-fraunces",
   display: "swap",
 });
@@ -37,7 +41,9 @@ const fraunces = Fraunces({
 const tiroDevanagari = Tiro_Devanagari_Hindi({
   subsets: ["devanagari", "latin"],
   weight: ["400"],
-  style: ["normal", "italic"],
+  // Italic dropped: nothing in the codebase sets it, and each style is its own
+  // woff2 download.
+  style: ["normal"],
   variable: "--font-devanagari",
   display: "swap",
 });
@@ -45,7 +51,9 @@ const tiroDevanagari = Tiro_Devanagari_Hindi({
 // Display sans for hero/promo treatments — chunky, rounded, sticker-friendly.
 const fredoka = Fredoka({
   subsets: ["latin"],
-  weight: ["500", "600", "700"],
+  // 600 is the weight `.font-display` sets by default and 700 is what
+  // `font-display font-bold` asks for. 500 was declared and never used.
+  weight: ["600", "700"],
   variable: "--font-fredoka",
   display: "swap",
 });
@@ -149,13 +157,19 @@ export default function RootLayout({
         {/* Preconnect to Google Fonts origin so the font CSS resolves earlier */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        {/* Preload the hero LCP image (used in HeroSection + ProductsSection card frames) */}
-        <link
-          rel="preload"
-          as="image"
-          href="/hero-cane-bg.jpg"
-          fetchPriority="high"
-        />
+        {/*
+          The hero background used to be preloaded here, on every route.
+
+          Two problems. It named the raw file, so the preload fetched the
+          original JPEG rather than anything next/image had optimised — the
+          browser then downloaded the picture twice on the home page, once for
+          the preload and once for the <Image> that actually renders. And it
+          ran sitewide, so every policy page, article and product page paid for
+          a hero image it never shows.
+
+          HeroSection's <Image priority fetchPriority="high"> already emits a
+          correct preload for the pages that need it.
+        */}
         {/* Publisher + site identity, emitted once for every page so crawlers
             resolve all our Organization references to a single entity. */}
         <JsonLd data={siteGraphLd()} />

@@ -71,7 +71,7 @@ export default function AdminShell({ activeTab, onTabChange, adminName, onLogout
       <aside className="hidden lg:flex fixed top-0 left-0 h-screen w-[260px] bg-[#1A1410] text-[#F5EDE0] flex-col z-40">
         <div className="px-6 pt-7 pb-6">
           <div className="relative w-[180px] h-10 brightness-0 invert">
-            <Image src="/word-logo.svg" alt="SakharSansar" fill priority className="object-contain object-left" />
+            <Image src="/word-logo.svg" alt="SakharSansar" fill sizes="160px" priority className="object-contain object-left" />
           </div>
           <p className="mt-2 text-[11px] tracking-[0.22em] uppercase text-[#E8A857] font-semibold">Admin Studio</p>
         </div>
@@ -154,7 +154,7 @@ export default function AdminShell({ activeTab, onTabChange, adminName, onLogout
             >
               <div className="px-5 pt-6 pb-4 flex items-center justify-between">
                 <div className="relative w-[150px] h-9 brightness-0 invert">
-                  <Image src="/word-logo.svg" alt="SakharSansar" fill className="object-contain object-left" />
+                  <Image src="/word-logo.svg" alt="SakharSansar" fill sizes="160px" className="object-contain object-left" />
                 </div>
                 <button onClick={() => setDrawerOpen(false)} className="h-9 w-9 rounded-xl bg-[#F5EDE0]/5 flex items-center justify-center">
                   <X className="w-4 h-4" />

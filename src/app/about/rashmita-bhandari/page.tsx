@@ -83,7 +83,7 @@ export default function AuthorPage() {
 
           <div className="relative z-10 max-w-[900px] mx-auto">
             <nav aria-label="Breadcrumb" className="mb-7">
-              <ol className="flex items-center gap-2 label-caps text-jaggery/45 min-w-0">
+              <ol className="flex items-center gap-2 label-caps text-jaggery/70 min-w-0">
                 <li className="shrink-0">
                   <Link href="/" className="hover:text-grove transition-colors">Home</Link>
                 </li>
@@ -102,7 +102,7 @@ export default function AuthorPage() {
                 className="h-28 w-28 sm:h-33 sm:w-33 rounded-full object-cover shadow-xl shadow-jaggery/15 ring-4 ring-cream shrink-0"
               />
               <div>
-                <p className="label-caps text-jaggery/45 mb-3">{AUTHOR.role}</p>
+                <p className="label-caps text-jaggery/70 mb-3">{AUTHOR.role}</p>
                 <h1 className="font-marker uppercase text-jaggery leading-[0.95] tracking-tight text-[clamp(2.25rem,5.5vw,4rem)]">
                   {AUTHOR.name}
                 </h1>
@@ -177,7 +177,7 @@ export default function AuthorPage() {
                       </span>
                       <time
                         dateTime={post.date}
-                        className="label-caps text-jaggery/40 shrink-0 sm:ml-6"
+                        className="label-caps text-jaggery/70 shrink-0 sm:ml-6"
                       >
                         {formatPostDate(post.date)}
                       </time>

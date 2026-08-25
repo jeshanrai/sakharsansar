@@ -103,7 +103,9 @@ const nextConfig: NextConfig = {
     formats: ["image/avif", "image/webp"],
     deviceSizes: [360, 480, 640, 768, 1024, 1280, 1440, 1920],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-    minimumCacheTTL: 60 * 60 * 24 * 7, // 7 days
+    // A year. These are content-addressed by the optimiser's own cache key, so
+    // a re-uploaded photo produces a different URL rather than a stale hit.
+    minimumCacheTTL: 60 * 60 * 24 * 365,
   },
 
   // Send fewer headers, shave bytes per request

@@ -258,7 +258,7 @@ export default function HeroSection() {
                     transition={{ duration: 0.7, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
                     className="absolute -top-3 -right-2 sm:-top-2 sm:-right-6 bg-jaggery text-cream rounded-2xl px-3.5 py-2.5 shadow-xl shadow-jaggery/30 max-w-[150px]"
                   >
-                    <p className="label-caps text-honey text-[9px]">100% Pure</p>
+                    <p className="label-caps text-honey-ink text-[9px]">100% Pure</p>
                     <p className="font-serif text-cream text-[13px] tracking-tight mt-0.5">
                       Sankhuwasabha gur
                     </p>

@@ -36,7 +36,7 @@ export default function Error({
   return (
     <main className="bg-cream overflow-x-hidden pt-36 pb-24 px-5 sm:px-8 lg:px-12 min-h-[70vh]">
       <div className="max-w-3xl mx-auto">
-        <p className="text-[11px] font-bold tracking-caps uppercase text-jaggery/55 mb-3">
+        <p className="text-[11px] font-bold tracking-caps uppercase text-jaggery/70 mb-3">
           Something went wrong
         </p>
         <h1 className="font-marker uppercase text-jaggery leading-[0.9] tracking-tight text-[clamp(2.25rem,6vw,4rem)]">
@@ -49,7 +49,7 @@ export default function Error({
         </p>
 
         {error.digest && (
-          <p className="mt-4 text-sm text-jaggery/45">
+          <p className="mt-4 text-sm text-jaggery/70">
             Reference:{" "}
             <code className="font-mono text-jaggery/70">{error.digest}</code>
           </p>
@@ -73,7 +73,7 @@ export default function Error({
           </Link>
         </div>
 
-        <p className="mt-10 text-sm text-jaggery/55">
+        <p className="mt-10 text-sm text-jaggery/70">
           Still stuck?{" "}
           <Link href="/contact" className="underline underline-offset-4 hover:text-jaggery">
             Tell us what you were doing

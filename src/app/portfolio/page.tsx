@@ -87,7 +87,7 @@ export default function PortfolioLogin() {
         <div className="relative">
           <motion.div initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
             <div className="relative w-[200px] h-11 brightness-0 invert">
-              <Image src="/word-logo.svg" alt="SakharSansar" fill priority className="object-contain object-left" />
+              <Image src="/word-logo.svg" alt="SakharSansar" fill sizes="200px" priority className="object-contain object-left" />
             </div>
             <p className="mt-3 text-[11px] tracking-[0.22em] uppercase text-[#E8A857] font-semibold">Admin Studio</p>
           </motion.div>
@@ -129,7 +129,7 @@ export default function PortfolioLogin() {
         {/* Mobile-only header */}
         <div className="lg:hidden flex items-center justify-between mb-10">
           <div className="relative w-[140px] h-8">
-            <Image src="/word-logo.svg" alt="SakharSansar" fill priority className="object-contain object-left" />
+            <Image src="/word-logo.svg" alt="SakharSansar" fill sizes="200px" priority className="object-contain object-left" />
           </div>
           <p className="text-[10px] tracking-[0.22em] uppercase text-[#B8763E] font-semibold">Admin</p>
         </div>

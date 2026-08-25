@@ -29,9 +29,13 @@ export default function PromoBar() {
   // Don't show on admin/portfolio internal pages
   if (pathname?.startsWith("/portfolio")) return null;
 
-  // Render the message set twice to enable seamless marquee loop
-  const renderSet = (key: string | number) => (
-    <div key={key} className="flex items-center shrink-0">
+  // Rendered twice so the -50% marquee slide loops seamlessly. Only the first
+  // copy is content: the second is the same four strings again, and without
+  // `aria-hidden` a screen reader read the whole promo bar twice before
+  // reaching the page, while crawlers saw ~60 words of duplicated boilerplate
+  // ahead of the real content on every URL.
+  const renderSet = (key: string | number, duplicate = false) => (
+    <div key={key} className="flex items-center shrink-0" aria-hidden={duplicate || undefined}>
       {MESSAGES.map((msg, i) => (
         <div key={i} className="flex items-center gap-2.5 px-7">
           <msg.icon className="w-3.5 h-3.5 text-honey shrink-0" strokeWidth={1.75} />
@@ -65,7 +69,7 @@ export default function PromoBar() {
       <div className="relative h-full flex items-center overflow-hidden">
         <div className="flex animate-marquee whitespace-nowrap will-change-transform">
           {renderSet("a")}
-          {renderSet("b")}
+          {renderSet("b", true)}
         </div>
       </div>
       {/* Edge fades for soft entry/exit */}

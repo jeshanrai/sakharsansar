@@ -114,7 +114,7 @@ export default function StoryChaptersSection() {
                 <p className="text-jaggery/75 text-lede mt-6 max-w-xl">
                   {c.body}
                 </p>
-                <p className="font-serif italic text-jaggery/60 text-body mt-4 max-w-xl">
+                <p className="font-serif italic text-jaggery/70 text-body mt-4 max-w-xl">
                   &ldquo;{c.quote}&rdquo;
                 </p>
                 <Link

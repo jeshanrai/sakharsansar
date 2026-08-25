@@ -26,9 +26,9 @@ export default function ProductDetailSections({ sections }: { sections: Section[
                 {s.title}
               </span>
               {isOpen ? (
-                <Minus className="w-4 h-4 text-jaggery/60 group-hover:text-jaggery transition-colors" strokeWidth={1.5} />
+                <Minus className="w-4 h-4 text-jaggery/70 group-hover:text-jaggery transition-colors" strokeWidth={1.5} />
               ) : (
-                <Plus className="w-4 h-4 text-jaggery/60 group-hover:text-jaggery transition-colors" strokeWidth={1.5} />
+                <Plus className="w-4 h-4 text-jaggery/70 group-hover:text-jaggery transition-colors" strokeWidth={1.5} />
               )}
             </button>
             <div

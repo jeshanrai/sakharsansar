@@ -49,13 +49,13 @@ export default function ProductsSection() {
           <div>
             <div className="flex items-center gap-2.5 mb-3">
               <span className="w-6 h-px bg-caramel" />
-              <span className="label-caps text-caramel text-[10px]">Shop pure sakhar</span>
+              <span className="label-caps text-caramel-deep text-[10px]">Shop pure sakhar</span>
             </div>
             <h2 className="font-serif font-soft text-jaggery tracking-[-0.02em] text-balance leading-[1.05] text-[clamp(2rem,4vw,3.25rem)]">
               The sakhar collection.
             </h2>
           </div>
-          <p className="text-jaggery/60 text-[15px] leading-relaxed max-w-sm sm:text-right">
+          <p className="text-jaggery/70 text-[15px] leading-relaxed max-w-sm sm:text-right">
             100% organic sakhar in three pure forms, one chemical-free harvest. Direct from Sankhuwasabha farmers.
           </p>
         </div>
@@ -76,13 +76,13 @@ export default function ProductsSection() {
                   className={`relative inline-flex items-center gap-1.5 h-9 px-4 rounded-full text-[13px] font-medium tracking-tight whitespace-nowrap transition-colors ${
                     isActive
                       ? "bg-jaggery text-cream"
-                      : "text-jaggery/60 hover:text-jaggery"
+                      : "text-jaggery/70 hover:text-jaggery"
                   }`}
                 >
                   {cat}
                   <span
                     className={`text-[10px] tabular-nums ${
-                      isActive ? "text-cream/55" : "text-jaggery/35"
+                      isActive ? "text-cream/75" : "text-jaggery/35"
                     }`}
                   >
                     {count}
@@ -94,7 +94,7 @@ export default function ProductsSection() {
 
           <Link
             href="/shop"
-            className="group hidden sm:inline-flex items-center gap-1.5 label-caps text-[10px] text-jaggery/55 hover:text-jaggery transition-colors shrink-0"
+            className="group hidden sm:inline-flex items-center gap-1.5 label-caps text-[10px] text-jaggery/70 hover:text-jaggery transition-colors shrink-0"
           >
             View all
             <ArrowRight
@@ -126,7 +126,7 @@ export default function ProductsSection() {
 
         {filtered.length === 0 && (
           <div className="text-center py-20">
-            <p className="font-serif text-jaggery/40 text-xl italic">
+            <p className="font-serif text-jaggery/70 text-xl italic">
               Nothing in this form, yet.
             </p>
           </div>
@@ -196,7 +196,7 @@ const ProductCard = memo(function ProductCard({
             className={`absolute top-2.5 right-2.5 z-10 w-8 h-8 rounded-full bg-cream/90 backdrop-blur-sm flex items-center justify-center transition-colors ${
               isWishlisted
                 ? "text-terracotta"
-                : "text-jaggery/45 hover:text-terracotta opacity-0 group-hover:opacity-100"
+                : "text-jaggery/70 hover:text-terracotta opacity-0 group-hover:opacity-100"
             }`}
           >
             <Heart
@@ -236,7 +236,7 @@ const ProductCard = memo(function ProductCard({
       <div className="relative z-10 pt-5 px-1.5 pb-1 flex flex-col [text-shadow:0_1px_2px_rgba(26,20,16,0.28)]">
         {/* Top meta — category */}
         <div className="flex items-center justify-between gap-2 mb-3">
-          <span className="text-[10px] font-bold tracking-[0.22em] uppercase text-honey">
+          <span className="text-[10px] font-bold tracking-[0.22em] uppercase text-honey-ink">
             {product.category}
           </span>
         </div>
@@ -259,7 +259,7 @@ const ProductCard = memo(function ProductCard({
             {product.price}
           </span>
           {product.weight === "1kg" && (
-            <span className="text-[12px] text-cream/70 font-medium">per kg</span>
+            <span className="text-[12px] text-cream/75 font-medium">per kg</span>
           )}
         </div>
       </div>

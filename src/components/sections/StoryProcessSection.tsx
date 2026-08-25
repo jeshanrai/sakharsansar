@@ -29,7 +29,7 @@ export default function StoryProcessSection() {
         <div className="grid grid-cols-1 lg:grid-cols-12 items-center gap-10 lg:gap-12">
           <SlideInLeft className="lg:col-span-7">
             <div className="max-w-2xl">
-              <span className="label-caps text-caramel mb-4 block">How it&rsquo;s made</span>
+              <span className="label-caps text-caramel-deep mb-4 block">How it&rsquo;s made</span>
               <h2 className="font-marker uppercase text-jaggery leading-[0.95] text-[clamp(2rem,4vw,3.25rem)]">
                 Four steps. No shortcuts.
               </h2>
@@ -65,11 +65,11 @@ export default function StoryProcessSection() {
                   <span className="relative z-10 inline-flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-cream ring-1 ring-jaggery/12 text-forest">
                     <s.icon className="h-6 w-6" strokeWidth={1.5} />
                   </span>
-                  <span className="font-serif italic text-jaggery/40 text-xl lg:hidden">0{i + 1}</span>
+                  <span className="font-serif italic text-jaggery/70 text-xl lg:hidden">0{i + 1}</span>
                 </div>
-                <span className="hidden lg:block font-serif italic text-jaggery/40 mt-5 mb-1">0{i + 1}</span>
+                <span className="hidden lg:block font-serif italic text-jaggery/70 mt-5 mb-1">0{i + 1}</span>
                 <h3 className="font-display font-bold text-jaggery text-h4 mt-4 lg:mt-2">{s.title}</h3>
-                <span className="label-caps text-caramel mt-1.5 mb-3 block">{s.season}</span>
+                <span className="label-caps text-caramel-deep mt-1.5 mb-3 block">{s.season}</span>
                 <p className="text-jaggery/70 text-body max-w-xs">{s.desc}</p>
               </div>
             </FadeUp>

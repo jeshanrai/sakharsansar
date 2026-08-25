@@ -147,7 +147,7 @@ export default function BlogList() {
                 />
               </Link>
               <div>
-                <span className="label-caps text-honey mb-5 block">This month&rsquo;s featured blog</span>
+                <span className="label-caps text-honey-ink mb-5 block">This month&rsquo;s featured blog</span>
                 <Link href={`/blog/${featured.slug}`} className="group inline-block">
                   <h2 className="font-marker uppercase text-cream leading-[0.98] text-[clamp(2rem,4.4vw,3.4rem)] group-hover:text-honey transition-colors text-balance">
                     {featured.title}

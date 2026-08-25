@@ -236,7 +236,7 @@ export default async function BlogPost({ params }: Props) {
           <div className="relative z-10 max-w-[820px] mx-auto">
             {/* Breadcrumb — the trail matches the BreadcrumbList above it. */}
             <nav aria-label="Breadcrumb" className="mb-7">
-              <ol className="flex items-center gap-2 label-caps text-jaggery/45 min-w-0">
+              <ol className="flex items-center gap-2 label-caps text-jaggery/70 min-w-0">
                 <li className="shrink-0">
                   <Link href="/" className="hover:text-grove transition-colors">Home</Link>
                 </li>
@@ -253,9 +253,9 @@ export default async function BlogPost({ params }: Props) {
               <span className="inline-flex items-center rounded-full bg-grove/10 border border-grove/15 px-3.5 py-1.5 label-caps text-grove">
                 {post.tags[0]}
               </span>
-              <time dateTime={post.date} className="label-caps text-jaggery/45">{formatPostDate(post.date)}</time>
+              <time dateTime={post.date} className="label-caps text-jaggery/70">{formatPostDate(post.date)}</time>
               <span className="w-1 h-1 rounded-full bg-jaggery/25" />
-              <span className="inline-flex items-center gap-1.5 label-caps text-jaggery/45">
+              <span className="inline-flex items-center gap-1.5 label-caps text-jaggery/70">
                 <Clock className="w-3.5 h-3.5" strokeWidth={1.75} /> {readingMins} min read
               </span>
               {/* Purity advice dates; showing when it was last checked is the
@@ -263,7 +263,7 @@ export default async function BlogPost({ params }: Props) {
               {post.updated && post.updated !== post.date && (
                 <>
                   <span className="w-1 h-1 rounded-full bg-jaggery/25" />
-                  <span className="inline-flex items-center gap-1.5 label-caps text-jaggery/45">
+                  <span className="inline-flex items-center gap-1.5 label-caps text-jaggery/70">
                     <RefreshCw className="w-3.5 h-3.5" strokeWidth={1.75} aria-hidden />
                     Updated <time dateTime={post.updated}>{formatPostDate(post.updated)}</time>
                   </span>
@@ -302,7 +302,7 @@ export default async function BlogPost({ params }: Props) {
                 >
                   {post.author}
                 </Link>
-                <p className="label-caps text-jaggery/45">
+                <p className="label-caps text-jaggery/70">
                   {post.authorRole ?? "SakharSansar Journal"}
                 </p>
               </div>
@@ -352,7 +352,7 @@ export default async function BlogPost({ params }: Props) {
                   />
                 )}
                 <div>
-                  <span className="label-caps text-caramel mb-2 block">Written by</span>
+                  <span className="label-caps text-caramel-deep mb-2 block">Written by</span>
                   <Link
                     href={AUTHOR.path}
                     className="font-display font-bold text-jaggery text-h4 hover:text-grove transition-colors"
@@ -360,10 +360,10 @@ export default async function BlogPost({ params }: Props) {
                     {post.author}
                   </Link>
                   {post.authorRole && (
-                    <p className="label-caps text-jaggery/45 mt-1.5">{post.authorRole}</p>
+                    <p className="label-caps text-jaggery/70 mt-1.5">{post.authorRole}</p>
                   )}
                   <p className="text-jaggery/75 text-body mt-4">{post.authorBio}</p>
-                  <div className="mt-5 flex flex-wrap gap-x-6 gap-y-2 text-jaggery/60 text-meta">
+                  <div className="mt-5 flex flex-wrap gap-x-6 gap-y-2 text-jaggery/70 text-meta">
                     <span className="inline-flex items-center gap-1.5">
                       <MapPin className="w-3.5 h-3.5" strokeWidth={1.75} aria-hidden />
                       {SITE.origin.locality}, {SITE.origin.region}, Nepal
@@ -385,7 +385,7 @@ export default async function BlogPost({ params }: Props) {
               {post.tags.map((t) => (
                 <span
                   key={t}
-                  className="inline-flex items-center rounded-full bg-ivory border border-jaggery/10 px-3.5 py-1.5 label-caps text-jaggery/55"
+                  className="inline-flex items-center rounded-full bg-ivory border border-jaggery/10 px-3.5 py-1.5 label-caps text-jaggery/70"
                 >
                   {t}
                 </span>
@@ -394,7 +394,7 @@ export default async function BlogPost({ params }: Props) {
 
             {/* Share */}
             <div className="mt-10 flex items-center justify-between gap-4 flex-wrap">
-              <p className="label-caps text-jaggery/55">Share this story</p>
+              <p className="label-caps text-jaggery/70">Share this story</p>
               <div className="flex gap-2.5">
                 {shareLinks.map(({ name, Icon, href }) => (
                   <a
@@ -403,7 +403,7 @@ export default async function BlogPost({ params }: Props) {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={`Share on ${name}`}
-                    className="h-11 w-11 rounded-full bg-ivory border border-jaggery/10 text-jaggery/65 flex items-center justify-center hover:bg-jaggery hover:text-cream hover:border-jaggery transition-colors"
+                    className="h-11 w-11 rounded-full bg-ivory border border-jaggery/10 text-jaggery/70 flex items-center justify-center hover:bg-jaggery hover:text-cream hover:border-jaggery transition-colors"
                   >
                     <Icon className="w-4 h-4" strokeWidth={1.75} />
                   </a>
@@ -417,7 +417,7 @@ export default async function BlogPost({ params }: Props) {
         {related.length > 0 && (
           <section aria-label="Keep reading" className="px-6 sm:px-10 lg:px-16 pb-24 sm:pb-28">
             <div className="max-w-[1000px] mx-auto">
-              <span className="label-caps text-caramel mb-4 block">More from the Journal</span>
+              <span className="label-caps text-caramel-deep mb-4 block">More from the Journal</span>
               <h2 className="font-marker uppercase text-jaggery leading-[0.98] text-[clamp(1.8rem,4vw,3rem)] text-balance mb-10">
                 Keep reading
               </h2>
@@ -437,7 +437,7 @@ export default async function BlogPost({ params }: Props) {
                     <h3 className="font-marker uppercase text-jaggery text-2xl leading-[1.05] group-hover:text-caramel-deep transition-colors text-balance">
                       {r.title}
                     </h3>
-                    <span className="mt-3 inline-flex items-center gap-2 label-caps text-jaggery/55 group-hover:text-jaggery transition-colors">
+                    <span className="mt-3 inline-flex items-center gap-2 label-caps text-jaggery/70 group-hover:text-jaggery transition-colors">
                       Read article <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" strokeWidth={2} />
                     </span>
                   </Link>
@@ -451,7 +451,7 @@ export default async function BlogPost({ params }: Props) {
         <section aria-label="Shop the harvest" className="relative bg-grove text-cream px-6 sm:px-10 lg:px-16 pt-24 sm:pt-32 pb-20 sm:pb-24 overflow-hidden">
           <AnimatedWave aria-hidden flip className="absolute top-0 left-0 w-full h-[48px] sm:h-[68px] text-cream" />
           <div className="relative z-10 max-w-2xl mx-auto text-center">
-            <span className="label-caps text-honey mb-5 block">From page to pantry</span>
+            <span className="label-caps text-honey-ink mb-5 block">From page to pantry</span>
             <h2 className="font-marker uppercase text-cream leading-[0.98] text-[clamp(2rem,4.4vw,3.4rem)] text-balance">
               Now, taste the story
             </h2>

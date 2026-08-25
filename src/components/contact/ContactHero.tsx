@@ -37,7 +37,7 @@ export default function ContactHero() {
         {/* Breadcrumb */}
         <FadeUp>
           <nav aria-label="Breadcrumb" className="mb-6 flex justify-center">
-            <ol className="flex items-center gap-2 label-caps text-jaggery/45">
+            <ol className="flex items-center gap-2 label-caps text-jaggery/70">
               <li>
                 <Link href="/" className="hover:text-grove transition-colors">
                   Home
@@ -135,7 +135,7 @@ function AudienceCard({
         <span className="w-12 h-12 rounded-2xl bg-grove/10 text-grove flex items-center justify-center shrink-0">
           {icon}
         </span>
-        <span className="label-caps text-caramel">{tag}</span>
+        <span className="label-caps text-caramel-deep">{tag}</span>
       </div>
 
       <h2 className="font-marker uppercase text-jaggery leading-[0.95] text-[clamp(1.6rem,3vw,2.25rem)]">

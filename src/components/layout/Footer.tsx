@@ -125,7 +125,12 @@ export default function Footer() {
           <div className="md:col-span-6 grid grid-cols-3 gap-x-5 sm:gap-x-6 gap-y-10">
             {COLUMNS.map((col) => (
               <nav key={col.title} aria-label={col.title}>
-                <h4 className="font-marker uppercase text-jaggery text-lg sm:text-xl mb-5 sm:mb-6">{col.title}</h4>
+                {/* h2, not h4. The footer renders after main content on every page, so
+                    on any page whose last heading is an h2 this skipped a level —
+                    axe reports it as heading-order, and a screen-reader user
+                    navigating by heading loses the footer's structure. The size
+                    is set by the classes, not by the tag. */}
+                <h2 className="font-marker uppercase text-jaggery text-lg sm:text-xl mb-5 sm:mb-6">{col.title}</h2>
                 <ul className="space-y-4">
                   {col.links.map((link) => (
                     <li key={link.label}>
@@ -140,10 +145,10 @@ export default function Footer() {
 
         {/* ─── Bottom bar ───────────────────────────── */}
         <div className="mt-14 pt-6 border-t border-jaggery/10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-          <p className="text-[13px] text-jaggery/55">
+          <p className="text-[13px] text-jaggery/70">
             © {new Date().getFullYear()} SakharSansar · Crafted in the Himalayas.
           </p>
-          <p className="text-[13px] text-jaggery/55">
+          <p className="text-[13px] text-jaggery/70">
             {SITE.address.street}, {SITE.address.locality} · Made in {SITE.origin.locality} · Nepal
           </p>
         </div>

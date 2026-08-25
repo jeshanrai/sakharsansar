@@ -92,6 +92,12 @@ export default function ShopPage() {
 
   return (
     <>
+      {/* The product cards' backdrop is a CSS background, which the browser
+          cannot discover until it has parsed the stylesheet — and on this page
+          a card is the LCP element. Preloading makes it visible in the first
+          byte. The raw path is correct here: CSS backgrounds do not pass
+          through next/image, so this is the URL that is actually fetched. */}
+      <link rel="preload" as="image" href="/hero-cane-bg.jpg" fetchPriority="high" />
       <JsonLd data={collectionJsonLd} />
       <JsonLd data={listJsonLd} />
       <JsonLd data={faqLd(FAQS)} />
@@ -107,7 +113,7 @@ export default function ShopPage() {
             the server, so the copy is in the first byte of HTML for the
             crawlers that never run JS. */}
         <header className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 pb-7 sm:pb-9">
-          <p className="text-[11px] font-bold tracking-caps uppercase text-jaggery/55 mb-3">
+          <p className="text-[11px] font-bold tracking-caps uppercase text-jaggery/70 mb-3">
             The Full Range
           </p>
           <h1 className="font-marker uppercase text-jaggery leading-[0.9] tracking-tight text-[clamp(2rem,5vw,3.25rem)]">

@@ -37,7 +37,7 @@ export default function FarmersSection() {
             </div>
             <figcaption className="mt-4">
               <p className="font-display font-bold text-jaggery text-h4">Rashmita Bhandari</p>
-              <p className="label-caps text-caramel mt-1">Founder · Farmer · Owner</p>
+              <p className="label-caps text-caramel-deep mt-1">Founder · Farmer · Owner</p>
             </figcaption>
           </figure>
         </SlideInLeft>

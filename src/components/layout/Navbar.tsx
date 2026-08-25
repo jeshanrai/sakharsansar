@@ -175,6 +175,12 @@ export default function Navbar() {
             : "opacity-0 pointer-events-none"
         }`}
         aria-hidden={!mobileOpen}
+        // `aria-hidden` alone hides the drawer from the accessibility tree but
+        // leaves its five links and two buttons in the tab order, so a keyboard
+        // user tabbing the page fell into a menu that is not on screen — axe
+        // reports it as aria-hidden-focus. `inert` takes the whole subtree out
+        // of focus, hit-testing and the a11y tree in one attribute.
+        inert={!mobileOpen}
       >
         <div
           className="absolute inset-0 bg-cream"

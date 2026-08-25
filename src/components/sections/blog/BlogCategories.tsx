@@ -101,7 +101,7 @@ export default function BlogCategories({
 
           <div className="relative lg:w-[340px] shrink-0">
             <Search
-              className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-jaggery/40"
+              className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-jaggery/70"
               strokeWidth={1.8}
               aria-hidden
             />
@@ -111,7 +111,7 @@ export default function BlogCategories({
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search blog posts…"
               aria-label="Search blog posts"
-              className="w-full rounded-full border border-jaggery/25 bg-ivory/60 pl-11 pr-4 py-3.5 label-caps text-jaggery placeholder:text-jaggery/40 focus:outline-none focus:border-grove transition-colors"
+              className="w-full rounded-full border border-jaggery/25 bg-ivory/60 pl-11 pr-4 py-3.5 label-caps text-jaggery placeholder:text-jaggery/70 focus:outline-none focus:border-grove transition-colors"
             />
           </div>
         </div>
@@ -137,9 +137,9 @@ export default function BlogCategories({
                 </div>
                 <div className="flex flex-col flex-grow px-6 pt-6 pb-7">
                   <div className="flex items-center gap-3 mb-4">
-                    <span className="label-caps text-caramel">{post.tags[0]}</span>
+                    <span className="label-caps text-caramel-deep">{post.tags[0]}</span>
                     <span className="w-1 h-1 rounded-full bg-jaggery/30" />
-                    <time dateTime={post.date} className="label-caps text-jaggery/45">
+                    <time dateTime={post.date} className="label-caps text-jaggery/70">
                       {formatPostDate(post.date)}
                     </time>
                   </div>
@@ -156,7 +156,7 @@ export default function BlogCategories({
             ))}
           </div>
         ) : (
-          <p className="text-center text-jaggery/60 text-lede py-16">
+          <p className="text-center text-jaggery/70 text-lede py-16">
             No posts found{query ? ` for “${query}”` : ""}. Try another category.
           </p>
         )}

@@ -69,6 +69,12 @@ export default async function ShopCategoryPage({ params }: Props) {
 
   return (
     <>
+      {/* The product cards' backdrop is a CSS background, which the browser
+          cannot discover until it has parsed the stylesheet — and on this page
+          a card is the LCP element. Preloading makes it visible in the first
+          byte. The raw path is correct here: CSS backgrounds do not pass
+          through next/image, so this is the URL that is actually fetched. */}
+      <link rel="preload" as="image" href="/hero-cane-bg.jpg" fetchPriority="high" />
       <JsonLd
         data={itemListLd(
           cat.heading,
@@ -90,7 +96,7 @@ export default async function ShopCategoryPage({ params }: Props) {
         <header className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 pb-7 sm:pb-9">
           {/* Trail matches the BreadcrumbList above it. */}
           <nav aria-label="Breadcrumb" className="mb-5">
-            <ol className="flex items-center gap-2 label-caps text-jaggery/45 min-w-0">
+            <ol className="flex items-center gap-2 label-caps text-jaggery/70 min-w-0">
               <li className="shrink-0">
                 <Link href="/" className="hover:text-grove transition-colors">
                   Home
@@ -109,7 +115,7 @@ export default async function ShopCategoryPage({ params }: Props) {
             </ol>
           </nav>
 
-          <p className="text-[11px] font-bold tracking-caps uppercase text-jaggery/55 mb-3">
+          <p className="text-[11px] font-bold tracking-caps uppercase text-jaggery/70 mb-3">
             {products.length} {products.length === 1 ? "form" : "forms"} · Shipped pan-Nepal
           </p>
           <h1 className="font-marker uppercase text-jaggery leading-[0.9] tracking-tight text-[clamp(2rem,5vw,3.25rem)]">

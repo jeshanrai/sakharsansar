@@ -40,7 +40,7 @@ export default function WaysToEnjoySection() {
       <div className="max-w-[1440px] mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 mb-16 sm:mb-24 items-end">
           <SlideInLeft className="md:col-span-7">
-            <span className="label-caps text-caramel mb-5 block">Ways to Savor</span>
+            <span className="label-caps text-caramel-deep mb-5 block">Ways to Savor</span>
             <h2 className="font-serif text-h1 text-jaggery tracking-[-0.018em] text-balance">
               From <span className="italic font-light">chiya</span> to ritual.
             </h2>
@@ -70,7 +70,7 @@ export default function WaysToEnjoySection() {
                     {r.nepali}
                   </span>
                 </div>
-                <span className="label-caps text-caramel mb-3 block">{r.eyebrow}</span>
+                <span className="label-caps text-caramel-deep mb-3 block">{r.eyebrow}</span>
                 <h3 className="font-serif text-h3 text-jaggery mb-4 group-hover:text-caramel-deep transition-colors text-balance">
                   {r.title}
                 </h3>

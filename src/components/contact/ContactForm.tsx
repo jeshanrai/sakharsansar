@@ -139,7 +139,7 @@ export default function ContactForm() {
           value={form.name}
           onChange={update("name")}
           placeholder="e.g. Anjali Shrestha"
-          className="w-full bg-white border border-jaggery/15 rounded-xl px-4 py-3 text-[15px] text-jaggery placeholder:text-jaggery/40 focus:outline-none focus:border-grove transition-colors"
+          className="w-full bg-white border border-jaggery/15 rounded-xl px-4 py-3 text-[15px] text-jaggery placeholder:text-jaggery/70 focus:outline-none focus:border-grove transition-colors"
         />
       </Field>
 
@@ -150,7 +150,7 @@ export default function ContactForm() {
           value={form.contact}
           onChange={update("contact")}
           placeholder="So we can reply"
-          className="w-full bg-white border border-jaggery/15 rounded-xl px-4 py-3 text-[15px] text-jaggery placeholder:text-jaggery/40 focus:outline-none focus:border-grove transition-colors"
+          className="w-full bg-white border border-jaggery/15 rounded-xl px-4 py-3 text-[15px] text-jaggery placeholder:text-jaggery/70 focus:outline-none focus:border-grove transition-colors"
         />
       </Field>
 
@@ -171,7 +171,7 @@ export default function ContactForm() {
           value={form.message}
           onChange={update("message")}
           placeholder="Tell us what you need: quantities, timelines, anything."
-          className="w-full bg-white border border-jaggery/15 rounded-xl px-4 py-3 text-[15px] text-jaggery placeholder:text-jaggery/40 focus:outline-none focus:border-grove transition-colors resize-none"
+          className="w-full bg-white border border-jaggery/15 rounded-xl px-4 py-3 text-[15px] text-jaggery placeholder:text-jaggery/70 focus:outline-none focus:border-grove transition-colors resize-none"
         />
       </Field>
 
@@ -193,7 +193,7 @@ export default function ContactForm() {
         )}
       </button>
 
-      <p className="text-center text-[13px] text-jaggery/50">
+      <p className="text-center text-[13px] text-jaggery/70">
         Prefer email?{" "}
         <a href={mailtoHref} className="text-grove font-medium underline underline-offset-2">
           {EMAIL}
@@ -206,7 +206,7 @@ export default function ContactForm() {
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <label className="flex flex-col gap-2">
-      <span className="label-caps text-jaggery/55">{label}</span>
+      <span className="label-caps text-jaggery/70">{label}</span>
       {children}
     </label>
   );

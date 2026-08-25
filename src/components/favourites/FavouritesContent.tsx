@@ -38,7 +38,7 @@ export default function FavouritesContent() {
       <div className="relative max-w-7xl mx-auto">
         {/* Breadcrumb */}
         <nav aria-label="Breadcrumb" className="mb-6">
-          <ol className="flex items-center gap-1.5 text-[11px] font-medium text-jaggery/50">
+          <ol className="flex items-center gap-1.5 text-[11px] font-medium text-jaggery/70">
             <li>
               <Link href="/" className="hover:text-jaggery transition-colors">
                 Home
@@ -56,7 +56,7 @@ export default function FavouritesContent() {
           <div>
             <div className="flex items-center gap-2.5 mb-4">
               <span className="w-6 h-px bg-caramel" />
-              <span className="text-[10px] font-bold tracking-[0.22em] uppercase text-caramel">
+              <span className="text-[10px] font-bold tracking-[0.22em] uppercase text-caramel-deep">
                 Saved for later
               </span>
             </div>
@@ -64,7 +64,7 @@ export default function FavouritesContent() {
               Your <span className="font-serif italic font-normal text-caramel-deep">favourites</span>.
             </h1>
             {count > 0 && (
-              <p className="mt-4 text-[13px] font-bold tracking-[0.18em] uppercase text-jaggery/55">
+              <p className="mt-4 text-[13px] font-bold tracking-[0.18em] uppercase text-jaggery/70">
                 {count} {count === 1 ? "item" : "items"} saved
               </p>
             )}
@@ -133,7 +133,7 @@ const FavouriteCard = memo(function FavouriteCard({
             onClick={() => toggleFavourite(product.slug)}
             aria-label={favourited ? `Remove ${product.name} from favourites` : `Add ${product.name} to favourites`}
             className={`absolute top-2.5 right-2.5 z-10 w-8 h-8 rounded-full bg-cream/90 backdrop-blur-sm flex items-center justify-center transition-colors ${
-              favourited ? "text-terracotta hover:bg-terracotta hover:text-cream" : "text-jaggery/45 hover:text-terracotta"
+              favourited ? "text-terracotta hover:bg-terracotta hover:text-cream" : "text-jaggery/70 hover:text-terracotta"
             }`}
           >
             <Heart className={`w-3.5 h-3.5 ${favourited ? "fill-current" : ""}`} strokeWidth={1.75} />
@@ -169,7 +169,7 @@ const FavouriteCard = memo(function FavouriteCard({
 
       <div className="relative z-10 pt-5 px-1.5 pb-1 flex flex-col [text-shadow:0_1px_2px_rgba(26,20,16,0.28)]">
         <div className="flex items-center justify-between gap-2 mb-3">
-          <span className="text-[10px] font-bold tracking-[0.22em] uppercase text-honey">
+          <span className="text-[10px] font-bold tracking-[0.22em] uppercase text-honey-ink">
             {product.category}
           </span>
         </div>
@@ -207,7 +207,7 @@ function EmptyState() {
         <p className="font-display font-bold text-jaggery text-[clamp(1.75rem,3.5vw,2.75rem)] tracking-tight leading-tight">
           No favourites yet.
         </p>
-        <p className="text-[14px] text-jaggery/55 mt-3 leading-relaxed">
+        <p className="text-[14px] text-jaggery/70 mt-3 leading-relaxed">
           Tap the <Heart className="inline w-3.5 h-3.5 -mt-0.5 text-terracotta" strokeWidth={2} /> heart on any
           sakhar to save it here. In the meantime, explore our pure forms.
         </p>
@@ -223,8 +223,8 @@ function EmptyState() {
       {/* A taste of the collection */}
       <div className="mt-16 sm:mt-20">
         <div className="flex items-center justify-center gap-2.5 mb-8">
-          <Sparkles className="w-4 h-4 text-caramel" strokeWidth={1.5} />
-          <span className="text-[10px] font-bold tracking-[0.22em] uppercase text-caramel">
+          <Sparkles className="w-4 h-4 text-caramel-deep" strokeWidth={1.5} />
+          <span className="text-[10px] font-bold tracking-[0.22em] uppercase text-caramel-deep">
             You might love
           </span>
         </div>

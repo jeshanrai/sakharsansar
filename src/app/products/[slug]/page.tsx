@@ -186,7 +186,7 @@ export default async function ProductPage({ params }: Props) {
           <div className="max-w-[1440px] mx-auto">
             <Link
               href="/shop"
-              className="inline-flex items-center gap-2.5 rounded-full bg-ivory border border-jaggery/10 px-4 py-2 label-caps text-jaggery/65 hover:text-jaggery hover:border-jaggery/25 transition-colors"
+              className="inline-flex items-center gap-2.5 rounded-full bg-ivory border border-jaggery/10 px-4 py-2 label-caps text-jaggery/70 hover:text-jaggery hover:border-jaggery/25 transition-colors"
             >
               <ArrowLeft className="w-3.5 h-3.5" strokeWidth={2} />
               Back to Collection
@@ -208,12 +208,16 @@ export default async function ProductPage({ params }: Props) {
                   alt={`${product.name}, ${product.weight} of pure Himalayan jaggery`}
                   fill
                   priority
+                  // `priority` preloads it, but Lighthouse still reported the
+                  // LCP element as not priority-hinted: the hint lands on the
+                  // preload link, not on the <img> the browser actually paints.
+                  fetchPriority="high"
                   sizes="(max-width: 1024px) 100vw, 60vw"
                   className="object-cover"
                 />
                 {/* Harvest badge */}
                 <div className="absolute top-5 left-5 sm:top-6 sm:left-6 rounded-2xl bg-cream/95 backdrop-blur-sm px-4 py-3 shadow-lg shadow-jaggery/10">
-                  <span className="label-caps text-jaggery/55 block mb-0.5">Harvested</span>
+                  <span className="label-caps text-jaggery/70 block mb-0.5">Harvested</span>
                   <span className="font-serif text-meta text-jaggery nums-price">{product.harvest}</span>
                 </div>
               </div>
@@ -237,7 +241,7 @@ export default async function ProductPage({ params }: Props) {
                 <span className="font-serif text-h3 text-jaggery nums-price">
                   {product.price}
                 </span>
-                <span className="label-caps text-jaggery/55 rounded-full border border-jaggery/20 px-3.5 py-1.5 nums-price">
+                <span className="label-caps text-jaggery/70 rounded-full border border-jaggery/20 px-3.5 py-1.5 nums-price">
                   {product.weight}
                 </span>
               </div>
@@ -274,7 +278,7 @@ export default async function ProductPage({ params }: Props) {
         >
           <Daisy aria-hidden className="absolute top-16 right-[7%] w-16 h-16 text-honey/25 -rotate-12 hidden md:block" />
           <div className="max-w-3xl mx-auto">
-            <span className="label-caps text-caramel mb-5 block">Good to know</span>
+            <span className="label-caps text-caramel-deep mb-5 block">Good to know</span>
             <h2 className="font-serif text-h2 text-jaggery tracking-display mb-10 text-balance">
               Questions, <span className="italic font-light">answered.</span>
             </h2>
@@ -298,7 +302,7 @@ export default async function ProductPage({ params }: Props) {
             <div className="max-w-[1440px] mx-auto">
               <div className="grid grid-cols-1 md:grid-cols-12 gap-8 mb-14 sm:mb-20 items-end">
                 <div className="md:col-span-8">
-                  <span className="label-caps text-caramel mb-4 block">Pairs Well With</span>
+                  <span className="label-caps text-caramel-deep mb-4 block">Pairs Well With</span>
                   <h2 className="font-serif text-h2 text-jaggery tracking-display">
                     Other expressions <span className="italic font-light">from the same harvest.</span>
                   </h2>
@@ -331,8 +335,8 @@ export default async function ProductPage({ params }: Props) {
                         </span>
                       </div>
                       <div className="flex items-center justify-between">
-                        <span className="label-caps text-jaggery/55 nums-price">{r.weight}</span>
-                        <span className="label-caps text-jaggery/45">{r.category}</span>
+                        <span className="label-caps text-jaggery/70 nums-price">{r.weight}</span>
+                        <span className="label-caps text-jaggery/70">{r.category}</span>
                       </div>
                     </div>
                   </Link>
@@ -349,7 +353,7 @@ export default async function ProductPage({ params }: Props) {
         >
           <AnimatedWave aria-hidden flip className="absolute top-0 left-0 w-full h-[48px] sm:h-[68px] text-cream" />
           <div className="relative z-10 max-w-3xl mx-auto text-center">
-            <span className="label-caps text-honey mb-5 block">
+            <span className="label-caps text-honey-ink mb-5 block">
               {BLOG_ENABLED ? "From the Journal" : "From the Cooperative"}
             </span>
             <h2 className="font-serif text-h2 text-cream tracking-display mb-7 text-balance">
@@ -378,7 +382,7 @@ export default async function ProductPage({ params }: Props) {
                         <span className="block font-medium text-cream group-hover:text-honey transition-colors text-balance">
                           {item.anchor}
                         </span>
-                        <span className="block text-cream/65 text-[14px] leading-relaxed mt-1">
+                        <span className="block text-cream/75 text-[14px] leading-relaxed mt-1">
                           {item.note}
                         </span>
                       </span>

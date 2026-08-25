@@ -86,7 +86,7 @@ export default function WholesalePage() {
           <div className="relative z-10 max-w-[820px] mx-auto">
             {/* Trail matches the BreadcrumbList above it. */}
             <nav aria-label="Breadcrumb" className="mb-7">
-              <ol className="flex items-center gap-2 label-caps text-jaggery/45 min-w-0">
+              <ol className="flex items-center gap-2 label-caps text-jaggery/70 min-w-0">
                 <li className="shrink-0">
                   <Link href="/" className="hover:text-grove transition-colors">Home</Link>
                 </li>
@@ -128,7 +128,7 @@ export default function WholesalePage() {
               </Link>
             </div>
 
-            <p className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 text-[14px] text-jaggery/65">
+            <p className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 text-[14px] text-jaggery/70">
               <a href={`tel:+${SITE.phoneDigits}`} className="inline-flex items-center gap-2 hover:text-grove transition-colors">
                 <Phone className="w-3.5 h-3.5" strokeWidth={1.75} aria-hidden />
                 {SITE.phone}
