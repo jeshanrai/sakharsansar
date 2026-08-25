@@ -17,6 +17,7 @@ import { formatPostDate, postPath } from "@/lib/blog";
 import { WEBSITE_ID, ORG_ID, breadcrumbLd, itemListLd, postNodeId } from "@/lib/seo";
 import { SITE, absoluteUrl } from "@/lib/site";
 import { alternates, openGraph, twitter } from "@/lib/metadata";
+import { OG_CONTENT_TYPE } from "@/lib/og";
 
 /**
  * /blog/category/[slug] — a hub per journal topic.
@@ -47,16 +48,35 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const cat = findBlogCategory(slug);
   if (!cat) return { title: "Not Found", robots: { index: false } };
 
+  // Named rather than resolved: `export const alt` in the colocated
+  // opengraph-image.tsx is one string for the whole [slug] segment, so all
+  // seven hubs would describe their seven different cards identically.
+  const card = {
+    url: `/blog/category/${cat.slug}/opengraph-image`,
+    width: 1200,
+    height: 630,
+    type: OG_CONTENT_TYPE,
+    alt: `${cat.heading}: ${cat.description}`,
+  };
+
   return {
-    title: cat.title,
+    // Absolute — see the shop categories. These titles carry the query the
+    // page is for, and appending the brand pushed all of them past the width
+    // a search result shows.
+    title: { absolute: cat.title },
     description: cat.description,
     alternates: alternates({ canonical: `/blog/category/${cat.slug}` }),
     openGraph: openGraph({
       title: cat.heading,
       description: cat.description,
       url: `/blog/category/${cat.slug}`,
+      images: [card],
     }),
-    twitter: twitter({ title: cat.heading, description: cat.description }),
+    twitter: twitter({
+      title: cat.heading,
+      description: cat.description,
+      images: [{ ...card, url: `/blog/category/${cat.slug}/twitter-image` }],
+    }),
   };
 }
 

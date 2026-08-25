@@ -21,7 +21,7 @@ const PAGE_DESC =
   "Seven generations of wood-fired sakhar in Sankhuwasabha. Meet the 42 farming families, the iron kadhai and the chemical-free method behind it.";
 
 export const metadata: Metadata = {
-  title: "Our Story: Wood-Fired Jaggery from Sankhuwasabha",
+  title: "Our Story: Wood-Fired Jaggery, Sankhuwasabha",
   description: PAGE_DESC,
   alternates: alternates({ canonical: PAGE_PATH }),
   openGraph: openGraph({

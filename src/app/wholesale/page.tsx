@@ -12,7 +12,7 @@ import { Daisy } from "@/components/ui/Doodles";
 import wholesale from "@/data/wholesale.json";
 import { faqEntries, parseArticle } from "@/lib/article";
 import { breadcrumbLd, faqLd, webPageLd } from "@/lib/seo";
-import { alternates, openGraph, twitter, DEFAULT_OG_IMAGE } from "@/lib/metadata";
+import { alternates, openGraph, twitter } from "@/lib/metadata";
 import { SITE } from "@/lib/site";
 
 /**
@@ -45,7 +45,10 @@ export const metadata: Metadata = {
     title: "Wholesale Sakhar: Bulk Himalayan Jaggery from Sankhuwasabha",
     description: wholesale.description,
     url: PATH,
-    images: [{ ...DEFAULT_OG_IMAGE, alt: wholesale.imageAlt }],
+    // The colocated opengraph-image.tsx now resolves the card. This used to
+    // name DEFAULT_OG_IMAGE, which is the homepage's — a card selling a kilo
+    // of jaggery to one person, on the only page written for shop owners and
+    // chaku makers buying by the sack. It also shipped with no og:image:type.
   }),
   twitter: twitter({
     title: "Wholesale Sakhar from Sankhuwasabha",

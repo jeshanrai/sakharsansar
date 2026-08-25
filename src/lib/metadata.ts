@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { BLOG_ENABLED } from "./blog";
+import { LOCALES, type Locale } from "./hreflang";
 import { SITE } from "./site";
 
 /**
@@ -56,6 +57,11 @@ export const DEFAULT_OG_IMAGE = {
   url: "/opengraph-image",
   width: 1200,
   height: 630,
+  // Next infers `og:image:type` for a colocated opengraph-image.tsx, but not
+  // for a URL written out by hand like this one — so every page pointing here
+  // shipped a card with no declared type. Some scrapers skip an image they
+  // cannot type without fetching it first.
+  type: "image/png",
   alt: "SakharSansar: 100% organic, wood-fired Himalayan jaggery from Sankhuwasabha, Nepal",
 } as const;
 
@@ -73,12 +79,22 @@ export const DEFAULT_OG_IMAGE = {
  */
 export function openGraph(
   overrides: OpenGraph,
-  opts?: { omitType?: boolean },
+  opts?: { omitType?: boolean; locale?: Locale; hasTranslation?: boolean },
 ): OpenGraph {
+  // The locale used to be hardcoded to the site default, which meant the three
+  // natively-written Devanagari articles under /ne announced themselves to
+  // every scraper as `og:locale: en_NP`. Facebook and the rest use that to
+  // decide which audience a shared link is for.
+  const locale = opts?.locale ?? "en";
+  const other: Locale = locale === "en" ? "ne" : "en";
   return {
     ...(opts?.omitType ? {} : { type: "website" }),
     siteName: SITE.name,
-    locale: SITE.ogLocale,
+    locale: LOCALES[locale].ogLocale,
+    // Only when the counterpart exists. `og:locale:alternate` naming a page
+    // that was never translated is the same mistake as a non-reciprocal
+    // hreflang: it describes a version of the page nobody can be sent to.
+    ...(opts?.hasTranslation ? { alternateLocale: LOCALES[other].ogLocale } : {}),
     ...overrides,
   } as OpenGraph;
 }

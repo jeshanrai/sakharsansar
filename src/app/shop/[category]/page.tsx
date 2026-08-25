@@ -9,6 +9,7 @@ import JsonLd from "@/components/seo/JsonLd";
 import { CATEGORIES, findCategory, productsIn } from "@/lib/categories";
 import { breadcrumbLd, itemListLd, productNodeId } from "@/lib/seo";
 import { alternates, openGraph, twitter } from "@/lib/metadata";
+import { OG_CONTENT_TYPE } from "@/lib/og";
 
 /**
  * /shop/[category] — a real URL per shop category.
@@ -44,16 +45,38 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const cat = findCategory(category);
   if (!cat) return { title: "Not Found", robots: { index: false } };
 
+  // The card art comes from the colocated opengraph-image.tsx, but it is
+  // named here rather than left to be resolved, because `export const alt` in
+  // that file is one string for the whole [category] segment — so all three
+  // categories would advertise the same description of three different
+  // pictures. Same reasoning, and the same workaround, as the journal posts.
+  const card = {
+    url: `/shop/${cat.slug}/opengraph-image`,
+    width: 1200,
+    height: 630,
+    type: OG_CONTENT_TYPE,
+    alt: `${cat.heading}: ${cat.description}`,
+  };
+
   return {
-    title: cat.title,
+    // Absolute, so the root layout's "| SakharSansar" is not appended. With it
+    // every one of these ran past the width Google renders and the brand was
+    // the part cut off; the keyword these pages exist to catch is worth more
+    // here than a suffix nobody reads.
+    title: { absolute: cat.title },
     description: cat.description,
     alternates: alternates({ canonical: `/shop/${cat.slug}` }),
     openGraph: openGraph({
       title: cat.heading,
       description: cat.description,
       url: `/shop/${cat.slug}`,
+      images: [card],
     }),
-    twitter: twitter({ title: cat.heading, description: cat.description }),
+    twitter: twitter({
+      title: cat.heading,
+      description: cat.description,
+      images: [{ ...card, url: `/shop/${cat.slug}/twitter-image` }],
+    }),
   };
 }
 

@@ -16,7 +16,7 @@ const Footer = dynamic(() => import("@/components/layout/Footer"));
 const OrderDrawer = dynamic(() => import("@/components/layout/OrderDrawer"));
 
 export const metadata: Metadata = {
-  title: "Sakhar: 100% Organic Jaggery from Sankhuwasabha | SakharSansar",
+  title: "Sakhar: 100% Organic Jaggery, Sankhuwasabha | SakharSansar",
   description:
     "Buy 100% organic Sakhar (pure Himalayan jaggery) direct from farmers in Sankhuwasabha. Wood-fired, chemical-free, premium quality, shipped pan-Nepal.",
   alternates: alternates({

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { type BlogPost, postPath, translationPair } from "./blog";
 import { languageAlternates } from "./hreflang";
 import { alternates, openGraph, twitter } from "./metadata";
+import { OG_CONTENT_TYPE } from "./og";
 
 /**
  * Metadata for one journal article, in either language.
@@ -36,6 +37,10 @@ function socialCard(post: BlogPost, route: "opengraph-image" | "twitter-image") 
     url: `${postPath(post)}/${route}`,
     width: 1200,
     height: 630,
+    // Written out because Next only infers the type when it resolves the
+    // colocated file itself; naming the route by hand, as we have to here,
+    // skips that and ships a card with no declared type.
+    type: OG_CONTENT_TYPE,
     alt: post.imageAlt,
   };
 }
@@ -69,17 +74,23 @@ export function postMetadata(post: BlogPost): Metadata {
         : {}),
     }),
     authors: [{ name: post.author }],
-    openGraph: openGraph({
-      title: post.title,
-      description: post.description,
-      url: path,
-      type: "article",
-      publishedTime: post.date,
-      modifiedTime: post.updated ?? post.date,
-      authors: [post.author],
-      tags: post.tags,
-      images: [socialCard(post, "opengraph-image")],
-    }),
+    openGraph: openGraph(
+      {
+        title: post.title,
+        description: post.description,
+        url: path,
+        type: "article",
+        publishedTime: post.date,
+        modifiedTime: post.updated ?? post.date,
+        authors: [post.author],
+        tags: post.tags,
+        images: [socialCard(post, "opengraph-image")],
+      },
+      // The three Devanagari articles were announcing themselves as en_NP.
+      // `hasTranslation` gates og:locale:alternate on a counterpart actually
+      // existing — one of the Nepali posts has none.
+      { locale: post.lang === "ne" ? "ne" : "en", hasTranslation: Boolean(pair) },
+    ),
     twitter: twitter({
       title: post.title,
       description: post.description,

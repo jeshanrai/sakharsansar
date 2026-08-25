@@ -17,10 +17,12 @@ import { ArrowRight } from "lucide-react";
 import { alternates, openGraph, twitter } from "@/lib/metadata";
 
 export const metadata: Metadata = {
-  // The root layout's `title.template` appends "| SakharSansar", so the brand
-  // is left off here. "Blogs" alone also carried no keyword — the page ranks
-  // for what it's actually about instead.
-  title: "Journal: Jaggery Recipes, Benefits & Farm Stories",
+  // Absolute, so the root layout's "| SakharSansar" template is not appended
+  // on top. With it, the title ran to 64 characters and Google cut the brand
+  // off the end; leading with it instead keeps both the brand and the subject
+  // inside the width a result actually shows. "Blogs" alone, which this was
+  // before, carried no keyword at all.
+  title: { absolute: "SakharSansar Journal: Jaggery Recipes & Benefits" },
   description: "Letters from Sankhuwasabha: recipes, rituals, and the slow stories behind every block of pure Himalayan jaggery.",
   alternates: alternates({
     canonical: "/blog",
@@ -29,13 +31,13 @@ export const metadata: Metadata = {
     },
   }),
   openGraph: openGraph({
-    title: "Blogs | SakharSansar",
+    title: "SakharSansar Journal: Jaggery Recipes & Benefits",
     description: "Letters from Sankhuwasabha: recipes, rituals, and harvest notes.",
     url: "/blog",
     type: "website",
   }),
   twitter: twitter({
-    title: "Blogs | SakharSansar",
+    title: "SakharSansar Journal: Jaggery Recipes & Benefits",
     description: "Letters from Sankhuwasabha: recipes, rituals, and harvest notes.",
   }),
 };

@@ -15,6 +15,7 @@ import data from "@/data/content.json";
 import { breadcrumbLd, faqLd, parsePrice, productLd } from "@/lib/seo";
 import { ArrowLeft, ArrowRight, Leaf, ShieldCheck, Truck } from "lucide-react";
 import { alternates, openGraph, twitter } from "@/lib/metadata";
+import { OG_CONTENT_TYPE } from "@/lib/og";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -37,6 +38,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const product = data.products.find((p) => p.slug === slug);
   if (!product) return { title: "Product Not Found", robots: { index: false } };
 
+  const card = {
+    url: `/products/${product.slug}/opengraph-image`,
+    width: 1200,
+    height: 630,
+    type: OG_CONTENT_TYPE,
+    alt: `${product.name}, ${product.weight}: ${product.description}`,
+  };
+
   return {
     // No brand suffix — the root layout's `title.template` appends
     // "| SakharSansar". The weight is carried in the title because size is a
@@ -55,8 +64,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: `${product.name} · ${product.price}`,
       description: product.description,
       url: `/products/${product.slug}`,
-      // Images come from the colocated opengraph-image.tsx, which renders the
-      // product photo at a true 1200×630 with its name and price on it.
+      // The card art comes from the colocated opengraph-image.tsx, which
+      // renders the product photo at a true 1200×630 with its name and price
+      // on it — but the route is named here rather than left to resolve,
+      // because `export const alt` in that file is one string for the whole
+      // [slug] segment. All three products advertised "SakharSansar product:
+      // pure Himalayan jaggery" over three different pictures, one of which is
+      // a bag of nuts.
       //
       // These pages need og:type=product, which Next cannot express: its
       // OpenGraph type is a closed union without a 'product' member, and the
@@ -67,10 +81,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       //
       // `omitType` suppresses the helper's "website" default. Without it the
       // page ships two competing og:type tags.
+      images: [card],
     }, { omitType: true }),
     twitter: twitter({
       title: product.name,
       description: product.description,
+      images: [{ ...card, url: `/products/${product.slug}/twitter-image` }],
     }),
   };
 }
