@@ -13,7 +13,7 @@ import {
   findBlogCategory,
   postsTagged,
 } from "@/lib/blog-categories";
-import { formatPostDate } from "@/lib/blog";
+import { formatPostDate, postPath } from "@/lib/blog";
 import { WEBSITE_ID, ORG_ID, breadcrumbLd, itemListLd } from "@/lib/seo";
 import { SITE, absoluteUrl } from "@/lib/site";
 import { alternates, openGraph, twitter } from "@/lib/metadata";
@@ -89,7 +89,7 @@ export default async function BlogCategoryPage({ params }: Props) {
       <JsonLd
         data={itemListLd(
           cat.heading,
-          tagged.map((p) => ({ name: p.title, path: `/blog/${p.slug}` })),
+          tagged.map((p) => ({ name: p.title, path: postPath(p) })),
         )}
       />
       <JsonLd
@@ -139,7 +139,7 @@ export default async function BlogCategoryPage({ params }: Props) {
           <div className="max-w-[1080px] mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {tagged.map((post) => (
               <article key={post.slug} className="group">
-                <Link href={`/blog/${post.slug}`} className="block">
+                <Link href={postPath(post)} className="block">
                   <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl bg-ivory ring-1 ring-jaggery/8">
                     <Image
                       src={post.image}

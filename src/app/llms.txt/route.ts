@@ -1,5 +1,5 @@
 import content from "@/data/content.json";
-import { BLOG_ENABLED, posts as blog } from "@/lib/blog";
+import { BLOG_ENABLED, posts as blog, postPath } from "@/lib/blog";
 import { COMMERCE, SITE, SITE_URL as BASE_URL, STORY, formatRs } from "@/lib/site";
 
 // Prerender at build time and serve as a static, CDN-cacheable asset.
@@ -24,7 +24,7 @@ export async function GET() {
     ? `\n## Guides\n${blog
         .map(
           (post) =>
-            `- [${post.title}](${BASE_URL}/blog/${post.slug}): ${post.description}`,
+            `- [${post.title}](${BASE_URL}${postPath(post)}): ${post.description}`,
         )
         .join("\n")}\n`
     : "";

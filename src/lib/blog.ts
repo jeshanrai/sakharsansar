@@ -77,6 +77,39 @@ export interface BlogPost {
   };
 }
 
+/**
+ * Where a post lives.
+ *
+ * The journal is bilingual, and the three Nepali articles used to sit at
+ * /blog/<slug> alongside the English ones — same shelf, different language,
+ * nothing in the URL to say so. They now live under /ne/, which is the locale
+ * prefix the rest of the site will adopt if the Nepali experiment works
+ * (see docs/i18n-plan.md). English stays un-prefixed so no existing English
+ * URL had to move.
+ *
+ * Every link, sitemap entry, feed item and schema `@id` routes through here,
+ * so a post's language decides its URL in exactly one place. The old
+ * /blog/<nepali-slug> URLs 301 to the new ones — see next.config.ts.
+ */
+export function postPath(post: Pick<BlogPost, "slug" | "lang">): string {
+  return post.lang === "ne" ? `/ne/blog/${post.slug}` : `/blog/${post.slug}`;
+}
+
+/** BCP-47 for a post. `lang` on the record is the short form. */
+export function postLocale(post: Pick<BlogPost, "lang">): string {
+  return post.lang === "ne" ? "ne-NP" : "en-NP";
+}
+
+/** The English half of the journal — what /blog lists and renders. */
+export function englishPosts(): BlogPost[] {
+  return posts.filter((p) => p.lang !== "ne");
+}
+
+/** The Nepali half — what /ne/blog renders. */
+export function nepaliPosts(): BlogPost[] {
+  return posts.filter((p) => p.lang === "ne");
+}
+
 export const posts: BlogPost[] = blogData as BlogPost[];
 
 /** The other half of a translation pair, if this post declares one. */

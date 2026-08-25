@@ -8,7 +8,7 @@ import JsonLd from "@/components/seo/JsonLd";
 import { AnimatedWave } from "@/components/ui/StoryArt";
 import { Daisy } from "@/components/ui/Doodles";
 import { AUTHOR, AUTHOR_ID, authorLd } from "@/lib/author";
-import { BLOG_ENABLED, formatPostDate, sortedPosts } from "@/lib/blog";
+import { BLOG_ENABLED, formatPostDate, sortedPosts, postPath } from "@/lib/blog";
 import { ORG_ID, WEBSITE_ID, breadcrumbLd } from "@/lib/seo";
 import { SITE, STORY, absoluteUrl } from "@/lib/site";
 import { alternates, openGraph, twitter, DEFAULT_OG_IMAGE } from "@/lib/metadata";
@@ -166,7 +166,7 @@ export default function AuthorPage() {
                 {posts.map((post) => (
                   <li key={post.slug}>
                     <Link
-                      href={`/blog/${post.slug}`}
+                      href={postPath(post)}
                       className="group flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1.5 py-4 hover:text-grove transition-colors"
                     >
                       <span

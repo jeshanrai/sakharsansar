@@ -1,4 +1,4 @@
-import { posts } from "./blog";
+import { postPath, posts } from "./blog";
 
 /**
  * The articles worth reading from each product page.
@@ -91,6 +91,6 @@ export function readingFor(productSlug: string): ProductReading[] {
   return (READING[productSlug] ?? []).flatMap((item) => {
     const post = posts.find((p) => p.slug === item.slug);
     if (!post) return [];
-    return [{ ...item, title: post.title, href: `/blog/${post.slug}` }];
+    return [{ ...item, title: post.title, href: postPath(post) }];
   });
 }

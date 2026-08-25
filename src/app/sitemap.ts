@@ -1,10 +1,11 @@
 import type { MetadataRoute } from "next";
 import content from "@/data/content.json";
-import { BLOG_ENABLED, posts as blog } from "@/lib/blog";
+import { BLOG_ENABLED, posts as blog, postPath } from "@/lib/blog";
 import { BLOG_CATEGORIES } from "@/lib/blog-categories";
 import { AUTHOR } from "@/lib/author";
 import { CATEGORIES } from "@/lib/categories";
-import { SITE, SITE_URL, absoluteUrl } from "@/lib/site";
+import { languageAlternateUrls } from "@/lib/hreflang";
+import { SITE_URL, absoluteUrl } from "@/lib/site";
 
 /**
  * Dynamic sitemap — auto-includes every public route plus product and blog
@@ -81,7 +82,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       : undefined;
 
     return {
-      url: `${SITE_URL}/blog/${post.slug}`,
+      url: `${SITE_URL}${postPath(post)}`,
       // `updated` is the date of the last substantive edit and is what the
       // post's own `dateModified` reports. Using `date` here meant the sitemap
       // and the structured data disagreed about the same page.
@@ -89,13 +90,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.6,
       images: [absoluteUrl(post.image)],
+      // Built by the same helper that writes the <link rel="alternate"> tags
+      // on the page, so the two can never describe different pairs. It used to
+      // key off `post.lang`, which is a bare "ne" against the site default
+      // "en-NP" — two different forms of annotation inside one pair, which is
+      // the shape Google is most likely to discard.
       ...(pair
         ? {
             alternates: {
-              languages: {
-                [post.lang ?? SITE.lang]: `${SITE_URL}/blog/${post.slug}`,
-                [pair.lang ?? SITE.lang]: `${SITE_URL}/blog/${pair.slug}`,
-              },
+              languages: languageAlternateUrls(
+                post.lang === "ne"
+                  ? { ne: `${SITE_URL}${postPath(post)}`, en: `${SITE_URL}${postPath(pair)}` }
+                  : { en: `${SITE_URL}${postPath(post)}`, ne: `${SITE_URL}${postPath(pair)}` },
+              ),
             },
           }
         : {}),

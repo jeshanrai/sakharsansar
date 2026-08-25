@@ -4,6 +4,7 @@ import React, { useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight } from "lucide-react";
+import { postPath } from "@/lib/blog";
 
 type Post = {
   slug: string;
@@ -11,6 +12,10 @@ type Post = {
   description: string;
   image: string;
   imageAlt?: string;
+  /** Needed by postPath: a Nepali post lives under /ne/. Optional because the
+   *  field is optional on the record, but omitting it here would silently
+   *  route every Nepali article to its English URL. */
+  lang?: string;
 };
 
 /**
@@ -69,7 +74,7 @@ export default function BlogEditorsPicks({ posts }: { posts: Post[] }) {
           {posts.map((post) => (
             <Link
               key={post.slug}
-              href={`/blog/${post.slug}`}
+              href={postPath(post)}
               data-card
               className="group snap-start shrink-0 w-[78%] sm:w-[44%] lg:w-[31%]"
             >

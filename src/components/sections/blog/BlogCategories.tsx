@@ -4,7 +4,7 @@ import React, { useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Search, ArrowUpRight } from "lucide-react";
-import { formatPostDate } from "@/lib/blog";
+import { formatPostDate, postPath } from "@/lib/blog";
 import { blogCategorySlug, findBlogCategory } from "@/lib/blog-categories";
 
 type Post = {
@@ -13,6 +13,10 @@ type Post = {
   description: string;
   image: string;
   imageAlt?: string;
+  /** Needed by postPath: a Nepali post lives under /ne/. Optional because the
+   *  field is optional on the record, but omitting it here would silently
+   *  route every Nepali article to its English URL. */
+  lang?: string;
   date: string;
   tags: string[];
 };
@@ -122,7 +126,7 @@ export default function BlogCategories({
             {filtered.map((post) => (
               <Link
                 key={post.slug}
-                href={`/blog/${post.slug}`}
+                href={postPath(post)}
                 className="group flex flex-col h-full rounded-2xl bg-ivory overflow-hidden ring-1 ring-jaggery/8 shadow-sm hover:shadow-md transition-shadow"
               >
                 <div className="relative aspect-[4/3] w-full overflow-hidden bg-jaggery-soft">

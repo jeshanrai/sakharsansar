@@ -8,7 +8,7 @@ import OrderDrawer from "@/components/layout/OrderDrawer";
 import BlogEditorsPicks from "@/components/sections/blog/BlogEditorsPicks";
 import BlogCategories from "@/components/sections/blog/BlogCategories";
 import JsonLd from "@/components/seo/JsonLd";
-import { BLOG_ENABLED, sortedPosts } from "@/lib/blog";
+import { BLOG_ENABLED, sortedPosts, postPath } from "@/lib/blog";
 import { ORG_ID, WEBSITE_ID, breadcrumbLd } from "@/lib/seo";
 import { SITE, absoluteUrl } from "@/lib/site";
 import { Bee, Ladybug, AnimatedWave } from "@/components/ui/StoryArt";
@@ -67,10 +67,10 @@ export default function BlogList() {
     inLanguage: SITE.lang,
     blogPost: ordered.map((post) => ({
       "@type": "BlogPosting",
-      "@id": absoluteUrl(`/blog/${post.slug}#post`),
+      "@id": absoluteUrl(`${postPath(post)}#post`),
       headline: post.title,
       description: post.description,
-      url: absoluteUrl(`/blog/${post.slug}`),
+      url: absoluteUrl(postPath(post)),
       datePublished: post.date,
       image: absoluteUrl(post.image),
       author: { "@type": "Organization", name: post.author },
@@ -134,7 +134,7 @@ export default function BlogList() {
           >
             <div className="max-w-[1280px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
               <Link
-                href={`/blog/${featured.slug}`}
+                href={postPath(featured)}
                 className="group relative aspect-[4/3] sm:aspect-[3/2] w-full overflow-hidden rounded-[1.75rem] ring-1 ring-cream/10 shadow-2xl shadow-grove-deep/40"
               >
                 <Image
@@ -148,14 +148,14 @@ export default function BlogList() {
               </Link>
               <div>
                 <span className="label-caps text-honey-ink mb-5 block">This month&rsquo;s featured blog</span>
-                <Link href={`/blog/${featured.slug}`} className="group inline-block">
+                <Link href={postPath(featured)} className="group inline-block">
                   <h2 className="font-marker uppercase text-cream leading-[0.98] text-[clamp(2rem,4.4vw,3.4rem)] group-hover:text-honey transition-colors text-balance">
                     {featured.title}
                   </h2>
                 </Link>
                 <p className="text-cream/80 text-lede mt-6 max-w-xl">{featured.description}</p>
                 <Link
-                  href={`/blog/${featured.slug}`}
+                  href={postPath(featured)}
                   className="mt-8 inline-flex items-center gap-2 rounded-full bg-cream text-jaggery label-caps px-8 py-4 hover:bg-honey transition-colors"
                 >
                   Read the article

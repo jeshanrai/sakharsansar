@@ -3,7 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 // Typed via @/lib/blog rather than the raw JSON: with no posts the JSON infers
 // as never[], which breaks every field access below.
-import { posts as blogData } from "@/lib/blog";
+import { posts as blogData, postPath } from "@/lib/blog";
 import { FadeUp, SlideInRight } from "@/components/ui/Animations";
 import { ArrowRight } from "lucide-react";
 
@@ -25,7 +25,7 @@ export default function BlogHighlightSection() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-12">
           {recentPosts.map((post, i) => (
             <SlideInRight key={post.slug} delay={i * 0.1} className="h-full">
-              <Link href={`/blog/${post.slug}`} className="group flex flex-col h-full cursor-pointer">
+              <Link href={postPath(post)} className="group flex flex-col h-full cursor-pointer">
                 <div className="relative aspect-[4/3] w-full overflow-hidden mb-8 bg-[#F4F1ED]">
                   <Image
                     src={post.image}

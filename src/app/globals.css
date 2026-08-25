@@ -202,6 +202,17 @@ em, i, .italic {
     letter-spacing: 0.01em;
   }
 
+  /* Tiro Devanagari ships one weight, 400. Asking for bold gets a synthetic
+     one — the browser smears the outline — and Devanagari shows that far more
+     than Latin does: the matras thicken unevenly and the conjuncts blur.
+     Nepali headings use size for hierarchy instead, which is what the face was
+     designed for. Latin inside a Nepali page is unaffected, since it falls to
+     the next family in the stack. */
+  :lang(ne) :is(h1, h2, h3, h4, h5, h6),
+  :lang(ne):is(h1, h2, h3, h4, h5, h6) {
+    font-weight: 400;
+  }
+
   /* ── Display rounded sans — for hero/promo treatments ───── */
   .font-display {
     font-family: var(--font-display);

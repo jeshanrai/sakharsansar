@@ -60,6 +60,23 @@ const PROMOTED_POSTS = [
 ];
 
 /**
+ * The Nepali articles, which moved from /blog/<slug> to /ne/blog/<slug>.
+ *
+ * They were on the same shelf as the English posts with nothing in the URL to
+ * say which language they were in. /ne/ is the locale prefix the site adopts
+ * if the Nepali experiment works (docs/i18n-plan.md), and English stays
+ * un-prefixed so no English URL had to move.
+ *
+ * Permanent, and they carry whatever the old URLs had earned. Read from
+ * blog.json rather than listed by hand: a post is Nepali if its record says
+ * so, and the redirect, the route and the sitemap entry all key off the same
+ * field.
+ */
+const NEPALI_POSTS = blogPosts
+  .filter((post) => post.lang === "ne")
+  .map((post) => post.slug);
+
+/**
  * Every route that renders a social card via `opengraph-image` / `twitter-image`.
  *
  * Next advertises these as absolute URLs in `og:image` / `twitter:image`, and
@@ -132,6 +149,11 @@ const nextConfig: NextConfig = {
         source: `/blog/${slug}`,
         destination: to,
         permanent: true, // 308 — the content lives at the new URL now
+      })),
+      ...NEPALI_POSTS.map((slug) => ({
+        source: `/blog/${slug}`,
+        destination: `/ne/blog/${slug}`,
+        permanent: true, // 308 — same article, and the locale is in the URL now
       })),
       // /blog itself is only *temporarily* empty: new posts are planned, so
       // this is a 307. A permanent redirect here would hand /blog's identity

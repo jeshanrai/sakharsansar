@@ -1,4 +1,4 @@
-import { BLOG_ENABLED, sortedPosts } from "@/lib/blog";
+import { BLOG_ENABLED, sortedPosts, postPath } from "@/lib/blog";
 import { SITE, SITE_URL, absoluteUrl } from "@/lib/site";
 
 // Prerender at build time and serve as a static, CDN-cacheable asset.
@@ -28,8 +28,8 @@ export async function GET() {
       (post) => `
     <item>
       <title><![CDATA[${post.title}]]></title>
-      <link>${SITE_URL}/blog/${post.slug}</link>
-      <guid isPermaLink="true">${SITE_URL}/blog/${post.slug}</guid>
+      <link>${SITE_URL}${postPath(post)}</link>
+      <guid isPermaLink="true">${SITE_URL}${postPath(post)}</guid>
       <description><![CDATA[${post.description}]]></description>
       <pubDate>${new Date(post.date).toUTCString()}</pubDate>
       <dc:creator><![CDATA[${post.author}]]></dc:creator>
