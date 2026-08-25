@@ -31,15 +31,7 @@
  *   npm run check:schema -- --live            # crawl the live sitemap instead
  *   npm run check:schema -- --live=https://…  # or another origin
  */
-import { readdir, readFile } from "node:fs/promises";
-import { join, relative } from "node:path";
-
-const ROOT = ".next/server/app";
-const DEFAULT_BASE = "https://www.sakharsansar.com.np";
-
-/** Not indexable, so their markup is not a ranking surface. Mirrors
- *  check-meta-descriptions.mjs. */
-const EXEMPT = [/^_/, /^portfolio(\/|$)/, /^favourites$/];
+import { liveBaseFrom, loadPages, visibleText } from "./lib/pages.mjs";
 
 /**
  * Fields each type must carry, keyed by the type name.
@@ -81,45 +73,7 @@ const REQUIRED = {
 /** Google truncates a BlogPosting headline past this and flags it as a warning. */
 const HEADLINE_MAX = 110;
 
-const args = process.argv.slice(2);
-const liveArg = args.find((a) => a === "--live" || a.startsWith("--live="));
-const liveBase = liveArg
-  ? (liveArg.split("=")[1] || DEFAULT_BASE).replace(/\/$/, "")
-  : null;
-
-// ─── Loading pages ──────────────────────────────────────────────────────────
-
-async function* walk(dir) {
-  for (const entry of await readdir(dir, { withFileTypes: true })) {
-    const path = join(dir, entry.name);
-    if (entry.isDirectory()) yield* walk(path);
-    else if (entry.name.endsWith(".html")) yield path;
-  }
-}
-
-/** [{ route, html }] from the build output. */
-async function pagesFromBuild() {
-  const out = [];
-  for await (const file of walk(ROOT)) {
-    const route = relative(ROOT, file).replace(/\.html$/, "").replace(/^index$/, "");
-    if (EXEMPT.some((re) => re.test(route))) continue;
-    out.push({ route: `/${route}`.replace(/\/$/, "") || "/", html: await readFile(file, "utf8") });
-  }
-  return out;
-}
-
-/** [{ route, html }] from the live sitemap. */
-async function pagesFromLive() {
-  const res = await fetch(`${liveBase}/sitemap.xml`);
-  if (!res.ok) throw new Error(`sitemap.xml returned ${res.status}`);
-  const urls = [...(await res.text()).matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1].trim());
-  const out = [];
-  for (const url of urls) {
-    const page = await fetch(url);
-    out.push({ route: new URL(url).pathname || "/", html: await page.text() });
-  }
-  return out;
-}
+const liveBase = liveBaseFrom(process.argv.slice(2));
 
 // ─── Reading the markup ─────────────────────────────────────────────────────
 
@@ -182,27 +136,9 @@ function collect(node, route, defs, refs, seen = new Set()) {
   }
 }
 
-/**
- * The words a visitor actually sees.
- *
- * Scripts are stripped first, and that matters more than it looks: the RSC
- * payload Next inlines repeats every price and product name as JSON. Checking
- * the raw HTML for a price would therefore pass even on a page that renders
- * none of it — the check would be measuring itself.
- */
-function visibleText(html) {
-  return html
-    .replace(/<script[\s\S]*?<\/script>/gi, " ")
-    .replace(/<style[\s\S]*?<\/style>/gi, " ")
-    .replace(/<!--[\s\S]*?-->/g, "")
-    .replace(/<[^>]*>/g, " ")
-    .replace(/&nbsp;/g, " ")
-    .replace(/\s+/g, " ");
-}
-
 // ─── The checks ─────────────────────────────────────────────────────────────
 
-const pages = liveBase ? await pagesFromLive() : await pagesFromBuild();
+const pages = await loadPages(liveBase);
 if (pages.length === 0) {
   console.error(`✗ no pages found. Run \`next build\` first, or pass --live.`);
   process.exit(1);

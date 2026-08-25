@@ -182,9 +182,14 @@ const FavouriteCard = memo(function FavouriteCard({
         </div>
 
         <Link href={`/products/${product.slug}`} className="block">
-          <h3 className="font-display font-bold text-cream text-[20px] sm:text-[22px] tracking-tight leading-[1.1] line-clamp-2 min-h-[2.2em] group-hover:text-honey transition-colors">
+          {/* h2, not h3. This is the same card component as the one on /shop,
+              which already uses h2 — but here the grid sits directly under the
+              page's h1 with no section heading between them, so an h3 skipped a
+              level and axe reported heading-order. The size is set by the
+              classes, not by the tag. */}
+          <h2 className="font-display font-bold text-cream text-[20px] sm:text-[22px] tracking-tight leading-[1.1] line-clamp-2 min-h-[2.2em] group-hover:text-honey transition-colors">
             {product.name}
-          </h3>
+          </h2>
         </Link>
 
         <p className="mt-2.5 text-[10px] font-bold tracking-[0.2em] uppercase text-cream/80">

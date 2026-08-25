@@ -65,7 +65,14 @@ const COPY: Record<
     ],
   },
   powder: {
-    heading: "Sakhar Powder",
+    // "Sakhar Powder" was also the H1 of /products/jaggery-powder, so the
+    // category and the one product in it went to search with the same heading
+    // and competed for the same query. The other two categories are already
+    // distinct from their products by plural ("Sakhar Blocks") or by
+    // description ("Sakhar-Coated Dry Fruits"); powder is the one that
+    // collided, because the category and the product really are the same
+    // thing. The adjective is the site's existing claim, not a new one.
+    heading: "Organic Sakhar Powder",
     title: "Sakhar Powder: Organic Jaggery Powder in Nepal",
     description:
       "Wood-fired sakhar crushed and sieved to an even grain. Dissolves cold, measures like sugar. 250g resealable pouch, shipped pan-Nepal.",

@@ -105,18 +105,25 @@ export default function BlogList() {
           />
 
           <div className="max-w-[1280px] mx-auto">
-            {/* The H1 here was the single word "Blog", which describes the
-                page but names nothing anyone searches for — on the hub that
-                holds eleven articles about jaggery. The display word stays as
-                it is; the subject matter goes in a second line at body scale,
-                the same shape as the /shop header above its intro paragraph. */}
+            {/* The subject line below used to live *inside* this H1, to give
+                the hub a heading that named something people search for rather
+                than the bare word "Blog".
+
+                It did name it, but it made the H1 74 characters of two
+                unrelated sentences run together: a screen reader announced
+                "Blog Jaggery recipes, health benefits and farm stories from
+                Sankhuwasabha" as one heading, and Google truncates well before
+                the end of that.
+
+                Same two lines on screen, same styling — the second one is now
+                a paragraph, which is what it always was. */}
             <h1 className="font-marker uppercase text-jaggery leading-[0.9] tracking-tight text-[clamp(3rem,9vw,6.5rem)]">
               Blog
-              <span className="block mt-4 font-sans normal-case font-medium tracking-normal text-jaggery/70 text-[clamp(0.95rem,1.6vw,1.15rem)] leading-snug max-w-2xl">
-                Jaggery recipes, health benefits and farm stories from
-                Sankhuwasabha.
-              </span>
             </h1>
+            <p className="mt-4 text-jaggery/70 font-medium text-[clamp(0.95rem,1.6vw,1.15rem)] leading-snug max-w-2xl">
+              Jaggery recipes, health benefits and farm stories from
+              Sankhuwasabha.
+            </p>
           </div>
 
           {/* Wave down into the green featured band */}
