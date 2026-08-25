@@ -1,85 +1,69 @@
-"use client";
-
-import { motion } from "framer-motion";
 import React from "react";
 
-export const FadeUp = ({ children, delay = 0, className = "" }: { children: React.ReactNode, delay?: number, className?: string }) => (
-  <motion.div
-    className={className}
-    initial={{ opacity: 0, y: 30 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true, margin: "-50px" }}
-    transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay }}
-  >
-    {children}
-  </motion.div>
-);
+/**
+ * Scroll and entrance reveals.
+ *
+ * These were framer-motion `whileInView` wrappers and a `"use client"`
+ * directive. That made every section using one a client component: 22 of the
+ * 25 had no state, no handlers and no reason to hydrate at all, and each one
+ * pulled framer-motion into its page bundle.
+ *
+ * They are now plain elements carrying a class, and the animation lives in
+ * globals.css as a scroll-driven CSS animation. Same component API, so no
+ * call site changed — but these are server components now, and the sections
+ * that only used them for animation are server components again too.
+ *
+ * The base state is *visible*. A browser without scroll-driven animation
+ * support, or with JavaScript off, shows the content immediately — which is
+ * better than the motion version managed, since that wrote `opacity: 0` into
+ * the server HTML and left it there until hydration finished.
+ *
+ * `delay` is applied as `animation-delay`. On the scroll-driven variants it is
+ * ignored by design: a view() timeline is driven by scroll position, not time,
+ * and a delay on it would hold the element invisible past the point it should
+ * have appeared. It is kept in the signature because call sites pass it, and
+ * it still does what it says on the hero wrappers below.
+ */
 
-export const SlideInLeft = ({ children, delay = 0, className = "" }: { children: React.ReactNode, delay?: number, className?: string }) => (
-  <motion.div
-    className={className}
-    initial={{ opacity: 0, x: -30 }}
-    whileInView={{ opacity: 1, x: 0 }}
-    viewport={{ once: true, margin: "-50px" }}
-    transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay }}
-  >
-    {children}
-  </motion.div>
-);
+type Props = {
+  children: React.ReactNode;
+  delay?: number;
+  className?: string;
+};
 
-export const SlideInRight = ({ children, delay = 0, className = "" }: { children: React.ReactNode, delay?: number, className?: string }) => (
-  <motion.div
-    className={className}
-    initial={{ opacity: 0, x: 30 }}
-    whileInView={{ opacity: 1, x: 0 }}
-    viewport={{ once: true, margin: "-50px" }}
-    transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay }}
-  >
-    {children}
-  </motion.div>
-);
+function reveal(variant: string, name: string) {
+  const Reveal = ({ children, className = "" }: Props) => (
+    <div className={`${variant} ${className}`.trim()}>{children}</div>
+  );
+  // Without this the factory produces anonymous components, which show up as
+  // "Unknown" in React DevTools and error under react/display-name.
+  Reveal.displayName = name;
+  return Reveal;
+}
 
-export const ZoomIn = ({ children, delay = 0, className = "" }: { children: React.ReactNode, delay?: number, className?: string }) => (
-  <motion.div
-    className={className}
-    initial={{ opacity: 0 }}
-    whileInView={{ opacity: 1 }}
-    viewport={{ once: true, margin: "-50px" }}
-    transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay }}
-  >
-    {children}
-  </motion.div>
-);
+export const FadeUp = reveal("reveal", "FadeUp");
+export const SlideInLeft = reveal("reveal-left", "SlideInLeft");
+export const SlideInRight = reveal("reveal-right", "SlideInRight");
+export const ZoomIn = reveal("reveal-in", "ZoomIn");
 
-export const HeroTitleWrapper = ({ children, className }: { children: React.ReactNode, className?: string }) => (
-  <motion.div
-    className={className}
-    initial={{ opacity: 0, y: 20 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-  >
-    {children}
-  </motion.div>
-);
+/**
+ * Hero entrances, which run on load rather than on scroll — they are above the
+ * fold by definition, so there is nothing to scroll them into. Here `delay`
+ * does apply, and staggers the three in sequence.
+ */
+function heroRise(defaultDelay: number, name: string) {
+  const HeroRise = ({ children, className = "", delay = defaultDelay }: Props) => (
+    <div
+      className={`hero-rise ${className}`.trim()}
+      style={delay ? { animationDelay: `${delay}s` } : undefined}
+    >
+      {children}
+    </div>
+  );
+  HeroRise.displayName = name;
+  return HeroRise;
+}
 
-export const HeroSubtitleWrapper = ({ children, className }: { children: React.ReactNode, className?: string }) => (
-  <motion.div
-    className={className}
-    initial={{ opacity: 0, y: 15 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-  >
-    {children}
-  </motion.div>
-);
-
-export const HeroButtonWrapper = ({ children, className }: { children: React.ReactNode, className?: string }) => (
-  <motion.div
-    className={className}
-    initial={{ opacity: 0, y: 15 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 1, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-  >
-    {children}
-  </motion.div>
-);
+export const HeroTitleWrapper = heroRise(0, "HeroTitleWrapper");
+export const HeroSubtitleWrapper = heroRise(0.2, "HeroSubtitleWrapper");
+export const HeroButtonWrapper = heroRise(0.4, "HeroButtonWrapper");

@@ -291,6 +291,77 @@ em, i, .italic {
   /* ── Marquee — used by the promo bar at the top of the site.
      The content is rendered twice in a row; the wrapper slides
      left by 50% of its total width to produce a seamless loop. */
+  /* ── Scroll reveals, without JavaScript ────────────────────
+     These were framer-motion `whileInView` wrappers, which made every section
+     that used one a client component — 22 of the 25 had no state, no handlers
+     and no reason to hydrate beyond the animation, and each one dragged
+     framer-motion into its page bundle.
+
+     Built as progressive enhancement rather than a polyfill. The base rule is
+     *visible*: a browser with no support for scroll-driven animations, and a
+     browser with JavaScript disabled, both render the content immediately —
+     which is strictly better than what the motion version did, since that
+     wrote opacity:0 into the server HTML and left it there until hydration.
+     Chrome and friends get the reveal on top.
+
+     `animation-range: entry 0% cover 25%` means an element already on screen
+     at load is past the end of its range and sits at full opacity, so nothing
+     above the fold is hidden waiting to be scrolled into. */
+  .reveal,
+  .reveal-left,
+  .reveal-right,
+  .reveal-in {
+    opacity: 1;
+  }
+
+  /* Transform only — deliberately no opacity.
+     A scroll-driven fade leaves everything below the fold sitting at a partial
+     opacity until it is scrolled to, and partially transparent text fails
+     contrast against its background: axe flagged 23 nodes on /contact and
+     /our-story that are perfectly legible once the reveal finishes. Animating
+     position alone keeps the movement and takes text colour out of it
+     entirely, so contrast is whatever the palette says at every point in the
+     animation. */
+  @keyframes reveal-up   { from { transform: translateY(30px); } }
+  @keyframes reveal-x-l  { from { transform: translateX(-30px); } }
+  @keyframes reveal-x-r  { from { transform: translateX(30px); } }
+  @keyframes reveal-fade { from { transform: translateY(12px); } }
+
+  @supports (animation-timeline: view()) {
+    .reveal,
+    .reveal-left,
+    .reveal-right,
+    .reveal-in {
+      animation: var(--reveal-name, reveal-up) 1ms linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 25%;
+    }
+    .reveal      { --reveal-name: reveal-up; }
+    .reveal-left { --reveal-name: reveal-x-l; }
+    .reveal-right{ --reveal-name: reveal-x-r; }
+    .reveal-in   { --reveal-name: reveal-fade; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal,
+    .reveal-left,
+    .reveal-right,
+    .reveal-in {
+      animation: none;
+      opacity: 1;
+    }
+  }
+
+  /* Hero entrances run on load rather than on scroll — they are above the
+     fold by definition, so there is nothing to scroll them into. */
+  @keyframes hero-rise { from { opacity: 0; transform: translateY(20px); } }
+  .hero-rise {
+    animation: hero-rise 1s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero-rise { animation: none; }
+  }
+
   /* ── Card entrance, without waiting for JS ─────────────────
      The shop grid used framer-motion's `initial={{opacity: 0}}`, which is
      written into the server HTML as an inline style. On a throttled mobile

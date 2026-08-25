@@ -189,6 +189,7 @@ export default async function BlogCategoryPage({ params }: Props) {
                 <li key={c.slug}>
                   <Link
                     href={`/blog/category/${c.slug}`}
+                    prefetch={false}
                     className="inline-flex items-center h-9 px-4 rounded-full border border-jaggery/15 text-[13px] font-medium text-jaggery/70 hover:text-jaggery hover:border-jaggery/30 transition-colors"
                   >
                     {c.tag}

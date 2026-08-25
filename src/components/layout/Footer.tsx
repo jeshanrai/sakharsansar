@@ -41,7 +41,13 @@ function FooterLink({ href, label }: { href: string; label: string }) {
   const classes = "text-jaggery/70 hover:text-grove transition-colors text-[15px]";
   if (href.startsWith("/")) {
     return (
-      <Link href={href} className={classes}>
+      // The footer links to every route on the site and appears on every page,
+      // so with prefetching on, each page pulled the RSC payload for the whole
+      // site into the background — ~164 KB of Fetch on /shop, against a 1.1 MB
+      // page. These are a site map, not a next step: nobody's journey depends
+      // on the privacy policy being warm. The nav and the product cards keep
+      // their prefetch, because those are the links people actually take.
+      <Link href={href} prefetch={false} className={classes}>
         {label}
       </Link>
     );

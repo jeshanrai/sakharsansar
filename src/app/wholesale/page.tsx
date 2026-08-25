@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { ChevronRight, MessageCircle, Phone, Mail } from "lucide-react";
+import { ArrowDown, ChevronRight, MessageCircle, Phone, Mail } from "lucide-react";
 import Footer from "@/components/layout/Footer";
 import OrderDrawer from "@/components/layout/OrderDrawer";
 import ArticleBody from "@/components/blog/ArticleBody";
+import QuoteForm from "@/components/wholesale/QuoteForm";
 import JsonLd from "@/components/seo/JsonLd";
 import { AnimatedWave, Bee } from "@/components/ui/StoryArt";
 import { Daisy } from "@/components/ui/Doodles";
@@ -65,8 +66,10 @@ export default function WholesalePage() {
     dateModified: wholesale.updated ?? wholesale.date,
   });
 
+  // Plain opener. The six answers used to be stuffed in here as placeholder
+  // text for the buyer to fill in; the form below asks for them properly.
   const waHref = `https://wa.me/${SITE.phoneDigits}?text=${encodeURIComponent(
-    "Hi SakharSansar! I'd like a wholesale quote. Form: ... Quantity: ... Needed by: ... Delivering to: ...",
+    "Hi SakharSansar! I'd like a wholesale quote.",
   )}`;
 
   return (
@@ -112,20 +115,21 @@ export default function WholesalePage() {
                 the six answers the page asks for further down. */}
             <div className="mt-8 flex flex-col sm:flex-row gap-3">
               <a
+                href="#quote"
+                className="inline-flex items-center justify-center gap-2.5 rounded-full bg-jaggery text-cream label-caps px-7 py-3.5 hover:bg-grove transition-colors"
+              >
+                Request a wholesale quote
+                <ArrowDown className="w-4 h-4" strokeWidth={1.75} aria-hidden />
+              </a>
+              <a
                 href={waHref}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-2.5 rounded-full bg-jaggery text-cream label-caps px-7 py-3.5 hover:bg-grove transition-colors"
-              >
-                <MessageCircle className="w-4 h-4" strokeWidth={1.75} aria-hidden />
-                Request a wholesale quote
-              </a>
-              <Link
-                href="/contact#contact-form"
                 className="inline-flex items-center justify-center gap-2.5 rounded-full border border-jaggery/20 text-jaggery label-caps px-7 py-3.5 hover:bg-jaggery/[0.04] transition-colors"
               >
-                Use the enquiry form
-              </Link>
+                <MessageCircle className="w-4 h-4" strokeWidth={1.75} aria-hidden />
+                Or message us on WhatsApp
+              </a>
             </div>
 
             <p className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 text-[14px] text-jaggery/70">
@@ -164,26 +168,12 @@ export default function WholesalePage() {
           <div className="max-w-[720px] mx-auto">
             <ArticleBody blocks={blocks} />
 
-            {/* Closing CTA — the page argues its way to a quote, so it should
-                end on one rather than on the last paragraph. */}
-            <div className="mt-16 rounded-2xl bg-ivory ring-1 ring-jaggery/8 px-6 sm:px-8 py-8">
-              <p className="font-marker uppercase text-jaggery text-[clamp(1.4rem,3vw,2rem)] leading-[1.05]">
-                Tell us what you need
-              </p>
-              <p className="text-jaggery/75 text-body mt-3">
-                Six answers — form, quantity, date, destination, packing and any
-                documentation — and you will get a real number rather than a
-                brochure.
-              </p>
-              <a
-                href={waHref}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-6 inline-flex items-center gap-2.5 rounded-full bg-jaggery text-cream label-caps px-7 py-3.5 hover:bg-grove transition-colors"
-              >
-                <MessageCircle className="w-4 h-4" strokeWidth={1.75} aria-hidden />
-                Message us on WhatsApp
-              </a>
+            {/* The page argues its way to a quote, so it ends on the form that
+                asks for the six answers it just finished explaining. Below the
+                fold and interactive, so it is loaded on demand rather than in
+                the bundle that has to hydrate before anything else works. */}
+            <div id="quote" className="mt-16 scroll-mt-32">
+              <QuoteForm />
             </div>
           </div>
         </article>

@@ -11,7 +11,14 @@ import { openOrderDrawer } from "@/components/layout/OrderDrawer";
 
 type Product = (typeof data.products)[number];
 
-const CARD_BG = "bg-[#2D9577] bg-[url('/hero-cane-bg.jpg')] bg-cover bg-center";
+/* The card backdrop.
+ *
+ * This used to point at /hero-cane-bg.jpg — the 1840px hero image, fetched raw
+ * because a CSS background never passes through next/image. That is 70 KB for
+ * a texture that renders a few hundred pixels wide behind a gradient scrim,
+ * and on /shop it is the LCP element. Same picture at the size it is actually
+ * drawn: 9 KB. The hero keeps the full-size file, where the width is used. */
+const CARD_BG = "bg-[#2D9577] bg-[url('/cane-texture.jpg')] bg-cover bg-center";
 
 
 export default function FavouritesContent() {

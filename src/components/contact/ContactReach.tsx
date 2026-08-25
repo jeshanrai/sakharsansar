@@ -76,7 +76,10 @@ export default function ContactReach() {
                 href={href}
                 target={href.startsWith("http") ? "_blank" : undefined}
                 rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
-                className="group flex items-start gap-4 rounded-2xl bg-ivory/70 hover:bg-ivory border border-jaggery/10 px-5 sm:px-6 py-5 transition-colors"
+                // Opaque, not bg-ivory/70. These cards sit on the green band, and at 70%
+                // the ground under the text resolved to #b4c7b4 — caramel-deep on that is
+                // 3.34:1, under the AA floor for the label above every contact detail.
+                className="group flex items-start gap-4 rounded-2xl bg-ivory hover:bg-white border border-jaggery/10 px-5 sm:px-6 py-5 transition-colors"
               >
                 <span className="w-12 h-12 rounded-2xl bg-grove/10 text-grove flex items-center justify-center shrink-0 group-hover:bg-grove group-hover:text-cream transition-colors">
                   <Icon className="w-5 h-5" strokeWidth={1.75} />

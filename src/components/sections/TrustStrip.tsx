@@ -1,6 +1,3 @@
-"use client";
-
-import { motion } from "framer-motion";
 import { ShieldCheck, Leaf, Flame, HandHeart } from "lucide-react";
 import { AnimatedWave } from "@/components/ui/StoryArt";
 
@@ -43,12 +40,8 @@ export default function TrustStrip() {
 
       <div className="relative max-w-[1440px] mx-auto">
         {/* Section heading */}
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-40px" }}
-          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          className="text-center mb-12 sm:mb-16 lg:mb-20"
+        <div
+          className="reveal text-center mb-12 sm:mb-16 lg:mb-20"
         >
           <div className="inline-flex items-center gap-3 mb-4">
             <span className="w-8 h-px bg-honey/60" />
@@ -61,18 +54,19 @@ export default function TrustStrip() {
             <span className="block text-[clamp(2rem,4.5vw,3.5rem)]">100% organic.</span>{" "}
             <span className="block text-[clamp(2.5rem,5.5vw,4.5rem)] text-honey mt-1 sm:mt-2">Pure sakhar.</span>
           </h2>
-        </motion.div>
+        </div>
 
         {/* Badge grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-y-10 gap-x-6 sm:gap-x-8 lg:gap-x-4">
           {BADGES.map((badge, i) => (
-            <motion.div
+            <div
               key={badge.big}
-              initial={{ opacity: 0, y: 18 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-30px" }}
-              transition={{ duration: 0.65, delay: i * 0.08, ease: [0.16, 1, 0.3, 1] }}
-              className="group flex items-center justify-center sm:justify-start lg:justify-center gap-4 sm:gap-5"
+              // Keeps the stagger the motion version had. On a scroll-driven
+              // timeline a delay would be wrong — the timeline is scroll
+              // position, not time — so this offsets the range instead, which
+              // starts each badge fractionally later down the page.
+              style={{ animationRangeStart: `entry ${i * 4}%` }}
+              className="reveal group flex items-center justify-center sm:justify-start lg:justify-center gap-4 sm:gap-5"
             >
               {/* Circular icon */}
               <div className="relative shrink-0">
@@ -103,7 +97,7 @@ export default function TrustStrip() {
                   {badge.small}
                 </p>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>

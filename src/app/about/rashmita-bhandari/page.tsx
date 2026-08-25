@@ -167,6 +167,9 @@ export default function AuthorPage() {
                   <li key={post.slug}>
                     <Link
                       href={postPath(post)}
+                      // A full bibliography — every post she has written. High
+                      // link count, low intent per link.
+                      prefetch={false}
                       className="group flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1.5 py-4 hover:text-grove transition-colors"
                     >
                       <span

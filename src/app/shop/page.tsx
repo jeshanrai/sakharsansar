@@ -97,7 +97,7 @@ export default function ShopPage() {
           a card is the LCP element. Preloading makes it visible in the first
           byte. The raw path is correct here: CSS backgrounds do not pass
           through next/image, so this is the URL that is actually fetched. */}
-      <link rel="preload" as="image" href="/hero-cane-bg.jpg" fetchPriority="high" />
+      <link rel="preload" as="image" href="/cane-texture.jpg" fetchPriority="high" />
       <JsonLd data={collectionJsonLd} />
       <JsonLd data={listJsonLd} />
       <JsonLd data={faqLd(FAQS)} />
