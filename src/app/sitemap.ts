@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import content from "@/data/content.json";
 import { BLOG_ENABLED, posts as blog } from "@/lib/blog";
+import { BLOG_CATEGORIES } from "@/lib/blog-categories";
 import { AUTHOR } from "@/lib/author";
 import { CATEGORIES } from "@/lib/categories";
 import { SITE, SITE_URL, absoluteUrl } from "@/lib/site";
@@ -63,6 +64,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     images: [absoluteUrl(p.image)],
   }));
 
+  // Journal topic hubs. Derived from the same list that generates the routes.
+  const blogCategoryRoutes: MetadataRoute.Sitemap = BLOG_CATEGORIES.map((c) => ({
+    url: `${SITE_URL}/blog/category/${c.slug}`,
+    changeFrequency: "monthly",
+    priority: 0.5,
+  }));
+
   const blogRoutes: MetadataRoute.Sitemap = blog.map((post) => {
     // The Nepali and English halves of a translation pair each declare the
     // other. Annotating them here as well as in the page's <link rel=alternate>
@@ -94,5 +102,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     };
   });
 
-  return [...staticRoutes, ...categoryRoutes, ...productRoutes, ...blogRoutes];
+  return [
+    ...staticRoutes,
+    ...categoryRoutes,
+    ...productRoutes,
+    ...blogCategoryRoutes,
+    ...blogRoutes,
+  ];
 }

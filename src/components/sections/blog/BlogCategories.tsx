@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Search, ArrowUpRight } from "lucide-react";
 import { formatPostDate } from "@/lib/blog";
+import { blogCategorySlug, findBlogCategory } from "@/lib/blog-categories";
 
 type Post = {
   slug: string;
@@ -56,26 +57,47 @@ export default function BlogCategories({
 
         {/* Filters + search */}
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 mb-12 sm:mb-16">
-          <div className="flex flex-wrap gap-3">
+          <ul className="flex flex-wrap gap-3">
             {filters.map((cat) => {
               const on = active === cat;
+              const className = `label-caps rounded-full px-5 py-2.5 border transition-colors ${
+                on
+                  ? "bg-grove text-cream border-grove"
+                  : "border-jaggery/25 text-jaggery/75 hover:border-jaggery hover:text-jaggery"
+              }`;
+              // A tag with a written hub gets an anchor, so the filtered view
+              // has an address a reader can share and a crawler can follow.
+              // The rest stay buttons and filter in place — see
+              // lib/blog-categories.ts for which, and why.
+              const hub =
+                cat === "All" ? undefined : findBlogCategory(blogCategorySlug(cat));
+              if (hub) {
+                return (
+                  <li key={cat} className="contents">
+                    <Link
+                      href={`/blog/category/${hub.slug}`}
+                      aria-current={on ? "page" : undefined}
+                      className={className}
+                    >
+                      {cat}
+                    </Link>
+                  </li>
+                );
+              }
               return (
-                <button
-                  key={cat}
-                  type="button"
-                  onClick={() => setActive(cat)}
-                  aria-pressed={on}
-                  className={`label-caps rounded-full px-5 py-2.5 border transition-colors ${
-                    on
-                      ? "bg-grove text-cream border-grove"
-                      : "border-jaggery/25 text-jaggery/75 hover:border-jaggery hover:text-jaggery"
-                  }`}
-                >
-                  {cat}
-                </button>
+                <li key={cat} className="contents">
+                  <button
+                    type="button"
+                    onClick={() => setActive(cat)}
+                    aria-pressed={on}
+                    className={className}
+                  >
+                    {cat}
+                  </button>
+                </li>
               );
             })}
-          </div>
+          </ul>
 
           <div className="relative lg:w-[340px] shrink-0">
             <Search
