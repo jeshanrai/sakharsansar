@@ -47,6 +47,22 @@ const tiroDevanagari = Tiro_Devanagari_Hindi({
   style: ["normal"],
   variable: "--font-devanagari",
   display: "swap",
+  /**
+   * Not preloaded, unlike the other four.
+   *
+   * next/font preloads by default, and it does so from the root layout — so
+   * every one of the thirty-five pages was issuing a `<link rel=preload>` for
+   * the Devanagari face, which only three of them render. On a throttled
+   * mobile connection those preloads compete for bandwidth with the LCP image,
+   * which is the thing actually being waited on.
+   *
+   * The face is still declared and still applies through the `:lang(ne)` rule
+   * in globals.css. With `display: swap` the Nepali pages paint in the
+   * fallback for a moment and then settle — the cost lands on three pages
+   * instead of thirty-five. This is the font-scoping item in
+   * docs/i18n-plan.md §5.
+   */
+  preload: false,
 });
 
 // Display sans for hero/promo treatments — chunky, rounded, sticker-friendly.
