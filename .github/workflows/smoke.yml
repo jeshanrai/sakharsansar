@@ -1,0 +1,47 @@
+# Proves the deploy actually landed, on every route, after it lands.
+#
+# scripts/smoke-build.mjs reads the x-build-id every page stamps into <head>
+# and asserts all of them match. It exists because a stale-content report
+# could be neither confirmed nor refuted: the copy in the repo was right, so
+# the only way to check was to grep ten pages for a dozen phrases that
+# happened to have changed.
+#
+# `--expect` is the stronger assertion and the reason to run it here rather
+# than by hand: it fails when the site is internally consistent but wholly
+# out of date, which is what a deploy that silently did not run looks like.
+name: Post-deploy smoke test
+
+on:
+  # Fires when a deployment reports success, which on Vercel means the build
+  # is live rather than merely queued.
+  deployment_status:
+  # And on demand, for checking production at any time.
+  workflow_dispatch:
+
+jobs:
+  smoke:
+    # deployment_status fires for every state; only act on the successful one.
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      github.event.deployment_status.state == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # The script has no dependencies beyond Node's own fetch, so there is
+      # nothing to install.
+      - name: Every route is serving one build
+        run: node scripts/smoke-build.mjs --expect=${{ github.sha }}
+
+      # The audit and the schema validator can both read the live site rather
+      # than the build output. Running them here catches anything the CDN or
+      # the platform changed between build and serve.
+      - name: Audit the live site
+        run: |
+          node scripts/seo-audit.mjs --live
+          node scripts/validate-schema.mjs --live

@@ -1,0 +1,48 @@
+# Every gate this repo has, run on the code rather than on a promise.
+#
+# `npm run build` is the whole suite: next build, then check:meta,
+# check:schema, check:claims and seo:audit in order. Any one of them exits
+# non-zero and the build fails, which is the point — these were written to
+# stop regressions reaching a deploy, and until now they only ran when
+# somebody remembered to run them.
+#
+# Deliberately not a `vercel build`. This runs the same command a developer
+# runs, so a green tick here means the same thing as a green terminal.
+name: Checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build-and-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # The gates. Named individually in the log rather than hidden inside
+      # `build`, so a failure says which rule broke without opening the run.
+      - name: Build (also runs meta, schema, claims and audit gates)
+        run: npm run build
+        env:
+          # Mirrors what Vercel sets, so the build ID meta tag is stamped the
+          # same way here as in a real deploy.
+          VERCEL_GIT_COMMIT_SHA: ${{ github.sha }}
+
+      - name: Lint
+        run: npm run lint
+        # Lint currently reports 10 pre-existing errors in the admin portal and
+        # backend. Failing the build on those would mean either fixing unrelated
+        # code in this PR or switching the job off, so it reports and does not
+        # block. Remove this line once the count is zero.
+        continue-on-error: true

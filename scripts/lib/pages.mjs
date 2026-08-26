@@ -53,12 +53,24 @@ async function fromBuild() {
   return pages;
 }
 
+/**
+ * Routes that exist but are deliberately not in the sitemap.
+ *
+ * /favourites is noindex — listing a noindex URL in a sitemap is a Search
+ * Console warning — but it is linked from the header of every page, so a live
+ * crawl that only reads the sitemap concludes that all thirty-nine of them
+ * link to a page that does not exist. Build mode never had this problem
+ * because it walks the filesystem.
+ */
+const OFF_SITEMAP_ROUTES = ["/favourites"];
+
 async function fromLive(base) {
   const res = await fetch(`${base}/sitemap.xml`);
   if (!res.ok) throw new Error(`sitemap.xml returned ${res.status}`);
-  const urls = [...(await res.text()).matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) =>
-    m[1].trim(),
-  );
+  const urls = [
+    ...[...(await res.text()).matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1].trim()),
+    ...OFF_SITEMAP_ROUTES.map((path) => `${base}${path}`),
+  ];
   const pages = [];
   for (const url of urls) {
     const page = await fetch(url);

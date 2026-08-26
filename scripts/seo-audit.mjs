@@ -310,9 +310,24 @@ function checkArchitecture(pages, sitemap) {
   return problems;
 }
 
-/** Paths that are real routes but not HTML pages, so the crawl will not find
- *  a document for them. */
-const KNOWN_NON_PAGE = [/^\/feed$/, /^\/llms\.txt$/, /^\/sitemap\.xml$/, /^\/robots\.txt$/, /^\/portfolio/];
+/**
+ * Paths that are real routes but not HTML pages, so the crawl will not find a
+ * document for them.
+ *
+ * `/cdn-cgi/` is Cloudflare's, not ours. Its email obfuscation rewrites every
+ * `mailto:` on the live site into `/cdn-cgi/l/email-protection` and decodes it
+ * with JavaScript, so the path appears only in `--live` mode and never in the
+ * build output. Worth knowing about rather than only excluding: it means the
+ * address in the footer is not readable by anything that does not run JS.
+ */
+const KNOWN_NON_PAGE = [
+  /^\/feed$/,
+  /^\/llms\.txt$/,
+  /^\/sitemap\.xml$/,
+  /^\/robots\.txt$/,
+  /^\/portfolio/,
+  /^\/cdn-cgi\//,
+];
 
 /**
  * i18n — Phase F.
