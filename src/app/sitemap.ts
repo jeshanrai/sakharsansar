@@ -43,6 +43,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
       ? ([{ url: `${SITE_URL}${AUTHOR.path}`, changeFrequency: "monthly", priority: 0.5 }] as MetadataRoute.Sitemap)
       : []),
     { url: `${SITE_URL}/contact`, changeFrequency: "monthly", priority: 0.6 },
+    // The purity test. A tool rather than an article, and the only page here
+    // built to be linked to by other people rather than to sell something.
+    ...(BLOG_ENABLED
+      ? ([{ url: `${SITE_URL}/tools/sakhar-purity-test`, changeFrequency: "monthly", priority: 0.7 }] as MetadataRoute.Sitemap)
+      : []),
     { url: `${SITE_URL}/privacy-policy`, changeFrequency: "yearly", priority: 0.3 },
     { url: `${SITE_URL}/terms`, changeFrequency: "yearly", priority: 0.3 },
     { url: `${SITE_URL}/shipping-policy`, changeFrequency: "yearly", priority: 0.3 },
