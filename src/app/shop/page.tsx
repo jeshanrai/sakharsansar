@@ -184,6 +184,29 @@ export default function ShopPage() {
                 we charge — not a range, and not before delivery is added at
                 checkout.
               </p>
+              {/* The shop had no route onward to either of these. A visitor
+                  buying for a business was left to work out on their own that
+                  wholesale exists, and a visitor wondering whether any of this
+                  is a fair price had nothing here to answer it — while the
+                  article that does answer it sat unlinked from the page where
+                  the question actually gets asked. */}
+              <p>
+                If you are buying for a shop, a hotel, or to make chaku for
+                Maghe Sankranti, these are the wrong numbers to plan from —{" "}
+                <Link href="/wholesale" className="text-grove underline underline-offset-4 hover:text-jaggery transition-colors">
+                  buying in bulk works differently
+                </Link>
+                , and it needs more notice than a retail order does.
+              </p>
+              <p>
+                And if you want to judge our price against the market before
+                you commit, we wrote up{" "}
+                <Link href="/blog/sakhar-price-in-nepal" className="text-grove underline underline-offset-4 hover:text-jaggery transition-colors">
+                  what sakhar actually costs per kilo in Nepal
+                </Link>{" "}
+                — including where cheaper Terai gur is the sensible buy, and
+                what a block priced well below the rest usually means.
+              </p>
             </div>
           </div>
         </section>

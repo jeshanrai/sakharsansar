@@ -362,11 +362,62 @@ function checkI18n(pages) {
  *  not "Home" — it is a substring of too much else. */
 const ENGLISH_NAV_LABELS = ["Our Story", "Blogs", "Contact", "Favourites"];
 
+/**
+ * Links — Phase G.
+ *
+ * Anchor text is the strongest signal a page can send about what it is
+ * linking to, and the three ways it goes wrong are all invisible in a browser:
+ * a link whose text is a URL says nothing about the destination, a link with
+ * no text at all says nothing to a screen reader, and an image-only link with
+ * no alt is a dead end for both.
+ *
+ * They survive review because each looks fine on the page — a raw URL renders
+ * as a URL and reads as a link, an icon renders as an icon. Only reading the
+ * markup of every anchor on the site at once turns them up.
+ */
+function checkLinks(pages) {
+  const problems = [];
+
+  for (const { route, html } of pages) {
+    const body = html.replace(/<script[\s\S]*?<\/script>/gi, " ");
+    for (const m of body.matchAll(/<a\b([^>]*)>([\s\S]*?)<\/a>/gi)) {
+      const [, attrs, inner] = m;
+      const href = attrs.match(/href="([^"]*)"/i)?.[1] ?? "";
+      const ariaLabel = attrs.match(/aria-label="([^"]*)"/i)?.[1] ?? "";
+      const text = textOf(inner);
+
+      // An accessible name from any of the three places one can come from.
+      const imgAlt = [...inner.matchAll(/<img\b[^>]*?\balt="([^"]*)"/gi)]
+        .map((x) => x[1]).filter(Boolean).join(" ");
+      const name = (text || ariaLabel || imgAlt).trim();
+
+      if (!name) {
+        problems.push([route, `link to ${href || "(no href)"} has no text, aria-label or image alt`]);
+        continue;
+      }
+
+      // Only judge the *visible* text — a raw URL behind a proper aria-label
+      // is still a raw URL to a sighted reader and to a crawler reading anchor
+      // text, so this deliberately checks `text`, not `name`.
+      if (text) {
+        if (/^https?:\/\//i.test(text) || /^www\./i.test(text)) {
+          problems.push([route, `anchor text is a URL: ${JSON.stringify(text.slice(0, 60))}`]);
+        } else if (text.startsWith("/") && text.length > 1) {
+          problems.push([route, `anchor text is a path: ${JSON.stringify(text.slice(0, 60))}`]);
+        }
+      }
+    }
+  }
+
+  return problems;
+}
+
 const GROUPS = [
   ["headings", checkHeadings],
   ["meta", checkMeta],
   ["architecture", checkArchitecture],
   ["i18n", checkI18n],
+  ["links", checkLinks],
 ];
 
 // ─── Run ────────────────────────────────────────────────────────────────────
