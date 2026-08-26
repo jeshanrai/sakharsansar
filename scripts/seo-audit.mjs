@@ -251,6 +251,20 @@ function checkArchitecture(pages, sitemap) {
     }
   }
 
+  // ── No page should ship an unresolved shell.
+  //
+  // A route-level loading.tsx wrapped every page in a Suspense boundary that
+  // was still pending in the prerendered HTML, so all thirty-six pages shipped
+  // a full-screen "Loading" overlay ahead of their own content. On a site
+  // where every route is static there is nothing to wait for, and the crawlers
+  // this site is written for — the ones that never run JS, see /llms.txt —
+  // read the placeholder as part of the page.
+  for (const { route, html } of pages) {
+    if (html.includes("<!--$?-->")) {
+      problems.push([route, "ships an unresolved Suspense boundary — the fallback is in the served HTML"]);
+    }
+  }
+
   // ── Breadcrumbs: shown and described, or neither.
   for (const { route, html } of pages) {
     if (route === "/") continue;

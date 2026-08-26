@@ -131,7 +131,13 @@ const ShopProductCard = memo(function ShopProductCard({
               alt={`${product.name}, ${product.weight} of pure organic sakhar`}
               fill
               loading={index < 6 ? "eager" : "lazy"}
-              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+              // The grid is two columns until lg and three after it, so the
+              // card is 50vw then 33vw. This used to declare 33vw at 640px and
+              // 25vw above 1024 — a four-column layout that does not exist —
+              // which had the browser fetching a 320px image for a 410px slot
+              // and rendering product photography slightly soft. Under-declared
+              // rather than over: the bytes were fine, the picture was not.
+              sizes="(max-width: 1023px) 50vw, 33vw"
               className="object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-[1.04]"
             />
           </Link>

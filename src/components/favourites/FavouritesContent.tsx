@@ -156,7 +156,7 @@ const FavouriteCard = memo(function FavouriteCard({
               alt={`${product.name}, ${product.weight} of pure organic sakhar`}
               fill
               loading={index < 6 ? "eager" : "lazy"}
-              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+              sizes="(max-width: 1023px) 50vw, 33vw"
               className="object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-[1.04]"
             />
           </Link>
