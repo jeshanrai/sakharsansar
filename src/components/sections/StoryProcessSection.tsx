@@ -7,7 +7,7 @@ const steps = [
   { title: "Harvest", season: "Oct – Dec", desc: "Cane is cut at first light, when the juice is sweetest and coolest.", icon: Sprout },
   { title: "Wood-fire", season: "Same day", desc: "The juice reduces slowly in iron kadhais over open wood-fire. Never gas, never sulphur.", icon: Flame },
   { title: "Hand-mould", season: "Cooled overnight", desc: "Once amber and pliable, it is poured by hand into wooden moulds and rested.", icon: Hand },
-  { title: "Pack", season: "Within 48 hrs", desc: "Sealed in compostable kraft paper from our village cooperative. Never plastic.", icon: Package },
+  { title: "Pack", season: "Within 48 hrs", desc: "Sealed in compostable kraft paper from a women's cooperative in the next valley. Never plastic.", icon: Package },
 ];
 
 /**

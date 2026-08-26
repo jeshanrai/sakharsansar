@@ -8,7 +8,7 @@ const faqs = [
   {
     question: "Where does SakharSansar jaggery come from?",
     answer:
-      "Every block, powder and pour is made in Sankhuwasabha, in the Koshi Province of eastern Nepal, where the Arun river meets the Makalu foothills. Our cooperative of forty-two families across six villages grows the cane and makes the jaggery by hand. There is no middleman between their fire and your kitchen.",
+      "Every block, powder and pour is made in Sankhuwasabha, in the Koshi Province of eastern Nepal, where the Arun river meets the Makalu foothills. Forty-two families across six villages grow the cane, and Rashmita makes the jaggery by hand. There is no middleman between that fire and your kitchen.",
   },
   {
     question: "What makes your jaggery chemical-free?",

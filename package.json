@@ -5,11 +5,12 @@
   "scripts": {
     "dev": "next dev",
     "dev:backend": "cd backend && npm run dev",
-    "build": "next build && npm run check:meta && npm run check:schema && npm run seo:audit",
+    "build": "next build && npm run check:meta && npm run check:schema && npm run check:claims && npm run seo:audit",
     "start": "next start",
     "lint": "eslint",
     "check:meta": "node scripts/check-meta-descriptions.mjs",
     "check:schema": "node scripts/validate-schema.mjs",
+    "check:claims": "node scripts/check-claims.mjs",
     "seo:audit": "node scripts/seo-audit.mjs",
     "smoke:build": "node scripts/smoke-build.mjs",
     "db:push": "cd backend && npx prisma db push",

@@ -1,3 +1,4 @@
+import { COMMERCE, SITE, formatRs } from "./site";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
@@ -119,10 +120,35 @@ const FIGURE = /^!\[([^\]]*)\]\(([^)\s]+)(?:\s+"([^"]*)")?\)$/;
 const ORDERED_ITEM = /^\d+\.\s+/;
 const BULLET_ITEM = /^-\s+/;
 
+/**
+ * Values the prose is allowed to quote, resolved from config as it is parsed.
+ *
+ * /wholesale printed the WhatsApp number three times, written out by hand in
+ * the article body. It was correct, and it was correct only for as long as
+ * nobody changed it — the number lives in SITE.phone, every other surface on
+ * the site reads it from there, and the one place a bulk buyer is actually
+ * told to message was the one place that would have gone stale silently.
+ *
+ * Tokens rather than a component, because the article body is markdown in a
+ * JSON file and has to stay writable by whoever writes the copy.
+ */
+const TOKENS: Record<string, string> = {
+  "{{phone}}": SITE.phone,
+  "{{email}}": SITE.email,
+  "{{freeShipping}}": formatRs(COMMERCE.freeShippingThreshold),
+};
+
+function interpolate(markdown: string): string {
+  return Object.entries(TOKENS).reduce(
+    (text, [token, value]) => text.split(token).join(value),
+    markdown,
+  );
+}
+
 export function parseArticle(markdown: string): Block[] {
   const blocks: Block[] = [];
 
-  for (const chunk of markdown.trim().split(/\n{2,}/)) {
+  for (const chunk of interpolate(markdown).trim().split(/\n{2,}/)) {
     const raw = chunk.trim();
     if (!raw) continue;
     const lines = raw.split("\n").map((l) => l.trim());

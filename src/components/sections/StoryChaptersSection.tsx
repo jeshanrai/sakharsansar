@@ -36,7 +36,7 @@ const chapters: Chapter[] = [
     eyebrow: "The Farmers",
     title: "Forty-two families, one recipe",
     body:
-      "Our cooperative is forty-two families across six villages. Some have farmed cane for so long the moulds in their kitchens are older than the road that connects them to town. They are not labourers; they are the recipe.",
+      "The cane comes from forty-two families across six villages. Some have farmed it for so long the moulds in their kitchens are older than the road that connects them to town. They are not labourers; they are the recipe.",
     quote: "If you cut the cane angry, the jaggery turns bitter. So we wake before the day, and we are gentle.",
     image: "/farmers/farmer1.jpg",
     imageAlt: "A SakharSansar farmer tending the wood fire while making traditional jaggery",

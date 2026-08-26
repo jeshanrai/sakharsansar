@@ -132,7 +132,7 @@ export default async function ProductPage({ params }: Props) {
     },
     {
       q: "Do you deliver across Nepal?",
-      a: "Yes. We ship pan-Nepal, packed in compostable kraft paper, direct from our Sankhuwasabha cooperative.",
+      a: "Yes. We ship pan-Nepal, packed in compostable kraft paper, direct from Sankhuwasabha.",
     },
   ];
 
@@ -375,14 +375,14 @@ export default async function ProductPage({ params }: Props) {
           <AnimatedWave aria-hidden flip className="absolute top-0 left-0 w-full h-[48px] sm:h-[68px] text-cream" />
           <div className="relative z-10 max-w-3xl mx-auto text-center">
             <span className="label-caps text-honey-ink mb-5 block">
-              {BLOG_ENABLED ? "From the Journal" : "From the Cooperative"}
+              {BLOG_ENABLED ? "From the Journal" : "From Sankhuwasabha"}
             </span>
             <h2 className="font-serif text-h2 text-cream tracking-display mb-7 text-balance">
               The hands behind <span className="italic font-light">{product.name}</span>.
             </h2>
             <p className="text-cream/80 text-lede mb-9 max-w-xl mx-auto">
-              Read the recipe, the harvest notes, and the people who pour every batch
-              by hand in our Sankhuwasabha cooperative.
+              Read the recipe, the harvest notes, and the families in Sankhuwasabha
+              who grow the cane every batch is poured from.
             </p>
 
             {/* This was one button pointing at /blog — the weakest link on the

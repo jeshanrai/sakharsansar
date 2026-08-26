@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import Footer from "@/components/layout/Footer";
 import JsonLd from "@/components/seo/JsonLd";
+import { formatPostDate } from "@/lib/blog";
 import Breadcrumbs from "@/components/layout/Breadcrumbs";
 import { webPageLd } from "@/lib/seo";
 import { alternates, openGraph, DEFAULT_OG_IMAGE } from "@/lib/metadata";
@@ -19,13 +20,24 @@ export const metadata: Metadata = {
   }),
 };
 
+/**
+ * The date these terms last changed.
+ *
+ * One constant, because the page printed "March 27, 2026" as prose while the
+ * WebPage schema separately declared "2026-03-27" — the same fact written
+ * twice, and only the second one is what Google reads. Editing the policy and
+ * updating the visible line would have left the markup claiming the old date,
+ * which is worse than no date at all.
+ */
+const LAST_UPDATED = "2026-03-27";
+
 export default function ShippingPolicyPage() {
   const pageJsonLd = webPageLd({
     name: "Shipping Policy",
     path: "/shipping-policy",
     description:
       "Learn about SakharSansar shipping methods, delivery times, and charges across Nepal.",
-    dateModified: "2026-03-27",
+    dateModified: LAST_UPDATED,
   });
 
   return (
@@ -37,7 +49,10 @@ export default function ShippingPolicyPage() {
           <Breadcrumbs trail={[{ name: "Shipping Policy", path: "/shipping-policy" }]} className="mb-6" />
           <p className="text-sm font-medium tracking-[0.2em] uppercase text-[#C17A2A] mb-4">Delivery</p>
           <h1 className="font-poppins text-4xl sm:text-5xl font-bold text-[#2C1500] mb-3">Shipping Policy</h1>
-          <p className="text-base text-[#2C1500]/50 mb-14">Last updated: March 27, 2026</p>
+          <p className="text-base text-[#2C1500]/50 mb-14">
+            Last updated:{" "}
+            <time dateTime={LAST_UPDATED}>{formatPostDate(LAST_UPDATED)}</time>
+          </p>
 
           <div className="space-y-10">
             <section className="bg-white rounded-2xl p-8 sm:p-10">

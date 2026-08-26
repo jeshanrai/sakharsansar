@@ -10,7 +10,7 @@ export default async function Image() {
     eyebrow: "GET IN TOUCH",
     title: "Wholesale & Retail Orders",
     subtitle:
-      "Talk to our cooperative in Sankhuwasabha. WhatsApp, call or email.",
+      "Talk to us in Kathmandu or Sankhuwasabha. WhatsApp, call or email.",
     chips: ["B2B Bulk", "B2C Delivery", "Pan-Nepal"],
     image: "/farmers/farmer1.jpg",
   });

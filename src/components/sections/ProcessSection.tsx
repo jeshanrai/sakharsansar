@@ -23,7 +23,7 @@ const steps = [
   },
   {
     title: "Pack",
-    desc: "Sealed in compostable kraft paper from our village cooperative. Never plastic.",
+    desc: "Sealed in compostable kraft paper from a women's cooperative in the next valley. Never plastic.",
     icon: Package,
     season: "Within 48 hrs",
   },

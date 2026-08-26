@@ -126,8 +126,9 @@ export default function ShopPage() {
           </h1>
           <p className="mt-4 max-w-2xl text-[15px] sm:text-base text-jaggery/70 leading-relaxed">
             Three forms of 100% organic Himalayan jaggery — blocks, powder
-            and sakhar-coated dry fruits — wood-fired without chemicals by our
-            farming cooperative in Sankhuwasabha, and shipped across Nepal.
+            and sakhar-coated dry fruits — wood-fired without chemicals in
+            Sankhuwasabha from cane grown by forty-two farming families, and
+            shipped across Nepal.
           </p>
         </header>
         <ShopContent />

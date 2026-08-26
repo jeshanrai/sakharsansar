@@ -7,6 +7,7 @@ import OrderDrawer from "@/components/layout/OrderDrawer";
 import ArticleBody from "@/components/blog/ArticleBody";
 import QuoteForm from "@/components/wholesale/QuoteForm";
 import JsonLd from "@/components/seo/JsonLd";
+import { formatPostDate } from "@/lib/blog";
 import { AnimatedWave, Bee } from "@/components/ui/StoryArt";
 import { Daisy } from "@/components/ui/Doodles";
 import wholesale from "@/data/wholesale.json";
@@ -111,6 +112,18 @@ export default function WholesalePage() {
 
             <p className="font-serif italic text-jaggery/75 text-lede mt-6 max-w-2xl">
               {wholesale.description}
+            </p>
+
+            {/* The page already declared dateModified in its schema and showed
+                a buyer nothing. Prices, lead times and pack sizes are the whole
+                content here, and a bulk buyer reading terms with no date on
+                them has no way to know whether they are this season's. Same
+                field the markup reads. */}
+            <p className="mt-5 label-caps text-jaggery/60">
+              Last updated:{" "}
+              <time dateTime={wholesale.updated ?? wholesale.date}>
+                {formatPostDate(wholesale.updated ?? wholesale.date)}
+              </time>
             </p>
 
             {/* The quote request. WhatsApp first because it is how nearly every

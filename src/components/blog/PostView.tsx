@@ -379,8 +379,8 @@ export default function PostView({ post }: { post: BlogPost }) {
               Now, taste the story
             </h2>
             <p className="text-cream/80 text-lede mt-6 max-w-xl mx-auto">
-              Every block, powder and pour ships directly from our Sankhuwasabha
-              cooperative to your home. No middleman, no shortcuts.
+              Every block, powder and pour ships directly from Sankhuwasabha to your
+              home. No middleman, no shortcuts.
             </p>
             <Link
               href="/shop"
