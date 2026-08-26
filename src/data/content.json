@@ -51,7 +51,7 @@
       "shelfLife": "6-12 months when stored in a cool, dry place",
       "origin": "Sankhuwasabha, Koshi Province, Nepal",
       "category": "Blocks",
-      "harvest": "November 2025",
+      "harvest": "Mangsir 2082",
       "tastingNotes": "The densest thing we make. It chips rather than crumbles, breaking to a dark amber face that catches the light. Toasted molasses lands first, then a long mineral finish carrying the faint smoke of the wood fire it was reduced over. This is the reference flavour \u2014 the powder is this block, crushed.",
       "howToUse": [
         "Chip a thumbnail-sized piece straight into hot chiya and let it dissolve as you stir.",
@@ -78,7 +78,8 @@
           "a": "Yes. The Sakhar Powder is this block crushed and sieved. The block is the less processed of the two, and works out cheaper by weight."
         }
       ],
-      "seoQualifier": "Pure Himalayan Sakhar"
+      "seoQualifier": "Pure Himalayan Sakhar",
+      "packed": ""
     },
     {
       "slug": "jaggery-powder",
@@ -93,7 +94,7 @@
       "shelfLife": "6 months when stored in an airtight container",
       "origin": "Sankhuwasabha, Koshi Province, Nepal",
       "category": "Powder",
-      "harvest": "November 2025",
+      "harvest": "Mangsir 2082",
       "tastingNotes": "Lighter in the cup than the block it comes from \u2014 crushing exposes more surface, which softens the smoke and pushes the clean caramel forward. It dissolves without leaving a grain behind, hot or cold, which is exactly why it suits baking and cold drinks where the block never worked.",
       "howToUse": [
         "Spoon straight into tea, coffee or lassi; it dissolves cold, unlike the block.",
@@ -116,7 +117,8 @@
           "a": "Convenience and cold solubility. The block keeps longer, has a slightly stronger smoke and costs less by weight, but it has to be chipped or grated and it will not dissolve in a cold drink. If you sweeten daily, most people find the powder easier."
         }
       ],
-      "seoQualifier": "Pure Himalayan Sakhar"
+      "seoQualifier": "Pure Himalayan Sakhar",
+      "packed": ""
     },
     {
       "slug": "mixed-dry-fruits",
@@ -131,7 +133,7 @@
       "shelfLife": "3 months in a sealed pouch, kept cool and dry",
       "origin": "Sankhuwasabha, Koshi Province, Nepal",
       "category": "Dry Fruits",
-      "harvest": "November 2025",
+      "harvest": "Mangsir 2082",
       "tastingNotes": "The coating goes first \u2014 toasted molasses, a little smoke, gone in a couple of seconds \u2014 and then you are left chewing the nut itself, which is the point. Far less sweet than a chikki, because the sakhar is a thin shell rather than a slab holding everything together. Each piece tastes slightly different depending on what is under it.",
       "howToUse": [
         "Eat a small handful in the afternoon instead of a biscuit.",
@@ -158,7 +160,8 @@
           "a": "Yes \u2014 it is a dry fruit and nut mix, so it is not suitable for anyone with a nut allergy. Message us before ordering if you need the exact composition of the current batch."
         }
       ],
-      "seoQualifier": "Sakhar-Coated Nuts"
+      "seoQualifier": "Sakhar-Coated Nuts",
+      "packed": ""
     }
   ],
   "testimonials": [

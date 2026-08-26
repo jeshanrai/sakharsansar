@@ -18,6 +18,7 @@ import Breadcrumbs from "@/components/layout/Breadcrumbs";
 import { ArrowRight, Leaf, ShieldCheck, Truck } from "lucide-react";
 import { alternates, openGraph, twitter } from "@/lib/metadata";
 import { OG_CONTENT_TYPE } from "@/lib/og";
+import { bestBefore, harvestSeason } from "@/lib/batch";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -145,6 +146,13 @@ export default async function ProductPage({ params }: Props) {
   // is harvested at first light" sourcing paragraph. That was inaccurate as
   // well as duplicative: the dry fruit mix is coated, not pressed and moulded.
   // They now read from the product's own record.
+  //
+  // `harvest` is the Bikram Sambat cane season and `packed` is when this pouch
+  // was filled. Both resolve to null until somebody records them, and the copy
+  // below simply omits the sentence rather than asserting a date we do not have.
+  const season = harvestSeason(product.harvest);
+  const bestBeforeDate = bestBefore(product.packed, product.shelfLife);
+
   const sections = [
     {
       title: "Tasting Notes",
@@ -177,6 +185,25 @@ export default async function ProductPage({ params }: Props) {
         <p>
           {product.shelfLife}. Keep away from direct sunlight and humidity. A small
           amount of natural crystallisation over time is a sign of purity, not spoilage.
+          {/* The harvest badge and this shelf life sat on the same page with
+              nothing joining them, so a careful reader could subtract one from
+              the other and conclude the pouch had expired. They are two
+              different dates: the cane is cut once a year in Mangsir, and the
+              pouch is packed when it is packed. Saying so is cheaper than
+              losing the sale to arithmetic we invited. */}
+          {season && (
+            <>
+              {" "}The cane for this sakhar was cut in {product.harvest} ({season.gregorian}).
+              Shelf life is counted from the day the pouch was packed, not from the harvest.
+            </>
+          )}
+          {bestBeforeDate && (
+            <>
+              {" "}<strong className="font-serif text-jaggery not-italic">
+                Best before {bestBeforeDate}.
+              </strong>
+            </>
+          )}
         </p>
       ),
     },
