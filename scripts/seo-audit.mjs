@@ -20,6 +20,8 @@
  * phases add groups here rather than new scripts, so there is one command and
  * one report.
  */
+import { existsSync } from "node:fs";
+import { join } from "node:path";
 import { headingsOf, liveBaseFrom, loadPages, sitemapPaths, textOf } from "./lib/pages.mjs";
 
 const SITE_URL = "https://www.sakharsansar.com.np";
@@ -243,10 +245,22 @@ function checkArchitecture(pages, sitemap) {
   }
 
   // ── Internal links have to go somewhere.
+  //
+  // A link to a file rather than a page is legitimate — /press offers the
+  // photography as downloads — but only if the file is really there. Checking
+  // the filesystem rather than allowing the extension means a renamed photo
+  // still fails, which is the case that would otherwise ship a broken download
+  // to a journalist.
   for (const { route, html } of pages) {
     for (const link of internalLinks(html)) {
       if (byRoute.has(link)) continue;
       if (KNOWN_NON_PAGE.some((re) => re.test(link))) continue;
+      if (/\.[a-z0-9]{2,5}$/i.test(link)) {
+        if (!existsSync(join("public", link))) {
+          problems.push([route, `links to ${link}, which is not a file in public/`]);
+        }
+        continue;
+      }
       problems.push([route, `links to ${link}, which is not a page on this site`]);
     }
   }

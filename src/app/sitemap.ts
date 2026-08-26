@@ -43,6 +43,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
       ? ([{ url: `${SITE_URL}${AUTHOR.path}`, changeFrequency: "monthly", priority: 0.5 }] as MetadataRoute.Sitemap)
       : []),
     { url: `${SITE_URL}/contact`, changeFrequency: "monthly", priority: 0.6 },
+    // The press page. Exists to be found and cited by someone writing about
+    // us, which is the one kind of link this site cannot manufacture.
+    { url: `${SITE_URL}/press`, changeFrequency: "monthly", priority: 0.5 },
     // The purity test. A tool rather than an article, and the only page here
     // built to be linked to by other people rather than to sell something.
     ...(BLOG_ENABLED

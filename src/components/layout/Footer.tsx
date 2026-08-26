@@ -37,6 +37,7 @@ function columns(locale: Locale) {
       title: m.footerHelp,
       links: [
         { label: m.footerContactUs, href: "/contact" },
+        { label: m.footerPress, href: "/press" },
         { label: m.footerShippingPolicy, href: "/shipping-policy" },
         { label: m.footerRefundPolicy, href: "/refund-policy" },
       ],
