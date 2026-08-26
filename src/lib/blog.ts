@@ -9,6 +9,7 @@ export {
   type PostRef,
 } from "./blog-format";
 import { postPath } from "./blog-format";
+import { DEFAULT_LOCALE, type Locale } from "./hreflang";
 
 /**
  * The journal, and whether it currently has anything in it.
@@ -91,12 +92,12 @@ export interface BlogPost {
 
 /** The English half of the journal — what /blog lists and renders. */
 export function englishPosts(): BlogPost[] {
-  return posts.filter((p) => p.lang !== "ne");
+  return postsIn("en");
 }
 
 /** The Nepali half — what /ne/blog renders. */
 export function nepaliPosts(): BlogPost[] {
-  return posts.filter((p) => p.lang === "ne");
+  return postsIn("ne");
 }
 
 export const posts: BlogPost[] = blogData as BlogPost[];
@@ -151,21 +152,43 @@ export const BLOG_ENABLED = posts.length > 0;
  */
 export const POSTS_PER_PAGE = 12;
 
-/** How many pages the journal currently needs. Always at least 1. */
-export function pageCount(): number {
-  return Math.max(1, Math.ceil(posts.length / POSTS_PER_PAGE));
+/**
+ * How many pages the journal currently needs, in one language. Always at least 1.
+ *
+ * Counted per locale because the two journals paginate independently — see
+ * `sortedPosts`. Counting both together sized the English pagination by the
+ * Nepali archive as well, which would have split /blog a post or three early.
+ */
+export function pageCount(locale: Locale = DEFAULT_LOCALE): number {
+  return Math.max(1, Math.ceil(postsIn(locale).length / POSTS_PER_PAGE));
 }
 
 /** The slice of the archive shown on page `n` (1-based), newest first. */
-export function postsOnPage(n: number): BlogPost[] {
+export function postsOnPage(n: number, locale: Locale = DEFAULT_LOCALE): BlogPost[] {
   const start = (n - 1) * POSTS_PER_PAGE;
-  return sortedPosts().slice(start, start + POSTS_PER_PAGE);
+  return sortedPosts(locale).slice(start, start + POSTS_PER_PAGE);
 }
 
-export function sortedPosts(): BlogPost[] {
-  return [...posts].sort(
+/**
+ * The journal in one language, newest first.
+ *
+ * Defaults to English because every surface that calls it — /blog, the
+ * paginated pages, the RSS feed, the author page, the Blog schema — is an
+ * English page. It used to return every post regardless of language, which put
+ * three Devanagari cards among the English ones on /blog and in the feed: one
+ * URL serving two languages, which is the shape Google is least able to
+ * classify and a reader is least able to use. The Nepali half is reachable by
+ * passing "ne", which is what /ne/blog will call when it is built.
+ */
+export function sortedPosts(locale: Locale = DEFAULT_LOCALE): BlogPost[] {
+  return [...postsIn(locale)].sort(
     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
   );
+}
+
+/** Every post written in `locale`. A post with no `lang` is English. */
+export function postsIn(locale: Locale): BlogPost[] {
+  return posts.filter((p) => (p.lang ?? "en") === locale);
 }
 
 /**

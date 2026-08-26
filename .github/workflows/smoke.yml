@@ -33,6 +33,13 @@ jobs:
         with:
           node-version: 22
 
+      # Before trusting the check, prove it still fails on the things it was
+      # written to catch. It runs the real script against a local server that
+      # serves a CDN split, a route with no build-ID meta, and a site that is
+      # consistent but stale. A green smoke test means nothing if this is red.
+      - name: The smoke test still fails on drift
+        run: npm run smoke:test
+
       # The script has no dependencies beyond Node's own fetch, so there is
       # nothing to install.
       - name: Every route is serving one build

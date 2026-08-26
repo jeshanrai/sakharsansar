@@ -2,6 +2,8 @@ import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 import JsonLd from "@/components/seo/JsonLd";
 import { breadcrumbLd } from "@/lib/seo";
+import { DEFAULT_LOCALE, type Locale } from "@/lib/hreflang";
+import { t } from "@/lib/i18n";
 
 /**
  * The breadcrumb trail, rendered once and described once.
@@ -28,17 +30,24 @@ export interface Crumb {
 export default function Breadcrumbs({
   trail,
   className = "mb-5",
+  locale = DEFAULT_LOCALE,
 }: {
   trail: Crumb[];
   /** Spacing is the page's business, not the component's. */
   className?: string;
+  /**
+   * The language the trail reads in. Defaults to English, which is every
+   * caller but the article view — the Nepali posts rendered a Devanagari
+   * headline under a breadcrumb that said "Home".
+   */
+  locale?: Locale;
 }) {
-  const links: Crumb[] = [{ name: "Home", path: "/" }, ...trail];
+  const links: Crumb[] = [{ name: t(locale).crumbHome, path: "/" }, ...trail];
   const last = links.length - 1;
 
   return (
     <>
-      <JsonLd data={breadcrumbLd(trail)} />
+      <JsonLd data={breadcrumbLd(trail, locale)} />
       <nav aria-label="Breadcrumb" className={className}>
         <ol className="flex items-center gap-2 label-caps text-jaggery/70 min-w-0">
           {links.map((crumb, i) => (

@@ -1,6 +1,7 @@
 import content from "@/data/content.json";
 import { AUTHOR, AUTHOR_ID } from "./author";
-import { LOCALES } from "./hreflang";
+import { DEFAULT_LOCALE, LOCALES, type Locale } from "./hreflang";
+import { t } from "./i18n";
 import { SITE, absoluteUrl } from "./site";
 
 /**
@@ -176,11 +177,25 @@ export function siteGraphLd(): Json {
  */
 export function breadcrumbLd(
   trail: { name: string; path: string }[],
+  /**
+   * The language the trail is read in. The root crumb was the literal string
+   * "Home" on every page including the Nepali articles, so a Devanagari
+   * article opened with an English breadcrumb — and said so twice, once in the
+   * markup and once in this schema. The rest of the trail is passed in already
+   * translated by the caller; only the root is ours to name.
+   */
+  locale: Locale = DEFAULT_LOCALE,
 ): Json {
+  // The path stays "/" in both languages: there is no /ne home page yet, and a
+  // crumb pointing at one would be a 404 in the markup and a broken item in
+  // the schema. Only the label is translated. When /ne exists this becomes a
+  // per-locale path — and the hreflang work that ships it is where that
+  // belongs, not here.
+  const home = { name: t(locale).crumbHome, path: "/" };
   return {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
-    itemListElement: [{ name: "Home", path: "/" }, ...trail].map(
+    itemListElement: [home, ...trail].map(
       (crumb, i) => ({
         "@type": "ListItem",
         position: i + 1,

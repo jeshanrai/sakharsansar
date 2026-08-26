@@ -93,6 +93,23 @@ const COPY: Record<string, Omit<BlogCategory, "slug" | "tag">> = {
   },
 };
 
+/**
+ * Tags that are deliberately not routes.
+ *
+ * A tag with no hub used to be invisible: `COPY` simply had no entry, the
+ * `flatMap` below dropped it, and the filter pill went on rendering with
+ * nothing behind it. That is indistinguishable from having forgotten to write
+ * the hub — which is the actual failure mode, and the reason
+ * `scripts/check-blog-categories.mjs` now reads this list and fails the build
+ * on any tag that is in neither it nor `COPY`.
+ *
+ * "Sakhar 101" is on every post. Its hub would be the journal index under a
+ * second URL: two pages listing the same articles, each competing with the
+ * other for the same queries, and neither of them the one we want to rank.
+ * It stays a client-side filter, which is what it always was in practice.
+ */
+export const ROUTELESS_TAGS = ["Sakhar 101"] as const;
+
 /** Every tag in the journal that has written copy, most-used first. */
 export const BLOG_CATEGORIES: BlogCategory[] = Array.from(
   posts.reduce((counts, post) => {

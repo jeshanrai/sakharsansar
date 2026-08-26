@@ -108,13 +108,13 @@ export default function ContactReach() {
             {/* Socials */}
             <div className="flex items-center gap-3 pt-2">
               <span className="label-caps text-cream/75">Follow</span>
-              {SOCIAL_LINKS.map(({ icon: Icon, href, label }) => (
+              {SOCIAL_LINKS.map(({ icon: Icon, href, label, ariaLabel }) => (
                 <a
                   key={label}
                   href={href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label={label}
+                  aria-label={ariaLabel}
                   className="w-10 h-10 rounded-full bg-cream/15 text-cream flex items-center justify-center hover:bg-honey hover:text-jaggery transition-colors"
                 >
                   <Icon className="w-4 h-4" strokeWidth={1.7} />

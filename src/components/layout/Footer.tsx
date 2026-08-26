@@ -9,7 +9,7 @@ import { SOCIAL_LINKS } from "@/components/ui/SocialLinks";
 
 const SOCIAL = [
   ...SOCIAL_LINKS,
-  { icon: Mail, href: `mailto:${SITE.email}`, label: "Email" },
+  { icon: Mail, href: `mailto:${SITE.email}`, label: "Email", ariaLabel: `Email ${SITE.name}` },
 ];
 
 /**
@@ -94,13 +94,13 @@ export default function Footer({ locale = "en" }: { locale?: Locale }) {
 
             {/* Social row — dark filled circles */}
             <div className="mt-7 flex items-center gap-3">
-              {SOCIAL.map(({ icon: Icon, href, label }) => (
+              {SOCIAL.map(({ icon: Icon, href, label, ariaLabel }) => (
                 <a
                   key={label}
                   href={href}
                   target={href.startsWith("http") ? "_blank" : undefined}
                   rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
-                  aria-label={label}
+                  aria-label={ariaLabel}
                   className="w-12 h-12 rounded-full bg-jaggery text-cream flex items-center justify-center hover:bg-grove transition-colors"
                 >
                   <Icon className="w-5 h-5" strokeWidth={1.7} />

@@ -39,6 +39,19 @@ jobs:
           # same way here as in a real deploy.
           VERCEL_GIT_COMMIT_SHA: ${{ github.sha }}
 
+      # Not in `build`, because it fails on a data problem only the owner can
+      # fix — the harvest date on the product cards — and a red build would
+      # block every unrelated deploy until they do. Reported here instead so it
+      # is visible on every run without holding the pipeline hostage.
+      - name: Batch dates are inside their stated shelf life
+        run: npm run check:batch
+        continue-on-error: true
+
+      # The post-deploy smoke test's own test. Runs here too so a change that
+      # blinds it is caught on the PR rather than after the next deploy.
+      - name: The smoke test still fails on drift
+        run: npm run smoke:test
+
       - name: Lint
         run: npm run lint
         # Lint currently reports 10 pre-existing errors in the admin portal and

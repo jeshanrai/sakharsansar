@@ -19,6 +19,7 @@ import {
 } from "@/lib/article";
 import { ORG_ID, faqLd, howToLd, recipeLd } from "@/lib/seo";
 import { SITE, absoluteUrl } from "@/lib/site";
+import { LOCALES } from "@/lib/hreflang";
 import { ArrowRight, Clock, Languages, Twitter, Facebook, Linkedin, MapPin, Phone, RefreshCw } from "lucide-react";
 
 /**
@@ -44,7 +45,15 @@ export default function PostView({ post }: { post: BlogPost }) {
   const faqs = faqEntries(blocks);
   const steps = howToSteps(blocks);
   const recipe = post.recipe ? recipeParts(blocks) : null;
-  const lang = post.lang ?? SITE.lang;
+  const locale = post.lang === "ne" ? ("ne" as const) : ("en" as const);
+  // One BCP-47 tag per locale, read from the same table the hreflang tags come
+  // from. This was `post.lang ?? SITE.lang`, which gave the Nepali articles a
+  // bare "ne" while their English counterparts said "en-NP" — the two halves
+  // of a translation pair describing themselves in different forms. That is
+  // the specific inconsistency docs/i18n-plan.md calls out as most likely to
+  // get an annotation discarded, and it reached both the <article lang> and
+  // the JSON-LD inLanguage.
+  const lang = LOCALES[locale].htmlLang;
 
   const authorInitials = post.author
     .split(" ")
@@ -53,7 +62,6 @@ export default function PostView({ post }: { post: BlogPost }) {
     .join("")
     .toUpperCase();
   const related = relatedPosts(post.slug);
-  const locale = lang === "ne" ? ("ne" as const) : ("en" as const);
   const m = t(locale);
 
   const postUrl = absoluteUrl(postPath(post));
@@ -94,7 +102,7 @@ export default function PostView({ post }: { post: BlogPost }) {
   // on the Nepali articles while the BreadcrumbList went on saying "Journal" —
   // a trail shown in one language and described to Google in another.
   const trail = [
-    { name: post.lang === "ne" ? "जर्नल" : "Journal", path: "/blog" },
+    { name: m.crumbJournal, path: "/blog" },
     { name: post.title, path: postPath(post) },
   ];
 
@@ -151,7 +159,7 @@ export default function PostView({ post }: { post: BlogPost }) {
 
           <div className="relative z-10 max-w-[820px] mx-auto">
             {/* Breadcrumb — the trail matches the BreadcrumbList above it. */}
-            <Breadcrumbs trail={trail} className="mb-7" />
+            <Breadcrumbs trail={trail} className="mb-7" locale={locale} />
 
             {/* Language switcher. Rendered only where a translation actually
                 exists — one of the Nepali articles has no English counterpart,
@@ -371,22 +379,21 @@ export default function PostView({ post }: { post: BlogPost }) {
         )}
 
         {/* ─── Taste-the-story CTA band ───────────────────────────── */}
-        <section aria-label="Shop the harvest" className="relative bg-grove text-cream px-6 sm:px-10 lg:px-16 pt-24 sm:pt-32 pb-20 sm:pb-24 overflow-hidden">
+        <section aria-label={m.ctaButton} className="relative bg-grove text-cream px-6 sm:px-10 lg:px-16 pt-24 sm:pt-32 pb-20 sm:pb-24 overflow-hidden">
           <AnimatedWave aria-hidden flip className="absolute top-0 left-0 w-full h-[48px] sm:h-[68px] text-cream" />
           <div className="relative z-10 max-w-2xl mx-auto text-center">
-            <span className="label-caps text-honey-ink mb-5 block">From page to pantry</span>
+            <span className="label-caps text-honey-ink mb-5 block">{m.ctaEyebrow}</span>
             <h2 className="font-marker uppercase text-cream leading-[0.98] text-[clamp(2rem,4.4vw,3.4rem)] text-balance">
-              Now, taste the story
+              {m.ctaHeading}
             </h2>
             <p className="text-cream/80 text-lede mt-6 max-w-xl mx-auto">
-              Every block, powder and pour ships directly from Sankhuwasabha to your
-              home. No middleman, no shortcuts.
+              {m.ctaBody}
             </p>
             <Link
               href="/shop"
               className="group mt-9 inline-flex items-center gap-3 rounded-full bg-cream text-jaggery label-caps px-9 py-4 hover:bg-honey transition-colors"
             >
-              Shop the harvest
+              {m.ctaButton}
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" strokeWidth={2} />
             </Link>
           </div>

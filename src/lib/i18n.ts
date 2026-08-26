@@ -101,6 +101,15 @@ const en = {
   // ── Breadcrumbs
   crumbHome: "Home",
   crumbJournal: "Journal",
+
+  // ── Closing CTA band on an article. Short, factual, and the same claim the
+  //    rest of the site makes — which is what makes it safe to translate here
+  //    rather than treat as body copy.
+  ctaEyebrow: "From page to pantry",
+  ctaHeading: "Now, taste the story",
+  ctaBody:
+    "Every block, powder and pour ships directly from Sankhuwasabha to your home. No middleman, no shortcuts.",
+  ctaButton: "Shop the harvest",
 } as const;
 
 /** Every key in `en`, required. A missing one will not compile. */
@@ -161,6 +170,14 @@ const ne: Messages = {
   // ── Breadcrumbs
   crumbHome: "गृहपृष्ठ",
   crumbJournal: "जर्नल",
+
+  // ── Closing CTA band. The English sat untranslated under three Devanagari
+  //    articles — the last thing a Nepali reader saw before being asked to buy.
+  ctaEyebrow: "लेखबाट भान्सासम्म",
+  ctaHeading: "अब स्वाद लिनुहोस्",
+  ctaBody:
+    "हरेक ढिक्का र धुलो सिधै सङ्खुवासभाबाट तपाईंको घरसम्म पुग्छ। बिचौलिया छैन, छोटो बाटो छैन।",
+  ctaButton: "सख्खर किन्नुहोस्",
 };
 
 const MESSAGES: Record<Locale, Messages> = { en, ne };

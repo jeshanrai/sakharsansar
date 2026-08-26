@@ -125,12 +125,19 @@ export default function BlogList() {
 
                 Same two lines on screen, same styling — the second one is now
                 a paragraph, which is what it always was. */}
-            <h1 className="font-marker uppercase text-jaggery leading-[0.9] tracking-tight text-[clamp(3rem,9vw,6.5rem)]">
-              Blog
+            {/* "Blog" was the whole H1 — the single strongest on-page signal
+                on the page, spent on a word that describes the format rather
+                than the subject. The title tag already says what this is;
+                the heading now agrees with it. The clamp comes down because
+                three words at 9vw is a different hero from one word at 9vw,
+                and the band around it was sized for the latter. */}
+            <h1 className="font-marker uppercase text-jaggery leading-[0.9] tracking-tight text-[clamp(2.5rem,7vw,5rem)]">
+              Jaggery Recipes &amp; Benefits
             </h1>
             <p className="mt-4 text-jaggery/70 font-medium text-[clamp(0.95rem,1.6vw,1.15rem)] leading-snug max-w-2xl">
-              Jaggery recipes, health benefits and farm stories from
-              Sankhuwasabha.
+              What we have worked out about sakhar — how to cook with it, what
+              it does and does not do for you, and what actually happens on the
+              terraces in Sankhuwasabha.
             </p>
           </div>
 

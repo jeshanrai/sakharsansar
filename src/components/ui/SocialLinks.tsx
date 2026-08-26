@@ -19,6 +19,22 @@ const ICONS: Record<string, SocialIcon> = {
 };
 
 /** The follow row, in one place: `SITE.social` decides which accounts exist,
- *  this decides what each one looks like. */
-export const SOCIAL_LINKS: { icon: SocialIcon; href: string; label: string }[] =
-  SITE.social.map(({ label, href }) => ({ icon: ICONS[label], href, label }));
+ *  this decides what each one looks like.
+ *
+ *  `label` stays the bare platform name because it is the key into `ICONS` and
+ *  the visible text where a caller shows text. `ariaLabel` is what an
+ *  icon-only link announces: "Facebook" on its own tells a screen-reader user
+ *  the platform but not whose page it is, and a page carrying several such
+ *  links reads as a list of platform names. Naming the account is the whole
+ *  point of an accessible name. */
+export const SOCIAL_LINKS: {
+  icon: SocialIcon;
+  href: string;
+  label: string;
+  ariaLabel: string;
+}[] = SITE.social.map(({ label, href }) => ({
+  icon: ICONS[label],
+  href,
+  label,
+  ariaLabel: `${SITE.name} on ${label}`,
+}));
