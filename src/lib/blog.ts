@@ -119,6 +119,29 @@ export function translationPair(slug: string): BlogPost | undefined {
   return posts.find((p) => p.slug === current.translationOf);
 }
 
+/**
+ * Every translated page, as a path → counterpart-path map.
+ *
+ * Exists so the language switcher can be a client component without pulling
+ * blog.json into the browser bundle. The root layout computes this on the
+ * server — it is three entries of two short strings — and passes it down;
+ * importing `posts` into a client component instead would ship every article's
+ * full body to every visitor.
+ *
+ * `translationOf` is declared on both halves of a pair, so both directions
+ * fall out of one pass. A post with no counterpart simply is not in the map,
+ * which is what the switcher keys off to render nothing.
+ */
+export function translationPaths(): Record<string, string> {
+  const map: Record<string, string> = {};
+  for (const post of posts) {
+    if (!post.translationOf) continue;
+    const pair = posts.find((p) => p.slug === post.translationOf);
+    if (pair) map[postPath(post)] = postPath(pair);
+  }
+  return map;
+}
+
 /** True once there is at least one post to show. */
 export const BLOG_ENABLED = posts.length > 0;
 
@@ -177,7 +200,12 @@ export function relatedPosts(slug: string, limit = 2): BlogPost[] {
   const tags = new Set(current.tags);
 
   return posts
-    .filter((p) => p.slug !== slug)
+    // Same language only. "Keep reading" on the Nepali articles offered two
+    // English ones — a reader who chose Devanagari was sent back to English at
+    // the first link out of the page, which is where a bilingual site loses
+    // people. A locale with fewer than `limit` articles simply shows fewer;
+    // padding the list with the other language is the bug, not the shortfall.
+    .filter((p) => p.slug !== slug && (p.lang ?? "en") === (current.lang ?? "en"))
     .map((post) => ({
       post,
       shared: post.tags.filter((t) => tags.has(t)).length,
@@ -191,22 +219,38 @@ export function relatedPosts(slug: string, limit = 2): BlogPost[] {
     .map((scored) => scored.post);
 }
 
-const MONTHS = [
-  "January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December",
-];
+const MONTHS: Record<string, string[]> = {
+  en: [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December",
+  ],
+  // Gregorian months in Nepali, not Bikram Sambat. The stored dates are
+  // Gregorian, and converting the calendar is a different job from
+  // translating the label — getting it half-right would put articles in the
+  // wrong year.
+  ne: [
+    "जनवरी", "फेब्रुअरी", "मार्च", "अप्रिल", "मे", "जुन",
+    "जुलाई", "अगस्ट", "सेप्टेम्बर", "अक्टोबर", "नोभेम्बर", "डिसेम्बर",
+  ],
+};
 
 /**
- * "2026-08-07" → "7 August 2026".
+ * "2026-08-07" → "7 August 2026", or "७ अगस्ट २०२६".
  *
  * Formatted from the string parts rather than through `Date` or
  * `toLocaleDateString`: the stored dates are timezone-less calendar days, and
  * both of those would shift them by one in some timezones — which on a client
  * component shows up as a hydration mismatch.
+ *
+ * The Nepali articles printed "7 August 2026" under a Devanagari headline. The
+ * numerals follow the articles' own convention, which writes १०, २५, १०० in
+ * prose and keeps Latin digits only for citations.
  */
-export function formatPostDate(iso: string): string {
+export function formatPostDate(iso: string, locale: "en" | "ne" = "en"): string {
   const [year, month, day] = iso.split("-");
-  const name = MONTHS[Number(month) - 1];
+  const name = MONTHS[locale]?.[Number(month) - 1];
   if (!name || !day || !year) return iso;
-  return `${Number(day)} ${name} ${year}`;
+  const n = (value: string) =>
+    locale === "ne" ? Number(value).toLocaleString("ne-NP", { useGrouping: false }) : String(Number(value));
+  return `${n(day)} ${name} ${n(year)}`;
 }

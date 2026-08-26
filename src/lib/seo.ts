@@ -79,6 +79,13 @@ export function organizationLd(): Json {
       addressCountry: SITE.address.country,
     },
     areaServed: { "@type": "Country", name: "Nepal" },
+    // When the business is reachable, from the same place /contact reads it.
+    openingHoursSpecification: {
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: [...SITE.hours.days],
+      opens: SITE.hours.opens,
+      closes: SITE.hours.closes,
+    },
     // The Person node lives on her page; this is the edge that makes the
     // business and the woman making the sakhar one connected pair of entities
     // rather than two. It used to be written the wrong way round — the Person

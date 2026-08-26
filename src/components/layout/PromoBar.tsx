@@ -2,7 +2,9 @@
 
 import { usePathname } from "next/navigation";
 import { Tag, Truck, Sparkles, Flame } from "lucide-react";
-import { COMMERCE, formatRs } from "@/lib/site";
+import { COMMERCE } from "@/lib/site";
+import { localeFromPath, t } from "@/lib/i18n";
+import type { Locale } from "@/lib/hreflang";
 
 type Msg = {
   icon: typeof Tag;
@@ -10,24 +12,33 @@ type Msg = {
   highlight?: string;
 };
 
-const MESSAGES: Msg[] = [
-  {
-    icon: Tag,
-    text: `Flat ${COMMERCE.discountPercent}% off on pure sakhar above ${formatRs(COMMERCE.discountMinimum)} with code`,
-    highlight: COMMERCE.discountCode,
-  },
-  { icon: Sparkles, text: "100% organic sakhar · No chemicals · Direct from farmers" },
-  {
-    icon: Truck,
-    text: `Free shipping pan-Nepal on orders above ${formatRs(COMMERCE.freeShippingThreshold)}`,
-  },
-  { icon: Flame, text: "Wood-fired sakhar from Sankhuwasabha · Shipped within 24h" },
-];
+/**
+ * The four promo lines, in the language of the page they sit above.
+ *
+ * The discount code itself is not translated — "SAKHAR10" is what the customer
+ * types at checkout, and a translated coupon code is a coupon code that does
+ * not work. Same reasoning as leaving "WhatsApp" alone.
+ */
+function messages(locale: Locale): Msg[] {
+  const m = t(locale);
+  return [
+    { icon: Tag, text: m.promoDiscount, highlight: COMMERCE.discountCode },
+    { icon: Sparkles, text: m.promoOrganic },
+    { icon: Truck, text: m.promoShipping },
+    { icon: Flame, text: m.promoWoodFired },
+  ];
+}
 
 export default function PromoBar() {
   const pathname = usePathname();
   // Don't show on admin/portfolio internal pages
   if (pathname?.startsWith("/portfolio")) return null;
+
+  // The bar is rendered by the root layout, which has no locale of its own —
+  // but this is a client component, and the path is enough. It resolves during
+  // the static prerender too, so the Nepali copy is in the served HTML rather
+  // than swapped in after hydration.
+  const MESSAGES = messages(localeFromPath(pathname));
 
   // Rendered twice so the -50% marquee slide loops seamlessly. Only the first
   // copy is content: the second is the same four strings again, and without

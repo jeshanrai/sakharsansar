@@ -3,6 +3,8 @@ import Image from "next/image";
 import { Mail, Phone, MapPin } from "lucide-react";
 import { BLOG_ENABLED } from "@/lib/blog";
 import { SITE, STORY } from "@/lib/site";
+import { t } from "@/lib/i18n";
+import type { Locale } from "@/lib/hreflang";
 import { SOCIAL_LINKS } from "@/components/ui/SocialLinks";
 
 const SOCIAL = [
@@ -10,32 +12,44 @@ const SOCIAL = [
   { icon: Mail, href: `mailto:${SITE.email}`, label: "Email" },
 ];
 
-const COLUMNS: { title: string; links: { label: string; href: string }[] }[] = [
-  {
-    title: "Explore",
-    links: [
-      { label: "Shop", href: "/shop" },
-      { label: "Wholesale", href: "/wholesale" },
-      { label: "Our Story", href: "/our-story" },
-      ...(BLOG_ENABLED ? [{ label: "Blogs", href: "/blog" }] : []),
-    ],
-  },
-  {
-    title: "Help",
-    links: [
-      { label: "Contact Us", href: "/contact" },
-      { label: "Shipping Policy", href: "/shipping-policy" },
-      { label: "Refund Policy", href: "/refund-policy" },
-    ],
-  },
-  {
-    title: "Legal",
-    links: [
-      { label: "Privacy Policy", href: "/privacy-policy" },
-      { label: "Terms", href: "/terms" },
-    ],
-  },
-];
+/**
+ * The three link columns, in the language of the page carrying them.
+ *
+ * Hrefs stay English on both locales — there is no /ne/shop to send anyone to
+ * yet. Translating the labels while the destinations stay English is the
+ * honest half-step: a Nepali reader gets Nepali furniture and still lands on a
+ * page that exists. Localised paths arrive with the translated pages
+ * (docs/i18n-plan.md §6).
+ */
+function columns(locale: Locale) {
+  const m = t(locale);
+  return [
+    {
+      title: m.footerExplore,
+      links: [
+        { label: m.navShop, href: "/shop" },
+        { label: m.navWholesale, href: "/wholesale" },
+        { label: m.navStory, href: "/our-story" },
+        ...(BLOG_ENABLED ? [{ label: m.navJournal, href: "/blog" }] : []),
+      ],
+    },
+    {
+      title: m.footerHelp,
+      links: [
+        { label: m.footerContactUs, href: "/contact" },
+        { label: m.footerShippingPolicy, href: "/shipping-policy" },
+        { label: m.footerRefundPolicy, href: "/refund-policy" },
+      ],
+    },
+    {
+      title: m.footerLegal,
+      links: [
+        { label: m.footerPrivacyPolicy, href: "/privacy-policy" },
+        { label: m.footerTerms, href: "/terms" },
+      ],
+    },
+  ];
+}
 
 function FooterLink({ href, label }: { href: string; label: string }) {
   const classes = "text-jaggery/70 hover:text-grove transition-colors text-[15px]";
@@ -59,14 +73,16 @@ function FooterLink({ href, label }: { href: string; label: string }) {
   );
 }
 
-export default function Footer() {
+export default function Footer({ locale = "en" }: { locale?: Locale }) {
+  const m = t(locale);
+  const COLUMNS = columns(locale);
   return (
     <footer id="contact" className="bg-peach text-jaggery scroll-mt-32">
       <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-12 pt-16 sm:pt-20 pb-10">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-y-12 gap-x-8">
           {/* ─── Brand + social + address ─────────────── */}
           <div className="md:col-span-6">
-            <Link href="/" aria-label="SakharSansar home" className="inline-flex items-center gap-3.5">
+            <Link href="/" aria-label={m.footerHome} className="inline-flex items-center gap-3.5">
               <span className="relative block h-12 w-12 rounded-full overflow-hidden border-2 border-jaggery/10">
                 <Image src="/logo-mark.webp" alt="" fill sizes="48px" className="object-cover scale-[1.02]" />
               </span>
@@ -93,6 +109,10 @@ export default function Footer() {
 
             {/* Address */}
             <div className="mt-9 space-y-4 text-[15px] leading-relaxed text-jaggery/70 max-w-sm">
+              {/* Prose, not a UI label. docs/i18n-plan.md is explicit that body
+                  copy needs a native writer and must not be bulk-translated, so
+                  this paragraph stays English on /ne until it is written
+                  properly. The labels around it are translated; this is not. */}
               <p>
                 SakharSansar: wood-fired Himalayan jaggery, founded in {STORY.founded} by
                 Rashmita Bhandari and made with {STORY.households} farming families in{" "}
@@ -152,10 +172,10 @@ export default function Footer() {
         {/* ─── Bottom bar ───────────────────────────── */}
         <div className="mt-14 pt-6 border-t border-jaggery/10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
           <p className="text-[13px] text-jaggery/70">
-            © {new Date().getFullYear()} SakharSansar · Crafted in the Himalayas.
+            © {new Date().getFullYear()} SakharSansar · {m.footerRights}
           </p>
           <p className="text-[13px] text-jaggery/70">
-            {SITE.address.street}, {SITE.address.locality} · Made in {SITE.origin.locality} · Nepal
+            {SITE.address.street}, {SITE.address.locality} · {m.footerMadeIn} {SITE.origin.locality} · Nepal
           </p>
         </div>
       </div>

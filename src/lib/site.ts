@@ -43,6 +43,28 @@ export const SITE = {
     region: "Bagmati Province",
     country: "NP",
   },
+  /**
+   * When someone can actually reach us, as rendered on /contact
+   * ("Sun–Fri · 9am – 6pm NPT"). Written once here so the page and the
+   * LocalBusiness markup cannot state different hours — Google cross-checks
+   * the two, and a business whose schema disagrees with its own contact page
+   * loses the panel rather than gaining one.
+   *
+   * Nepal's working week runs Sunday to Friday; Saturday is the weekend, which
+   * is why Saturday is absent rather than forgotten.
+   */
+  hours: {
+    days: [
+      "https://schema.org/Sunday",
+      "https://schema.org/Monday",
+      "https://schema.org/Tuesday",
+      "https://schema.org/Wednesday",
+      "https://schema.org/Thursday",
+      "https://schema.org/Friday",
+    ],
+    opens: "09:00",
+    closes: "18:00",
+  },
   /** Where the jaggery is actually made. Kept apart from `address` so the
    *  farm story and the contactable address never get conflated. */
   origin: {

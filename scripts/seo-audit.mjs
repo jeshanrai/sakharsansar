@@ -286,10 +286,87 @@ function checkArchitecture(pages, sitemap) {
  *  a document for them. */
 const KNOWN_NON_PAGE = [/^\/feed$/, /^\/llms\.txt$/, /^\/sitemap\.xml$/, /^\/robots\.txt$/, /^\/portfolio/];
 
+/**
+ * i18n — Phase F.
+ *
+ * The reciprocity rule is the one worth having. Google honours an `hreflang`
+ * annotation only when the page it names points back; a one-way pair is not a
+ * weak signal, it is discarded entirely. That is invisible on either page on
+ * its own — each looks perfectly correct — and only shows up when you hold the
+ * two side by side, which is what this does for every pair at once.
+ *
+ * The chrome check is the other half of Phase F: a Devanagari article wrapped
+ * in an English nav reads as a translation somebody abandoned, and it is the
+ * kind of thing that regresses silently the moment a new label is added to the
+ * header without a Nepali counterpart.
+ */
+function checkI18n(pages) {
+  const problems = [];
+  const byRoute = new Map(pages.map((p) => [p.route, p]));
+
+  /** hreflang links on a page, as [hreflang, path]. Next emits the attribute
+   *  as `hrefLang`; HTML attribute names are case-insensitive, so is this. */
+  const alternatesOf = (html) =>
+    [...html.split("</head>")[0].matchAll(
+      /<link rel="alternate" hreflang="([^"]+)" href="([^"]+)"/gi,
+    )].map((m) => [m[1], m[2].replace(SITE_URL, "") || "/"]);
+
+  for (const { route, html } of pages) {
+    const alternates = alternatesOf(html);
+    if (alternates.length === 0) continue; // no counterpart declared, nothing to check
+
+    const paths = new Map(alternates);
+    if (!paths.has("x-default")) {
+      problems.push([route, "declares hreflang alternates but no x-default"]);
+    }
+
+    for (const [lang, path] of alternates) {
+      if (!byRoute.has(path)) {
+        problems.push([route, `hreflang="${lang}" points at ${path}, which is not a page`]);
+        continue;
+      }
+      if (lang === "x-default") continue;
+
+      // Reciprocity: the page named must name this one back, under some lang.
+      const back = alternatesOf(byRoute.get(path).html).map(([, p]) => p);
+      if (path !== route && !back.includes(route)) {
+        problems.push([route, `hreflang="${lang}" names ${path}, which does not point back`]);
+      }
+    }
+  }
+
+  // Chrome: a Nepali page should not be sitting inside an English header.
+  for (const { route, html } of pages) {
+    if (!route.startsWith("/ne/") && route !== "/ne") continue;
+    const nav = html.replace(/<script[\s\S]*?<\/script>/gi, " ")
+      .match(/<nav aria-label="Main navigation"[\s\S]*?<\/nav>/i);
+    if (!nav) {
+      problems.push([route, "no main navigation found to check"]);
+      continue;
+    }
+    const text = textOf(nav[0]);
+    for (const english of ENGLISH_NAV_LABELS) {
+      if (text.includes(english)) {
+        problems.push([route, `main navigation still renders the English label "${english}"`]);
+      }
+    }
+    if (!/[\u0900-\u097F]/.test(text)) {
+      problems.push([route, "main navigation renders no Devanagari at all"]);
+    }
+  }
+
+  return problems;
+}
+
+/** Labels that must not appear in the header of a Nepali page. Deliberately
+ *  not "Home" — it is a substring of too much else. */
+const ENGLISH_NAV_LABELS = ["Our Story", "Blogs", "Contact", "Favourites"];
+
 const GROUPS = [
   ["headings", checkHeadings],
   ["meta", checkMeta],
   ["architecture", checkArchitecture],
+  ["i18n", checkI18n],
 ];
 
 // ─── Run ────────────────────────────────────────────────────────────────────

@@ -8,17 +8,36 @@ import { ShoppingBag, Heart, Menu, X } from "lucide-react";
 import { openOrderDrawer } from "./OrderDrawer";
 import { useFavouritesCount } from "@/lib/favourites";
 import { BLOG_ENABLED } from "@/lib/blog";
+import { localeFromPath, t } from "@/lib/i18n";
+import type { Locale } from "@/lib/hreflang";
+import LanguageSwitcher from "./LanguageSwitcher";
 
-// "Blogs" appears only while the journal has posts — see @/lib/blog.
-const NAV = [
-  { href: "/", label: "Home" },
-  { href: "/shop", label: "Shop" },
-  { href: "/our-story", label: "Our Story" },
-  ...(BLOG_ENABLED ? [{ href: "/blog", label: "Blogs" }] : []),
-  { href: "/contact", label: "Contact" },
-];
+/**
+ * "Blogs" appears only while the journal has posts — see @/lib/blog.
+ *
+ * The hrefs stay English on both locales, and that is not an oversight: there
+ * is no /ne/shop to link to. Only the labels translate, so a reader on a
+ * Nepali article sees Nepali furniture around it and still lands somewhere
+ * real when they click. Localised paths arrive with the translated pages
+ * (docs/i18n-plan.md §6), not before them.
+ */
+function navLinks(locale: Locale) {
+  const m = t(locale);
+  return [
+    { href: "/", label: m.navHome },
+    { href: "/shop", label: m.navShop },
+    { href: "/our-story", label: m.navStory },
+    ...(BLOG_ENABLED ? [{ href: "/blog", label: m.navJournal }] : []),
+    { href: "/contact", label: m.navContact },
+  ];
+}
 
-export default function Navbar() {
+export default function Navbar({
+  translations,
+}: {
+  /** path → counterpart path, for the language switcher. */
+  translations: Record<string, string>;
+}) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
@@ -45,6 +64,10 @@ export default function Navbar() {
   // Hide on admin routes
   if (pathname?.startsWith("/portfolio")) return null;
 
+  const locale = localeFromPath(pathname);
+  const m = t(locale);
+  const NAV = navLinks(locale);
+
   const isActive = (href: string) =>
     pathname === href || (href !== "/" && (pathname?.startsWith(href) ?? false));
 
@@ -64,7 +87,7 @@ export default function Navbar() {
             {/* Logo */}
             <Link
               href="/"
-              aria-label="SakharSansar home"
+              aria-label={m.footerHome}
               onClick={closeMobile}
               className="group shrink-0 inline-flex items-center"
             >
@@ -111,10 +134,13 @@ export default function Navbar() {
 
           {/* ─── Right: utilities + mobile menu ─── */}
           <div className="flex items-center gap-1 ml-auto">
+            {/* Renders only where the current page has a counterpart in the
+                other language — three articles today. */}
+            <LanguageSwitcher translations={translations} className="hidden md:inline-flex mr-2" />
             {/* Favourites */}
             <Link
               href="/favourites"
-              aria-label={favCount > 0 ? `Favourites, ${favCount} items` : "Favourites"}
+              aria-label={favCount > 0 ? `${m.navFavourites}, ${favCount}` : m.navFavourites}
               className={`relative h-12 w-12 inline-flex items-center justify-center rounded-full transition-colors ${
                 isActive("/favourites") ? "text-terracotta" : "text-jaggery hover:bg-jaggery/[0.06]"
               }`}
@@ -153,7 +179,7 @@ export default function Navbar() {
             <button
               type="button"
               onClick={() => setMobileOpen((v) => !v)}
-              aria-label={mobileOpen ? "Close menu" : "Open menu"}
+              aria-label={mobileOpen ? m.navMenuClose : m.navMenuOpen}
               aria-expanded={mobileOpen}
               className="md:hidden h-11 w-11 inline-flex items-center justify-center rounded-full text-jaggery hover:bg-jaggery/[0.06] transition-colors"
             >
@@ -214,13 +240,17 @@ export default function Navbar() {
             })}
           </ul>
 
+          {/* Same rule as the desktop one: nothing renders unless this page
+              exists in the other language. */}
+          <LanguageSwitcher translations={translations} className="mt-10" />
+
           <Link
             href="/favourites"
             onClick={closeMobile}
-            className="mt-10 w-full h-12 inline-flex items-center justify-center gap-2 rounded-full border border-jaggery/20 text-jaggery text-[13px] font-semibold tracking-wide hover:bg-jaggery/[0.04] transition-colors"
+            className="mt-6 w-full h-12 inline-flex items-center justify-center gap-2 rounded-full border border-jaggery/20 text-jaggery text-[13px] font-semibold tracking-wide hover:bg-jaggery/[0.04] transition-colors"
           >
             <Heart className="h-4 w-4" strokeWidth={1.6} />
-            Favourites
+            {m.navFavourites}
             {favCount > 0 && (
               <span className="ml-0.5 min-w-[18px] h-[18px] px-1 rounded-full bg-terracotta text-cream text-[10px] font-semibold flex items-center justify-center tabular-nums">
                 {favCount}
@@ -237,7 +267,7 @@ export default function Navbar() {
             className="mt-3 w-full h-12 inline-flex items-center justify-center gap-2 rounded-full bg-jaggery text-cream text-[13px] font-semibold tracking-wide hover:bg-jaggery-soft transition-colors"
           >
             <ShoppingBag className="h-4 w-4" strokeWidth={1.6} />
-            View Cart
+            {m.navCart}
           </button>
         </div>
       </div>

@@ -9,6 +9,7 @@ import JsonLd from "@/components/seo/JsonLd";
 import Breadcrumbs from "@/components/layout/Breadcrumbs";
 import { AUTHOR, authorLd } from "@/lib/author";
 import { type BlogPost, formatPostDate, postPath, relatedPosts, translationPair } from "@/lib/blog";
+import { t, tagLabel } from "@/lib/i18n";
 import {
   faqEntries,
   howToSteps,
@@ -52,6 +53,8 @@ export default function PostView({ post }: { post: BlogPost }) {
     .join("")
     .toUpperCase();
   const related = relatedPosts(post.slug);
+  const locale = lang === "ne" ? ("ne" as const) : ("en" as const);
+  const m = t(locale);
 
   const postUrl = absoluteUrl(postPath(post));
   const modified = post.updated ?? post.date;
@@ -164,19 +167,19 @@ export default function PostView({ post }: { post: BlogPost }) {
                   className="inline-flex items-center gap-2 rounded-full border border-jaggery/20 px-4 py-2 label-caps text-jaggery/70 hover:text-jaggery hover:border-jaggery/40 transition-colors"
                 >
                   <Languages className="w-3.5 h-3.5" strokeWidth={1.75} aria-hidden />
-                  {pair.lang === "ne" ? "नेपालीमा पढ्नुहोस्" : "Read in English"}
+                  {pair.lang === "ne" ? m.langSwitchToNe : m.langSwitchToEn}
                 </Link>
               </p>
             )}
 
             <div className="flex flex-wrap items-center gap-x-3 gap-y-2 mb-6">
               <span className="inline-flex items-center rounded-full bg-grove/10 border border-grove/15 px-3.5 py-1.5 label-caps text-grove">
-                {post.tags[0]}
+                {tagLabel(post.tags[0], locale)}
               </span>
-              <time dateTime={post.date} className="label-caps text-jaggery/70">{formatPostDate(post.date)}</time>
+              <time dateTime={post.date} className="label-caps text-jaggery/70">{formatPostDate(post.date, locale)}</time>
               <span className="w-1 h-1 rounded-full bg-jaggery/25" />
               <span className="inline-flex items-center gap-1.5 label-caps text-jaggery/70">
-                <Clock className="w-3.5 h-3.5" strokeWidth={1.75} /> {readingMins} min read
+                <Clock className="w-3.5 h-3.5" strokeWidth={1.75} /> {readingMins} {m.articleReadTime}
               </span>
               {/* Purity advice dates; showing when it was last checked is the
                   point of re-checking it every six months. */}
@@ -185,7 +188,7 @@ export default function PostView({ post }: { post: BlogPost }) {
                   <span className="w-1 h-1 rounded-full bg-jaggery/25" />
                   <span className="inline-flex items-center gap-1.5 label-caps text-jaggery/70">
                     <RefreshCw className="w-3.5 h-3.5" strokeWidth={1.75} aria-hidden />
-                    Updated <time dateTime={post.updated}>{formatPostDate(post.updated)}</time>
+                    Updated <time dateTime={post.updated}>{formatPostDate(post.updated, locale)}</time>
                   </span>
                 </>
               )}
@@ -257,7 +260,7 @@ export default function PostView({ post }: { post: BlogPost }) {
           className="px-6 sm:px-10 lg:px-16 pt-14 sm:pt-20 pb-16"
         >
           <div className="max-w-[720px] mx-auto">
-            <ArticleBody blocks={blocks} />
+            <ArticleBody blocks={blocks} locale={locale} />
 
             {/* Author — who wrote this and why they would know */}
             {post.authorBio && (
@@ -272,7 +275,7 @@ export default function PostView({ post }: { post: BlogPost }) {
                   />
                 )}
                 <div>
-                  <span className="label-caps text-caramel-deep mb-2 block">Written by</span>
+                  <span className="label-caps text-caramel-deep mb-2 block">{m.articleWrittenBy}</span>
                   <Link
                     href={AUTHOR.path}
                     className="font-display font-bold text-jaggery text-h4 hover:text-grove transition-colors"
@@ -302,19 +305,19 @@ export default function PostView({ post }: { post: BlogPost }) {
 
             {/* Tags */}
             <div className="mt-12 pt-8 border-t border-jaggery/12 flex flex-wrap gap-2.5">
-              {post.tags.map((t) => (
+              {post.tags.map((tag) => (
                 <span
-                  key={t}
+                  key={tag}
                   className="inline-flex items-center rounded-full bg-ivory border border-jaggery/10 px-3.5 py-1.5 label-caps text-jaggery/70"
                 >
-                  {t}
+                  {tagLabel(tag, locale)}
                 </span>
               ))}
             </div>
 
             {/* Share */}
             <div className="mt-10 flex items-center justify-between gap-4 flex-wrap">
-              <p className="label-caps text-jaggery/70">Share this story</p>
+              <p className="label-caps text-jaggery/70">{m.articleShare}</p>
               <div className="flex gap-2.5">
                 {shareLinks.map(({ name, Icon, href }) => (
                   <a
@@ -335,11 +338,11 @@ export default function PostView({ post }: { post: BlogPost }) {
 
         {/* ─── Keep reading ───────────────────────────────────────── */}
         {related.length > 0 && (
-          <section aria-label="Keep reading" className="px-6 sm:px-10 lg:px-16 pb-24 sm:pb-28">
+          <section aria-label={m.articleKeepReading} className="px-6 sm:px-10 lg:px-16 pb-24 sm:pb-28">
             <div className="max-w-[1000px] mx-auto">
-              <span className="label-caps text-caramel-deep mb-4 block">More from the Journal</span>
+              <span className="label-caps text-caramel-deep mb-4 block">{m.articleMoreFrom}</span>
               <h2 className="font-marker uppercase text-jaggery leading-[0.98] text-[clamp(1.8rem,4vw,3rem)] text-balance mb-10">
-                Keep reading
+                {m.articleKeepReading}
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-7 sm:gap-10">
                 {related.map((r) => (
@@ -353,12 +356,12 @@ export default function PostView({ post }: { post: BlogPost }) {
                         className="object-cover group-hover:scale-[1.04] transition-transform duration-700 ease-out"
                       />
                     </div>
-                    <span className="label-caps text-forest mb-2 block">{r.tags[0]}</span>
+                    <span className="label-caps text-forest mb-2 block">{tagLabel(r.tags[0], locale)}</span>
                     <h3 className="font-marker uppercase text-jaggery text-2xl leading-[1.05] group-hover:text-caramel-deep transition-colors text-balance">
                       {r.title}
                     </h3>
                     <span className="mt-3 inline-flex items-center gap-2 label-caps text-jaggery/70 group-hover:text-jaggery transition-colors">
-                      Read article <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" strokeWidth={2} />
+                      {m.articleReadArticle} <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" strokeWidth={2} />
                     </span>
                   </Link>
                 ))}
@@ -390,7 +393,7 @@ export default function PostView({ post }: { post: BlogPost }) {
         </section>
       </main>
 
-      <Footer />
+      <Footer locale={locale} />
     </>
   );
 }

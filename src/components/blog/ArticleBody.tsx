@@ -1,3 +1,5 @@
+import { t } from "@/lib/i18n";
+import type { Locale } from "@/lib/hreflang";
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -12,20 +14,32 @@ import type { Block, Inline } from "@/lib/article";
  * and the two custom blocks — the answer box and the pure/adulterated verdict
  * pair — carrying the weight that a wall of prose can't.
  */
-export default function ArticleBody({ blocks }: { blocks: Block[] }) {
+/**
+ * `locale` reaches only two of the blocks — the answer callout and the
+ * horizontal-scroll hint on wide tables — because those are the only two that
+ * put words of our own inside the article. Everything else here renders the
+ * writer's text, which is already in the language it was written in.
+ */
+export default function ArticleBody({
+  blocks,
+  locale = "en",
+}: {
+  blocks: Block[];
+  locale?: Locale;
+}) {
   // The drop cap belongs to the opening paragraph only, wherever it falls.
   const leadIndex = blocks.findIndex((b) => b.kind === "p");
 
   return (
     <>
       {blocks.map((block, i) => (
-        <BlockView key={i} block={block} lead={i === leadIndex} />
+        <BlockView key={i} block={block} lead={i === leadIndex} locale={locale} />
       ))}
     </>
   );
 }
 
-function BlockView({ block, lead }: { block: Block; lead: boolean }) {
+function BlockView({ block, lead, locale }: { block: Block; lead: boolean; locale: Locale }) {
   switch (block.kind) {
     case "h2":
       return (
@@ -55,7 +69,7 @@ function BlockView({ block, lead }: { block: Block; lead: boolean }) {
       );
 
     case "note":
-      return <AnswerBox inline={block.inline} />;
+      return <AnswerBox inline={block.inline} locale={locale} />;
 
     case "list":
       return <ListView ordered={block.ordered} items={block.items} />;
@@ -64,7 +78,7 @@ function BlockView({ block, lead }: { block: Block; lead: boolean }) {
       return <CompareCard rows={block.rows} />;
 
     case "table":
-      return <TableView block={block} />;
+      return <TableView block={block} locale={locale} />;
 
     case "figure":
       return <FigureView block={block} />;
@@ -81,7 +95,7 @@ function BlockView({ block, lead }: { block: Block; lead: boolean }) {
  * table scrolls inside its own focusable region rather than squeezing the
  * words to one letter per line.
  */
-function TableView({ block }: { block: Block & { kind: "table" } }) {
+function TableView({ block, locale }: { block: Block & { kind: "table" }; locale: Locale }) {
   return (
     <figure className="my-10 -mx-2 sm:mx-0">
       {block.caption && (
@@ -136,7 +150,7 @@ function TableView({ block }: { block: Block & { kind: "table" } }) {
         </table>
       </div>
       <p className="sm:hidden mt-2.5 px-2 label-caps text-jaggery/70">
-        Scroll the table sideways →
+        {t(locale).articleScrollTable}
       </p>
     </figure>
   );
@@ -149,10 +163,10 @@ function TableView({ block }: { block: Block & { kind: "table" } }) {
  * text into position zero and a box built out of divs gives it nothing to
  * lift.
  */
-function AnswerBox({ inline }: { inline: Inline[] }) {
+function AnswerBox({ inline, locale }: { inline: Inline[]; locale: Locale }) {
   return (
     <aside className="my-10 rounded-2xl bg-ivory border border-jaggery/10 border-l-4 border-l-honey px-6 sm:px-8 py-7 shadow-sm">
-      <span className="label-caps text-caramel-deep mb-3 block">The short answer</span>
+      <span className="label-caps text-caramel-deep mb-3 block">{t(locale).articleShortAnswer}</span>
       <p className="text-jaggery/90 text-lede">
         <InlineView nodes={inline} />
       </p>

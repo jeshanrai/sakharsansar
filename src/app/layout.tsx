@@ -6,7 +6,7 @@ import Navbar from "@/components/layout/Navbar";
 import FloatingContact from "@/components/layout/FloatingContact";
 import JsonLd from "@/components/seo/JsonLd";
 import Analytics from "@/components/seo/Analytics";
-import { BLOG_ENABLED } from "@/lib/blog";
+import { BLOG_ENABLED, translationPaths } from "@/lib/blog";
 import { BUILD_ID } from "@/lib/build-id";
 import { siteGraphLd } from "@/lib/seo";
 import { SITE, SITE_URL } from "@/lib/site";
@@ -191,7 +191,11 @@ export default function RootLayout({
         className={`${inter.variable} ${fraunces.variable} ${tiroDevanagari.variable} ${fredoka.variable} ${gochiHand.variable} font-sans antialiased bg-cream text-jaggery`}
       >
         <PromoBar />
-        <Navbar />
+        {/* The pair map is built here, on the server. The switcher inside the
+            nav is a client component — it needs the path to know where it is —
+            and looking the pair up there would drag blog.json, every article
+            body included, into the browser bundle. */}
+        <Navbar translations={translationPaths()} />
         {children}
         <FloatingContact />
         <Analytics />
