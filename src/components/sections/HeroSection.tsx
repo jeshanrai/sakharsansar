@@ -281,7 +281,12 @@ export default function HeroSection() {
             <ChevronLeft className="w-4 h-4" strokeWidth={1.75} />
           </button>
 
-          <div className="flex items-center gap-2.5" role="tablist" aria-label="Hero slides">
+          {/* gap-4 rather than gap-2.5. The dots are 8px, so at the old spacing
+              their centres were 18px apart and the 24px minimum tap target
+              could not fit between them — Lighthouse reported it, and on a
+              phone they were genuinely fiddly. 16px of gap puts the centres
+              exactly 24px apart, which is the smallest change that fits. */}
+          <div className="flex items-center gap-4" role="tablist" aria-label="Hero slides">
             {SLIDES.map((s, i) => {
               const active = i === index;
               return (
@@ -291,7 +296,10 @@ export default function HeroSection() {
                   aria-selected={active}
                   aria-label={`Go to slide ${i + 1}`}
                   onClick={() => goTo(i)}
-                  className={`relative h-2 rounded-full transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                  // The ::before is an invisible 24x24 hit area centred on the
+                  // dot. The dot itself stays 8px — this buys the tap target
+                  // without making the control heavier on screen.
+                  className={`relative h-2 rounded-full transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] before:absolute before:left-1/2 before:top-1/2 before:h-6 before:w-6 before:-translate-x-1/2 before:-translate-y-1/2 before:content-[''] ${
                     active ? "w-12 bg-cream/25" : "w-2 bg-cream/35 hover:bg-cream/55"
                   }`}
                 >

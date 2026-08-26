@@ -1,4 +1,14 @@
 import blogData from "@/data/blog.json";
+// Pure helpers live in blog-format.ts so a client component can import them
+// without dragging this file's 156 KB JSON along. Re-exported here so every
+// existing server-side import path keeps working.
+export {
+  postPath,
+  postLocale,
+  formatPostDate,
+  type PostRef,
+} from "./blog-format";
+import { postPath } from "./blog-format";
 
 /**
  * The journal, and whether it currently has anything in it.
@@ -77,28 +87,7 @@ export interface BlogPost {
   };
 }
 
-/**
- * Where a post lives.
- *
- * The journal is bilingual, and the three Nepali articles used to sit at
- * /blog/<slug> alongside the English ones — same shelf, different language,
- * nothing in the URL to say so. They now live under /ne/, which is the locale
- * prefix the rest of the site will adopt if the Nepali experiment works
- * (see docs/i18n-plan.md). English stays un-prefixed so no existing English
- * URL had to move.
- *
- * Every link, sitemap entry, feed item and schema `@id` routes through here,
- * so a post's language decides its URL in exactly one place. The old
- * /blog/<nepali-slug> URLs 301 to the new ones — see next.config.ts.
- */
-export function postPath(post: Pick<BlogPost, "slug" | "lang">): string {
-  return post.lang === "ne" ? `/ne/blog/${post.slug}` : `/blog/${post.slug}`;
-}
 
-/** BCP-47 for a post. `lang` on the record is the short form. */
-export function postLocale(post: Pick<BlogPost, "lang">): string {
-  return post.lang === "ne" ? "ne-NP" : "en-NP";
-}
 
 /** The English half of the journal — what /blog lists and renders. */
 export function englishPosts(): BlogPost[] {
@@ -219,38 +208,4 @@ export function relatedPosts(slug: string, limit = 2): BlogPost[] {
     .map((scored) => scored.post);
 }
 
-const MONTHS: Record<string, string[]> = {
-  en: [
-    "January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December",
-  ],
-  // Gregorian months in Nepali, not Bikram Sambat. The stored dates are
-  // Gregorian, and converting the calendar is a different job from
-  // translating the label — getting it half-right would put articles in the
-  // wrong year.
-  ne: [
-    "जनवरी", "फेब्रुअरी", "मार्च", "अप्रिल", "मे", "जुन",
-    "जुलाई", "अगस्ट", "सेप्टेम्बर", "अक्टोबर", "नोभेम्बर", "डिसेम्बर",
-  ],
-};
 
-/**
- * "2026-08-07" → "7 August 2026", or "७ अगस्ट २०२६".
- *
- * Formatted from the string parts rather than through `Date` or
- * `toLocaleDateString`: the stored dates are timezone-less calendar days, and
- * both of those would shift them by one in some timezones — which on a client
- * component shows up as a hydration mismatch.
- *
- * The Nepali articles printed "7 August 2026" under a Devanagari headline. The
- * numerals follow the articles' own convention, which writes १०, २५, १०० in
- * prose and keeps Latin digits only for citations.
- */
-export function formatPostDate(iso: string, locale: "en" | "ne" = "en"): string {
-  const [year, month, day] = iso.split("-");
-  const name = MONTHS[locale]?.[Number(month) - 1];
-  if (!name || !day || !year) return iso;
-  const n = (value: string) =>
-    locale === "ne" ? Number(value).toLocaleString("ne-NP", { useGrouping: false }) : String(Number(value));
-  return `${n(day)} ${name} ${n(year)}`;
-}

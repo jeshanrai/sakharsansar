@@ -1,4 +1,6 @@
 import { posts, type BlogPost } from "./blog";
+export { blogCategorySlug } from "./blog-format";
+import { blogCategorySlug } from "./blog-format";
 
 /**
  * Journal categories, as real URLs.
@@ -31,13 +33,6 @@ export interface BlogCategory {
   intro: string;
 }
 
-/** "Buying Guide" → "buying-guide". */
-export function blogCategorySlug(tag: string): string {
-  return tag
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "");
-}
 
 const COPY: Record<string, Omit<BlogCategory, "slug" | "tag">> = {
   "buying-guide": {

@@ -7,7 +7,6 @@ import { usePathname } from "next/navigation";
 import { ShoppingBag, Heart, Menu, X } from "lucide-react";
 import { openOrderDrawer } from "./OrderDrawer";
 import { useFavouritesCount } from "@/lib/favourites";
-import { BLOG_ENABLED } from "@/lib/blog";
 import { localeFromPath, t } from "@/lib/i18n";
 import type { Locale } from "@/lib/hreflang";
 import LanguageSwitcher from "./LanguageSwitcher";
@@ -21,22 +20,31 @@ import LanguageSwitcher from "./LanguageSwitcher";
  * real when they click. Localised paths arrive with the translated pages
  * (docs/i18n-plan.md §6), not before them.
  */
-function navLinks(locale: Locale) {
+function navLinks(locale: Locale, blogEnabled: boolean) {
   const m = t(locale);
   return [
     { href: "/", label: m.navHome },
     { href: "/shop", label: m.navShop },
     { href: "/our-story", label: m.navStory },
-    ...(BLOG_ENABLED ? [{ href: "/blog", label: m.navJournal }] : []),
+    ...(blogEnabled ? [{ href: "/blog", label: m.navJournal }] : []),
     { href: "/contact", label: m.navContact },
   ];
 }
 
 export default function Navbar({
   translations,
+  blogEnabled,
 }: {
   /** path → counterpart path, for the language switcher. */
   translations: Record<string, string>;
+  /**
+   * Whether to show the journal link. Passed in rather than read from
+   * `BLOG_ENABLED`, which lives in lib/blog.ts beside a 156 KB JSON import —
+   * and this component renders on all thirty-six pages, so importing it put
+   * every article body in the browser bundle of every visitor to the shop, a
+   * product page or a policy page. One boolean instead.
+   */
+  blogEnabled: boolean;
 }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -66,7 +74,7 @@ export default function Navbar({
 
   const locale = localeFromPath(pathname);
   const m = t(locale);
-  const NAV = navLinks(locale);
+  const NAV = navLinks(locale, blogEnabled);
 
   const isActive = (href: string) =>
     pathname === href || (href !== "/" && (pathname?.startsWith(href) ?? false));

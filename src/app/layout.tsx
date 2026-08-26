@@ -195,7 +195,7 @@ export default function RootLayout({
             nav is a client component — it needs the path to know where it is —
             and looking the pair up there would drag blog.json, every article
             body included, into the browser bundle. */}
-        <Navbar translations={translationPaths()} />
+        <Navbar translations={translationPaths()} blogEnabled={BLOG_ENABLED} />
         {children}
         <FloatingContact />
         <Analytics />

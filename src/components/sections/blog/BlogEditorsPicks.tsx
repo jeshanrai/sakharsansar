@@ -4,7 +4,7 @@ import React, { useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import { postPath } from "@/lib/blog";
+import { postPath } from "@/lib/blog-format";
 
 type Post = {
   slug: string;

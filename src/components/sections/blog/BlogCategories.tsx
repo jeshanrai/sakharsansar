@@ -4,8 +4,8 @@ import React, { useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Search, ArrowUpRight } from "lucide-react";
-import { formatPostDate, postPath } from "@/lib/blog";
-import { blogCategorySlug, findBlogCategory } from "@/lib/blog-categories";
+import { blogCategorySlug, formatPostDate, postPath } from "@/lib/blog-format";
+
 
 type Post = {
   slug: string;
@@ -28,9 +28,12 @@ type Post = {
 export default function BlogCategories({
   posts,
   categories,
+  hubSlugs,
 }: {
   posts: Post[];
   categories: string[];
+  /** Category slugs that have a written hub page, from the server. */
+  hubSlugs: string[];
 }) {
   const [active, setActive] = useState("All");
   const [query, setQuery] = useState("");
@@ -73,13 +76,17 @@ export default function BlogCategories({
               // has an address a reader can share and a crawler can follow.
               // The rest stay buttons and filter in place — see
               // lib/blog-categories.ts for which, and why.
-              const hub =
-                cat === "All" ? undefined : findBlogCategory(blogCategorySlug(cat));
+              // `hubSlugs` comes from the server rather than being looked up
+              // here. The lookup lived in lib/blog-categories.ts, which imports
+              // the journal — and importing it from a client component put all
+              // 156 KB of article bodies in the browser bundle.
+              const slug = cat === "All" ? "" : blogCategorySlug(cat);
+              const hub = slug && hubSlugs.includes(slug) ? slug : undefined;
               if (hub) {
                 return (
                   <li key={cat} className="contents">
                     <Link
-                      href={`/blog/category/${hub.slug}`}
+                      href={`/blog/category/${hub}`}
                       aria-current={on ? "page" : undefined}
                       className={className}
                     >

@@ -10,6 +10,7 @@ import BlogCategories from "@/components/sections/blog/BlogCategories";
 import JsonLd from "@/components/seo/JsonLd";
 import Breadcrumbs from "@/components/layout/Breadcrumbs";
 import { BLOG_ENABLED, pageCount, postPath, postsOnPage, sortedPosts } from "@/lib/blog";
+import { BLOG_CATEGORIES } from "@/lib/blog-categories";
 import { ORG_ID, WEBSITE_ID } from "@/lib/seo";
 import { SITE, absoluteUrl } from "@/lib/site";
 import { Bee, Ladybug, AnimatedWave } from "@/components/ui/StoryArt";
@@ -192,7 +193,11 @@ export default function BlogList() {
             className="absolute top-0 left-0 z-10 w-full h-[55px] sm:h-[80px] text-grove"
           />
           <div className="pt-10 sm:pt-16">
-            <BlogCategories posts={ordered} categories={categories} />
+            <BlogCategories
+              posts={ordered}
+              categories={categories}
+              hubSlugs={BLOG_CATEGORIES.map((c) => c.slug)}
+            />
           </div>
 
           {/* Renders only once the archive outgrows one page. A real link in
