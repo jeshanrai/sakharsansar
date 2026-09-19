@@ -202,7 +202,7 @@ export default function ShopPage() {
               <p>
                 And if you want to judge our price against the market before
                 you commit, we wrote up{" "}
-                <Link href="/blog/sakhar-price-in-nepal" className="text-grove underline underline-offset-4 hover:text-jaggery transition-colors">
+                <Link href="/sakhar-price" className="text-grove underline underline-offset-4 hover:text-jaggery transition-colors">
                   what sakhar actually costs per kilo in Nepal
                 </Link>{" "}
                 — including where cheaper Terai gur is the sensible buy, and

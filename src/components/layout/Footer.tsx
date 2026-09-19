@@ -28,6 +28,7 @@ function columns(locale: Locale) {
       title: m.footerExplore,
       links: [
         { label: m.navShop, href: "/shop" },
+        { label: m.navPrice, href: "/sakhar-price" },
         { label: m.navWholesale, href: "/wholesale" },
         { label: m.navStory, href: "/our-story" },
         ...(BLOG_ENABLED ? [{ label: m.navJournal, href: "/blog" }] : []),

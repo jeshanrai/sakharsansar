@@ -57,6 +57,10 @@ const RETIRED_PRODUCTS = [
  */
 const PROMOTED_POSTS = [
   { slug: "wholesale-jaggery-nepal", to: "/wholesale" },
+  // Same reasoning, and it applied harder: somebody searching
+  // "sankhuwasabha sakhar price" is mid-purchase, and the post answered
+  // them inside a reading experience with no way to buy.
+  { slug: "sakhar-price-in-nepal", to: "/sakhar-price" },
 ];
 
 /**

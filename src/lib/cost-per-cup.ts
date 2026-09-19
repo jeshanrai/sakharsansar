@@ -4,7 +4,7 @@ import { parsePrice } from "./seo";
 /**
  * The per-cup arithmetic, in one place.
  *
- * /blog/sakhar-price-in-nepal already works this out and publishes the table:
+ * /sakhar-price already works this out and publishes the table:
  * a level teaspoon of grated sakhar is 4 to 5 grams, our chiya method suggests
  * 1 to 1.5 teaspoons a cup, so a kilo at Rs. 400 sweetens roughly 140 to 250
  * cups. The calculator does the same division with your numbers instead of

@@ -36,6 +36,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     // Commercial intent, and the only page targeting the B2B queries, so it
     // sits with /shop rather than with the informational pages.
     { url: `${SITE_URL}/wholesale`, changeFrequency: "monthly", priority: 0.8 },
+    // The price list. Retail commercial intent — "sankhuwasabha sakhar
+    // price", "sakhar price in Kathmandu" — so it ranks beside /shop rather
+    // than in the journal it moved out of. Weekly, because a price that
+    // moves and a crawl that does not is how a stale figure gets shown.
+    { url: `${SITE_URL}/sakhar-price`, changeFrequency: "weekly", priority: 0.8 },
     { url: `${SITE_URL}/our-story`, changeFrequency: "monthly", priority: 0.7 },
     // The author page. Every post's byline and Person schema resolve to it,
     // so it needs to be crawlable in its own right.

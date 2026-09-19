@@ -130,7 +130,7 @@ export default function CostPerCupPage() {
                 </Link>
                 . The rest is division, and{" "}
                 <Link
-                  href="/blog/sakhar-price-in-nepal"
+                  href="/sakhar-price"
                   className="text-grove underline underline-offset-4 hover:text-jaggery transition-colors"
                 >
                   the full working is in the price article
