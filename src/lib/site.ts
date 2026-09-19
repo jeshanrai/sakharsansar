@@ -25,9 +25,9 @@ export const SITE = {
   url: SITE_URL,
   name: "SakharSansar",
   alternateNames: ["Sakhar Sansar", "सखर संसार", "Sakhar"],
-  tagline: "Pure, Chemical-Free Jaggery from Sankhuwasabha",
+  tagline: "Sankhuwasabha Sakhar (सखर) — Pure and Chemical-Free",
   description:
-    "100% organic Sakhar (Himalayan jaggery). Wood-fired, chemical-free, direct from Sankhuwasabha farmers. Premium pure gur shipped pan-Nepal.",
+    "Sankhuwasabha Sakhar (सखर): 100% organic Himalayan jaggery, wood-fired and chemical-free, direct from our farmers. Pure gur shipped pan-Nepal.",
   email: "sakharsansar@gmail.com",
   phone: "+977-9860149199",
   /** Digits-only, for wa.me and tel: links. */

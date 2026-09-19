@@ -16,22 +16,27 @@ const Footer = dynamic(() => import("@/components/layout/Footer"));
 const OrderDrawer = dynamic(() => import("@/components/layout/OrderDrawer"));
 
 export const metadata: Metadata = {
-  title: "Sakhar: 100% Organic Jaggery, Sankhuwasabha | SakharSansar",
+  // "Sankhuwasabha sakhar" is the name this product is actually known and
+  // asked for by, and it appeared in no title on the site — every page led
+  // with "Himalayan jaggery", a phrase we coined and nobody searches. The
+  // exact phrase goes first, and the Devanagari spelling with it, because
+  // that is what a Nepali keyboard types.
+  title: "Sankhuwasabha Sakhar: Buy Organic सखर | SakharSansar",
   description:
-    "Buy 100% organic Sakhar (pure Himalayan jaggery) direct from farmers in Sankhuwasabha. Wood-fired, chemical-free, premium quality, shipped pan-Nepal.",
+    "Buy Sankhuwasabha Sakhar (सखर) direct from our farmers in Nepal. 100% organic, wood-fired, chemical-free jaggery. Rs. 400 per kg, shipped pan-Nepal.",
   alternates: alternates({
     canonical: "/",
   }),
   openGraph: openGraph({
-    title: "Sakhar: 100% Organic Jaggery from Sankhuwasabha",
+    title: "Sankhuwasabha Sakhar (सखर): Buy Organic Jaggery in Nepal",
     description:
-      "Pure, premium Sakhar. Wood-fired by Himalayan farmers. 100% organic, no chemicals, direct from the farm.",
+      "Pure, premium Sankhuwasabha Sakhar. Wood-fired by Himalayan farmers. 100% organic, no chemicals, direct from the farm.",
     url: "/",
   }),
   twitter: twitter({
-    title: "Sakhar: 100% Organic Himalayan Jaggery",
+    title: "Sankhuwasabha Sakhar (सखर): 100% Organic Jaggery",
     description:
-      "Pure Sakhar from Sankhuwasabha. 100% organic, chemical-free, direct from farmers.",
+      "Pure Sankhuwasabha Sakhar. 100% organic, chemical-free, direct from farmers.",
   }),
 };
 
@@ -48,7 +53,7 @@ export default function Home() {
     "@type": "WebPage",
     "@id": absoluteUrl("/#webpage"),
     url: absoluteUrl("/"),
-    name: "Sakhar: 100% Organic Jaggery from Sankhuwasabha",
+    name: "Sankhuwasabha Sakhar: Buy Organic Jaggery in Nepal",
     description: SITE.description,
     isPartOf: { "@id": WEBSITE_ID },
     about: { "@id": ORG_ID },

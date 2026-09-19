@@ -15,23 +15,23 @@ const OrderDrawer = dynamic(() => import("@/components/layout/OrderDrawer"));
 export const metadata: Metadata = {
   // No brand suffix here — the root layout's `title.template` appends
   // "| SakharSansar" to every child segment's title.
-  title: "Shop Pure Sakhar: Organic Himalayan Jaggery",
+  title: "Buy Sankhuwasabha Sakhar (सखर) Online",
   description:
-    "Shop wood-fired organic sakhar from Sankhuwasabha: blocks, powder and sakhar-coated dry fruits. Chemical-free, direct from farmers, shipped pan-Nepal.",
+    "Buy Sankhuwasabha Sakhar online in Nepal: 1kg block Rs. 400, 250g powder Rs. 149, sakhar-coated nuts. Wood-fired, chemical-free, shipped pan-Nepal.",
   alternates: alternates({
     canonical: "/shop",
   }),
   openGraph: openGraph({
-    title: "Shop Pure Sakhar: Organic Himalayan Jaggery",
+    title: "Buy Sankhuwasabha Sakhar (सखर) Online in Nepal",
     description:
-      "100% organic sakhar from Sankhuwasabha: blocks, powder and dry fruits, direct from farmers, shipped pan-Nepal.",
+      "100% organic Sankhuwasabha Sakhar: blocks, powder and dry fruits, direct from farmers, shipped pan-Nepal.",
     url: "/shop",
     type: "website",
   }),
   twitter: twitter({
-    title: "Shop Pure Sakhar: Organic Himalayan Jaggery",
+    title: "Buy Sankhuwasabha Sakhar (सखर) Online",
     description:
-      "100% organic sakhar from Sankhuwasabha. Wood-fired, chemical-free, premium quality.",
+      "100% organic Sankhuwasabha Sakhar. Wood-fired, chemical-free, premium quality.",
   }),
 };
 
@@ -122,10 +122,10 @@ export default function ShopPage() {
             The Full Range
           </p>
           <h1 className="font-marker uppercase text-jaggery leading-[0.9] tracking-tight text-[clamp(2rem,5vw,3.25rem)]">
-            Shop Pure Sakhar
+            Buy Sankhuwasabha Sakhar
           </h1>
           <p className="mt-4 max-w-2xl text-[15px] sm:text-base text-jaggery/70 leading-relaxed">
-            Three forms of 100% organic Himalayan jaggery — blocks, powder
+            Three forms of Sankhuwasabha sakhar (सखर) — blocks, powder
             and sakhar-coated dry fruits — wood-fired without chemicals in
             Sankhuwasabha from cane grown by forty-two farming families, and
             shipped across Nepal.

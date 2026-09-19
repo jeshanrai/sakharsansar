@@ -1,7 +1,7 @@
 {
   "brand": {
     "name": "SakharSansar",
-    "tagline": "Pure, Chemical-Free Jaggery from Sankhuwasabha"
+    "tagline": "Sankhuwasabha Sakhar (सखर) — Pure and Chemical-Free"
   },
   "highlights": [
     {
@@ -40,19 +40,19 @@
   "products": [
     {
       "slug": "organic-jaggery-block",
-      "name": "Sakhar Block",
+      "name": "Sankhuwasabha Sakhar Block",
       "price": "Rs. 400",
       "weight": "1kg",
       "image": "/products/sakhar-block.jpg",
-      "description": "Wood-fired sakhar poured into rounds and left to set. Sold by the kilo, roughly three discs to a pack.",
-      "longDescription": "This is the sakhar everything else here is made from. Cane pressed in Sankhuwasabha, reduced over an open wood fire in an iron kadhai, skimmed by hand and poured into moulds while still molten. It sets overnight into dense amber discs, about three to the kilo, with the cracked surface and uneven colour that come from setting in open air rather than a machine. No sulphur, no clarifier, no colour, no added sugar. Break a piece into your chiya, grate it into what you are cooking, or eat a chip of it after a meal the way it has always been eaten in the hills.",
-      "metaDescription": "Wood-fired sakhar from Sankhuwasabha, poured by hand into amber discs, about three to the kilo. Rs. 400 for 1kg. No sulphur, no added sugar.",
+      "description": "Wood-fired Sankhuwasabha sakhar poured into rounds and left to set. Sold by the kilo, roughly three discs to a pack.",
+      "longDescription": "This is the Sankhuwasabha sakhar everything else here is made from. Cane pressed in Sankhuwasabha, reduced over an open wood fire in an iron kadhai, skimmed by hand and poured into moulds while still molten. It sets overnight into dense amber discs, about three to the kilo, with the cracked surface and uneven colour that come from setting in open air rather than a machine. No sulphur, no clarifier, no colour, no added sugar. Break a piece into your chiya, grate it into what you are cooking, or eat a chip of it after a meal the way it has always been eaten in the hills.",
+      "metaDescription": "Buy Sankhuwasabha Sakhar (सखर) block: 1kg for Rs. 400, poured by hand into amber discs, about three to the kilo. No sulphur, no added sugar.",
       "ingredients": "100% pure sugarcane juice",
       "shelfLife": "6-12 months when stored in a cool, dry place",
       "origin": "Sankhuwasabha, Koshi Province, Nepal",
       "category": "Blocks",
       "harvest": "Mangsir 2082",
-      "tastingNotes": "The densest thing we make. It chips rather than crumbles, breaking to a dark amber face that catches the light. Toasted molasses lands first, then a long mineral finish carrying the faint smoke of the wood fire it was reduced over. This is the reference flavour \u2014 the powder is this block, crushed.",
+      "tastingNotes": "The densest thing we make. It chips rather than crumbles, breaking to a dark amber face that catches the light. Toasted molasses lands first, then a long mineral finish carrying the faint smoke of the wood fire it was reduced over. This is the reference flavour — the powder is this block, crushed.",
       "howToUse": [
         "Chip a thumbnail-sized piece straight into hot chiya and let it dissolve as you stir.",
         "Grate over kheer, halwa or sel roti batter for a deeper, less sugary sweetness.",
@@ -78,35 +78,35 @@
           "a": "Yes. The Sakhar Powder is this block crushed and sieved. The block is the less processed of the two, and works out cheaper by weight."
         }
       ],
-      "seoQualifier": "Pure Himalayan Sakhar",
+      "seoQualifier": "सखर Nepal",
       "packed": ""
     },
     {
       "slug": "jaggery-powder",
-      "name": "Sakhar Powder",
+      "name": "Sankhuwasabha Sakhar Powder",
       "price": "Rs. 149",
       "weight": "250g",
       "image": "/products/sakhar-powder.jpg",
-      "description": "Our block, crushed and sieved to a free-flowing powder. Dissolves cold, measures like sugar.",
-      "longDescription": "The same wood-fired sakhar as our block, crushed once it has fully set and sieved to an even grain. It pours, it measures, and it dissolves without leaving anything at the bottom of the cup \u2014 hot or cold \u2014 which is what makes it the easy everyday swap for refined sugar. Spoon it into chiya, use it where a recipe asks for brown sugar, or sprinkle it over oats and curd with no melting step in between. Nothing is added at this stage: no anti-caking agent, no starch, no flour. The 250g pouch is resealable, which matters more than it sounds \u2014 loose sakhar pulls moisture out of the air within hours.",
-      "metaDescription": "Our wood-fired sakhar block, crushed and sieved to an even grain. It dissolves cold and measures like sugar. 250g pouch, Rs. 149, shipped pan-Nepal.",
+      "description": "Our Sankhuwasabha sakhar block, crushed and sieved to a free-flowing powder. Dissolves cold, measures like sugar.",
+      "longDescription": "The same wood-fired Sankhuwasabha sakhar as our block, crushed once it has fully set and sieved to an even grain. It pours, it measures, and it dissolves without leaving anything at the bottom of the cup — hot or cold — which is what makes it the easy everyday swap for refined sugar. Spoon it into chiya, use it where a recipe asks for brown sugar, or sprinkle it over oats and curd with no melting step in between. Nothing is added at this stage: no anti-caking agent, no starch, no flour. The 250g pouch is resealable, which matters more than it sounds — loose sakhar pulls moisture out of the air within hours.",
+      "metaDescription": "Buy Sankhuwasabha Sakhar (सखर) powder: 250g for Rs. 149. Our wood-fired block, crushed and sieved. Dissolves cold, measures like sugar.",
       "ingredients": "100% pure sugarcane sakhar",
       "shelfLife": "6 months when stored in an airtight container",
       "origin": "Sankhuwasabha, Koshi Province, Nepal",
       "category": "Powder",
       "harvest": "Mangsir 2082",
-      "tastingNotes": "Lighter in the cup than the block it comes from \u2014 crushing exposes more surface, which softens the smoke and pushes the clean caramel forward. It dissolves without leaving a grain behind, hot or cold, which is exactly why it suits baking and cold drinks where the block never worked.",
+      "tastingNotes": "Lighter in the cup than the block it comes from — crushing exposes more surface, which softens the smoke and pushes the clean caramel forward. It dissolves without leaving a grain behind, hot or cold, which is exactly why it suits baking and cold drinks where the block never worked.",
       "howToUse": [
         "Spoon straight into tea, coffee or lassi; it dissolves cold, unlike the block.",
         "Swap it one-for-one where a recipe asks for brown sugar.",
         "Sprinkle over oats, yoghurt or cut fruit without any melting step.",
         "Whisk into marinades and glazes, where it browns faster than refined sugar."
       ],
-      "sourcing": "Made from our own Sakhar Block once it has fully set \u2014 crushed, then sieved to an even grain so it pours and measures consistently. Nothing is added at this stage: no anti-caking agent, no starch, no flour. It is packed straight into a resealable pouch, because loose sakhar pulls moisture out of the air within hours.",
+      "sourcing": "Made from our own Sakhar Block once it has fully set — crushed, then sieved to an even grain so it pours and measures consistently. Nothing is added at this stage: no anti-caking agent, no starch, no flour. It is packed straight into a resealable pouch, because loose sakhar pulls moisture out of the air within hours.",
       "faqs": [
         {
           "q": "Can I substitute it one-for-one for sugar in baking?",
-          "a": "For brown sugar, yes, measure for measure. For white sugar, start at about three-quarters of the amount \u2014 sakhar reads sweeter and browns faster, so also check your bake a few minutes early."
+          "a": "For brown sugar, yes, measure for measure. For white sugar, start at about three-quarters of the amount — sakhar reads sweeter and browns faster, so also check your bake a few minutes early."
         },
         {
           "q": "My powder has clumped into a solid lump. Is it spoiled?",
@@ -117,7 +117,7 @@
           "a": "Convenience and cold solubility. The block keeps longer, has a slightly stronger smoke and costs less by weight, but it has to be chipped or grated and it will not dissolve in a cold drink. If you sweeten daily, most people find the powder easier."
         }
       ],
-      "seoQualifier": "Pure Himalayan Sakhar",
+      "seoQualifier": "सखर Nepal",
       "packed": ""
     },
     {
@@ -126,22 +126,22 @@
       "price": "Rs. 299",
       "weight": "100g",
       "image": "/products/dry-fruits-mixed.jpg",
-      "description": "Mixed nuts turned through our own wood-fired sakhar and left to set. A snack, not a sweet.",
-      "longDescription": "Whole dry fruits, warmed and turned through molten sakhar until each one carries a thin, matte coat, then spread out to cool loose rather than pressed into a slab. The sakhar is the same wood-fired batch that goes into our blocks, which is why the coating tastes of toasted molasses rather than plain sugar. Nuts stay crisp underneath. There is no glucose syrup, no colour and no flavouring in it \u2014 the pieces look uneven and slightly dusty because that is what setting sakhar does when nothing is added to keep it glossy. A 100g pouch is about a week of afternoons.",
-      "metaDescription": "Whole nuts turned through molten wood-fired sakhar and left to cool loose. No glucose syrup, no colour. 100g pouch, Rs. 299, shipped pan-Nepal.",
+      "description": "Mixed nuts turned through our own wood-fired Sankhuwasabha sakhar and left to set. A snack, not a sweet.",
+      "longDescription": "Whole dry fruits, warmed and turned through molten sakhar until each one carries a thin, matte coat, then spread out to cool loose rather than pressed into a slab. The sakhar is the same wood-fired batch that goes into our blocks, which is why the coating tastes of toasted molasses rather than plain sugar. Nuts stay crisp underneath. There is no glucose syrup, no colour and no flavouring in it — the pieces look uneven and slightly dusty because that is what setting sakhar does when nothing is added to keep it glossy. A 100g pouch is about a week of afternoons.",
+      "metaDescription": "Whole nuts turned through molten Sankhuwasabha sakhar and left to cool loose. No glucose syrup, no colour. 100g pouch, Rs. 299, shipped pan-Nepal.",
       "ingredients": "Mixed dry fruits, pure sugarcane sakhar",
       "shelfLife": "3 months in a sealed pouch, kept cool and dry",
       "origin": "Sankhuwasabha, Koshi Province, Nepal",
       "category": "Dry Fruits",
       "harvest": "Mangsir 2082",
-      "tastingNotes": "The coating goes first \u2014 toasted molasses, a little smoke, gone in a couple of seconds \u2014 and then you are left chewing the nut itself, which is the point. Far less sweet than a chikki, because the sakhar is a thin shell rather than a slab holding everything together. Each piece tastes slightly different depending on what is under it.",
+      "tastingNotes": "The coating goes first — toasted molasses, a little smoke, gone in a couple of seconds — and then you are left chewing the nut itself, which is the point. Far less sweet than a chikki, because the sakhar is a thin shell rather than a slab holding everything together. Each piece tastes slightly different depending on what is under it.",
       "howToUse": [
         "Eat a small handful in the afternoon instead of a biscuit.",
         "Scatter over curd, kheer or ice cream for crunch and a little sweetness.",
         "Pack a pouch for a trek or a long bus journey; it keeps better than anything with cream in it.",
         "Set a bowl out with tea when people come over."
       ],
-      "sourcing": "Dry fruits are sorted by hand, then turned through sakhar melted from the same wood-fired batch we mould our blocks from. They are spread to cool in a single layer so the pieces stay separate instead of setting into a sheet. Nothing else goes in \u2014 no glucose syrup, no colour, no flavouring, no preservative \u2014 which is why the shelf life is shorter than for the plain sakhar.",
+      "sourcing": "Dry fruits are sorted by hand, then turned through sakhar melted from the same wood-fired batch we mould our blocks from. They are spread to cool in a single layer so the pieces stay separate instead of setting into a sheet. Nothing else goes in — no glucose syrup, no colour, no flavouring, no preservative — which is why the shelf life is shorter than for the plain sakhar.",
       "faqs": [
         {
           "q": "How sweet is it, really?",
@@ -153,11 +153,11 @@
         },
         {
           "q": "Will it stick together in warm weather?",
-          "a": "The coating softens above roughly 30\u00b0C and pieces can tack together in the pouch. They separate with a light tap and the taste is unaffected. Keep it out of direct sun, and in peak summer the fridge does no harm."
+          "a": "The coating softens above roughly 30°C and pieces can tack together in the pouch. They separate with a light tap and the taste is unaffected. Keep it out of direct sun, and in peak summer the fridge does no harm."
         },
         {
           "q": "Does it contain nuts?",
-          "a": "Yes \u2014 it is a dry fruit and nut mix, so it is not suitable for anyone with a nut allergy. Message us before ordering if you need the exact composition of the current batch."
+          "a": "Yes — it is a dry fruit and nut mix, so it is not suitable for anyone with a nut allergy. Message us before ordering if you need the exact composition of the current batch."
         }
       ],
       "seoQualifier": "Sakhar-Coated Nuts",

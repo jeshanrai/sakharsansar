@@ -40,9 +40,9 @@ const SLIDES: Slide[] = [
     id: "block",
     eyebrow: "100% Organic · No Chemicals",
     eyebrowTone: "honey",
-    headlineTop: "Pure Sakhar.",
-    headlineAccent: "Wood-fired.",
-    headlineContext: "Organic jaggery from Sankhuwasabha, Nepal.",
+    headlineTop: "Sankhuwasabha",
+    headlineAccent: "Sakhar.",
+    headlineContext: "100% organic सखर, wood-fired in Nepal.",
     ctaLabel: "Shop sakhar",
     ctaHref: "/products/organic-jaggery-block",
     product: "/products/sakhar-block.jpg",
@@ -200,7 +200,7 @@ export default function HeroSection() {
                     name without affecting the layout, since the spans are
                     `block` and the space collapses at the line end. */}
                 <h1 className="mt-5 font-display font-bold text-cream tracking-tight text-balance leading-[0.95]">
-                  <span className="block text-[clamp(2.75rem,7.5vw,6rem)] drop-shadow-[0_3px_0_rgba(26,20,16,0.18)]">
+                  <span className="block text-[clamp(2.25rem,7vw,6rem)] drop-shadow-[0_3px_0_rgba(26,20,16,0.18)]">
                     {slide.headlineTop}
                   </span>{" "}
                   <span className="block text-[clamp(3.25rem,9vw,7.5rem)] text-forest text-sticker leading-[1.05] mt-2 sm:mt-3">
