@@ -119,15 +119,19 @@ ranks. Check any new keyword against what is already published:
 
 | Slug | Owns |
 |------|------|
-| `himalayan-jaggery-sankhuwasabha` | Himalayan jaggery, hill vs Terai, what sakhar is. **The pillar.** |
-| `sakhar-price-in-nepal` | price, cost per kg, what you pay per cup |
+| `himalayan-jaggery-sankhuwasabha` | Sankhuwasabha sakhar, hill vs Terai, what sakhar is. **The pillar.** |
+| `sakhar-in-english` | sakhar in English / Hindi / Marathi, the word itself |
+| `/sakhar-price` (a page, not a post) | price, cost per kg, what you pay per cup |
 | `jaggery-vs-sugar` | the honest comparison, calories, minerals, GI |
+| `jaggery-health-claims-truth` | sakhar benefits, jaggery health claims |
+| `jaggery-powder-vs-block` | powder vs block |
+| `how-to-store-jaggery-sakhar` | storage, going sticky, shelf life |
 | `how-to-identify-pure-jaggery-sakhar` | purity, adulteration, the 7 home tests |
 | `is-jaggery-safe-for-diabetics` | diabetes and all GI claims |
 | `jaggery-tea-without-curdling` | sakhar chiya method |
 | `chaku-recipe-maghe-sankranti` | chaku, Maghe Sankranti |
 | `wholesale-jaggery-nepal` | bulk, B2B, supply |
-| `sakhar-khane-faida` | benefits, in Nepali |
+| `sakhar-khane-faida` | benefits, in Nepali (pair of `jaggery-health-claims-truth`) |
 | `sakhar-ra-chini` | sakhar vs sugar, in Nepali |
 | `sakhar-kasari-chinne` | purity, in Nepali |
 
