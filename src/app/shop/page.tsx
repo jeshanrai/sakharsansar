@@ -171,7 +171,11 @@ export default function ShopPage() {
                   block
                 </Link>{" "}
                 is the original and the cheapest by weight — buy it if you cook
-                with sakhar, get through a kilo, or are making chaku. The{" "}
+                with sakhar, get through a kilo, or are{" "}
+                <Link href="/blog/chaku-recipe-maghe-sankranti" className="text-grove underline underline-offset-4 hover:text-jaggery transition-colors">
+                  making chaku
+                </Link>
+                . The{" "}
                 <Link href="/shop/powder" className="text-grove underline underline-offset-4 hover:text-jaggery transition-colors">
                   powder
                 </Link>{" "}
