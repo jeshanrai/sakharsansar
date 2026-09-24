@@ -119,7 +119,7 @@ ranks. Check any new keyword against what is already published:
 
 | Slug | Owns |
 |------|------|
-| `himalayan-jaggery-sankhuwasabha` | Sankhuwasabha sakhar, hill vs Terai, what sakhar is. **The pillar.** |
+| `himalayan-jaggery-sankhuwasabha` | Sankhuwasabha sakhar, hill vs Terai, what sakhar is, sakhar vs gud / khudo / chaku (the vocabulary section). **The pillar.** A separate glossary post was considered on 24 Sep 2026 and rejected: it would compete with this and with `sakhar-in-english`. |
 | `sakhar-in-english` | jaggery in Nepali, sakhar in English / Hindi / Marathi, what is jaggery |
 | `/sakhar-price` (a page, not a post) | price, cost per kg, what you pay per cup |
 | `jaggery-vs-sugar` | the honest comparison, jaggery nutrition, calories, minerals, GI |
@@ -130,13 +130,17 @@ ranks. Check any new keyword against what is already published:
 | `is-jaggery-safe-for-diabetics` | diabetes and all GI claims |
 | `jaggery-tea-without-curdling` | sakhar chiya method |
 | `chaku-recipe-maghe-sankranti` | chaku, Maghe Sankranti |
+| `thekua-recipe-chhath` | thekua, Chhath prasad |
+| `sel-roti-sakhar` | sel roti with jaggery, Tihar |
+| `yomari-chaku-recipe` | yomari, Yomari Punhi, chaku as a filling |
 | `wholesale-jaggery-nepal` | bulk, B2B, supply |
 | `sakhar-khane-faida` | benefits, in Nepali (pair of `jaggery-health-claims-truth`) |
 | `sakhar-ra-chini` | sakhar vs sugar, in Nepali |
 | `sakhar-kasari-chinne` | purity, in Nepali |
 
 "jaggery", "jaggery in Nepal" and "jaggery powder" belong to the homepage and
-the powder product page, not to a post.
+the powder product page, not to a post. "Buy jaggery online (in Nepal)" belongs
+to `/shop`.
 
 If a published post already covers the query, stop. If it is thin on the
 topic, update it rather than adding a page beside it.
@@ -175,6 +179,15 @@ the ingredient, and there is no chaku call to action.
 Never invent one. Retired slugs are 301'd in `next.config.ts`; if a new post
 ever reuses one of those slugs, delete its redirect entry first or the
 redirect will shadow the post.
+
+## Borrowed photographs
+
+Where we have no photograph of our own, a hero may use an openly licensed
+image from Wikimedia Commons (CC0, CC BY or CC BY-SA only). Set `imageCredit`
+on the post so the credit renders under the hero, crop it into
+`<name>-16x9.jpg`, `-4x3.jpg` and `-1x1.jpg`, and list all three in
+`recipe.images` on a recipe post. Never imply it is our kitchen: the `note`
+says so. Replace it with our own shot as soon as one exists.
 
 ## Approved external sources
 
