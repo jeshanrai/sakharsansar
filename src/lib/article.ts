@@ -355,15 +355,19 @@ export interface RecipeParts {
  *
  * Returns null when the article is not laid out as a recipe, which is what
  * keeps this off the other posts.
+ *
+ * The Nepali recipes head the same two sections सामग्री and विधि, matched
+ * the way FAQ_HEADINGS matches the Nepali FAQ heading.
  */
+const INGREDIENT_HEADINGS = ["ingredients", slugifyHeading("सामग्री")];
+const METHOD_HEADINGS = ["method", slugifyHeading("विधि")];
+
 export function recipeParts(blocks: Block[]): RecipeParts | null {
   const all = sections(blocks);
-  const ingredientSection = all.find((s) =>
-    slugifyHeading(s.heading.text).startsWith("ingredients"),
-  );
-  const methodSection = all.find((s) =>
-    slugifyHeading(s.heading.text).startsWith("method"),
-  );
+  const opens = (s: { heading: { text: string } }, names: string[]) =>
+    names.some((n) => slugifyHeading(s.heading.text).startsWith(n));
+  const ingredientSection = all.find((s) => opens(s, INGREDIENT_HEADINGS));
+  const methodSection = all.find((s) => opens(s, METHOD_HEADINGS));
   if (!ingredientSection || !methodSection) return null;
 
   const ingredients = ingredientSection.body.flatMap((b) =>

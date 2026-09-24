@@ -143,6 +143,24 @@ ranks. Check any new keyword against what is already published:
 | `sakhar-khane-faida` | benefits, in Nepali (pair of `jaggery-health-claims-truth`) |
 | `sakhar-ra-chini` | sakhar vs sugar, in Nepali |
 | `sakhar-kasari-chinne` | purity, in Nepali |
+| `jaggery-in-pregnancy` | jaggery in pregnancy, iron and haemoglobin in pregnancy, sakhar in sutkeri. `jaggery-health-claims-truth` keeps a short pregnancy answer that links here. |
+| `gud-vs-misri` | gud vs misri, what misri is, rock sugar |
+| `til-ko-laddu-sakhar` | til ko laddu, til laddu with jaggery |
+| `peanut-chikki-sakhar` | peanut chikki, jaggery brittle, chikki vs chaku vs laddu |
+| `jaggery-in-winter` | jaggery in winter, is jaggery hot for the body, Poush and Magh uses |
+| `sakhar-ko-sel-roti` | sel roti, in Nepali (pair of `sel-roti-sakhar`) |
+| `chaku-kasari-banaune` | chaku, in Nepali (pair of `chaku-recipe-maghe-sankranti`) |
+| `yomari-kasari-banaune` | yomari, in Nepali (pair of `yomari-chaku-recipe`) |
+| `madhumeh-ma-sakhar` | diabetes, in Nepali (pair of `is-jaggery-safe-for-diabetics`) |
+| `sakhar-kasari-rakhne` | storage, in Nepali (pair of `how-to-store-jaggery-sakhar`) |
+
+Considered and not written, 24 Sep 2026, because a published page already
+owns the query: "how jaggery is made" (the step-by-step in
+`himalayan-jaggery-sankhuwasabha`), "organic jaggery in Nepal" (the pillar's
+FAQ and `/products/organic-jaggery-block`), "jaggery for cough" (the benefits
+post), "storing jaggery in the monsoon" (the storage post), and a /gud page
+(owner's Semrush data: about 40 searches a month, both real queries already
+answered).
 
 "jaggery", "jaggery in Nepal" and "jaggery powder" belong to the homepage and
 the powder product page, not to a post. "Buy jaggery online (in Nepal)" belongs
