@@ -48,7 +48,7 @@
       "longDescription": "This is the Sankhuwasabha sakhar everything else here is made from. Cane pressed in Sankhuwasabha, reduced over an open wood fire in an iron kadhai, skimmed by hand and poured into moulds while still molten. It sets overnight into dense amber discs, about three to the kilo, with the cracked surface and uneven colour that come from setting in open air rather than a machine. No sulphur, no clarifier, no colour, no added sugar. Break a piece into your chiya, grate it into what you are cooking, or eat a chip of it after a meal the way it has always been eaten in the hills.",
       "metaDescription": "Sankhuwasabha Sakhar (सखर) block, 1kg for Rs. 400. Wood-fired, poured by hand. No sulphur, no added sugar.",
       "ingredients": "100% pure sugarcane juice",
-      "shelfLife": "6-12 months when stored in a cool, dry place",
+      "shelfLife": "6 months when stored in a cool, dry place",
       "origin": "Sankhuwasabha, Koshi Province, Nepal",
       "category": "Blocks",
       "harvest": "Mangsir 2082",
@@ -79,7 +79,8 @@
         }
       ],
       "seoQualifier": "Jaggery, सखर",
-      "packed": ""
+      "packed": "",
+      "packedToOrder": true
     },
     {
       "slug": "jaggery-powder",
@@ -119,7 +120,8 @@
       ],
       "seoQualifier": "सखर Nepal",
       "seoTitle": "Jaggery Powder: Sankhuwasabha Sakhar, 250g",
-      "packed": ""
+      "packed": "",
+      "packedToOrder": true
     },
     {
       "slug": "mixed-dry-fruits",
@@ -162,7 +164,8 @@
         }
       ],
       "seoQualifier": "Sakhar-Coated Nuts",
-      "packed": ""
+      "packed": "",
+      "packedToOrder": true
     }
   ],
   "testimonials": [
@@ -240,11 +243,11 @@
     },
     {
       "question": "What is the shelf life of the jaggery?",
-      "answer": "Store it in a cool, dark, and dry place in an airtight container. Properly preserved, it can easily last 6-12 months without losing its flavor or nutritional value."
+      "answer": "Store it in a cool, dark, dry place in an airtight container. We pack every order when it comes in, and it keeps its flavour for about six months from the packing date on the pouch."
     },
     {
       "question": "Can diabetic patients consume jaggery?",
-      "answer": "While healthier and more nutritious than refined sugar, jaggery is still a sweetener with a high glycemic index. We recommend diabetic individuals consult their physician before adding it to their diet."
+      "answer": "Jaggery is still sugar. It raises blood sugar much as white sugar does, and it is not a safer choice for diabetics. If you have diabetes, please talk to your doctor before adding it to your diet."
     },
     {
       "question": "Do you deliver pan-Nepal?",

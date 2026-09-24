@@ -72,7 +72,7 @@ const en = {
   promoDiscount: `Flat ${COMMERCE.discountPercent}% off on pure sakhar above ${formatMoney(COMMERCE.discountMinimum, "en")} with code`,
   promoOrganic: "100% organic sakhar · No chemicals · Direct from farmers",
   promoShipping: `Free shipping pan-Nepal on orders above ${formatMoney(COMMERCE.freeShippingThreshold, "en")}`,
-  promoWoodFired: "Wood-fired sakhar from Sankhuwasabha · Shipped within 24h",
+  promoWoodFired: "Wood-fired sakhar from Sankhuwasabha · Packed when you order",
 
   // ── Article chrome
   articleReadTime: "min read",
@@ -142,7 +142,7 @@ const ne: Messages = {
   promoDiscount: `${formatNumber(COMMERCE.discountMinimum, "ne")} रुपैयाँमाथिको शुद्ध सख्खरमा ${formatNumber(COMMERCE.discountPercent, "ne")}% छुट, कोड`,
   promoOrganic: "१००% अर्गानिक सख्खर · कुनै रसायन छैन · सिधै किसानबाट",
   promoShipping: `${formatMoney(COMMERCE.freeShippingThreshold, "ne")} माथिको अर्डरमा नेपालभरि निःशुल्क ढुवानी`,
-  promoWoodFired: "सङ्खुवासभाको दाउराको आगोमा बनेको सख्खर · २४ घण्टाभित्र पठाइन्छ",
+  promoWoodFired: "सङ्खुवासभाको दाउराको आगोमा बनेको सख्खर · अर्डर आएपछि प्याक गरिन्छ",
 
   // ── Article chrome
   articleReadTime: "मिनेट पढ्न",

@@ -17,7 +17,8 @@ import {
   recipeParts,
   wordCount as countWords,
 } from "@/lib/article";
-import { ORG_ID, faqLd, howToLd, recipeLd } from "@/lib/seo";
+import { ORG_ID, faqLd, howToLd, recipeLd, videoLd } from "@/lib/seo";
+import TikTokVideo from "@/components/ui/TikTokVideo";
 import { SITE, absoluteUrl } from "@/lib/site";
 import { LOCALES } from "@/lib/hreflang";
 import { ArrowRight, Clock, Languages, Twitter, Facebook, Linkedin, MapPin, Phone, RefreshCw } from "lucide-react";
@@ -275,6 +276,22 @@ export default function PostView({ post }: { post: BlogPost }) {
             )}
           </div>
         </div>
+
+        {post.video && (
+          <section aria-label={post.video.title} className="px-6 sm:px-10 lg:px-16 mt-14 sm:mt-16">
+            <JsonLd data={videoLd(post.video)} />
+            <div className="max-w-[720px] mx-auto">
+              <p className="label-caps text-caramel-deep mb-3">{locale === "ne" ? "भिडियो" : "Watch it being made"}</p>
+              <p className="text-jaggery/70 mb-6">{post.video.description}</p>
+              <TikTokVideo
+                id={post.video.tiktokId}
+                title={post.video.title}
+                thumbnail={post.video.thumbnail}
+                playLabel={locale === "ne" ? "भिडियो हेर्नुहोस्" : "Play video"}
+              />
+            </div>
+          </section>
+        )}
 
         {/* ─── Article body ───────────────────────────────────────── */}
         <article

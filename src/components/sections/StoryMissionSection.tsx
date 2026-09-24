@@ -27,10 +27,9 @@ export default function StoryMissionSection() {
         </FadeUp>
         <FadeUp delay={0.1}>
           <p className="text-cream/85 text-lede mt-6 max-w-xl mx-auto text-balance">
-            Our mineral-rich jaggery tastes great and keeps the iron, magnesium and
-            potassium that nature put in the cane, as part of a balanced, honest diet.
-            We wanted to share the goodness of slow, unrefined sweetness, and let you in
-            on the wonderful world of wood-fired jaggery.
+            Our jaggery is cane juice boiled down over a wood fire, with nothing added
+            and nothing taken out. It tastes of the cane and the fire. It is still
+            sugar, so eat it the way the hills always have: a little at a time.
           </p>
         </FadeUp>
         <FadeUp delay={0.2}>

@@ -19,7 +19,7 @@ import { ArrowRight, Leaf, ShieldCheck, Truck } from "lucide-react";
 import { alternates, openGraph, twitter } from "@/lib/metadata";
 import { COMMERCE, DELIVERY, formatRs } from "@/lib/site";
 import { OG_CONTENT_TYPE } from "@/lib/og";
-import { bestBefore, harvestSeason } from "@/lib/batch";
+import { bestBefore, harvestSeason, shelfLifeMonths } from "@/lib/batch";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -139,7 +139,7 @@ export default async function ProductPage({ params }: Props) {
     ...product.faqs,
     {
       q: "How is jaggery different from refined white sugar?",
-      a: "Unlike refined sugar, our unrefined jaggery retains the iron, magnesium and potassium naturally present in sugarcane, and carries a deep caramel flavour refined sugar can't match.",
+      a: "White sugar has the cane's molasses spun out of it. Jaggery keeps it, which is where the dark colour and caramel taste come from. It also keeps small traces of minerals such as iron and potassium, but at the amounts anyone should eat they make no real difference. It is still sugar, and we would rather say so.",
     },
     {
       q: "Do you deliver across Nepal?",
@@ -207,7 +207,17 @@ export default async function ProductPage({ params }: Props) {
               Shelf life is counted from the day the pouch was packed, not from the harvest.
             </>
           )}
-          {bestBeforeDate && (
+          {/* Packed to order: there is no stock sitting on a shelf ageing, so
+              the honest date is the one on the pouch, not one on this page. */}
+          {"packedToOrder" in product && product.packedToOrder ? (
+            <>
+              {" "}<strong className="font-serif text-jaggery not-italic">
+                We pack each order when it comes in, and the packing date is
+                printed on the pouch. Best before {shelfLifeMonths(product.shelfLife)?.[0] ?? 6} months
+                from that date.
+              </strong>
+            </>
+          ) : bestBeforeDate && (
             <>
               {" "}<strong className="font-serif text-jaggery not-italic">
                 Best before {bestBeforeDate}.

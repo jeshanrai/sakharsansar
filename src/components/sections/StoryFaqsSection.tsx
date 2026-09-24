@@ -23,7 +23,7 @@ const faqs = [
   {
     question: "How is jaggery different from refined white sugar?",
     answer:
-      "Refined sugar is stripped of everything but sweetness. Our unrefined jaggery retains iron, magnesium, potassium and other minerals naturally present in sugarcane, and releases its energy more gently. It carries a deep caramel flavour that white sugar simply cannot match.",
+      "White sugar has the cane's molasses spun out of it. Jaggery keeps it, which is where the dark colour and caramel taste come from. It also keeps small traces of minerals such as iron and potassium, but at the amounts anyone should eat they make no real difference. It is still sugar, and we would rather say so.",
   },
   {
     question: "How does buying SakharSansar support farmers?",

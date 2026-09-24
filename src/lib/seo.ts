@@ -519,6 +519,34 @@ export function productLd(product: ProductLike): Json {
 }
 
 /**
+ * One of our own TikToks, embedded on a page.
+ *
+ * The upload date is not guessed: a TikTok video ID carries its creation time
+ * in its top 32 bits, so it is read from the ID. The thumbnail is our copy
+ * under public/, because TikTok's thumbnail URLs are signed and expire, and
+ * a VideoObject whose image 404s is dropped from video results.
+ */
+export function videoLd(video: {
+  tiktokId: string;
+  title: string;
+  description: string;
+  thumbnail: string;
+}): Json {
+  const created = new Date(Number(BigInt(video.tiktokId) >> BigInt(32)) * 1000);
+  return {
+    "@context": "https://schema.org",
+    "@type": "VideoObject",
+    name: video.title,
+    description: video.description,
+    thumbnailUrl: absoluteUrl(video.thumbnail),
+    uploadDate: created.toISOString(),
+    embedUrl: `https://www.tiktok.com/player/v1/${video.tiktokId}`,
+    url: `https://www.tiktok.com/@sakharsansar/video/${video.tiktokId}`,
+    publisher: { "@id": ORG_ID },
+  };
+}
+
+/**
  * A plain WebPage node, for pages whose content has no richer type.
  *
  * The policy pages had only the sitewide graph on them, so crawlers saw the

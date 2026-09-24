@@ -71,6 +71,17 @@ export interface BlogPost {
   };
   tags: string[];
   /**
+   * One of our TikToks, shown under the hero with VideoObject markup. Only our
+   * own videos: the page credits nobody else's.
+   */
+  video?: {
+    tiktokId: string;
+    title: string;
+    description: string;
+    /** Our copy of the thumbnail, under public/video/. */
+    thumbnail: string;
+  };
+  /**
    * BCP-47 language of the body, when it is not the site default. The Nepali
    * posts set "ne" so the rendered `<article lang>`, the `inLanguage` in the
    * schema and the hreflang pair all agree — without it Google reads a

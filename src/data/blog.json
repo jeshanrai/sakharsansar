@@ -192,7 +192,13 @@
       "Sakhar 101",
       "Buying Guide",
       "Comparison"
-    ]
+    ],
+    "video": {
+      "tiktokId": "7626774007022357780",
+      "title": "How Sankhuwasabha sakhar is made",
+      "description": "Our own video from Sankhuwasabha: the cane juice going into the kadhai over a wood fire and coming out as sakhar.",
+      "thumbnail": "/video/sakhar-making-process-tiktok.jpg"
+    }
   },
   {
     "slug": "chaku-recipe-maghe-sankranti",

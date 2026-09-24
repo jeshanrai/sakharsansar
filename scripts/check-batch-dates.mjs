@@ -84,6 +84,10 @@ for (const p of products) {
     continue;
   }
 
+  // Packed to order: every pouch is filled when its order arrives and carries
+  // its own date, so there is no standing batch date for the site to age.
+  if (p.packedToOrder) continue;
+
   if (!p.packed) {
     warnings.push(
       `${p.name} — no packing date recorded, so the best-before sentence does not render. ` +

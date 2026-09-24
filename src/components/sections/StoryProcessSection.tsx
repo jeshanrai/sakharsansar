@@ -7,7 +7,7 @@ const steps = [
   { title: "Harvest", season: "Oct – Dec", desc: "Cane is cut at first light, when the juice is sweetest and coolest.", icon: Sprout },
   { title: "Wood-fire", season: "Same day", desc: "The juice reduces slowly in iron kadhais over open wood-fire. Never gas, never sulphur.", icon: Flame },
   { title: "Hand-mould", season: "Cooled overnight", desc: "Once amber and pliable, it is poured by hand into wooden moulds and rested.", icon: Hand },
-  { title: "Pack", season: "Within 48 hrs", desc: "Sealed in compostable kraft paper from a women's cooperative in the next valley. Never plastic.", icon: Package },
+  { title: "Pack", season: "When you order", desc: "Each order is packed when it comes in, in compostable kraft paper, with the packing date on the pouch.", icon: Package },
 ];
 
 /**
@@ -37,6 +37,14 @@ export default function StoryProcessSection() {
                 The same method our grandparents used: slow, smoky, and stubbornly free of
                 the chemicals modern factories rely on. Watch a batch come to life.
               </p>
+              <a
+                href="https://www.tiktok.com/@sakharsansar/video/7626774007022357780"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-6 inline-block label-caps text-grove underline underline-offset-4 hover:text-jaggery transition-colors"
+              >
+                Watch the full making process on TikTok
+              </a>
             </div>
           </SlideInLeft>
 
