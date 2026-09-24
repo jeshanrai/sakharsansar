@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { apiFetch } from "@/lib/api";
+import { markInternalTraffic } from "@/lib/internal-traffic";
 import AdminShell, { type Tab } from "./_components/AdminShell";
 import { Toast, ConfirmDialog } from "./_components/primitives";
 import OverviewPage from "./_pages/OverviewPage";
@@ -35,6 +36,7 @@ export default function Dashboard() {
           return;
         }
         const data = await res.json();
+        markInternalTraffic();
         setAdminName(data.name);
         setAuthReady(true);
       })

@@ -1,5 +1,6 @@
 import Script from "next/script";
 import { GA_MEASUREMENT_ID } from "@/lib/site";
+import { INTERNAL_TRAFFIC_KEY } from "@/lib/internal-traffic";
 
 /**
  * Google Analytics 4 (gtag.js) for the whole site.
@@ -39,8 +40,20 @@ export default function Analytics() {
         src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
         strategy="lazyOnload"
       />
+      {/*
+        The owner is not a customer. `ga-disable-<id>` is GA's own opt-out and
+        must be set before `config` runs, so it goes first in the bootstrap:
+        off on the admin portal always, and off everywhere in a browser that
+        has signed in to it (see lib/internal-traffic.ts for the key).
+      */}
       <Script id="ga4-init" strategy="lazyOnload">
-        {`window.dataLayer = window.dataLayer || [];
+        {`try {
+  if (location.pathname.indexOf('/portfolio') === 0 ||
+      localStorage.getItem('${INTERNAL_TRAFFIC_KEY}') === '1') {
+    window['ga-disable-${GA_MEASUREMENT_ID}'] = true;
+  }
+} catch (e) {}
+window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', '${GA_MEASUREMENT_ID}');`}
