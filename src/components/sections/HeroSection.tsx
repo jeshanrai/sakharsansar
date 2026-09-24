@@ -170,7 +170,12 @@ export default function HeroSection() {
         </button>
 
         <div className="relative max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-20 min-h-[600px] sm:min-h-[70svh] lg:min-h-[76svh] flex items-center py-10 sm:py-14 lg:py-16">
-          <AnimatePresence mode="wait" custom={direction}>
+          {/* initial={false}: the first slide is in the server HTML at full
+              opacity. Without it, the headline, the button and the product
+              photo were rendered at opacity 0 and stayed invisible until the
+              JavaScript had downloaded and run — seconds, on a phone in Nepal,
+              after the photo itself had arrived. Changing slides still animates. */}
+          <AnimatePresence mode="wait" custom={direction} initial={false}>
             <motion.div
               key={slide.id}
               custom={direction}

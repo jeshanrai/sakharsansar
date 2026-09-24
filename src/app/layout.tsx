@@ -34,6 +34,11 @@ const fraunces = Fraunces({
   axes: ["SOFT"],
   variable: "--font-fraunces",
   display: "swap",
+  // Not preloaded. Normal and italic are two files and the largest two of the
+  // five, and nothing in the first screen of the home page is set in Fraunces.
+  // Preloaded, they sat in the queue ahead of the hero photograph on every
+  // route. With `swap`, headings paint in Georgia and change over when it lands.
+  preload: false,
 });
 
 // Devanagari serif for "सखर संसार" and other Nepali/Sanskrit accents.
@@ -45,7 +50,7 @@ const tiroDevanagari = Tiro_Devanagari_Hindi({
   // Italic dropped: nothing in the codebase sets it, and each style is its own
   // woff2 download.
   style: ["normal"],
-  variable: "--font-devanagari",
+  variable: "--font-tiro",
   display: "swap",
   /**
    * Not preloaded, unlike the other four.
@@ -81,7 +86,7 @@ const fredoka = Fredoka({
 const gochiHand = Gochi_Hand({
   subsets: ["latin"],
   weight: ["400"],
-  variable: "--font-marker",
+  variable: "--font-gochi",
   display: "swap",
 });
 
@@ -169,7 +174,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang={SITE.lang} className="scroll-smooth">
+    <html
+      lang={SITE.lang}
+      // The font variables sit on <html>, not <body>. globals.css builds its
+      // stacks on :root (`--font-sans: var(--font-inter), …`), and a custom
+      // property resolves its var() where it is declared — with these on
+      // <body>, :root saw no --font-inter, the whole stack was discarded, and
+      // every page rendered in the browser's default face.
+      className={`${inter.variable} ${fraunces.variable} ${tiroDevanagari.variable} ${fredoka.variable} ${gochiHand.variable} scroll-smooth`}
+    >
       <head>
         {/* Preconnect to Google Fonts origin so the font CSS resolves earlier */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -204,7 +217,7 @@ export default function RootLayout({
         <JsonLd data={siteGraphLd()} />
       </head>
       <body
-        className={`${inter.variable} ${fraunces.variable} ${tiroDevanagari.variable} ${fredoka.variable} ${gochiHand.variable} font-sans antialiased bg-cream text-jaggery`}
+        className="font-sans antialiased bg-cream text-jaggery"
       >
         <PromoBar />
         {/* The pair map is built here, on the server. The switcher inside the

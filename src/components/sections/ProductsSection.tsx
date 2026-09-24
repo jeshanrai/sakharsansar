@@ -112,7 +112,10 @@ export default function ProductsSection() {
         </div>
 
         {/* ─── Product grid ─────────────────────── */}
-        <AnimatePresence mode="wait">
+        {/* initial={false}, and no fade on the cards below: both started the
+            grid at opacity 0, so the products stayed blank until hydration and
+            then until scrolled into view. Only a change of filter animates. */}
+        <AnimatePresence mode="wait" initial={false}>
           <motion.div
             key={active}
             initial={{ opacity: 0, y: 6 }}
@@ -169,11 +172,7 @@ const ProductCard = memo(function ProductCard({
   const badge = badgeFor(product.slug, index);
 
   return (
-    <motion.article
-      initial={{ opacity: 0, y: 12 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-30px" }}
-      transition={{ duration: 0.45, delay: index * 0.04, ease: [0.16, 1, 0.3, 1] }}
+    <article
       className={`group relative flex flex-col rounded-3xl p-3 sm:p-4 transition-transform duration-500 hover:-translate-y-1 ${CARD_BG}`}
     >
       {/* Legibility scrim — darkens the photo behind the text so it reads consistently */}
@@ -221,7 +220,9 @@ const ProductCard = memo(function ProductCard({
               src={product.image}
               alt={`${product.name}, ${product.weight}`}
               fill
-              loading={index < 4 ? "eager" : "lazy"}
+              // Lazy: the grid sits below the hero, and eager loading here
+              // preloaded all three photos ahead of the hero image.
+              loading="lazy"
               sizes="(max-width: 1023px) 50vw, 33vw"
               className="object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-[1.04]"
             />
@@ -270,6 +271,6 @@ const ProductCard = memo(function ProductCard({
           )}
         </div>
       </div>
-    </motion.article>
+    </article>
   );
 });

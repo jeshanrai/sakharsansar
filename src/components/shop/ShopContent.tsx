@@ -475,7 +475,9 @@ export default function ShopContent({
           </div>
 
           {filteredProducts.length > 0 ? (
-            <AnimatePresence mode="wait">
+            <AnimatePresence mode="wait" initial={false}>
+              {/* initial={false}: the grid is in the server HTML at full opacity
+                  rather than invisible until hydration. Filter changes animate. */}
               <motion.div
                 key={`${activeCategory}-${activePriceRange}-${sortBy}-${searchQuery}`}
                 initial={{ opacity: 0, y: 6 }}
