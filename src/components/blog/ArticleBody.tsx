@@ -63,7 +63,7 @@ function BlockView({ block, lead, locale }: { block: Block; lead: boolean; local
 
     case "p":
       return (
-        <p className={`text-jaggery/85 text-lede mb-7 ${lead ? "has-dropcap" : ""}`}>
+        <p className={`text-jaggery/85 text-lede leading-[1.72] mb-7 ${lead ? "has-dropcap" : ""}`}>
           <InlineView nodes={block.inline} />
         </p>
       );

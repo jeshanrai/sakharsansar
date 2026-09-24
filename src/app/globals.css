@@ -13,11 +13,11 @@
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system,
     "Segoe UI", Roboto, sans-serif;
   --font-serif: var(--font-fraunces), ui-serif, "Iowan Old Style", Georgia, serif;
-  --font-devanagari: var(--font-devanagari), "Tiro Devanagari Hindi",
+  --font-devanagari: var(--font-tiro), "Tiro Devanagari Hindi",
     "Noto Serif Devanagari", "Sanskrit Text", serif;
   --font-display: var(--font-fredoka), ui-rounded, "Helvetica Rounded",
     "Nunito", system-ui, sans-serif;
-  --font-marker: var(--font-marker), "Comic Sans MS", "Marker Felt", ui-rounded,
+  --font-marker: var(--font-gochi), "Comic Sans MS", "Marker Felt", ui-rounded,
     sans-serif;
 
   /* Editorial type scale — pairs line-height with each step.
@@ -111,41 +111,47 @@
   text-rendering: optimizeLegibility;
 }
 
-html {
-  scroll-behavior: smooth;
-  /* Limit how much iOS Safari inflates text in landscape */
-  -webkit-text-size-adjust: 100%;
-}
+/* Element defaults live in the base layer. Unlayered, they outranked every
+   Tailwind utility regardless of specificity — `h1 { font-family }` beat
+   `.font-marker` and `h2 { font-size }` beat `.text-h3`, so no heading on the
+   site could be restyled by class. */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    /* Limit how much iOS Safari inflates text in landscape */
+    -webkit-text-size-adjust: 100%;
+  }
 
-body {
-  font-family: var(--font-sans);
-  font-size: var(--text-body);
-  line-height: var(--text-body--line-height);
-  background: var(--color-cream);
-  color: var(--color-jaggery);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+  body {
+    font-family: var(--font-sans);
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+    background: var(--color-cream);
+    color: var(--color-jaggery);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
 
-/* Headings default to the display serif so any unclassed heading still
-   carries the editorial voice. Components can override with utilities. */
-h1, h2, h3, h4 {
-  font-family: var(--font-serif);
-  font-weight: 400;
-  letter-spacing: var(--tracking-tight);
-  text-wrap: balance;
-}
+  /* Headings default to the display serif so any unclassed heading still
+     carries the editorial voice. Components can override with utilities. */
+  h1, h2, h3, h4 {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    letter-spacing: var(--tracking-tight);
+    text-wrap: balance;
+  }
 
-h1 { font-size: var(--text-h1); line-height: var(--text-h1--line-height); }
-h2 { font-size: var(--text-h2); line-height: var(--text-h2--line-height); }
-h3 { font-size: var(--text-h3); line-height: var(--text-h3--line-height); }
-h4 { font-size: var(--text-h4); line-height: var(--text-h4--line-height); }
+  h1 { font-size: var(--text-h1); line-height: var(--text-h1--line-height); }
+  h2 { font-size: var(--text-h2); line-height: var(--text-h2--line-height); }
+  h3 { font-size: var(--text-h3); line-height: var(--text-h3--line-height); }
+  h4 { font-size: var(--text-h4); line-height: var(--text-h4--line-height); }
 
-p { text-wrap: pretty; }
+  p { text-wrap: pretty; }
 
-em, i, .italic {
-  /* Fraunces has a true italic — tilt slightly more for warmth */
-  font-style: italic;
+  em, i, .italic {
+    /* Fraunces has a true italic — tilt slightly more for warmth */
+    font-style: italic;
+  }
 }
 
 ::selection {
@@ -265,8 +271,8 @@ em, i, .italic {
     font-size: 4.25em;
     float: left;
     line-height: 0.85;
-    margin: 0.1em 0.12em -0.1em 0;
-    color: var(--color-jaggery);
+    margin: 0.08em 0.14em -0.1em 0;
+    color: var(--color-caramel-deep);
   }
 
   /* ── Pull quote ──────────────────────────────────────────── */
