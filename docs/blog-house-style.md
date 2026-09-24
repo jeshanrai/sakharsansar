@@ -136,6 +136,8 @@ ranks. Check any new keyword against what is already published:
 | `sakhar-kheer-recipe` | jaggery kheer, gud kheer, kheer curdling |
 | `suji-haluwa-sakhar` | suji halwa with jaggery, haluwa |
 | `jaggery-for-children` | jaggery for kids and babies, how much sugar for children |
+| `gud-ko-roti` | gud ko roti, jaggery roti, stuffed jaggery roti |
+| `aanp-ko-guliyo-achar` | mango achar with jaggery, gud ko achar |
 | `how-to-eat-sakhar` | how to eat / use jaggery, sakhar with dahi, dhido, roti; jaggery instead of sugar in cooking |
 | `wholesale-jaggery-nepal` | bulk, B2B, supply |
 | `sakhar-khane-faida` | benefits, in Nepali (pair of `jaggery-health-claims-truth`) |
