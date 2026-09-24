@@ -3,13 +3,10 @@
 import { memo, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
 import { Plus, Heart, X, ChevronRight, ArrowRight, Sparkles } from "lucide-react";
-import data from "@/data/content.json";
 import { useFavourites, useIsFavourite, toggleFavourite, clearFavourites } from "@/lib/favourites";
-import { openOrderDrawer } from "@/components/layout/OrderDrawer";
-
-type Product = (typeof data.products)[number];
+import { openOrderDrawer } from "@/lib/order-drawer";
+import type { ProductCard as Product } from "@/lib/product-cards";
 
 /* The card backdrop.
  *
@@ -21,16 +18,21 @@ type Product = (typeof data.products)[number];
 const CARD_BG = "bg-[#2D9577] bg-[url('/cane-texture.jpg')] bg-cover bg-center";
 
 
-export default function FavouritesContent() {
+export default function FavouritesContent({
+  /** From productCards(), on the server. See @/lib/product-cards. */
+  catalogue,
+}: {
+  catalogue: Product[];
+}) {
   const favourites = useFavourites();
 
   // Resolve slugs → products, preserving the store's most-recent-first order.
   const products = useMemo(() => {
-    const bySlug = new Map(data.products.map((p) => [p.slug, p]));
+    const bySlug = new Map(catalogue.map((p) => [p.slug, p]));
     return favourites
       .map((slug) => bySlug.get(slug))
       .filter((p): p is Product => Boolean(p));
-  }, [favourites]);
+  }, [catalogue, favourites]);
 
   const count = products.length;
 
@@ -89,18 +91,13 @@ export default function FavouritesContent() {
         </div>
 
         {count > 0 ? (
-          <motion.div
-            layout
-            className="grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-7"
-          >
-            <AnimatePresence mode="popLayout">
-              {products.map((product, i) => (
-                <FavouriteCard key={product.slug} product={product} index={i} />
-              ))}
-            </AnimatePresence>
-          </motion.div>
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-7">
+            {products.map((product, i) => (
+              <FavouriteCard key={product.slug} product={product} index={i} />
+            ))}
+          </div>
         ) : (
-          <EmptyState />
+          <EmptyState catalogue={catalogue} />
         )}
       </div>
     </section>
@@ -118,13 +115,11 @@ const FavouriteCard = memo(function FavouriteCard({
   const favourited = useIsFavourite(product.slug);
 
   return (
-    <motion.article
-      layout
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, scale: 0.92 }}
-      transition={{ duration: 0.4, delay: (index % 9) * 0.04, ease: [0.16, 1, 0.3, 1] }}
-      className={`group relative flex flex-col rounded-3xl p-3 sm:p-4 transition-transform duration-500 hover:-translate-y-1 ${CARD_BG}`}
+    // A CSS entrance (globals.css) in place of framer-motion, which this page
+    // loaded for a fade on at most three cards.
+    <article
+      style={{ animationDelay: `${(index % 9) * 0.04}s` }}
+      className={`animate-card-in group relative flex flex-col rounded-3xl p-3 sm:p-4 transition-transform duration-500 hover:-translate-y-1 ${CARD_BG}`}
     >
       {/* Legibility scrim — darkens the photo behind the text so it reads consistently */}
       <span
@@ -202,13 +197,13 @@ const FavouriteCard = memo(function FavouriteCard({
           </span>
         </div>
       </div>
-    </motion.article>
+    </article>
   );
 });
 
 /* ─── Empty state → explore products ─── */
-function EmptyState() {
-  const picks = data.products.slice(0, 4);
+function EmptyState({ catalogue }: { catalogue: Product[] }) {
+  const picks = catalogue.slice(0, 4);
 
   return (
     <div className="py-10 sm:py-16">

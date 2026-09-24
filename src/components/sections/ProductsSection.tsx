@@ -3,13 +3,9 @@
 import { memo, useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
 import { Plus, ArrowRight, Heart } from "lucide-react";
-import data from "@/data/content.json";
 import { useIsFavourite, toggleFavourite } from "@/lib/favourites";
-
-type Product = (typeof data.products)[number];
-
+import type { ProductCard as Product } from "@/lib/product-cards";
 
 function badgeFor(slug: string, index: number): { label: string; tone: string } | null {
   if (index === 0) return { label: "Bestseller", tone: "bg-jaggery text-cream" };
@@ -17,13 +13,7 @@ function badgeFor(slug: string, index: number): { label: string; tone: string } 
   return null;
 }
 
-// Derived from the data so adding or retiring a product never leaves a filter
-// pointing at an empty shelf.
-const CATEGORIES = [
-  "All",
-  ...Array.from(new Set(data.products.map((p) => p.category))),
-] as const;
-type Category = (typeof CATEGORIES)[number];
+type Category = string;
 
 // Card backdrop — matches the hero sugarcane bg for visual continuity
 /* The card backdrop.
@@ -36,13 +26,26 @@ type Category = (typeof CATEGORIES)[number];
 const CARD_BG =
   "bg-[#2D9577] bg-[url('/cane-texture.jpg')] bg-cover bg-center";
 
-export default function ProductsSection() {
+export default function ProductsSection({
+  /** From productCards(), on the server. See @/lib/product-cards. */
+  products,
+}: {
+  products: Product[];
+}) {
+  // Derived from the data so adding or retiring a product never leaves a filter
+  // pointing at an empty shelf.
+  const CATEGORIES = useMemo(
+    () => ["All", ...Array.from(new Set(products.map((p) => p.category)))],
+    [products],
+  );
   const [active, setActive] = useState<Category>("All");
+  // Only a change of filter animates; the first render paints as-is.
+  const [filterChanged, setFilterChanged] = useState(false);
 
   const filtered = useMemo(() => {
-    if (active === "All") return data.products;
-    return data.products.filter((p) => p.category === active);
-  }, [active]);
+    if (active === "All") return products;
+    return products.filter((p) => p.category === active);
+  }, [active, products]);
 
   return (
     <section
@@ -74,12 +77,15 @@ export default function ProductsSection() {
               const isActive = active === cat;
               const count =
                 cat === "All"
-                  ? data.products.length
-                  : data.products.filter((p) => p.category === cat).length;
+                  ? products.length
+                  : products.filter((p) => p.category === cat).length;
               return (
                 <button
                   key={cat}
-                  onClick={() => setActive(cat)}
+                  onClick={() => {
+                    setActive(cat);
+                    setFilterChanged(true);
+                  }}
                   className={`relative inline-flex items-center gap-1.5 h-9 px-4 rounded-full text-[13px] font-medium tracking-tight whitespace-nowrap transition-colors ${
                     isActive
                       ? "bg-jaggery text-cream"
@@ -112,27 +118,23 @@ export default function ProductsSection() {
         </div>
 
         {/* ─── Product grid ─────────────────────── */}
-        {/* initial={false}, and no fade on the cards below: both started the
-            grid at opacity 0, so the products stayed blank until hydration and
-            then until scrolled into view. Only a change of filter animates. */}
-        <AnimatePresence mode="wait" initial={false}>
-          <motion.div
-            key={active}
-            initial={{ opacity: 0, y: 6 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -2 }}
-            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            className="grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-7"
-          >
-            {filtered.map((product, i) => (
-              <ProductCard
-                key={product.slug}
-                product={product}
-                index={i}
-              />
-            ))}
-          </motion.div>
-        </AnimatePresence>
+        {/* Re-keyed on the filter, so a change of filter remounts the grid and
+            plays the CSS entrance. The first render carries no animation: the
+            products are the reason for the page and paint with the HTML. */}
+        <div
+          key={active}
+          className={`grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-7 ${
+            filterChanged ? "animate-fade-rise" : ""
+          }`}
+        >
+          {filtered.map((product, i) => (
+            <ProductCard
+              key={product.slug}
+              product={product}
+              index={i}
+            />
+          ))}
+        </div>
 
         {filtered.length === 0 && (
           <div className="text-center py-20">
@@ -148,7 +150,7 @@ export default function ProductsSection() {
             href="/shop"
             className="group inline-flex items-center gap-2 label-caps text-[10px] text-jaggery border-b border-jaggery/30 pb-1.5"
           >
-            View all {data.products.length} forms
+            View all {products.length} forms
             <ArrowRight
               className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform"
               strokeWidth={1.75}

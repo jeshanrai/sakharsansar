@@ -3,7 +3,6 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import { Leaf, ShieldCheck, Truck } from "lucide-react";
 import Footer from "@/components/layout/Footer";
-import OrderDrawer from "@/components/layout/OrderDrawer";
 import ArticleBody from "@/components/blog/ArticleBody";
 import ProductActions from "@/components/product/ProductActions";
 import Breadcrumbs from "@/components/layout/Breadcrumbs";
@@ -81,7 +80,6 @@ export default async function NepaliProductPage({ params }: Props) {
       />
       {faqs.length > 0 && <JsonLd data={faqLd(faqs)} />}
 
-      <OrderDrawer />
 
       <main lang="ne" className="overflow-x-hidden bg-cream">
         <div className="pt-28 sm:pt-36 px-6 sm:px-10 lg:px-16">

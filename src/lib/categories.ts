@@ -108,6 +108,17 @@ export const CATEGORIES: ShopCategory[] = Array.from(
   return [{ slug, name, ...copy }];
 });
 
+/**
+ * Category name → its route, for the categories that have one.
+ *
+ * For the shop's filter pills, which are a client component. They only need to
+ * know where each pill points, and importing findCategory to find out put all
+ * of the category copy above, and content.json with it, into the browser.
+ */
+export function categoryPaths(): Record<string, string> {
+  return Object.fromEntries(CATEGORIES.map((c) => [c.name, `/shop/${c.slug}`]));
+}
+
 export function findCategory(slug: string): ShopCategory | undefined {
   return CATEGORIES.find((c) => c.slug === slug);
 }

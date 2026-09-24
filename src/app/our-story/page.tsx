@@ -2,7 +2,6 @@ import { Metadata } from "next";
 import JsonLd from "@/components/seo/JsonLd";
 import { ORG_ID, WEBSITE_ID, breadcrumbLd } from "@/lib/seo";
 import { SITE, absoluteUrl } from "@/lib/site";
-import OrderDrawer from "@/components/layout/OrderDrawer";
 import Footer from "@/components/layout/Footer";
 import StorySection from "@/components/sections/StorySection";
 import StoryWelcomeSection from "@/components/sections/StoryWelcomeSection";
@@ -67,7 +66,6 @@ export default function OurStory() {
       <JsonLd data={aboutJsonLd} />
       <JsonLd data={breadcrumbJsonLd} />
 
-      <OrderDrawer />
       <main className="overflow-x-hidden">
         {/* Frames mirror the reference About-Us flow, top to bottom */}
         <StorySection />        {/* 1 · A bit about us (peach hero) */}

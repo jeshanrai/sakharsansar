@@ -3,7 +3,6 @@ import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import Footer from "@/components/layout/Footer";
-import OrderDrawer from "@/components/layout/OrderDrawer";
 import ProductActions from "@/components/product/ProductActions";
 import ProductDetailSections from "@/components/product/ProductDetailSections";
 import { AnimatedWave } from "@/components/ui/StoryArt";
@@ -255,7 +254,6 @@ export default async function ProductPage({ params }: Props) {
       <JsonLd data={jsonLd} />
       <JsonLd data={faqJsonLd} />
 
-      <OrderDrawer />
 
       <main className="overflow-x-hidden bg-cream">
         {/* Breadcrumb.

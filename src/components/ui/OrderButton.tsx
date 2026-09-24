@@ -1,6 +1,6 @@
 "use client";
 
-import { openOrderDrawer } from "../layout/OrderDrawer";
+import { openOrderDrawer } from "@/lib/order-drawer";
 import { ArrowRight } from "lucide-react";
 
 export default function OrderButton() {

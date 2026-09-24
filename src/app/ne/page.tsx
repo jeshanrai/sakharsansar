@@ -3,7 +3,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import Footer from "@/components/layout/Footer";
-import OrderDrawer from "@/components/layout/OrderDrawer";
 import ArticleBody from "@/components/blog/ArticleBody";
 import JsonLd from "@/components/seo/JsonLd";
 import { NeHero, NeProductGrid, neMetadata } from "@/components/ne/NePage";
@@ -58,7 +57,6 @@ export default function NepaliHome() {
       />
       {faqs.length > 0 && <JsonLd data={faqLd(faqs)} />}
 
-      <OrderDrawer />
 
       <main lang="ne" className="bg-cream overflow-x-hidden">
         <NeHero eyebrow={home.eyebrow} title={home.h1} lede={home.lede}>

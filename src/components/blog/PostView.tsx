@@ -1,7 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import Footer from "@/components/layout/Footer";
-import OrderDrawer from "@/components/layout/OrderDrawer";
 import ArticleBody from "@/components/blog/ArticleBody";
 import { AnimatedWave, Bee } from "@/components/ui/StoryArt";
 import { Daisy } from "@/components/ui/Doodles";
@@ -149,7 +148,6 @@ export default function PostView({ post }: { post: BlogPost }) {
         />
       )}
 
-      <OrderDrawer />
 
       <main className="bg-cream overflow-x-hidden">
         {/* ─── Hero (peach) ───────────────────────────────────────── */}

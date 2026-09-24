@@ -4,7 +4,6 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ChevronRight, ArrowUpRight } from "lucide-react";
 import Footer from "@/components/layout/Footer";
-import OrderDrawer from "@/components/layout/OrderDrawer";
 import JsonLd from "@/components/seo/JsonLd";
 import { AnimatedWave } from "@/components/ui/StoryArt";
 import { Daisy } from "@/components/ui/Doodles";
@@ -123,7 +122,6 @@ export default async function BlogCategoryPage({ params }: Props) {
         ])}
       />
 
-      <OrderDrawer />
 
       <main className="bg-cream overflow-x-hidden">
         <header className="relative bg-peach overflow-hidden pt-32 sm:pt-36 pb-24 sm:pb-32 px-6 sm:px-10 lg:px-16">

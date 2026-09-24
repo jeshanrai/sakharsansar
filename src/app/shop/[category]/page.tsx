@@ -3,10 +3,10 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ChevronRight } from "lucide-react";
 import Footer from "@/components/layout/Footer";
-import OrderDrawer from "@/components/layout/OrderDrawer";
 import ShopContent from "@/components/shop/ShopContent";
+import { productCards } from "@/lib/product-cards";
 import JsonLd from "@/components/seo/JsonLd";
-import { CATEGORIES, findCategory, productsIn } from "@/lib/categories";
+import { CATEGORIES, categoryPaths, findCategory, productsIn } from "@/lib/categories";
 import { breadcrumbLd, itemListLd, productNodeId } from "@/lib/seo";
 import { alternates, openGraph, twitter } from "@/lib/metadata";
 import { OG_CONTENT_TYPE } from "@/lib/og";
@@ -115,7 +115,6 @@ export default async function ShopCategoryPage({ params }: Props) {
         ])}
       />
 
-      <OrderDrawer />
 
       {/* The navbar is fixed and 108px tall, so pt-10 left the eyebrow and
           the top of the H1 behind it. */}
@@ -156,7 +155,11 @@ export default async function ShopCategoryPage({ params }: Props) {
           </div>
         </header>
 
-        <ShopContent initialCategory={cat.name} />
+        <ShopContent
+          products={productCards()}
+          categoryPaths={categoryPaths()}
+          initialCategory={cat.name}
+        />
       </main>
 
       <Footer />

@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { ShoppingBag, Heart, Menu, X } from "lucide-react";
-import { openOrderDrawer } from "./OrderDrawer";
+import { openOrderDrawer } from "@/lib/order-drawer";
 import { useFavouritesCount } from "@/lib/favourites";
 import { localeFromPath, t } from "@/lib/i18n";
 import { localizedHref } from "@/lib/locale-paths";

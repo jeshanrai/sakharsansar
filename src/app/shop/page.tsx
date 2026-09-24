@@ -2,6 +2,8 @@ import { Metadata } from "next";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import ShopContent from "@/components/shop/ShopContent";
+import { productCards } from "@/lib/product-cards";
+import { categoryPaths } from "@/lib/categories";
 import JsonLd from "@/components/seo/JsonLd";
 import Breadcrumbs from "@/components/layout/Breadcrumbs";
 import data from "@/data/content.json";
@@ -12,7 +14,6 @@ import { languageAlternates } from "@/lib/hreflang";
 import { nePathFor } from "@/lib/locale-paths";
 
 const Footer = dynamic(() => import("@/components/layout/Footer"));
-const OrderDrawer = dynamic(() => import("@/components/layout/OrderDrawer"));
 
 export const metadata: Metadata = {
   // No brand suffix here — the root layout's `title.template` appends
@@ -112,7 +113,6 @@ export default function ShopPage() {
       <JsonLd data={listJsonLd} />
       <JsonLd data={faqLd(FAQS)} />
 
-      <OrderDrawer />
       {/* The navbar is fixed and 108px tall, so pt-10 left the eyebrow and
           the top of the H1 behind it. */}
       <main className="overflow-x-hidden pt-32 sm:pt-36">
@@ -137,7 +137,7 @@ export default function ShopPage() {
             ourselves, and everywhere else with {DELIVERY.outsideValleyCarrier}.
           </p>
         </header>
-        <ShopContent />
+        <ShopContent products={productCards()} categoryPaths={categoryPaths()} />
 
         {/* ─── What sakhar is, and which form to buy ──────────────── */}
         <section

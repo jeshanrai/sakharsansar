@@ -8,7 +8,6 @@ import { SITE, absoluteUrl } from "@/lib/site";
 import { alternates, openGraph, twitter } from "@/lib/metadata";
 
 const Footer = dynamic(() => import("@/components/layout/Footer"));
-const OrderDrawer = dynamic(() => import("@/components/layout/OrderDrawer"));
 
 const PAGE_PATH = "/contact";
 const PAGE_URL = absoluteUrl(PAGE_PATH);
@@ -55,7 +54,6 @@ export default function ContactPage() {
       <JsonLd data={contactJsonLd} />
       <JsonLd data={breadcrumbJsonLd} />
 
-      <OrderDrawer />
       <main className="overflow-x-hidden">
         <ContactHero />   {/* 1 · peach · intro + B2C / B2B */}
         <ContactReach />  {/* 2 · green · channels + form */}

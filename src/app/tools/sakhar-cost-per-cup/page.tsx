@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Footer from "@/components/layout/Footer";
-import OrderDrawer from "@/components/layout/OrderDrawer";
 import Breadcrumbs from "@/components/layout/Breadcrumbs";
 import JsonLd from "@/components/seo/JsonLd";
 import CostPerCupCalculator from "@/components/tools/CostPerCupCalculator";
@@ -69,7 +68,6 @@ export default function CostPerCupPage() {
         })}
       />
 
-      <OrderDrawer />
 
       <main className="overflow-x-hidden">
         <section className="bg-peach px-6 sm:px-10 lg:px-16 pt-28 sm:pt-36 pb-14 sm:pb-16">

@@ -9,13 +9,13 @@ import { SITE, absoluteUrl } from "@/lib/site";
 import { alternates, openGraph, twitter } from "@/lib/metadata";
 import { languageAlternates } from "@/lib/hreflang";
 import { nePathFor } from "@/lib/locale-paths";
+import { productCards } from "@/lib/product-cards";
 
 // Below-the-fold — split out of the initial JS bundle
 const ProductsSection = dynamic(
   () => import("@/components/sections/ProductsSection"),
 );
 const Footer = dynamic(() => import("@/components/layout/Footer"));
-const OrderDrawer = dynamic(() => import("@/components/layout/OrderDrawer"));
 
 export const metadata: Metadata = {
   // "Sankhuwasabha sakhar" is the name this product is actually known and
@@ -85,11 +85,10 @@ export default function Home() {
       <JsonLd data={homeJsonLd} />
       <JsonLd data={catalogueJsonLd} />
 
-      <OrderDrawer />
       <main className="overflow-x-hidden">
         <HeroSection />
         <TrustStrip />
-        <ProductsSection />
+        <ProductsSection products={productCards()} />
       </main>
       <Footer />
     </>

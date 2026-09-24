@@ -1,9 +1,8 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
 import {
   ShoppingBag,
   ArrowUpRight,
@@ -87,7 +86,9 @@ const TONE_MAP: Record<Slide["eyebrowTone"], { ring: string; dot: string; text: 
 
 export default function HeroSection() {
   const [index, setIndex] = useState(0);
-  const [direction, setDirection] = useState(1);
+  // 0 until the first change of slide: the first slide is in the server HTML
+  // and must paint at once, not play an entrance after hydration.
+  const [direction, setDirection] = useState(0);
   const [paused, setPaused] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -170,21 +171,17 @@ export default function HeroSection() {
         </button>
 
         <div className="relative max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-20 min-h-[600px] sm:min-h-[70svh] lg:min-h-[76svh] flex items-center py-10 sm:py-14 lg:py-16">
-          {/* initial={false}: the first slide is in the server HTML at full
-              opacity. Without it, the headline, the button and the product
-              photo were rendered at opacity 0 and stayed invisible until the
-              JavaScript had downloaded and run — seconds, on a phone in Nepal,
-              after the photo itself had arrived. Changing slides still animates. */}
-          <AnimatePresence mode="wait" custom={direction} initial={false}>
-            <motion.div
-              key={slide.id}
-              custom={direction}
-              initial={{ opacity: 0, x: direction * 40 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -direction * 40 }}
-              transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
-              className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center w-full"
-            >
+          {/* Keyed by slide, so each new slide mounts fresh and plays its CSS
+              entrance (globals.css, .animate-slide-in). The first slide carries
+              no animation class: it is in the server HTML at full opacity and
+              paints before any JavaScript has run. */}
+          <div
+            key={slide.id}
+            className={`grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center w-full ${
+              direction ? "animate-slide-in" : ""
+            }`}
+            style={direction ? ({ "--slide-dir": direction } as React.CSSProperties) : undefined}
+          >
               {/* ── Left copy ── */}
               <div className="lg:col-span-6 xl:col-span-7 order-2 lg:order-1">
                 {/* Eyebrow chip */}
@@ -257,23 +254,17 @@ export default function HeroSection() {
                   </div>
 
                   {/* Floating badge */}
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.85, rotate: -10 }}
-                    animate={{ opacity: 1, scale: 1, rotate: 6 }}
-                    transition={{ duration: 0.7, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
-                    className="absolute -top-3 -right-2 sm:-top-2 sm:-right-6 bg-jaggery text-cream rounded-2xl px-3.5 py-2.5 shadow-xl shadow-jaggery/30 max-w-[150px]"
+                  <div
+                    className={`absolute -top-3 -right-2 sm:-top-2 sm:-right-6 rotate-6 ${direction ? "animate-badge-pop" : ""} bg-jaggery text-cream rounded-2xl px-3.5 py-2.5 shadow-xl shadow-jaggery/30 max-w-[150px]`}
                   >
                     <p className="label-caps text-honey-ink text-[9px]">100% Pure</p>
                     <p className="font-serif text-cream text-[13px] tracking-tight mt-0.5">
                       Sankhuwasabha gur
                     </p>
-                  </motion.div>
-
-                  {/* Floating mini-stat */}
+                  </div>
                 </div>
               </div>
-            </motion.div>
-          </AnimatePresence>
+          </div>
         </div>
 
         {/* ─── Dots + progress + arrows mobile ─── */}
@@ -309,12 +300,10 @@ export default function HeroSection() {
                   }`}
                 >
                   {active && !paused && (
-                    <motion.span
+                    <span
                       key={`progress-${index}`}
-                      initial={{ width: 0 }}
-                      animate={{ width: "100%" }}
-                      transition={{ duration: AUTO_MS / 1000, ease: "linear" }}
-                      className="absolute inset-y-0 left-0 rounded-full bg-honey"
+                      className="absolute inset-0 rounded-full bg-honey animate-progress-fill"
+                      style={{ "--progress-ms": `${AUTO_MS}ms` } as React.CSSProperties}
                     />
                   )}
                   {active && paused && (

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { ArrowRight, Heart } from "lucide-react";
-import { openOrderDrawer } from "@/components/layout/OrderDrawer";
+import { openOrderDrawer } from "@/lib/order-drawer";
 import { useIsFavourite, toggleFavourite } from "@/lib/favourites";
 import { t } from "@/lib/i18n";
 import type { Locale } from "@/lib/hreflang";

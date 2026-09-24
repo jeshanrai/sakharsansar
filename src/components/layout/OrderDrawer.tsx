@@ -8,12 +8,7 @@ import JaggeryLoader from "../ui/JaggeryLoader";
 import { usePathname } from "next/navigation";
 import { formatPrice, localeFromPath, productName, t } from "@/lib/i18n";
 import type { Locale } from "@/lib/hreflang";
-
-export const openOrderDrawer = (productName?: string) => {
-  if (typeof window !== 'undefined') {
-    window.dispatchEvent(new CustomEvent('open-order-drawer', { detail: { productName } }));
-  }
-};
+import { OPEN_ORDER_DRAWER, type OpenOrderDetail } from "@/lib/order-drawer";
 
 type Product = { name: string; price: string; weight?: string; image?: string };
 const PRODUCTS = data.products as Product[];
@@ -25,15 +20,21 @@ const money = (n: number, locale: Locale) => formatPrice(n, locale);
 
 type Step = "order" | "delivery";
 
-export default function OrderDrawer() {
-  // Rendered inside each page, so the path says which language to speak.
+export default function OrderDrawer({
+  initialRequest,
+}: {
+  /** The click that caused this drawer to load, if one did. See OrderDrawerHost. */
+  initialRequest?: OpenOrderDetail;
+}) {
+  // Mounted in the root layout; the path says which language to speak.
   const locale = localeFromPath(usePathname());
   const m = t(locale);
   const rs = (n: number) => money(n, locale);
-  const [isOpen, setIsOpen] = useState(false);
+  // Mounted by the click that loaded it, if any: start open on that product.
+  const [isOpen, setIsOpen] = useState(Boolean(initialRequest));
   const [show, setShow] = useState(false); // drives the slide/fade transition
   const [step, setStep] = useState<Step>("order");
-  const [selectedProduct, setSelectedProduct] = useState("");
+  const [selectedProduct, setSelectedProduct] = useState(initialRequest?.productName ?? "");
   const [quantity, setQuantity] = useState(1);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -71,23 +72,31 @@ export default function OrderDrawer() {
     }, 450);
   }, [resetState]);
 
-  useEffect(() => {
-    const handleOpen = (e: Event) => {
-      const customEvent = e as CustomEvent;
-      if (closeTimer.current) clearTimeout(closeTimer.current);
-      resetState();
-      if (customEvent.detail?.productName) {
-        setSelectedProduct(customEvent.detail.productName);
-      }
-      setIsOpen(true);
-      document.body.style.overflow = 'hidden';
-      // Next frame: flip `show` so the panel slides in from off-screen.
-      requestAnimationFrame(() => requestAnimationFrame(() => setShow(true)));
-    };
-
-    window.addEventListener('open-order-drawer', handleOpen);
-    return () => window.removeEventListener('open-order-drawer', handleOpen);
+  const openDrawer = useCallback((productName?: string) => {
+    if (closeTimer.current) clearTimeout(closeTimer.current);
+    resetState();
+    if (productName) setSelectedProduct(productName);
+    setIsOpen(true);
+    document.body.style.overflow = 'hidden';
+    // Next frame: flip `show` so the panel slides in from off-screen.
+    requestAnimationFrame(() => requestAnimationFrame(() => setShow(true)));
   }, [resetState]);
+
+  useEffect(() => {
+    const handleOpen = (e: Event) =>
+      openDrawer((e as CustomEvent<OpenOrderDetail>).detail?.productName);
+    window.addEventListener(OPEN_ORDER_DRAWER, handleOpen);
+    return () => window.removeEventListener(OPEN_ORDER_DRAWER, handleOpen);
+  }, [openDrawer]);
+
+  // The click that loaded us arrived before the listener above existed. The
+  // state already starts open; this does the rest of what openDrawer does.
+  const openedOnMount = useRef(Boolean(initialRequest));
+  useEffect(() => {
+    if (!openedOnMount.current) return;
+    document.body.style.overflow = 'hidden';
+    requestAnimationFrame(() => requestAnimationFrame(() => setShow(true)));
+  }, []);
 
   // Close on Escape
   useEffect(() => {

@@ -3,7 +3,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import Footer from "@/components/layout/Footer";
-import OrderDrawer from "@/components/layout/OrderDrawer";
 import JsonLd from "@/components/seo/JsonLd";
 import { AnimatedWave } from "@/components/ui/StoryArt";
 import { Daisy } from "@/components/ui/Doodles";
@@ -70,7 +69,6 @@ export default function AuthorPage() {
   return (
     <>
       <JsonLd data={profile} />
-      <OrderDrawer />
 
       <main className="bg-cream overflow-x-hidden">
         {/* ─── Hero (peach) ───────────────────────────────────────── */}

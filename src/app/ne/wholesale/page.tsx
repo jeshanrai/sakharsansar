@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { MessageCircle, Phone, Mail } from "lucide-react";
 import Footer from "@/components/layout/Footer";
-import OrderDrawer from "@/components/layout/OrderDrawer";
 import ArticleBody from "@/components/blog/ArticleBody";
 import JsonLd from "@/components/seo/JsonLd";
 import { NeHero, neMetadata } from "@/components/ne/NePage";
@@ -78,7 +77,6 @@ export default function NepaliWholesale() {
       />
       {faqs.length > 0 && <JsonLd data={faqLd(faqs)} />}
 
-      <OrderDrawer />
 
       <main lang="ne" className="bg-cream overflow-x-hidden">
         <NeHero

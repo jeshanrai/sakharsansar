@@ -4,7 +4,6 @@ import React, { useState, useMemo, useEffect, useCallback, memo, useRef } from "
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
 import {
   X,
   Search,
@@ -16,11 +15,8 @@ import {
   Check,
   Sparkles,
 } from "lucide-react";
-import data from "@/data/content.json";
-import { categorySlug, findCategory } from "@/lib/categories";
 import { useIsFavourite, toggleFavourite } from "@/lib/favourites";
-
-type Product = (typeof data.products)[number];
+import type { ProductCard as Product } from "@/lib/product-cards";
 
 /* ─── Card backdrop (matches landing) ─────────────────────────── */
 /* The card backdrop.
@@ -44,8 +40,6 @@ function parsePrice(price: string): number {
   return parseInt(price.replace(/[^0-9]/g, ""), 10) || 0;
 }
 
-const CATEGORIES = ["All", ...Array.from(new Set(data.products.map((p) => p.category)))];
-
 /**
  * Where a category pill points.
  *
@@ -58,9 +52,9 @@ const CATEGORIES = ["All", ...Array.from(new Set(data.products.map((p) => p.cate
  * A category without a written intro has no route (see lib/categories.ts), so
  * it stays on /shop and filters in place rather than linking to a 404.
  */
-function categoryHref(cat: string): string | null {
+function categoryHref(cat: string, paths: Record<string, string>): string | null {
   if (cat === "All") return "/shop";
-  return findCategory(categorySlug(cat)) ? `/shop/${categorySlug(cat)}` : null;
+  return paths[cat] ?? null;
 }
 
 const SORT_OPTIONS = [
@@ -185,11 +179,21 @@ const ShopProductCard = memo(function ShopProductCard({
 
 /* ─────────────────────────── Page ─────────────────────────── */
 export default function ShopContent({
+  /** From productCards(), on the server. See @/lib/product-cards. */
+  products: allProducts,
+  /** From categoryPaths(), on the server. See @/lib/categories. */
+  categoryPaths,
   /** Set by /shop/[category]; /shop leaves it at "All". */
   initialCategory = "All",
 }: {
+  products: Product[];
+  categoryPaths: Record<string, string>;
   initialCategory?: string;
-} = {}) {
+}) {
+  const CATEGORIES = useMemo(
+    () => ["All", ...Array.from(new Set(allProducts.map((p) => p.category)))],
+    [allProducts],
+  );
   const router = useRouter();
   const [activeCategory, setActiveCategory] = useState(initialCategory);
   const [activePriceRange, setActivePriceRange] = useState(0);
@@ -216,15 +220,15 @@ export default function ShopContent({
   }, [filtersOpen]);
 
   const productCounts = useMemo(() => {
-    const counts: Record<string, number> = { All: data.products.length };
-    data.products.forEach((p) => {
+    const counts: Record<string, number> = { All: allProducts.length };
+    allProducts.forEach((p) => {
       counts[p.category] = (counts[p.category] || 0) + 1;
     });
     return counts;
-  }, []);
+  }, [allProducts]);
 
   const filteredProducts = useMemo(() => {
-    let products = [...data.products];
+    let products = [...allProducts];
     if (activeCategory !== "All") products = products.filter((p) => p.category === activeCategory);
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
@@ -245,7 +249,13 @@ export default function ShopContent({
       case "name-asc":   products.sort((a, b) => a.name.localeCompare(b.name)); break;
     }
     return products;
-  }, [activeCategory, activePriceRange, sortBy, searchQuery]);
+  }, [allProducts, activeCategory, activePriceRange, sortBy, searchQuery]);
+
+  // The search box is left out of the key on purpose: in it, every keystroke
+  // remounted the whole grid, photographs included.
+  const gridKey = `${activeCategory}-${activePriceRange}-${sortBy}`;
+  const [initialGridKey] = useState(gridKey);
+  const filtersChanged = gridKey !== initialGridKey;
 
   const hasActiveFilters =
     activeCategory !== "All" ||
@@ -280,7 +290,7 @@ export default function ShopContent({
               <ul className="flex items-center gap-1">
                 {CATEGORIES.map((cat) => {
                   const active = activeCategory === cat;
-                  const href = categoryHref(cat);
+                  const href = categoryHref(cat, categoryPaths);
                   const className = `relative inline-flex items-center gap-1.5 h-9 px-3.5 rounded-full text-[13px] font-medium tracking-tight whitespace-nowrap transition-all ${
                     active
                       ? "bg-jaggery text-cream shadow-[0_4px_12px_rgba(26,20,16,0.12)]"
@@ -364,15 +374,10 @@ export default function ShopContent({
                   <span className="hidden sm:inline">{activeSortLabel.split(" · ")[0]}</span>
                   <ChevronDown className={`w-3.5 h-3.5 transition-transform ${sortOpen ? "rotate-180" : ""}`} />
                 </button>
-                <AnimatePresence>
-                  {sortOpen && (
-                    <motion.ul
-                      initial={{ opacity: 0, y: -6 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -6 }}
-                      transition={{ duration: 0.18 }}
+                {sortOpen && (
+                    <ul
                       role="listbox"
-                      className="absolute right-0 top-full mt-2 w-60 bg-white border border-jaggery/10 rounded-2xl shadow-[0_8px_30px_rgba(26,20,16,0.10)] p-1.5 z-20"
+                      className="animate-drop-in absolute right-0 top-full mt-2 w-60 bg-white border border-jaggery/10 rounded-2xl shadow-[0_8px_30px_rgba(26,20,16,0.10)] p-1.5 z-20"
                     >
                       {SORT_OPTIONS.map((opt) => {
                         const active = sortBy === opt.value;
@@ -393,9 +398,8 @@ export default function ShopContent({
                           </li>
                         );
                       })}
-                    </motion.ul>
+                    </ul>
                   )}
-                </AnimatePresence>
               </div>
 
               {/* Filters button */}
@@ -419,15 +423,8 @@ export default function ShopContent({
           </div>
 
           {/* Active filter chips */}
-          <AnimatePresence>
-            {hasActiveFilters && (
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: "auto" }}
-                exit={{ opacity: 0, height: 0 }}
-                transition={{ duration: 0.2 }}
-                className="overflow-hidden"
-              >
+          {hasActiveFilters && (
+              <div className="animate-fade-in">
                 <div className="pb-4 flex items-center gap-2 flex-wrap">
                   {activeCategory !== "All" && (
                     <Chip onRemove={() => router.push("/shop", { scroll: false })}>
@@ -450,9 +447,8 @@ export default function ShopContent({
                     Clear all
                   </button>
                 </div>
-              </motion.div>
+              </div>
             )}
-          </AnimatePresence>
         </div>
       </div>
 
@@ -475,17 +471,15 @@ export default function ShopContent({
           </div>
 
           {filteredProducts.length > 0 ? (
-            <AnimatePresence mode="wait" initial={false}>
-              {/* initial={false}: the grid is in the server HTML at full opacity
-                  rather than invisible until hydration. Filter changes animate. */}
-              <motion.div
-                key={`${activeCategory}-${activePriceRange}-${sortBy}-${searchQuery}`}
-                initial={{ opacity: 0, y: 6 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -2 }}
-                transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                className="grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-7"
-              >
+            // Re-keyed on the filters, so a change remounts the grid and plays
+            // the CSS entrance. The grid the page loads with does not animate:
+            // it is in the server HTML at full opacity.
+            <div
+              key={gridKey}
+              className={`grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-7 ${
+                filtersChanged ? "animate-fade-rise" : ""
+              }`}
+            >
                 {filteredProducts.map((product, i) => (
                   <ShopProductCard
                     key={product.slug}
@@ -493,8 +487,7 @@ export default function ShopContent({
                     index={i}
                   />
                 ))}
-              </motion.div>
-            </AnimatePresence>
+            </div>
           ) : (
             <EmptyState onReset={clearAll} />
           )}
@@ -502,22 +495,14 @@ export default function ShopContent({
       </section>
 
       {/* ─── Filters / search drawer ──────────────────── */}
-      <AnimatePresence>
         {filtersOpen && (
           <div className="fixed inset-0 z-[60]">
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
+            <div
               onClick={() => setFiltersOpen(false)}
-              className="absolute inset-0 bg-jaggery/45 backdrop-blur-sm"
+              className="animate-fade-in absolute inset-0 bg-jaggery/45 backdrop-blur-sm"
             />
-            <motion.div
-              initial={{ x: "100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "100%" }}
-              transition={{ type: "spring", damping: 28, stiffness: 260 }}
-              className="absolute right-0 top-0 bottom-0 w-[360px] max-w-[92vw] bg-cream shadow-2xl overflow-y-auto"
+            <div
+              className="animate-panel-in absolute right-0 top-0 bottom-0 w-[360px] max-w-[92vw] bg-cream shadow-2xl overflow-y-auto"
             >
               <div className="p-7">
                 <div className="flex items-center justify-between mb-8">
@@ -603,10 +588,9 @@ export default function ShopContent({
                   </button>
                 )}
               </div>
-            </motion.div>
+            </div>
           </div>
         )}
-      </AnimatePresence>
     </>
   );
 }

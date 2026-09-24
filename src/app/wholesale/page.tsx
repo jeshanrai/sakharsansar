@@ -3,7 +3,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowDown, ChevronRight, MessageCircle, Phone, Mail } from "lucide-react";
 import Footer from "@/components/layout/Footer";
-import OrderDrawer from "@/components/layout/OrderDrawer";
 import ArticleBody from "@/components/blog/ArticleBody";
 import QuoteForm from "@/components/wholesale/QuoteForm";
 import JsonLd from "@/components/seo/JsonLd";
@@ -84,7 +83,6 @@ export default function WholesalePage() {
       <JsonLd data={breadcrumb} />
       {faqs.length > 0 && <JsonLd data={faqLd(faqs)} />}
 
-      <OrderDrawer />
 
       <main className="bg-cream overflow-x-hidden">
         {/* ─── Hero (peach) ───────────────────────────────────────── */}

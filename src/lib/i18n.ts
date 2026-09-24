@@ -28,9 +28,29 @@ import type { Locale } from "./hreflang";
  * speaker should still read the list once.
  */
 
-/** 1500 → "१,५००" in Nepali, "1,500" in English. */
+const DEVANAGARI_DIGITS = "०१२३४५६७८९";
+
+/**
+ * 1500 → "१,५००" in Nepali, "1,500" in English.
+ *
+ * The Nepali form is built by hand rather than with `toLocaleString("ne-NP")`.
+ * That depends on the locale data the runtime ships, and they differ: Node
+ * renders Devanagari digits, while Chromium builds with a trimmed ICU (Android
+ * Chrome among them) return "1,500". The promo bar is prerendered by one and
+ * hydrated by the other, so every /ne page failed hydration and React threw
+ * away the server HTML for it and rendered again in the browser. Same output
+ * as Node's ne-NP, lakh grouping included: 150000 → "१,५०,०००".
+ */
 export function formatNumber(n: number, locale: Locale): string {
-  return n.toLocaleString(locale === "ne" ? "ne-NP" : "en-US");
+  if (locale !== "ne") return n.toLocaleString("en-US");
+  const [int, frac] = Math.abs(n).toString().split(".");
+  // South Asian grouping: the last three digits, then pairs.
+  const grouped =
+    int.length <= 3
+      ? int
+      : `${int.slice(0, -3).replace(/\B(?=(\d{2})+$)/g, ",")},${int.slice(-3)}`;
+  const text = (n < 0 ? "-" : "") + grouped + (frac ? `.${frac}` : "");
+  return text.replace(/\d/g, (d) => DEVANAGARI_DIGITS[Number(d)]);
 }
 
 /** The site quotes money as "Rs. 1,500" / "रु. १,५००". */

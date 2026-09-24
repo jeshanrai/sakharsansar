@@ -4,7 +4,6 @@ import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import Footer from "@/components/layout/Footer";
-import OrderDrawer from "@/components/layout/OrderDrawer";
 import BlogEditorsPicks from "@/components/sections/blog/BlogEditorsPicks";
 import BlogCategories from "@/components/sections/blog/BlogCategories";
 import JsonLd from "@/components/seo/JsonLd";
@@ -92,7 +91,6 @@ export default function BlogList() {
     <>
       <JsonLd data={blogJsonLd} />
 
-      <OrderDrawer />
 
       <main className="overflow-x-hidden">
         {/* ─── 1 · Hero (peach) ─────────────────────── */}

@@ -4,6 +4,7 @@ import "./globals.css";
 import PromoBar from "@/components/layout/PromoBar";
 import Navbar from "@/components/layout/Navbar";
 import FloatingContact from "@/components/layout/FloatingContact";
+import OrderDrawerHost from "@/components/layout/OrderDrawerHost";
 import JsonLd from "@/components/seo/JsonLd";
 import Analytics from "@/components/seo/Analytics";
 import { BLOG_ENABLED, translationPaths } from "@/lib/blog";
@@ -227,6 +228,7 @@ export default function RootLayout({
         <Navbar translations={translationPaths()} blogEnabled={BLOG_ENABLED} />
         {children}
         <FloatingContact />
+        <OrderDrawerHost />
         <Analytics />
       </body>
     </html>

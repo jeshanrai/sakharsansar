@@ -2,9 +2,9 @@ import { Metadata } from "next";
 import dynamic from "next/dynamic";
 import FavouritesContent from "@/components/favourites/FavouritesContent";
 import { alternates } from "@/lib/metadata";
+import { productCards } from "@/lib/product-cards";
 
 const Footer = dynamic(() => import("@/components/layout/Footer"));
-const OrderDrawer = dynamic(() => import("@/components/layout/OrderDrawer"));
 
 export const metadata: Metadata = {
   title: "Your Favourites: Saved Sakhar",
@@ -21,9 +21,8 @@ export const metadata: Metadata = {
 export default function FavouritesPage() {
   return (
     <>
-      <OrderDrawer />
       <main className="overflow-x-hidden">
-        <FavouritesContent />
+        <FavouritesContent catalogue={productCards()} />
       </main>
       <Footer />
     </>
