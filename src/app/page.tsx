@@ -21,9 +21,13 @@ export const metadata: Metadata = {
   // with "Himalayan jaggery", a phrase we coined and nobody searches. The
   // exact phrase goes first, and the Devanagari spelling with it, because
   // that is what a Nepali keyboard types.
-  title: "Sankhuwasabha Sakhar: Buy Organic सखर | SakharSansar",
+  // The rename to Sankhuwasabha sakhar took "jaggery" out of every
+  // commercial title on the site. Semrush: "jaggery" is 1,900 a month and
+  // "jaggery in nepal" 880, against a KD of 10 for the second. The local
+  // name still leads; the English one follows it.
+  title: "Sankhuwasabha Sakhar (सखर) | Jaggery in Nepal | SakharSansar",
   description:
-    "Buy Sankhuwasabha Sakhar (सखर) direct from our farmers in Nepal. 100% organic, wood-fired, chemical-free jaggery. Rs. 400 per kg, shipped pan-Nepal.",
+    "Buy Sankhuwasabha Sakhar (सखर) direct from our farmers in Nepal. 100% organic, wood-fired, chemical-free jaggery in Nepal. Rs. 400 per kg, shipped pan-Nepal.",
   alternates: alternates({
     canonical: "/",
   }),

@@ -55,7 +55,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     // real qualifier people search on ("jaggery powder 250g"). The trailing
     // qualifier comes from the product's own record — the nut mix is not
     // "Pure Himalayan Sakhar", it is dry fruit with sakhar on it.
-    title: `${product.name} — ${product.weight} ${product.seoQualifier}`,
+    // A product can set the whole title instead, where the phrase people
+    // search for does not fit the pattern: "jaggery powder" (210 a month)
+    // would push the powder past 60 characters as a trailing qualifier.
+    title:
+      "seoTitle" in product && product.seoTitle
+        ? product.seoTitle
+        : `${product.name} — ${product.weight} ${product.seoQualifier}`,
     // Hand-written per product, not sliced out of the body copy. The old
     // `longDescription.slice(0, 160)` cut every one of these mid-word — the
     // block's ended "...skimmed by hand and poure" — which is what Google

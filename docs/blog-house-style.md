@@ -120,10 +120,10 @@ ranks. Check any new keyword against what is already published:
 | Slug | Owns |
 |------|------|
 | `himalayan-jaggery-sankhuwasabha` | Sankhuwasabha sakhar, hill vs Terai, what sakhar is. **The pillar.** |
-| `sakhar-in-english` | sakhar in English / Hindi / Marathi, the word itself |
+| `sakhar-in-english` | jaggery in Nepali, sakhar in English / Hindi / Marathi, what is jaggery |
 | `/sakhar-price` (a page, not a post) | price, cost per kg, what you pay per cup |
-| `jaggery-vs-sugar` | the honest comparison, calories, minerals, GI |
-| `jaggery-health-claims-truth` | sakhar benefits, jaggery health claims |
+| `jaggery-vs-sugar` | the honest comparison, jaggery nutrition, calories, minerals, GI |
+| `jaggery-health-claims-truth` | jaggery benefits, sakhar benefits, is jaggery good for health |
 | `jaggery-powder-vs-block` | powder vs block |
 | `how-to-store-jaggery-sakhar` | storage, going sticky, shelf life |
 | `how-to-identify-pure-jaggery-sakhar` | purity, adulteration, the 7 home tests |
@@ -134,6 +134,9 @@ ranks. Check any new keyword against what is already published:
 | `sakhar-khane-faida` | benefits, in Nepali (pair of `jaggery-health-claims-truth`) |
 | `sakhar-ra-chini` | sakhar vs sugar, in Nepali |
 | `sakhar-kasari-chinne` | purity, in Nepali |
+
+"jaggery", "jaggery in Nepal" and "jaggery powder" belong to the homepage and
+the powder product page, not to a post.
 
 If a published post already covers the query, stop. If it is thin on the
 topic, update it rather than adding a page beside it.

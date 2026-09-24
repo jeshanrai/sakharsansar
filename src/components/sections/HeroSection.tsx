@@ -42,7 +42,7 @@ const SLIDES: Slide[] = [
     eyebrowTone: "honey",
     headlineTop: "Sankhuwasabha",
     headlineAccent: "Sakhar.",
-    headlineContext: "100% organic सखर, wood-fired in Nepal.",
+    headlineContext: "100% organic jaggery (सखर), wood-fired in Nepal.",
     ctaLabel: "Shop sakhar",
     ctaHref: "/products/organic-jaggery-block",
     product: "/products/sakhar-block.jpg",
