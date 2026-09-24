@@ -5,7 +5,7 @@ import { formatPostDate } from "@/lib/blog";
 import Breadcrumbs from "@/components/layout/Breadcrumbs";
 import { webPageLd } from "@/lib/seo";
 import { alternates, openGraph, DEFAULT_OG_IMAGE } from "@/lib/metadata";
-import { COMMERCE, formatRs } from "@/lib/site";
+import { COMMERCE, DELIVERY, formatRs } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Shipping Policy",
@@ -57,7 +57,7 @@ export default function ShippingPolicyPage() {
           <div className="space-y-10">
             <section className="bg-white rounded-2xl p-8 sm:p-10">
               <h2 className="font-poppins text-xl sm:text-2xl font-semibold text-[#2C1500] mb-4">Delivery Coverage</h2>
-              <p className="text-base sm:text-lg text-[#2C1500]/70 leading-[1.8]">We currently ship across Nepal. Orders are dispatched directly from Sankhuwasabha to ensure maximum freshness. Major cities including Kathmandu, Biratnagar, Dharan, and Itahari typically receive faster delivery.</p>
+              <p className="text-base sm:text-lg text-[#2C1500]/70 leading-[1.8]">We deliver across Nepal. Inside the Kathmandu Valley we bring your order ourselves, from Kapan. Everywhere outside the Valley, orders travel with {DELIVERY.outsideValleyCarrier}, where we are a listed merchant, and you get their tracking.</p>
             </section>
 
             <section className="bg-white rounded-2xl p-8 sm:p-10">

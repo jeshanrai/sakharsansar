@@ -44,12 +44,12 @@ export const metadata: Metadata = {
   description: price.description,
   alternates: alternates({ canonical: PATH }),
   openGraph: openGraph({
-    title: "Sankhuwasabha Sakhar Price in Nepal: The Full List",
+    title: "Jaggery (Sakhar) Price in Nepal: The Full List",
     description: price.description,
     url: PATH,
   }),
   twitter: twitter({
-    title: "Sankhuwasabha Sakhar Price in Nepal",
+    title: "Jaggery (Sakhar) Price in Nepal 2026",
     description: price.description,
   }),
 };

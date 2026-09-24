@@ -138,6 +138,16 @@ export const COMMERCE = {
   discountMinimum: 1500,
 } as const;
 
+/**
+ * Who carries an order, by where it is going. Inside the Kathmandu Valley we
+ * deliver ourselves from Kapan; everything outside it goes with Nepal Can
+ * Move, where we are a listed merchant. Named once here so the shipping page,
+ * the shop and the product FAQs cannot disagree about it.
+ */
+export const DELIVERY = {
+  outsideValleyCarrier: "Nepal Can Move",
+} as const;
+
 /** 1500 -> "Rs. 1,500". Nepali grouping is 3-digit up to 5 figures, which is
  *  where every number we quote sits, so plain en-US grouping is correct here. */
 export function formatRs(amount: number): string {

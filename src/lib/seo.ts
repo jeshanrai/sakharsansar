@@ -292,6 +292,10 @@ export function recipeLd(opts: {
   /** Path of the page carrying the recipe — steps are anchored inside it. */
   path: string;
   image?: string;
+  /** The same photograph cropped 16:9, 4:3 and 1:1. Google picks the crop
+   *  that fits the slot it is filling; given one ratio, it crops for us, and
+   *  usually through the middle of the dish. Replaces `image` when present. */
+  images?: string[];
   author: string;
   datePublished: string;
   dateModified?: string;
@@ -316,7 +320,11 @@ export function recipeLd(opts: {
     description: opts.description,
     url,
     inLanguage: opts.inLanguage ?? SITE.lang,
-    ...(opts.image ? { image: absoluteUrl(opts.image) } : {}),
+    ...(opts.images?.length
+      ? { image: opts.images.map((src) => absoluteUrl(src)) }
+      : opts.image
+        ? { image: absoluteUrl(opts.image) }
+        : {}),
     author: { "@type": "Person", name: opts.author, worksFor: { "@id": ORG_ID } },
     publisher: { "@id": ORG_ID },
     datePublished: opts.datePublished,

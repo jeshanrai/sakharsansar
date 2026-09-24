@@ -17,7 +17,7 @@ import { CATEGORIES } from "@/lib/categories";
 import Breadcrumbs from "@/components/layout/Breadcrumbs";
 import { ArrowRight, Leaf, ShieldCheck, Truck } from "lucide-react";
 import { alternates, openGraph, twitter } from "@/lib/metadata";
-import { COMMERCE, formatRs } from "@/lib/site";
+import { COMMERCE, DELIVERY, formatRs } from "@/lib/site";
 import { OG_CONTENT_TYPE } from "@/lib/og";
 import { bestBefore, harvestSeason } from "@/lib/batch";
 
@@ -143,7 +143,7 @@ export default async function ProductPage({ params }: Props) {
     },
     {
       q: "Do you deliver across Nepal?",
-      a: "Yes. We ship pan-Nepal, packed in compostable kraft paper, direct from Sankhuwasabha.",
+      a: `Yes. Inside the Kathmandu Valley we deliver ourselves; outside it, orders go with ${DELIVERY.outsideValleyCarrier}. Free over ${formatRs(COMMERCE.freeShippingThreshold)}, packed in compostable kraft paper.`,
     },
   ];
 

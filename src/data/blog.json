@@ -206,8 +206,15 @@
     "authorRole": "Founder · Farmer · Owner",
     "authorBio": "Rashmita founded SakharSansar in 2024 and runs it end to end — she tends the wood fire, pours the moulds and packs every block by hand. The cane comes off the terraces her family and forty-one neighbouring households farm in Sankhuwasabha, the way they have made sakhar for seven generations.",
     "authorImage": "/team/rashmita.jpg",
-    "image": "/products/sakhar-block.jpg",
-    "imageAlt": "Blocks of hill sakhar jaggery, the ingredient Maghe Sankranti chaku is made from",
+    "image": "/blog/chaku-recipe-maghe-sankranti/til-chaku-maghe-sankranti-16x9.jpg",
+    "imageAlt": "A slab of dark Nepali chaku topped with coconut, beside a puffed rice laddu, a Maghe Sankranti plate",
+    "imageCredit": {
+      "author": "Gaurav Dhwaj Khadka",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "source": "https://commons.wikimedia.org/wiki/File:Chaku_and_Laddu.jpg",
+      "note": "Not our kitchen: chaku and a laddu for Maghe Sankranti."
+    },
     "tags": [
       "Recipes",
       "How-To",
@@ -220,7 +227,19 @@
       "recipeYield": "About 600 g, roughly 20 to 25 pieces",
       "recipeCategory": "Dessert",
       "recipeCuisine": "Nepali",
-      "keywords": ["chaku", "chaku recipe", "til chaku", "Maghe Sankranti", "चाकु", "jaggery sweet"]
+      "images": [
+        "/blog/chaku-recipe-maghe-sankranti/til-chaku-maghe-sankranti-16x9.jpg",
+        "/blog/chaku-recipe-maghe-sankranti/til-chaku-maghe-sankranti-4x3.jpg",
+        "/blog/chaku-recipe-maghe-sankranti/til-chaku-maghe-sankranti-1x1.jpg"
+      ],
+      "keywords": [
+        "chaku",
+        "chaku recipe",
+        "til chaku",
+        "Maghe Sankranti",
+        "चाकु",
+        "jaggery sweet"
+      ]
     }
   },
   {

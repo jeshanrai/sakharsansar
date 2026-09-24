@@ -53,6 +53,22 @@ export interface BlogPost {
   image: string;
   /** Hero alt text. Falls back to the title, which is rarely descriptive enough. */
   imageAlt?: string;
+  /**
+   * Set when the hero is someone else's photograph used under an open licence.
+   * CC BY and CC BY-SA both require a visible credit naming the author, the
+   * licence and the source; it renders directly under the hero. Our own
+   * photographs leave this unset.
+   */
+  imageCredit?: {
+    author: string;
+    /** e.g. "CC BY-SA 4.0" */
+    license: string;
+    licenseUrl: string;
+    /** The file's page on Wikimedia Commons, or wherever it was published. */
+    source: string;
+    /** Where it was taken, when that is not obvious and matters to the reader. */
+    note?: string;
+  };
   tags: string[];
   /**
    * BCP-47 language of the body, when it is not the site default. The Nepali
@@ -85,6 +101,8 @@ export interface BlogPost {
     recipeYield?: string;
     recipeCategory?: string;
     recipeCuisine?: string;
+    /** The hero cropped 16:9, 4:3 and 1:1, for the recipe carousel. */
+    images?: string[];
     /** What someone types to find the dish. Without this the schema falls back
      *  to the post's tags, which are our category names, not search terms. */
     keywords?: string[];

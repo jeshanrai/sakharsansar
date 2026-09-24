@@ -6,7 +6,7 @@ import JsonLd from "@/components/seo/JsonLd";
 import Breadcrumbs from "@/components/layout/Breadcrumbs";
 import data from "@/data/content.json";
 import { WEBSITE_ID, faqLd, itemListLd, productNodeId } from "@/lib/seo";
-import { SITE, absoluteUrl } from "@/lib/site";
+import { DELIVERY, SITE, absoluteUrl } from "@/lib/site";
 import { alternates, openGraph, twitter } from "@/lib/metadata";
 
 const Footer = dynamic(() => import("@/components/layout/Footer"));
@@ -15,21 +15,23 @@ const OrderDrawer = dynamic(() => import("@/components/layout/OrderDrawer"));
 export const metadata: Metadata = {
   // No brand suffix here — the root layout's `title.template` appends
   // "| SakharSansar" to every child segment's title.
-  title: "Buy Sankhuwasabha Sakhar (सखर) Online",
+  // "jaggery in nepal" belongs to the homepage (docs/blog-house-style.md);
+  // this page takes the buying form of the query, so the two do not compete.
+  title: "Buy Jaggery Online in Nepal: Sakhar (सखर)",
   description:
-    "Buy Sankhuwasabha Sakhar online in Nepal: 1kg block Rs. 400, 250g powder Rs. 149, sakhar-coated nuts. Wood-fired, chemical-free, shipped pan-Nepal.",
+    "Buy jaggery online in Nepal: Sankhuwasabha sakhar, 1kg block Rs. 400, 250g powder Rs. 149. Wood-fired, chemical-free, delivered across Nepal.",
   alternates: alternates({
     canonical: "/shop",
   }),
   openGraph: openGraph({
-    title: "Buy Sankhuwasabha Sakhar (सखर) Online in Nepal",
+    title: "Buy Jaggery Online in Nepal: Sankhuwasabha Sakhar (सखर)",
     description:
       "100% organic Sankhuwasabha Sakhar: blocks, powder and dry fruits, direct from farmers, shipped pan-Nepal.",
     url: "/shop",
     type: "website",
   }),
   twitter: twitter({
-    title: "Buy Sankhuwasabha Sakhar (सखर) Online",
+    title: "Buy Jaggery Online in Nepal: Sakhar (सखर)",
     description:
       "100% organic Sankhuwasabha Sakhar. Wood-fired, chemical-free, premium quality.",
   }),
@@ -58,7 +60,7 @@ const FAQS = [
   },
   {
     q: "Do you deliver outside Kathmandu?",
-    a: "Yes, we ship pan-Nepal. Charges depend on your location and the weight of the order, and delivery is free above the threshold set on our shipping page. Hill and remote deliveries take longer, particularly during monsoon.",
+    a: `Yes. Inside the Kathmandu Valley we deliver ourselves; everywhere else goes with ${DELIVERY.outsideValleyCarrier}. Charges depend on your location and the weight of the order, and delivery is free above the threshold set on our shipping page. Hill and remote deliveries take longer, particularly during monsoon.`,
   },
   {
     q: "How long does sakhar keep?",
@@ -125,10 +127,11 @@ export default function ShopPage() {
             Buy Sankhuwasabha Sakhar
           </h1>
           <p className="mt-4 max-w-2xl text-[15px] sm:text-base text-jaggery/70 leading-relaxed">
-            Three forms of Sankhuwasabha sakhar (सखर) — blocks, powder
-            and sakhar-coated dry fruits — wood-fired without chemicals in
-            Sankhuwasabha from cane grown by forty-two farming families, and
-            shipped across Nepal.
+            Buy jaggery online in Nepal, in three forms of Sankhuwasabha
+            sakhar (सखर) — blocks, powder and sakhar-coated dry fruits —
+            wood-fired without chemicals in Sankhuwasabha from cane grown by
+            forty-two farming families. We deliver inside the Kathmandu Valley
+            ourselves, and everywhere else with {DELIVERY.outsideValleyCarrier}.
           </p>
         </header>
         <ShopContent />

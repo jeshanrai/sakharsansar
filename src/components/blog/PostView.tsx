@@ -259,6 +259,20 @@ export default function PostView({ post }: { post: BlogPost }) {
                 className="object-cover"
               />
             </div>
+            {post.imageCredit && (
+              <p className="mt-3 px-1 text-xs text-jaggery/60">
+                {post.imageCredit.note ? `${post.imageCredit.note} ` : ""}
+                Photo:{" "}
+                <a href={post.imageCredit.source} target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-jaggery">
+                  {post.imageCredit.author}
+                </a>
+                ,{" "}
+                <a href={post.imageCredit.licenseUrl} target="_blank" rel="noopener noreferrer license" className="underline underline-offset-2 hover:text-jaggery">
+                  {post.imageCredit.license}
+                </a>
+                , via Wikimedia Commons, cropped.
+              </p>
+            )}
           </div>
         </div>
 

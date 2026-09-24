@@ -9,7 +9,7 @@ tied behind its back.
 
 | # | Where | Filename | What to shoot |
 |---|-------|----------|---------------|
-| 1 | Hero | `chaku-recipe-maghe-sankranti-nepal.jpg` | Finished til chaku, cut into pieces, on a thali. Matte, not glassy. **Interim: the post currently uses a real product photo from `/products/`. Replace with this shot.** |
+| 1 | Hero | `chaku-recipe-maghe-sankranti-nepal.jpg` | Finished til chaku, cut into pieces, on a thali. Matte, not glassy. **Interim: the hero is an openly licensed Wikimedia Commons photo (credited on the page), cropped to `til-chaku-maghe-sankranti-{16x9,4x3,1x1}.jpg`. Replace with our own shot when we have one, and drop `imageCredit`.** |
 
 ## The step shots, which are the point
 
