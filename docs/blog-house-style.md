@@ -133,6 +133,7 @@ ranks. Check any new keyword against what is already published:
 | `thekua-recipe-chhath` | thekua, Chhath prasad |
 | `sel-roti-sakhar` | sel roti with jaggery, Tihar |
 | `yomari-chaku-recipe` | yomari, Yomari Punhi, chaku as a filling |
+| `sakhar-kheer-recipe` | jaggery kheer, gud kheer, kheer curdling |
 | `how-to-eat-sakhar` | how to eat / use jaggery, sakhar with dahi, dhido, roti; jaggery instead of sugar in cooking |
 | `wholesale-jaggery-nepal` | bulk, B2B, supply |
 | `sakhar-khane-faida` | benefits, in Nepali (pair of `jaggery-health-claims-truth`) |
