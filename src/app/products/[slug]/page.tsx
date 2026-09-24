@@ -17,6 +17,7 @@ import { CATEGORIES } from "@/lib/categories";
 import Breadcrumbs from "@/components/layout/Breadcrumbs";
 import { ArrowRight, Leaf, ShieldCheck, Truck } from "lucide-react";
 import { alternates, openGraph, twitter } from "@/lib/metadata";
+import { COMMERCE, formatRs } from "@/lib/site";
 import { OG_CONTENT_TYPE } from "@/lib/og";
 import { bestBefore, harvestSeason } from "@/lib/batch";
 
@@ -67,7 +68,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     // block's ended "...skimmed by hand and poure" — which is what Google
     // showed in the result. A description is a piece of copy with a job, not
     // the first 160 characters of a different piece of copy.
-    description: product.metaDescription,
+    // The delivery line is appended here rather than written into each record
+    // so the threshold is only ever read from COMMERCE. It is the answer to
+    // "can I get this outside Kathmandu", which is what a result line is for.
+    description: `${product.metaDescription} Delivered across Nepal, free over ${formatRs(COMMERCE.freeShippingThreshold)}.`,
     alternates: alternates({ canonical: `/products/${product.slug}` }),
     openGraph: openGraph({
       title: `${product.name} · ${product.price}`,

@@ -85,6 +85,9 @@ export interface BlogPost {
     recipeYield?: string;
     recipeCategory?: string;
     recipeCuisine?: string;
+    /** What someone types to find the dish. Without this the schema falls back
+     *  to the post's tags, which are our category names, not search terms. */
+    keywords?: string[];
   };
 }
 
