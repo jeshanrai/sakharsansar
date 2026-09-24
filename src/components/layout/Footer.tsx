@@ -5,6 +5,7 @@ import { BLOG_ENABLED } from "@/lib/blog";
 import { SITE, STORY } from "@/lib/site";
 import { t } from "@/lib/i18n";
 import type { Locale } from "@/lib/hreflang";
+import { localizedHref } from "@/lib/locale-paths";
 import { SOCIAL_LINKS } from "@/components/ui/SocialLinks";
 
 const SOCIAL = [
@@ -15,15 +16,13 @@ const SOCIAL = [
 /**
  * The three link columns, in the language of the page carrying them.
  *
- * Hrefs stay English on both locales — there is no /ne/shop to send anyone to
- * yet. Translating the labels while the destinations stay English is the
- * honest half-step: a Nepali reader gets Nepali furniture and still lands on a
- * page that exists. Localised paths arrive with the translated pages
- * (docs/i18n-plan.md §6).
+ * Hrefs go to the Nepali page where one exists (@/lib/locale-paths) and stay
+ * English where none does yet: the policy pages, for one, are legal copy and
+ * are translated last, if at all.
  */
 function columns(locale: Locale) {
   const m = t(locale);
-  return [
+  const cols = [
     {
       title: m.footerExplore,
       links: [
@@ -51,6 +50,10 @@ function columns(locale: Locale) {
       ],
     },
   ];
+  return cols.map((col) => ({
+    ...col,
+    links: col.links.map((l) => ({ ...l, href: localizedHref(l.href, locale) })),
+  }));
 }
 
 function FooterLink({ href, label }: { href: string; label: string }) {
@@ -84,7 +87,7 @@ export default function Footer({ locale = "en" }: { locale?: Locale }) {
         <div className="grid grid-cols-1 md:grid-cols-12 gap-y-12 gap-x-8">
           {/* ─── Brand + social + address ─────────────── */}
           <div className="md:col-span-6">
-            <Link href="/" aria-label={m.footerHome} className="inline-flex items-center gap-3.5">
+            <Link href={localizedHref("/", locale)} aria-label={m.footerHome} className="inline-flex items-center gap-3.5">
               <span className="relative block h-12 w-12 rounded-full overflow-hidden border-2 border-jaggery/10">
                 <Image src="/logo-mark.webp" alt="" fill sizes="48px" className="object-cover scale-[1.02]" />
               </span>

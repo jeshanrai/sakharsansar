@@ -5,6 +5,9 @@ import { X, CheckCircle, Minus, Plus, ArrowRight, ArrowLeft, AlertCircle } from 
 import Image from "next/image";
 import data from "@/data/content.json";
 import JaggeryLoader from "../ui/JaggeryLoader";
+import { usePathname } from "next/navigation";
+import { formatPrice, localeFromPath, productName, t } from "@/lib/i18n";
+import type { Locale } from "@/lib/hreflang";
 
 export const openOrderDrawer = (productName?: string) => {
   if (typeof window !== 'undefined') {
@@ -17,11 +20,16 @@ const PRODUCTS = data.products as Product[];
 const CUSTOM = "Custom Order";
 
 const parsePrice = (s?: string) => (s ? parseInt(s.replace(/[^0-9]/g, ""), 10) || 0 : 0);
-const rs = (n: number) => `Rs. ${n.toLocaleString()}`;
+// "Rs. 1,500" on English pages, "रु. 1,500" on Nepali ones.
+const money = (n: number, locale: Locale) => formatPrice(n, locale);
 
 type Step = "order" | "delivery";
 
 export default function OrderDrawer() {
+  // Rendered inside each page, so the path says which language to speak.
+  const locale = localeFromPath(usePathname());
+  const m = t(locale);
+  const rs = (n: number) => money(n, locale);
   const [isOpen, setIsOpen] = useState(false);
   const [show, setShow] = useState(false); // drives the slide/fade transition
   const [step, setStep] = useState<Step>("order");
@@ -155,7 +163,7 @@ export default function OrderDrawer() {
     if (backendOk || backupOk) {
       setIsSubmitted(true);
     } else {
-      setError("We couldn't place your order just now. Please check your connection and try again, or call us directly.");
+      setError(m.drawerError);
     }
   };
 
@@ -169,7 +177,7 @@ export default function OrderDrawer() {
       <div
         role="dialog"
         aria-modal="true"
-        aria-label={isSubmitted ? "Order confirmed" : "Place your order"}
+        aria-label={isSubmitted ? m.drawerAriaDone : m.drawerAria}
         className={`fixed right-0 top-0 h-full w-full sm:w-[500px] bg-[#F4F1ED] z-[100] transform transition-transform duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] flex flex-col ${
           show ? "translate-x-0" : "translate-x-full"
         }`}
@@ -178,17 +186,17 @@ export default function OrderDrawer() {
         <div className="flex justify-between items-center p-6 sm:px-10 sm:py-7 border-b border-black/10 bg-white">
           <div>
             <h2 className="font-poppins text-xl font-medium tracking-[0.1em] uppercase text-black">
-              {isSubmitted ? "Order Confirmed" : "Place Order"}
+              {isSubmitted ? m.drawerTitleDone : m.drawerTitle}
             </h2>
             {!isSubmitted && (
               <div className="mt-2 flex items-center gap-2">
-                <StepDot active={step === "order"} done={step === "delivery"} label="Order" />
+                <StepDot active={step === "order"} done={step === "delivery"} label={m.drawerStepOrder} />
                 <span className="w-6 h-px bg-black/15" />
-                <StepDot active={step === "delivery"} done={false} label="Delivery" />
+                <StepDot active={step === "delivery"} done={false} label={m.drawerStepDelivery} />
               </div>
             )}
           </div>
-          <button onClick={closeDrawer} aria-label="Close" className="text-black/50 hover:text-black transition-colors">
+          <button onClick={closeDrawer} aria-label={m.drawerClose} className="text-black/50 hover:text-black transition-colors">
             <X className="w-6 h-6" strokeWidth={1.5} />
           </button>
         </div>
@@ -200,7 +208,9 @@ export default function OrderDrawer() {
             </div>
           ) : isSubmitted ? (
             <SuccessView
-              product={selectedProduct || "Jaggery"}
+              product={isCustom ? m.drawerCustomShort : productName(selectedProduct || "Jaggery", locale)}
+              m={m}
+              rs={rs}
               quantity={quantity}
               total={isCustom ? null : lineTotal}
               name={formData.name}
@@ -212,18 +222,18 @@ export default function OrderDrawer() {
             /* ───── Step 1: Order ───── */
             <div className="p-6 sm:p-10 flex flex-col gap-8">
               <div className="flex flex-col gap-2">
-                <label className="text-[10px] font-semibold tracking-[0.2em] text-black/50 uppercase">Select Product</label>
+                <label className="text-[10px] font-semibold tracking-[0.2em] text-black/50 uppercase">{m.drawerSelect}</label>
                 <select
                   className="w-full bg-white border border-black/10 px-4 py-3 text-sm focus:border-black outline-none font-poppins text-black transition-colors"
                   value={selectedProduct}
                   onChange={(e) => setSelectedProduct(e.target.value)}
                   required
                 >
-                  <option value="" disabled>Choose a product</option>
+                  <option value="" disabled>{m.drawerChoose}</option>
                   {PRODUCTS.map((p) => (
-                    <option key={p.name} value={p.name}>{p.name} · {p.price}</option>
+                    <option key={p.name} value={p.name}>{productName(p.name, locale)} · {rs(parsePrice(p.price))}</option>
                   ))}
-                  <option value={CUSTOM}>Custom / Bulk Order</option>
+                  <option value={CUSTOM}>{m.drawerCustom}</option>
                 </select>
               </div>
 
@@ -235,17 +245,17 @@ export default function OrderDrawer() {
                       <Image src={product.image} alt={selectedProduct} fill className="object-cover" sizes="80px" />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-black/30 text-[10px] tracking-[0.15em] uppercase text-center px-2">
-                        Custom Order
+                        {m.drawerCustomShort}
                       </div>
                     )}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="font-poppins text-sm font-medium text-black truncate">{selectedProduct}</p>
+                    <p className="font-poppins text-sm font-medium text-black truncate">{isCustom ? m.drawerCustom : productName(selectedProduct, locale)}</p>
                     {isCustom ? (
-                      <p className="text-xs text-black/50 mt-1">Pricing confirmed on call</p>
+                      <p className="text-xs text-black/50 mt-1">{m.drawerPricingOnCall}</p>
                     ) : (
                       <p className="text-xs text-black/50 mt-1">
-                        {rs(unitPrice)} {product?.weight ? `· ${product.weight}` : ""} each
+                        {rs(unitPrice)} {product?.weight ? `· ${product.weight}` : ""} {m.drawerEach}
                       </p>
                     )}
                   </div>
@@ -254,14 +264,14 @@ export default function OrderDrawer() {
 
               {/* Quantity stepper */}
               <div className="flex flex-col gap-2">
-                <label className="text-[10px] font-semibold tracking-[0.2em] text-black/50 uppercase">Quantity</label>
+                <label className="text-[10px] font-semibold tracking-[0.2em] text-black/50 uppercase">{m.drawerQuantity}</label>
                 <div className="flex items-center gap-4">
                   <div className="flex items-center border border-black/10 bg-white">
                     <button
                       type="button"
                       onClick={() => setQuantity((q) => Math.max(1, q - 1))}
                       disabled={quantity <= 1}
-                      aria-label="Decrease quantity"
+                      aria-label={m.drawerDecrease}
                       className="w-12 h-12 flex items-center justify-center text-black hover:bg-black/5 disabled:opacity-30 transition-colors"
                     >
                       <Minus className="w-4 h-4" strokeWidth={2} />
@@ -270,7 +280,7 @@ export default function OrderDrawer() {
                     <button
                       type="button"
                       onClick={() => setQuantity((q) => Math.min(99, q + 1))}
-                      aria-label="Increase quantity"
+                      aria-label={m.drawerIncrease}
                       className="w-12 h-12 flex items-center justify-center text-black hover:bg-black/5 transition-colors"
                     >
                       <Plus className="w-4 h-4" strokeWidth={2} />
@@ -296,7 +306,7 @@ export default function OrderDrawer() {
               {/* Live total */}
               {selectedProduct && !isCustom && (
                 <div className="flex items-center justify-between border-t border-black/10 pt-5">
-                  <span className="text-[10px] font-semibold tracking-[0.2em] text-black/50 uppercase">Order Total</span>
+                  <span className="text-[10px] font-semibold tracking-[0.2em] text-black/50 uppercase">{m.drawerTotal}</span>
                   <span className="font-poppins text-2xl font-medium text-[#C17A2A]">{rs(lineTotal)}</span>
                 </div>
               )}
@@ -307,7 +317,7 @@ export default function OrderDrawer() {
                 disabled={!selectedProduct}
                 className="group w-full py-4 bg-black text-white text-[10px] font-semibold tracking-[0.2em] uppercase hover:bg-black/80 transition-colors disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
-                Continue to Delivery
+                {m.drawerContinue}
                 <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" strokeWidth={2} />
               </button>
             </div>
@@ -320,23 +330,23 @@ export default function OrderDrawer() {
               {/* Compact order summary */}
               <div className="bg-white border border-black/10 px-4 py-3 flex items-center justify-between text-sm">
                 <span className="text-black/60">
-                  <span className="font-medium text-black">{quantity}×</span> {selectedProduct}
+                  <span className="font-medium text-black">{quantity}×</span> {isCustom ? m.drawerCustom : productName(selectedProduct, locale)}
                 </span>
                 {!isCustom && <span className="font-medium text-[#C17A2A]">{rs(lineTotal)}</span>}
               </div>
 
-              <Field label="Full Name">
+              <Field label={m.drawerName}>
                 <input
                   type="text"
                   required
                   className="w-full bg-white border border-black/10 px-4 py-3 text-sm focus:border-black outline-none text-black transition-colors"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  placeholder="Your Name"
+                  placeholder={m.drawerNamePh}
                 />
               </Field>
 
-              <Field label="Phone Number" error={touched && !phoneValid ? "Enter a valid phone number" : undefined}>
+              <Field label={m.drawerPhone} error={touched && !phoneValid ? m.drawerPhoneInvalid : undefined}>
                 <input
                   type="tel"
                   required
@@ -349,19 +359,19 @@ export default function OrderDrawer() {
                 />
               </Field>
 
-              <Field label="Delivery Address">
+              <Field label={m.drawerAddress}>
                 <textarea
                   required
                   rows={3}
                   className="w-full bg-white border border-black/10 px-4 py-3 text-sm focus:border-black outline-none text-black transition-colors resize-none"
                   value={formData.address}
                   onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                  placeholder="City, Street, House No."
+                  placeholder={m.drawerAddressPh}
                 />
               </Field>
 
               <p className="text-xs text-black/45 leading-relaxed -mt-2">
-                We&apos;ll call you to confirm your order and delivery details. {isCustom ? "Pricing for custom/bulk orders is confirmed on the call." : "Delivery charges (if any) are confirmed on the call."}
+                {m.drawerCallNote} {isCustom ? m.drawerCallNoteCustom : m.drawerCallNoteCharges}
               </p>
 
               {error && (
@@ -378,13 +388,13 @@ export default function OrderDrawer() {
                   className="group inline-flex items-center justify-center gap-2 px-6 py-4 bg-white border border-black/15 text-black text-[10px] font-semibold tracking-[0.2em] uppercase hover:bg-black/5 transition-colors"
                 >
                   <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-1 transition-transform" strokeWidth={2} />
-                  Back
+                  {m.drawerBack}
                 </button>
                 <button
                   type="submit"
                   className="flex-1 py-4 bg-black text-white text-[10px] font-semibold tracking-[0.2em] uppercase hover:bg-black/80 transition-colors"
                 >
-                  {isCustom ? "Request Order" : `Place Order · ${rs(lineTotal)}`}
+                  {isCustom ? m.drawerRequest : `${m.drawerPlace} · ${rs(lineTotal)}`}
                 </button>
               </div>
             </form>
@@ -425,7 +435,11 @@ function SuccessView({
   phone,
   address,
   onClose,
+  m,
+  rs,
 }: {
+  m: ReturnType<typeof t>;
+  rs: (n: number) => string;
   product: string;
   quantity: number;
   total: number | null;
@@ -439,24 +453,23 @@ function SuccessView({
       <div className="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center">
         <CheckCircle className="w-12 h-12 text-green-600" strokeWidth={1.5} />
       </div>
-      <h3 className="font-poppins text-2xl font-medium tracking-[0.1em] uppercase text-black">Order Confirmed!</h3>
+      <h3 className="font-poppins text-2xl font-medium tracking-[0.1em] uppercase text-black">{m.drawerConfirmed}</h3>
       <div className="bg-white rounded-lg p-5 w-full text-left space-y-3 border border-black/10">
-        <Row label="Product" value={product} />
-        <Row label="Quantity" value={String(quantity)} />
-        {total !== null && <Row label="Total" value={rs(total)} highlight />}
-        <Row label="Name" value={name} />
-        <Row label="Phone" value={phone} />
-        <Row label="Address" value={address} wrap />
+        <Row label={m.drawerRowProduct} value={product} />
+        <Row label={m.drawerQuantity} value={String(quantity)} />
+        {total !== null && <Row label={m.drawerRowTotal} value={rs(total)} highlight />}
+        <Row label={m.drawerRowName} value={name} />
+        <Row label={m.drawerRowPhone} value={phone} />
+        <Row label={m.drawerRowAddress} value={address} wrap />
       </div>
       <p className="text-black/60 text-sm leading-relaxed">
-        Thank you for your order, <span className="font-medium text-black">{name}</span>! We will contact you at{" "}
-        <span className="font-medium text-black">{phone}</span> shortly to confirm delivery details.
+        {m.drawerThanks.replace("{name}", name).replace("{phone}", phone)}
       </p>
       <button
         onClick={onClose}
         className="mt-2 w-full py-4 bg-black text-white text-[10px] font-semibold tracking-[0.2em] uppercase hover:bg-black/80 transition-colors"
       >
-        Continue Shopping
+        {m.drawerKeepShopping}
       </button>
     </div>
   );

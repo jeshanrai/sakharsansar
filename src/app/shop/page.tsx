@@ -8,6 +8,8 @@ import data from "@/data/content.json";
 import { WEBSITE_ID, faqLd, itemListLd, productNodeId } from "@/lib/seo";
 import { DELIVERY, SITE, absoluteUrl } from "@/lib/site";
 import { alternates, openGraph, twitter } from "@/lib/metadata";
+import { languageAlternates } from "@/lib/hreflang";
+import { nePathFor } from "@/lib/locale-paths";
 
 const Footer = dynamic(() => import("@/components/layout/Footer"));
 const OrderDrawer = dynamic(() => import("@/components/layout/OrderDrawer"));
@@ -22,6 +24,7 @@ export const metadata: Metadata = {
     "Buy jaggery online in Nepal: Sankhuwasabha sakhar, 1kg block Rs. 400, 250g powder Rs. 149. Wood-fired, chemical-free, delivered across Nepal.",
   alternates: alternates({
     canonical: "/shop",
+    languages: languageAlternates({ en: "/shop", ne: nePathFor("/shop")! }),
   }),
   openGraph: openGraph({
     title: "Buy Jaggery Online in Nepal: Sankhuwasabha Sakhar (सखर)",
@@ -29,7 +32,7 @@ export const metadata: Metadata = {
       "100% organic Sankhuwasabha Sakhar: blocks, powder and dry fruits, direct from farmers, shipped pan-Nepal.",
     url: "/shop",
     type: "website",
-  }),
+  }, { hasTranslation: true }),
   twitter: twitter({
     title: "Buy Jaggery Online in Nepal: Sakhar (सखर)",
     description:

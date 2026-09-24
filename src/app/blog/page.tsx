@@ -17,6 +17,8 @@ import { Bee, Ladybug, AnimatedWave } from "@/components/ui/StoryArt";
 import { Daisy } from "@/components/ui/Doodles";
 import { ArrowRight } from "lucide-react";
 import { alternates, openGraph, twitter } from "@/lib/metadata";
+import { languageAlternates } from "@/lib/hreflang";
+import { nePathFor } from "@/lib/locale-paths";
 
 export const metadata: Metadata = {
   // Absolute, so the root layout's "| SakharSansar" template is not appended
@@ -28,6 +30,7 @@ export const metadata: Metadata = {
   description: "Letters from Sankhuwasabha: recipes, rituals, and the slow stories behind every block of pure Himalayan jaggery.",
   alternates: alternates({
     canonical: "/blog",
+    languages: languageAlternates({ en: "/blog", ne: nePathFor("/blog")! }),
     types: {
       "application/rss+xml": [{ url: "/feed", title: "SakharSansar Journal" }],
     },
@@ -37,7 +40,7 @@ export const metadata: Metadata = {
     description: "Letters from Sankhuwasabha: recipes, rituals, and harvest notes.",
     url: "/blog",
     type: "website",
-  }),
+  }, { hasTranslation: true }),
   twitter: twitter({
     title: "SakharSansar Journal: Jaggery Recipes & Benefits",
     description: "Letters from Sankhuwasabha: recipes, rituals, and harvest notes.",

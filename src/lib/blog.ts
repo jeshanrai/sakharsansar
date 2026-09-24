@@ -10,6 +10,7 @@ export {
 } from "./blog-format";
 import { postPath } from "./blog-format";
 import { DEFAULT_LOCALE, type Locale } from "./hreflang";
+import { pagePairs } from "./locale-paths";
 
 /**
  * The journal, and whether it currently has anything in it.
@@ -155,7 +156,9 @@ export function translationPair(slug: string): BlogPost | undefined {
  * which is what the switcher keys off to render nothing.
  */
 export function translationPaths(): Record<string, string> {
-  const map: Record<string, string> = {};
+  // The mirrored pages (home, shop, products, wholesale, journal index) first;
+  // the article pairs below are editorial and come from blog.json.
+  const map: Record<string, string> = pagePairs();
   for (const post of posts) {
     if (!post.translationOf) continue;
     const pair = posts.find((p) => p.slug === post.translationOf);

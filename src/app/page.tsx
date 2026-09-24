@@ -7,6 +7,8 @@ import JsonLd from "@/components/seo/JsonLd";
 import { ORG_ID, WEBSITE_ID, itemListLd, productNodeId } from "@/lib/seo";
 import { SITE, absoluteUrl } from "@/lib/site";
 import { alternates, openGraph, twitter } from "@/lib/metadata";
+import { languageAlternates } from "@/lib/hreflang";
+import { nePathFor } from "@/lib/locale-paths";
 
 // Below-the-fold — split out of the initial JS bundle
 const ProductsSection = dynamic(
@@ -30,13 +32,14 @@ export const metadata: Metadata = {
     "Buy Sankhuwasabha Sakhar (सखर) direct from our farmers in Nepal. 100% organic, wood-fired, chemical-free jaggery in Nepal. Rs. 400 per kg, shipped pan-Nepal.",
   alternates: alternates({
     canonical: "/",
+    languages: languageAlternates({ en: "/", ne: nePathFor("/")! }),
   }),
   openGraph: openGraph({
     title: "Sankhuwasabha Sakhar (सखर): Buy Organic Jaggery in Nepal",
     description:
       "Pure, premium Sankhuwasabha Sakhar. Wood-fired by Himalayan farmers. 100% organic, no chemicals, direct from the farm.",
     url: "/",
-  }),
+  }, { hasTranslation: true }),
   twitter: twitter({
     title: "Sankhuwasabha Sakhar (सखर): 100% Organic Jaggery",
     description:
