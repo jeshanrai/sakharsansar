@@ -84,6 +84,28 @@ const BANNED = [
     pattern: /Rs\.?\s?2,?000/,
     why: "the old free-shipping threshold. It is COMMERCE.freeShippingThreshold in src/lib/site.ts, currently Rs. 1,500 — read it from there via formatRs().",
   },
+  // ── Health and nutrition. Removed 24 Sep 2026 from the product FAQ,
+  //    /our-story and the home FAQ; docs/blog-house-style.md forbids them.
+  //    Jaggery keeps trace minerals, not meaningful ones, and it raises blood
+  //    sugar much as white sugar does.
+  {
+    pattern: /retains?\s+(the\s+)?iron|mineral-rich|rich in minerals|minerals preserved/i,
+    why: "a mineral claim. The minerals in jaggery are traces; say so, as the product FAQ now does, or say nothing.",
+  },
+  {
+    pattern: /healthier and more nutritious|more nutritious than (refined|white) sugar|releases its energy more (gently|slowly)/i,
+    why: "jaggery is still sugar and raises blood sugar much as white sugar does. Anything touching diabetes links to /blog/is-jaggery-safe-for-diabetics and defers to a doctor.",
+  },
+  {
+    pattern: /improves digestion|body cleanser|supporting bone and heart health|empty calories/i,
+    why: "an unsupported health claim (house style: sakhar does not aid digestion, detox, or protect bone or heart). Label a traditional belief as traditional, or leave it out.",
+  },
+  // ── Delivery promises. Orders are packed when they come in; nobody has
+  //    committed to a dispatch window.
+  {
+    pattern: /shipped within \d+\s*h|within 48 hrs|२४ घण्टाभित्र/i,
+    why: "a dispatch promise the owner has not made. Orders are packed when they come in; say that.",
+  },
   {
     pattern: /\+?977[-\s]?98\d{8}/,
     why: "a hardcoded phone number. It is SITE.phone in src/lib/site.ts.",

@@ -25,10 +25,6 @@
       "desc": "Made with tradition and care"
     }
   ],
-  "story": {
-    "title": "Our Story",
-    "content": "We connect farmers from the pristine mountains of Sankhuwasabha directly to your home. Our sweet, mineral-rich jaggery is made using traditional methods completely devoid of bleach or artificial coloring. By choosing SakharSansar, you are not only savoring an authentic taste but also supporting rural livelihoods."
-  },
   "farmers": [
     {
       "name": "Ram Bahadur",
@@ -216,24 +212,6 @@
     {
       "title": "Packaging",
       "desc": "Eco-friendly sealing directly from source."
-    }
-  ],
-  "benefits": [
-    {
-      "title": "Rich in Minerals",
-      "desc": "Contains essential minerals like Iron, Magnesium, and Zinc, supporting bone and heart health."
-    },
-    {
-      "title": "Improves Digestion",
-      "desc": "Activates digestive enzymes, acting as a natural body cleanser after meals."
-    },
-    {
-      "title": "Energy Booster",
-      "desc": "Provides gradual energy without spikes, preventing the sudden fatigue caused by refined sugar."
-    },
-    {
-      "title": "Immunity Support",
-      "desc": "Loaded with antioxidants and nutrients that help build a stronger immune system naturally."
     }
   ],
   "faqs": [

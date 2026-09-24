@@ -46,7 +46,7 @@ export default function StoryRootsSection() {
           <div className="relative aspect-[5/4] w-full overflow-hidden rounded-[1.75rem] ring-1 ring-jaggery/10 shadow-xl shadow-jaggery/15">
             <Image
               src="/products/sakhar-powder.jpg"
-              alt="Mineral-rich amber sakhar powder, crushed from chemical-free Himalayan cane"
+              alt="Amber sakhar powder, crushed from chemical-free Sankhuwasabha cane"
               fill
               loading="lazy"
               sizes="(max-width: 1024px) 100vw, 60vw"
