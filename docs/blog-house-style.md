@@ -134,6 +134,8 @@ ranks. Check any new keyword against what is already published:
 | `sel-roti-sakhar` | sel roti with jaggery, Tihar |
 | `yomari-chaku-recipe` | yomari, Yomari Punhi, chaku as a filling |
 | `sakhar-kheer-recipe` | jaggery kheer, gud kheer, kheer curdling |
+| `suji-haluwa-sakhar` | suji halwa with jaggery, haluwa |
+| `jaggery-for-children` | jaggery for kids and babies, how much sugar for children |
 | `how-to-eat-sakhar` | how to eat / use jaggery, sakhar with dahi, dhido, roti; jaggery instead of sugar in cooking |
 | `wholesale-jaggery-nepal` | bulk, B2B, supply |
 | `sakhar-khane-faida` | benefits, in Nepali (pair of `jaggery-health-claims-truth`) |
@@ -203,6 +205,7 @@ says so. Replace it with our own shot as soon as one exists.
 | Wikipedia, Kolhapur jaggery | https://en.wikipedia.org/wiki/Kolhapur_jaggery |
 | All India Radio, Tokha chaku | https://www.newsonair.gov.in/kathmandu-streets-full-oof-fragrance-of-freshly-cookled-jaggery-for-maghe-sankranti |
 | ClinicalTrials.gov, jaggery GI trial | https://clinicaltrials.gov/study/NCT07015814 |
+| WHO guideline on complementary feeding, 6–23 months (2023) | https://www.who.int/publications/i/item/9789240081864 |
 
 All eight resolved when last checked (24 August 2026). If one dies, say so
 rather than substituting an unapproved source.
