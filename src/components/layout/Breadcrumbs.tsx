@@ -1,3 +1,4 @@
+import { localizedHref } from "@/lib/locale-paths";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 import JsonLd from "@/components/seo/JsonLd";
@@ -42,7 +43,7 @@ export default function Breadcrumbs({
    */
   locale?: Locale;
 }) {
-  const links: Crumb[] = [{ name: t(locale).crumbHome, path: "/" }, ...trail];
+  const links: Crumb[] = [{ name: t(locale).crumbHome, path: localizedHref("/", locale) }, ...trail];
   const last = links.length - 1;
 
   return (

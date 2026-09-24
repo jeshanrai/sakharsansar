@@ -17,6 +17,8 @@ import { CATEGORIES } from "@/lib/categories";
 import Breadcrumbs from "@/components/layout/Breadcrumbs";
 import { ArrowRight, Leaf, ShieldCheck, Truck } from "lucide-react";
 import { alternates, openGraph, twitter } from "@/lib/metadata";
+import { languageAlternates } from "@/lib/hreflang";
+import { nePathFor } from "@/lib/locale-paths";
 import { COMMERCE, DELIVERY, formatRs } from "@/lib/site";
 import { OG_CONTENT_TYPE } from "@/lib/og";
 import { bestBefore, harvestSeason, shelfLifeMonths } from "@/lib/batch";
@@ -72,7 +74,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     // so the threshold is only ever read from COMMERCE. It is the answer to
     // "can I get this outside Kathmandu", which is what a result line is for.
     description: `${product.metaDescription} Delivered across Nepal, free over ${formatRs(COMMERCE.freeShippingThreshold)}.`,
-    alternates: alternates({ canonical: `/products/${product.slug}` }),
+    alternates: alternates({
+      canonical: `/products/${product.slug}`,
+      ...(nePathFor(`/products/${product.slug}`)
+        ? { languages: languageAlternates({ en: `/products/${product.slug}`, ne: nePathFor(`/products/${product.slug}`)! }) }
+        : {}),
+    }),
     openGraph: openGraph({
       title: `${product.name} · ${product.price}`,
       description: product.description,
@@ -95,7 +102,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       // `omitType` suppresses the helper's "website" default. Without it the
       // page ships two competing og:type tags.
       images: [card],
-    }, { omitType: true }),
+    }, { omitType: true, hasTranslation: Boolean(nePathFor(`/products/${product.slug}`)) }),
     twitter: twitter({
       title: product.name,
       description: product.description,

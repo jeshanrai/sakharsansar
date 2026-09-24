@@ -281,7 +281,8 @@ function checkArchitecture(pages, sitemap) {
 
   // ── Breadcrumbs: shown and described, or neither.
   for (const { route, html } of pages) {
-    if (route === "/") continue;
+    // A home page has no trail above it, in either language.
+    if (route === "/" || route === "/ne") continue;
     const noindex = /<meta name="robots" content="[^"]*noindex/i.test(html);
     const visible = html
       .replace(/<script[\s\S]*?<\/script>/gi, " ")

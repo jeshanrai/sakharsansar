@@ -1,3 +1,4 @@
+import { localizedHref } from "./locale-paths";
 import content from "@/data/content.json";
 import { AUTHOR, AUTHOR_ID } from "./author";
 import { DEFAULT_LOCALE, LOCALES, type Locale } from "./hreflang";
@@ -186,12 +187,9 @@ export function breadcrumbLd(
    */
   locale: Locale = DEFAULT_LOCALE,
 ): Json {
-  // The path stays "/" in both languages: there is no /ne home page yet, and a
-  // crumb pointing at one would be a 404 in the markup and a broken item in
-  // the schema. Only the label is translated. When /ne exists this becomes a
-  // per-locale path — and the hreflang work that ships it is where that
-  // belongs, not here.
-  const home = { name: t(locale).crumbHome, path: "/" };
+  // The root is the home page in the trail's own language: /ne for Nepali,
+  // now that it exists.
+  const home = { name: t(locale).crumbHome, path: localizedHref("/", locale) };
   return {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -477,13 +475,22 @@ function priceValidUntil(): string {
   return d.toISOString().split("T")[0];
 }
 
-export function productLd(product: ProductLike): Json {
-  const url = absoluteUrl(`/products/${product.slug}`);
+export function productLd(
+  product: ProductLike,
+  /**
+   * For the Nepali product pages: their own URL and language. The node then
+   * describes the /ne/ page in Nepali, under that page's own @id, rather than
+   * restating the English node with a second, contradicting name.
+   */
+  opts?: { path?: string; inLanguage?: string },
+): Json {
+  const url = absoluteUrl(opts?.path ?? `/products/${product.slug}`);
   const amount = parseAmount(product.weight);
   return {
     "@context": "https://schema.org",
     "@type": "Product",
     "@id": `${url}#product`,
+    ...(opts?.inLanguage ? { inLanguage: opts.inLanguage } : {}),
     name: product.name,
     description: product.longDescription ?? product.description,
     image: absoluteUrl(product.image),
@@ -561,6 +568,8 @@ export function webPageLd(opts: {
   description: string;
   /** ISO date the terms last changed, when the page states one. */
   dateModified?: string;
+  /** BCP-47. Defaults to the site language; the /ne/ pages pass "ne-NP". */
+  inLanguage?: string;
 }): Json {
   const url = absoluteUrl(opts.path);
   return {
@@ -573,7 +582,7 @@ export function webPageLd(opts: {
     isPartOf: { "@id": WEBSITE_ID },
     about: { "@id": ORG_ID },
     publisher: { "@id": ORG_ID },
-    inLanguage: SITE.lang,
+    inLanguage: opts.inLanguage ?? SITE.lang,
     ...(opts.dateModified ? { dateModified: opts.dateModified } : {}),
   };
 }

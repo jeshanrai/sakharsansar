@@ -39,6 +39,18 @@ export function formatMoney(n: number, locale: Locale): string {
 }
 
 /**
+ * A price, as a shop shows it: "Rs. 400" / "रु. 400".
+ *
+ * Latin digits in both languages, unlike `formatMoney`. Nepali shops write
+ * prices this way (Daraz, SastoDeal), and Google checks a Product's offer
+ * price against the digits visible on the page; "४००" is a number a reader
+ * understands and a price-matching crawler may not.
+ */
+export function formatPrice(n: number, locale: Locale): string {
+  return `${locale === "ne" ? "रु." : "Rs."} ${n.toLocaleString("en-US")}`;
+}
+
+/**
  * Which language a path is served in.
  *
  * The only Nepali routes are under /ne. Everything else is English, including
@@ -109,8 +121,53 @@ const en = {
   ctaEyebrow: "From page to pantry",
   ctaHeading: "Now, taste the story",
   ctaBody:
-    "Every block, powder and pour ships directly from Sankhuwasabha to your home. No middleman, no shortcuts.",
+    "Every block and pouch is made in Sankhuwasabha and delivered to your door. No middleman, no shortcuts.",
   ctaButton: "Shop the harvest",
+  // ── Buying: the product page button and the order drawer. The drawer is
+  //    the last step before a sale, and a Nepali shopper who has read a whole
+  //    product page in Nepali should not meet "Continue to Delivery" there.
+  buyAddToOrder: "Add to Order",
+  buySaveFav: "Save to favourites",
+  buyRemoveFav: "Remove from favourites",
+  drawerTitle: "Place Order",
+  drawerTitleDone: "Order Confirmed",
+  drawerAria: "Place your order",
+  drawerAriaDone: "Order confirmed",
+  drawerStepOrder: "Order",
+  drawerStepDelivery: "Delivery",
+  drawerClose: "Close",
+  drawerSelect: "Select Product",
+  drawerChoose: "Choose a product",
+  drawerCustom: "Custom / Bulk Order",
+  drawerCustomShort: "Custom Order",
+  drawerPricingOnCall: "Pricing confirmed on call",
+  drawerEach: "each",
+  drawerQuantity: "Quantity",
+  drawerDecrease: "Decrease quantity",
+  drawerIncrease: "Increase quantity",
+  drawerTotal: "Order Total",
+  drawerContinue: "Continue to Delivery",
+  drawerName: "Full Name",
+  drawerNamePh: "Your Name",
+  drawerPhone: "Phone Number",
+  drawerPhoneInvalid: "Enter a valid phone number",
+  drawerAddress: "Delivery Address",
+  drawerAddressPh: "City, Street, House No.",
+  drawerCallNote: "We'll call you to confirm your order and delivery details.",
+  drawerCallNoteCustom: "Pricing for custom/bulk orders is confirmed on the call.",
+  drawerCallNoteCharges: "Delivery charges (if any) are confirmed on the call.",
+  drawerError: "We couldn't place your order just now. Please check your connection and try again, or call us directly.",
+  drawerBack: "Back",
+  drawerRequest: "Request Order",
+  drawerPlace: "Place Order",
+  drawerConfirmed: "Order Confirmed!",
+  drawerRowProduct: "Product",
+  drawerRowTotal: "Total",
+  drawerRowName: "Name",
+  drawerRowPhone: "Phone",
+  drawerRowAddress: "Address",
+  drawerThanks: "Thank you for your order, {name}! We will contact you at {phone} shortly to confirm delivery details.",
+  drawerKeepShopping: "Continue Shopping",
 } as const;
 
 /** Every key in `en`, required. A missing one will not compile. */
@@ -178,8 +235,51 @@ const ne: Messages = {
   ctaEyebrow: "लेखबाट भान्सासम्म",
   ctaHeading: "अब स्वाद लिनुहोस्",
   ctaBody:
-    "हरेक ढिक्का र धुलो सिधै सङ्खुवासभाबाट तपाईंको घरसम्म पुग्छ। बिचौलिया छैन, छोटो बाटो छैन।",
+    "हरेक ढिक्का र पोका सङ्खुवासभामा बन्छ र तपाईंको घरसम्म पुग्छ। बिचौलिया छैन, छोटो बाटो छैन।",
   ctaButton: "सख्खर किन्नुहोस्",
+  // ── Buying. NOTE FOR REVIEW: every line below is new.
+  buyAddToOrder: "अर्डरमा थप्नुहोस्",
+  buySaveFav: "मन पर्नेमा राख्नुहोस्",
+  buyRemoveFav: "मन पर्नेबाट हटाउनुहोस्",
+  drawerTitle: "अर्डर गर्नुहोस्",
+  drawerTitleDone: "अर्डर पक्का भयो",
+  drawerAria: "आफ्नो अर्डर गर्नुहोस्",
+  drawerAriaDone: "अर्डर पक्का भयो",
+  drawerStepOrder: "अर्डर",
+  drawerStepDelivery: "डेलिभरी",
+  drawerClose: "बन्द गर्नुहोस्",
+  drawerSelect: "सामान छान्नुहोस्",
+  drawerChoose: "एउटा सामान छान्नुहोस्",
+  drawerCustom: "विशेष / थोक अर्डर",
+  drawerCustomShort: "विशेष अर्डर",
+  drawerPricingOnCall: "मूल्य फोनमा पक्का गरिन्छ",
+  drawerEach: "प्रति वटा",
+  drawerQuantity: "परिमाण",
+  drawerDecrease: "परिमाण घटाउनुहोस्",
+  drawerIncrease: "परिमाण बढाउनुहोस्",
+  drawerTotal: "जम्मा रकम",
+  drawerContinue: "डेलिभरी विवरणमा जानुहोस्",
+  drawerName: "पूरा नाम",
+  drawerNamePh: "तपाईंको नाम",
+  drawerPhone: "फोन नम्बर",
+  drawerPhoneInvalid: "सही फोन नम्बर लेख्नुहोस्",
+  drawerAddress: "डेलिभरी ठेगाना",
+  drawerAddressPh: "सहर, टोल, घर नम्बर",
+  drawerCallNote: "अर्डर र डेलिभरी विवरण पक्का गर्न हामी तपाईंलाई फोन गर्छौँ।",
+  drawerCallNoteCustom: "विशेष वा थोक अर्डरको मूल्य फोनमै पक्का गरिन्छ।",
+  drawerCallNoteCharges: "डेलिभरी शुल्क (लाग्ने भए) फोनमै पक्का गरिन्छ।",
+  drawerError: "अहिले अर्डर पठाउन सकिएन। इन्टरनेट जाँचेर फेरि प्रयास गर्नुहोस्, वा हामीलाई सिधै फोन गर्नुहोस्।",
+  drawerBack: "पछाडि",
+  drawerRequest: "अर्डर अनुरोध गर्नुहोस्",
+  drawerPlace: "अर्डर पठाउनुहोस्",
+  drawerConfirmed: "अर्डर पक्का भयो!",
+  drawerRowProduct: "सामान",
+  drawerRowTotal: "जम्मा",
+  drawerRowName: "नाम",
+  drawerRowPhone: "फोन",
+  drawerRowAddress: "ठेगाना",
+  drawerThanks: "अर्डरका लागि धन्यवाद, {name}! डेलिभरी विवरण पक्का गर्न हामी छिट्टै {phone} मा सम्पर्क गर्नेछौँ।",
+  drawerKeepShopping: "किनमेल जारी राख्नुहोस्",
 };
 
 const MESSAGES: Record<Locale, Messages> = { en, ne };
@@ -206,6 +306,24 @@ const TAG_LABELS: Record<string, string> = {
   Recipes: "परिकार",
   "Sakhar 101": "सख्खर आधारभूत",
 };
+
+/**
+ * Product names in Nepali, keyed by the English name.
+ *
+ * Keyed by name rather than slug because the order drawer and the backend
+ * both identify a product by its English name; that stays the value that is
+ * submitted, and only the label a Nepali shopper reads changes.
+ * NOTE FOR REVIEW.
+ */
+const PRODUCT_NAMES_NE: Record<string, string> = {
+  "Sankhuwasabha Sakhar Block": "सङ्खुवासभा सख्खर ढिक्का",
+  "Sankhuwasabha Sakhar Powder": "सङ्खुवासभा सख्खर धुलो",
+  "Mixed Dry Fruits": "सख्खर लगाएको मिश्रित सुकामेवा",
+};
+
+export function productName(name: string, locale: Locale): string {
+  return locale === "ne" ? (PRODUCT_NAMES_NE[name] ?? name) : name;
+}
 
 export function tagLabel(tag: string, locale: Locale): string {
   return locale === "ne" ? (TAG_LABELS[tag] ?? tag) : tag;

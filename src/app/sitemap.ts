@@ -5,6 +5,7 @@ import { BLOG_CATEGORIES } from "@/lib/blog-categories";
 import { AUTHOR } from "@/lib/author";
 import { CATEGORIES } from "@/lib/categories";
 import { languageAlternateUrls } from "@/lib/hreflang";
+import { NE_PAGES, nePathFor } from "@/lib/locale-paths";
 import { SITE_URL, absoluteUrl } from "@/lib/site";
 
 /**
@@ -137,10 +138,34 @@ export default function sitemap(): MetadataRoute.Sitemap {
     };
   });
 
+  // The mirrored /ne/ pages, each paired with its English page in both
+  // directions, from the same map that writes the hreflang tags on the pages
+  // themselves, so the sitemap and the markup cannot disagree.
+  const pathOf = (url: string) => new URL(url).pathname || "/";
+  const paired = (entry: MetadataRoute.Sitemap[number]) => {
+    const ne = nePathFor(pathOf(entry.url));
+    return ne
+      ? {
+          ...entry,
+          alternates: { languages: languageAlternateUrls({ en: entry.url, ne: `${SITE_URL}${ne}` }) },
+        }
+      : entry;
+  };
+  const neRoutes: MetadataRoute.Sitemap = Object.entries(NE_PAGES)
+    .filter(([en]) => BLOG_ENABLED || en !== "/blog")
+    .map(([en, ne]) => ({
+      url: `${SITE_URL}${ne}`,
+      changeFrequency: "weekly" as const,
+      priority: 0.6,
+      alternates: {
+        languages: languageAlternateUrls({ en: en === "/" ? SITE_URL : `${SITE_URL}${en}`, ne: `${SITE_URL}${ne}` }),
+      },
+    }));
+
   return [
-    ...staticRoutes,
+    ...[...staticRoutes, ...productRoutes].map(paired),
+    ...neRoutes,
     ...categoryRoutes,
-    ...productRoutes,
     ...blogCategoryRoutes,
     ...blogPageRoutes,
     ...blogRoutes,

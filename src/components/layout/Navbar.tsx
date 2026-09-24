@@ -8,17 +8,16 @@ import { ShoppingBag, Heart, Menu, X } from "lucide-react";
 import { openOrderDrawer } from "./OrderDrawer";
 import { useFavouritesCount } from "@/lib/favourites";
 import { localeFromPath, t } from "@/lib/i18n";
+import { localizedHref } from "@/lib/locale-paths";
 import type { Locale } from "@/lib/hreflang";
 import LanguageSwitcher from "./LanguageSwitcher";
 
 /**
  * "Blogs" appears only while the journal has posts — see @/lib/blog.
  *
- * The hrefs stay English on both locales, and that is not an oversight: there
- * is no /ne/shop to link to. Only the labels translate, so a reader on a
- * Nepali article sees Nepali furniture around it and still lands somewhere
- * real when they click. Localised paths arrive with the translated pages
- * (docs/i18n-plan.md §6), not before them.
+ * Each href goes to the Nepali page where one exists (@/lib/locale-paths) and
+ * to the English one where it does not, so a Nepali reader stays in Nepali as
+ * far as the site goes and still lands somewhere real after that.
  */
 function navLinks(locale: Locale, blogEnabled: boolean) {
   const m = t(locale);
@@ -28,7 +27,7 @@ function navLinks(locale: Locale, blogEnabled: boolean) {
     { href: "/our-story", label: m.navStory },
     ...(blogEnabled ? [{ href: "/blog", label: m.navJournal }] : []),
     { href: "/contact", label: m.navContact },
-  ];
+  ].map((link) => ({ ...link, href: localizedHref(link.href, locale) }));
 }
 
 export default function Navbar({
@@ -94,7 +93,7 @@ export default function Navbar({
           <div className="flex items-center gap-5 lg:gap-10 min-w-0">
             {/* Logo */}
             <Link
-              href="/"
+              href={localizedHref("/", locale)}
               aria-label={m.footerHome}
               onClick={closeMobile}
               className="group shrink-0 inline-flex items-center"

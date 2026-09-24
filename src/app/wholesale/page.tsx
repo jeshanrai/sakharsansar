@@ -14,6 +14,8 @@ import wholesale from "@/data/wholesale.json";
 import { faqEntries, parseArticle } from "@/lib/article";
 import { breadcrumbLd, faqLd, webPageLd } from "@/lib/seo";
 import { alternates, openGraph, twitter } from "@/lib/metadata";
+import { languageAlternates } from "@/lib/hreflang";
+import { nePathFor } from "@/lib/locale-paths";
 import { SITE } from "@/lib/site";
 
 /**
@@ -41,7 +43,7 @@ const PATH = "/wholesale";
 export const metadata: Metadata = {
   title: "Wholesale Jaggery Nepal: Bulk Sakhar Supply",
   description: wholesale.description,
-  alternates: alternates({ canonical: PATH }),
+  alternates: alternates({ canonical: PATH, languages: languageAlternates({ en: PATH, ne: nePathFor(PATH)! }), }),
   openGraph: openGraph({
     title: "Wholesale Sakhar: Bulk Himalayan Jaggery from Sankhuwasabha",
     description: wholesale.description,
@@ -50,7 +52,7 @@ export const metadata: Metadata = {
     // name DEFAULT_OG_IMAGE, which is the homepage's — a card selling a kilo
     // of jaggery to one person, on the only page written for shop owners and
     // chaku makers buying by the sack. It also shipped with no og:image:type.
-  }),
+  }, { hasTranslation: true }),
   twitter: twitter({
     title: "Wholesale Sakhar from Sankhuwasabha",
     description: wholesale.description,
