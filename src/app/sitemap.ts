@@ -1,7 +1,6 @@
 import type { MetadataRoute } from "next";
 import content from "@/data/content.json";
-import { BLOG_ENABLED, pageCount, posts as blog, postPath } from "@/lib/blog";
-import { BLOG_CATEGORIES } from "@/lib/blog-categories";
+import { BLOG_ENABLED, posts as blog, postPath } from "@/lib/blog";
 import { AUTHOR } from "@/lib/author";
 import { CATEGORIES } from "@/lib/categories";
 import { languageAlternateUrls } from "@/lib/hreflang";
@@ -82,24 +81,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     images: [absoluteUrl(p.image)],
   }));
 
-  // Journal topic hubs. Derived from the same list that generates the routes.
-  const blogCategoryRoutes: MetadataRoute.Sitemap = BLOG_CATEGORIES.map((c) => ({
-    url: `${SITE_URL}/blog/category/${c.slug}`,
-    changeFrequency: "monthly",
-    priority: 0.5,
-  }));
-
-  // Pages 2..N of the journal. Empty while the archive fits on one page,
-  // which is the state today — derived from the same helper the route uses, so
-  // a page cannot exist and be missing from here.
-  const blogPageRoutes: MetadataRoute.Sitemap = Array.from(
-    { length: Math.max(0, pageCount() - 1) },
-    (_, i) => ({
-      url: `${SITE_URL}/blog/page/${i + 2}`,
-      changeFrequency: "weekly" as const,
-      priority: 0.4,
-    }),
-  );
+  // Journal topic hubs (/blog/category/*) and archive pages (/blog/page/N)
+  // are deliberately left out. They are lists of links with no text of their
+  // own, and Search Console had most of them under "Crawled - currently not
+  // indexed" (28 Sep 2026). Submitting them asked Google to spend a new site's
+  // small crawl budget on pages it had already declined. They stay live and
+  // linked from /blog, so crawlers still reach them and the posts they list.
 
   const blogRoutes: MetadataRoute.Sitemap = blog.map((post) => {
     // The Nepali and English halves of a translation pair each declare the
@@ -166,8 +153,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...[...staticRoutes, ...productRoutes].map(paired),
     ...neRoutes,
     ...categoryRoutes,
-    ...blogCategoryRoutes,
-    ...blogPageRoutes,
     ...blogRoutes,
   ];
 }
