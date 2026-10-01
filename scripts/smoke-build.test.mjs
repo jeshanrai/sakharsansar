@@ -24,6 +24,8 @@
  *                                            so it could not report drift)
  *   4. whole site consistent but not the   → fails only with --expect (the
  *      build that was just deployed          deploy that silently did not run)
+ *   5. one route current but serving the   → fails (old copy restored by a
+ *      old ratings and footer                revert, not a cache)
  *
  *   npm run smoke:test
  */
@@ -37,16 +39,22 @@ const STALE = "bbbbbbbbbbbb";
 /** The routes the fake sitemap advertises, plus the two the script adds itself. */
 const ROUTES = ["/", "/shop", "/shop/blocks", "/blog"];
 
-function page(buildId) {
+function page(buildId, body = "x") {
   const meta =
     buildId === null ? "" : `<meta name="x-build-id" content="${buildId}">`;
-  return `<!doctype html><html><head>${meta}<title>t</title></head><body>x</body></html>`;
+  return `<!doctype html><html><head>${meta}<title>t</title></head><body>${body}</body></html>`;
 }
+
+/** The old /shop: ratings and footer copy that were removed from the site. */
+const OLD_SHOP_BODY =
+  `<span>4.6 (491)</span><footer>a cooperative of 42 farming families` +
+  `<a href="https://instagram.com/sakharsansar">ig</a></footer>`;
 
 /**
  * @param builds  path → build id, or null for "serves HTML with no meta tag"
+ * @param bodies  path → page body, for routes that serve particular copy
  */
-function startServer(builds) {
+function startServer(builds, bodies = {}) {
   const server = createServer((req, res) => {
     const path = new URL(req.url, "http://x").pathname;
 
@@ -71,7 +79,7 @@ function startServer(builds) {
     }
 
     res.writeHead(200, { "content-type": "text/html" });
-    res.end(page(builds[path]));
+    res.end(page(builds[path], bodies[path]));
   });
 
   server.listen(0, "127.0.0.1");
@@ -126,12 +134,19 @@ const SCENARIOS = [
     args: [`--expect=${CURRENT}`],
     expect: 1,
   },
+  {
+    name: "one route on the current build but serving retired copy",
+    builds: allOn(CURRENT),
+    bodies: { "/shop": OLD_SHOP_BODY },
+    args: [],
+    expect: 1,
+  },
 ];
 
 let failures = 0;
 
 for (const s of SCENARIOS) {
-  const { server, base } = await startServer(s.builds);
+  const { server, base } = await startServer(s.builds, s.bodies);
   const { code, out } = await runSmoke(base, s.args);
   server.close();
   await once(server, "close");

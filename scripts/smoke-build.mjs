@@ -46,6 +46,18 @@ const EXTRA_PATHS = ["/favourites", "/this-page-does-not-exist-smoke-test"];
 /** Paths whose HTTP status is expected to be something other than 200. */
 const EXPECTED_STATUS = new Map([["/this-page-does-not-exist-smoke-test", 404]]);
 
+/**
+ * Phrases from the pre-build-ID site that must never be served again.
+ *
+ * A build ID proves which deploy a page came from, not what that deploy says:
+ * a revert or a restored component could put the old copy back on a page that
+ * is perfectly current. These are exact strings — the fabricated ratings, the
+ * superseded origin line, the social accounts that do not exist. Not a bare
+ * "491", which also matches the phone number +977-9860149199 and has produced
+ * a false stale-page report before.
+ */
+const BANNED = ["4.6 (491)", "4.8 (393)", "4.5 (155)", "cooperative of 42", "instagram.com/sakharsansar", "youtube.com/@sakharsansar"];
+
 /** Polite concurrency. The site is small; hammering it proves nothing. */
 const CONCURRENCY = 6;
 
@@ -83,13 +95,14 @@ async function probe(url) {
       path,
       status: res.status,
       buildId: match?.[1] ?? null,
+      banned: BANNED.filter((phrase) => html.includes(phrase)),
       // Kept for the failure report — a split is almost always a cache layer,
       // and these two headers say which one and how old the copy is.
       cache: res.headers.get("x-vercel-cache") ?? res.headers.get("cf-cache-status") ?? "",
       age: res.headers.get("age") ?? "",
     };
   } catch (err) {
-    return { url, path, status: 0, buildId: null, error: String(err), cache: "", age: "" };
+    return { url, path, status: 0, buildId: null, error: String(err), banned: [], cache: "", age: "" };
   }
 }
 
@@ -119,6 +132,9 @@ for (const r of results) {
     problems.push(`${r.path} — HTTP ${r.status || r.error}, expected ${want}`);
   } else if (!r.buildId) {
     problems.push(`${r.path} — no <meta name="x-build-id"> in the served HTML`);
+  }
+  if (r.banned.length > 0) {
+    problems.push(`${r.path} — serves retired copy: ${r.banned.map((b) => `"${b}"`).join(", ")}`);
   }
 }
 
