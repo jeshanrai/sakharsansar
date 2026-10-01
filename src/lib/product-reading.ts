@@ -1,4 +1,5 @@
 import { postPath, posts } from "./blog";
+import price from "@/data/sakhar-price.json";
 
 /**
  * The articles worth reading from each product page.
@@ -89,6 +90,12 @@ export interface ProductReading extends Reading {
 /** The reading list for a product, dropping anything no longer published. */
 export function readingFor(productSlug: string): ProductReading[] {
   return (READING[productSlug] ?? []).flatMap((item) => {
+    // The price article left the journal for its own route, /sakhar-price,
+    // and keeps its old slug as an id. Without this the lookup below misses
+    // it and the link quietly disappears from the product pages.
+    if (item.slug === price.slug) {
+      return [{ ...item, title: price.title, href: "/sakhar-price" }];
+    }
     const post = posts.find((p) => p.slug === item.slug);
     if (!post) return [];
     return [{ ...item, title: post.title, href: postPath(post) }];
