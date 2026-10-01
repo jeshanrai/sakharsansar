@@ -145,10 +145,19 @@ function interpolate(markdown: string): string {
   );
 }
 
+/**
+ * `<!-- -->` notes are for whoever edits the copy (where the owner's
+ * first-hand lines go, what a reviewer should check) and never reach the page.
+ * Without this they would fall through to a paragraph and render verbatim.
+ */
+function stripComments(markdown: string): string {
+  return markdown.replace(/<!--[\s\S]*?-->/g, "");
+}
+
 export function parseArticle(markdown: string): Block[] {
   const blocks: Block[] = [];
 
-  for (const chunk of interpolate(markdown).trim().split(/\n{2,}/)) {
+  for (const chunk of interpolate(stripComments(markdown)).trim().split(/\n{2,}/)) {
     const raw = chunk.trim();
     if (!raw) continue;
     const lines = raw.split("\n").map((l) => l.trim());
