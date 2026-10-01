@@ -80,6 +80,33 @@ async function fromLive(base) {
       status: page.status,
     });
   }
+
+  // The sitemap is what we submit, not everything we serve. The blog's
+  // category hubs and /blog/page/2 left it on 28 Sep 2026 and stayed live and
+  // linked from /blog, after which every live audit reported /blog as linking
+  // to six pages that do not exist. Follow internal links beyond the sitemap
+  // until nothing new turns up, and keep whatever answers 200 with HTML, which
+  // is what build mode sees by walking the filesystem. A broken link still
+  // 404s, stays out of the set, and is still reported.
+  const seen = new Set(pages.map((p) => p.route));
+  let frontier = pages;
+  while (frontier.length > 0) {
+    const next = [];
+    for (const { html } of frontier) {
+      const body = html.replace(/<script[\s\S]*?<\/script>/gi, " ");
+      for (const [, href] of body.matchAll(/<a\b[^>]*?href="(\/[^"#?]*)/gi)) {
+        const path = href.length > 1 ? href.replace(/\/$/, "") : "/";
+        if (seen.has(path) || /\.[a-z0-9]{2,5}$/i.test(path)) continue;
+        seen.add(path);
+        const page = await fetch(`${base}${path}`);
+        if (page.status === 200 && page.headers.get("content-type")?.includes("text/html")) {
+          next.push({ route: path, html: await page.text(), status: page.status });
+        }
+      }
+    }
+    pages.push(...next);
+    frontier = next;
+  }
   return pages;
 }
 
