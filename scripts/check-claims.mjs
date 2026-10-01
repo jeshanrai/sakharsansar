@@ -1,6 +1,6 @@
 /**
  * Fails the build when the site makes a claim it has retired, or hardcodes a
- * figure that lives in site-config.
+ * figure that lives in src/lib/site.ts.
  *
  * The site tells one story about itself, and it took a reconciliation to get
  * there. The footer, /contact and /our-story used to describe "a cooperative
