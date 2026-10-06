@@ -154,6 +154,10 @@ export default function OrderDrawer({
           discountCode,
           discount: isCustom ? 0 : pricing.discount,
           freeDelivery: !isCustom && pricing.freeDelivery,
+          // For the shop's notification email: the photo and pack size.
+          unitPrice: isCustom ? 0 : unitPrice,
+          weight: product?.weight ?? null,
+          image: product?.image ?? null,
         }),
       });
       backendOk = res.ok;

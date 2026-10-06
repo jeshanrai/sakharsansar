@@ -14,6 +14,7 @@ import DeliveryPage from "./_pages/DeliveryPage";
 import ExpensesPage from "./_pages/ExpensesPage";
 import B2BPage from "./_pages/B2BPage";
 import UsersPage from "./_pages/UsersPage";
+import SettingsPage from "./_pages/SettingsPage";
 
 export default function Dashboard() {
   const router = useRouter();
@@ -76,6 +77,7 @@ export default function Dashboard() {
       {activeTab === "expenses" && <ExpensesPage onToast={showToast} />}
       {activeTab === "b2b" && <B2BPage onToast={showToast} />}
       {activeTab === "users" && <UsersPage />}
+      {activeTab === "settings" && <SettingsPage onToast={showToast} />}
       <Toast visible={toast.visible} message={toast.message} />
       <ConfirmDialog
         open={logoutOpen}

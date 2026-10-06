@@ -179,3 +179,12 @@ enum PaymentMethod {
   ONLINE
   CREDIT
 }
+
+// Admin-editable settings, one row per key. Values are JSON-encoded strings so
+// a list (like the notification inboxes) needs no table of its own.
+model Setting {
+  key       String   @id
+  value     String
+  updatedAt DateTime @updatedAt
+  updatedBy String?
+}

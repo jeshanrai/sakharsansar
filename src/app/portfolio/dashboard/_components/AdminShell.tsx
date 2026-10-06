@@ -19,11 +19,14 @@ import {
   LogOut,
   ChevronRight,
   Sparkles,
+  Settings,
 } from "lucide-react";
 
-export type Tab = "overview" | "orders" | "enquiries" | "sales" | "delivery" | "expenses" | "b2b" | "users";
+export type Tab = "overview" | "orders" | "enquiries" | "sales" | "delivery" | "expenses" | "b2b" | "users" | "settings";
 
-const NAV: { id: Tab; label: string; mobileLabel?: string; icon: typeof LayoutDashboard; hint: string }[] = [
+// `bottomBar: false` keeps a tab out of the phone's bottom bar, which is full;
+// it is still in the side menu behind the hamburger.
+const NAV: { id: Tab; label: string; mobileLabel?: string; icon: typeof LayoutDashboard; hint: string; bottomBar?: false }[] = [
   { id: "overview", label: "Overview", icon: LayoutDashboard, hint: "Today's snapshot" },
   { id: "orders", label: "Orders", icon: ClipboardList, hint: "Online orders" },
   { id: "enquiries", label: "Enquiries", mobileLabel: "Inbox", icon: Inbox, hint: "Contact messages" },
@@ -32,6 +35,7 @@ const NAV: { id: Tab; label: string; mobileLabel?: string; icon: typeof LayoutDa
   { id: "expenses", label: "Expenses", icon: Receipt, hint: "Cash outflow" },
   { id: "b2b", label: "B2B Shops", mobileLabel: "Shops", icon: Store, hint: "Wholesale clients" },
   { id: "users", label: "Team", icon: Users, hint: "Staff activity" },
+  { id: "settings", label: "Settings", icon: Settings, hint: "Order emails", bottomBar: false },
 ];
 
 interface Props {
@@ -272,7 +276,7 @@ export default function AdminShell({ activeTab, onTabChange, adminName, onLogout
       {/* ─── Mobile bottom nav ──────────────────────────────────── */}
       <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-30 px-3 pb-3 pt-2 bg-gradient-to-t from-[#FAF6EE] via-[#FAF6EE]/95 to-[#FAF6EE]/0">
         <div className="rounded-2xl bg-[#1A1410] text-[#F5EDE0] shadow-2xl shadow-[#1A1410]/20 p-1 flex items-center justify-between">
-          {NAV.map((item) => {
+          {NAV.filter((item) => item.bottomBar !== false).map((item) => {
             const Active = activeTab === item.id;
             return (
               <button

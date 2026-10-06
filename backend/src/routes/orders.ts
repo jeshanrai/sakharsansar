@@ -7,10 +7,14 @@ import { OrderStatus } from "@prisma/client";
 
 const router = Router();
 
+const PRODUCT_IMAGE = /^\/products\/[\w.-]+\.(jpe?g|png|webp)$/i;
+
 // POST /api/orders — public (from frontend order form)
 router.post("/", async (req: Request, res: Response): Promise<void> => {
-  const { customer, phone, address, product, quantity, amount, subtotal, discountCode, discount, freeDelivery } =
-    req.body ?? {};
+  const {
+    customer, phone, address, product, quantity, amount,
+    subtotal, discountCode, discount, freeDelivery, unitPrice, weight, image,
+  } = req.body ?? {};
 
   if (!customer || !phone || !address || !product || !quantity) {
     res.status(400).json({ error: "Missing required fields" });
@@ -43,6 +47,7 @@ router.post("/", async (req: Request, res: Response): Promise<void> => {
   // email is where the shop sees what the customer was quoted.
   void sendOrderNotification({
     id: order.id,
+    createdAt: order.createdAt,
     customer: order.customer,
     phone: order.phone,
     address: order.address,
@@ -53,6 +58,10 @@ router.post("/", async (req: Request, res: Response): Promise<void> => {
     discountCode: discountCode ? String(discountCode).slice(0, 40) : null,
     discount: money(discount),
     freeDelivery: freeDelivery === true,
+    unitPrice: money(unitPrice),
+    weight: weight ? String(weight).slice(0, 20) : null,
+    // Only our own product photos: this lands in an <img> in the shop's inbox.
+    image: typeof image === "string" && PRODUCT_IMAGE.test(image) ? image : null,
   });
 
   res.status(201).json(order);
