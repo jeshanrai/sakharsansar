@@ -9,6 +9,8 @@ import { usePathname } from "next/navigation";
 import { formatPrice, localeFromPath, productName, t } from "@/lib/i18n";
 import type { Locale } from "@/lib/hreflang";
 import { OPEN_ORDER_DRAWER, type OpenOrderDetail } from "@/lib/order-drawer";
+import { codeStatus, normaliseCode, orderRef, priceOrder, type OrderPricing } from "@/lib/order-pricing";
+import { COMMERCE } from "@/lib/site";
 
 type Product = { name: string; price: string; weight?: string; image?: string };
 const PRODUCTS = data.products as Product[];
@@ -41,12 +43,19 @@ export default function OrderDrawer({
   const [error, setError] = useState<string | null>(null);
   const [touched, setTouched] = useState(false);
   const [formData, setFormData] = useState({ name: "", phone: "", address: "" });
+  const [codeInput, setCodeInput] = useState("");
+  const [appliedCode, setAppliedCode] = useState("");
+  const [orderId, setOrderId] = useState<string | null>(null);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const product = PRODUCTS.find((p) => p.name === selectedProduct);
   const isCustom = selectedProduct === CUSTOM;
   const unitPrice = parsePrice(product?.price);
   const lineTotal = unitPrice * quantity;
+  // The code is re-checked against the live subtotal, so lowering the quantity
+  // under the minimum after applying it drops the discount rather than keeping it.
+  const pricing = priceOrder(lineTotal, appliedCode);
+  const appliedStatus = codeStatus(appliedCode, lineTotal);
 
   const phoneValid = /\d{7,}/.test(formData.phone.replace(/\D/g, ""));
   const detailsValid = formData.name.trim() !== "" && phoneValid && formData.address.trim() !== "";
@@ -60,6 +69,9 @@ export default function OrderDrawer({
     setError(null);
     setTouched(false);
     setFormData({ name: "", phone: "", address: "" });
+    setCodeInput("");
+    setAppliedCode("");
+    setOrderId(null);
   }, []);
 
   const closeDrawer = useCallback(() => {
@@ -122,7 +134,8 @@ export default function OrderDrawer({
     setIsLoading(true);
     setError(null);
 
-    const amount = lineTotal;
+    const amount = isCustom ? 0 : pricing.total;
+    const discountCode = isCustom ? null : pricing.discountCode;
     const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
 
     let backendOk = false;
@@ -137,9 +150,17 @@ export default function OrderDrawer({
           product: selectedProduct || "Custom Order",
           quantity,
           amount,
+          subtotal: isCustom ? 0 : pricing.subtotal,
+          discountCode,
+          discount: isCustom ? 0 : pricing.discount,
+          freeDelivery: !isCustom && pricing.freeDelivery,
         }),
       });
       backendOk = res.ok;
+      if (res.ok) {
+        const saved = await res.json().catch(() => null);
+        if (saved?.id) setOrderId(String(saved.id));
+      }
     } catch {
       backendOk = false;
     }
@@ -153,7 +174,18 @@ export default function OrderDrawer({
     params.append("entry.1534389057", formData.address);
     params.append("entry.1575432690", String(quantity));
     params.append("entry.1497466413", selectedProduct || "");
-    params.append("entry.1057130625", "");
+    // The form's free-text field: the figures the customer was quoted, so the
+    // backup copy of an order carries the same total as the real one.
+    params.append(
+      "entry.1057130625",
+      isCustom
+        ? ""
+        : [
+            `Total ${rs(pricing.total)}`,
+            discountCode ? `code ${discountCode} −${rs(pricing.discount)}` : "",
+            pricing.freeDelivery ? "free delivery" : "",
+          ].filter(Boolean).join(" · "),
+    );
 
     let backupOk = false;
     try {
@@ -221,7 +253,8 @@ export default function OrderDrawer({
               m={m}
               rs={rs}
               quantity={quantity}
-              total={isCustom ? null : lineTotal}
+              pricing={isCustom ? null : pricing}
+              reference={orderId ? orderRef(orderId) : null}
               name={formData.name}
               phone={formData.phone}
               address={formData.address}
@@ -312,11 +345,71 @@ export default function OrderDrawer({
                 </div>
               </div>
 
+              {/* Discount code */}
+              {selectedProduct && !isCustom && (
+                <div className="flex flex-col gap-2">
+                  <label htmlFor="order-code" className="text-[10px] font-semibold tracking-[0.2em] text-black/50 uppercase">{m.drawerCode}</label>
+                  {appliedCode ? (
+                    <div className="flex items-center justify-between bg-white border border-black/10 px-4 py-3 text-sm">
+                      <span className="font-poppins font-medium text-black tracking-[0.1em]">{normaliseCode(appliedCode)}</span>
+                      <button
+                        type="button"
+                        onClick={() => { setAppliedCode(""); setCodeInput(""); }}
+                        className="text-[10px] font-semibold tracking-[0.2em] uppercase text-black/50 hover:text-black transition-colors"
+                      >
+                        {m.drawerCodeRemove}
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="flex">
+                      <input
+                        id="order-code"
+                        type="text"
+                        autoComplete="off"
+                        autoCapitalize="characters"
+                        className="flex-1 min-w-0 bg-white border border-black/10 px-4 py-3 text-sm focus:border-black outline-none text-black uppercase transition-colors"
+                        value={codeInput}
+                        onChange={(e) => setCodeInput(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") { e.preventDefault(); setAppliedCode(codeInput); }
+                        }}
+                        placeholder={m.drawerCodePh}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setAppliedCode(codeInput)}
+                        disabled={!codeInput.trim()}
+                        className="px-5 bg-black text-white text-[10px] font-semibold tracking-[0.2em] uppercase hover:bg-black/80 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                      >
+                        {m.drawerCodeApply}
+                      </button>
+                    </div>
+                  )}
+                  {appliedStatus === "applied" && (
+                    <span className="text-xs text-green-700">{m.drawerCodeApplied}</span>
+                  )}
+                  {appliedStatus === "invalid" && (
+                    <span className="text-xs text-red-600">{m.drawerCodeInvalid}</span>
+                  )}
+                  {appliedStatus === "below-minimum" && (
+                    <span className="text-xs text-black/60">
+                      {m.drawerCodeBelowMin
+                        .replace("{min}", rs(COMMERCE.discountMinimum))
+                        .replace("{more}", rs(COMMERCE.discountMinimum - lineTotal))}
+                    </span>
+                  )}
+                </div>
+              )}
+
               {/* Live total */}
               {selectedProduct && !isCustom && (
-                <div className="flex items-center justify-between border-t border-black/10 pt-5">
-                  <span className="text-[10px] font-semibold tracking-[0.2em] text-black/50 uppercase">{m.drawerTotal}</span>
-                  <span className="font-poppins text-2xl font-medium text-[#C17A2A]">{rs(lineTotal)}</span>
+                <div className="border-t border-black/10 pt-5 flex flex-col gap-2">
+                  <Breakdown pricing={pricing} m={m} rs={rs} />
+                  <p className="text-xs text-black/50">
+                    {pricing.freeDelivery
+                      ? m.drawerFreeNote
+                      : m.drawerToFree.replace("{more}", rs(pricing.toFreeDelivery))}
+                  </p>
                 </div>
               )}
 
@@ -341,7 +434,7 @@ export default function OrderDrawer({
                 <span className="text-black/60">
                   <span className="font-medium text-black">{quantity}×</span> {isCustom ? m.drawerCustom : productName(selectedProduct, locale)}
                 </span>
-                {!isCustom && <span className="font-medium text-[#C17A2A]">{rs(lineTotal)}</span>}
+                {!isCustom && <span className="font-medium text-[#C17A2A]">{rs(pricing.total)}</span>}
               </div>
 
               <Field label={m.drawerName}>
@@ -380,7 +473,8 @@ export default function OrderDrawer({
               </Field>
 
               <p className="text-xs text-black/45 leading-relaxed -mt-2">
-                {m.drawerCallNote} {isCustom ? m.drawerCallNoteCustom : m.drawerCallNoteCharges}
+                {m.drawerCallNote}{" "}
+                {isCustom ? m.drawerCallNoteCustom : pricing.freeDelivery ? m.drawerFreeNote : m.drawerCallNoteCharges}
               </p>
 
               {error && (
@@ -403,7 +497,7 @@ export default function OrderDrawer({
                   type="submit"
                   className="flex-1 py-4 bg-black text-white text-[10px] font-semibold tracking-[0.2em] uppercase hover:bg-black/80 transition-colors"
                 >
-                  {isCustom ? m.drawerRequest : `${m.drawerPlace} · ${rs(lineTotal)}`}
+                  {isCustom ? m.drawerRequest : `${m.drawerPlace} · ${rs(pricing.total)}`}
                 </button>
               </div>
             </form>
@@ -436,10 +530,46 @@ function Field({ label, error, children }: { label: string; error?: string; chil
   );
 }
 
+function Breakdown({
+  pricing,
+  m,
+  rs,
+}: {
+  pricing: OrderPricing;
+  m: ReturnType<typeof t>;
+  rs: (n: number) => string;
+}) {
+  return (
+    <div className="flex flex-col gap-2 text-sm">
+      {pricing.discount > 0 && (
+        <>
+          <div className="flex justify-between text-black/60">
+            <span>{m.drawerSubtotal}</span>
+            <span className="tabular-nums">{rs(pricing.subtotal)}</span>
+          </div>
+          <div className="flex justify-between text-green-700">
+            <span>{m.drawerDiscount} ({pricing.discountCode})</span>
+            <span className="tabular-nums">−{rs(pricing.discount)}</span>
+          </div>
+        </>
+      )}
+      <div className="flex justify-between text-black/60">
+        <span>{m.drawerDelivery}</span>
+        <span>{pricing.freeDelivery ? m.drawerDeliveryFree : m.drawerDeliveryOnCall}</span>
+      </div>
+      <div className="flex items-center justify-between pt-1">
+        <span className="text-[10px] font-semibold tracking-[0.2em] text-black/50 uppercase">{m.drawerTotal}</span>
+        <span className="font-poppins text-2xl font-medium text-[#C17A2A] tabular-nums">{rs(pricing.total)}</span>
+      </div>
+    </div>
+  );
+}
+
 function SuccessView({
   product,
   quantity,
-  total,
+  pricing,
+  reference,
   name,
   phone,
   address,
@@ -451,7 +581,9 @@ function SuccessView({
   rs: (n: number) => string;
   product: string;
   quantity: number;
-  total: number | null;
+  pricing: OrderPricing | null;
+  /** Null when only the Google Form backup got through: there is no id to quote. */
+  reference: string | null;
   name: string;
   phone: string;
   address: string;
@@ -464,9 +596,19 @@ function SuccessView({
       </div>
       <h3 className="font-poppins text-2xl font-medium tracking-[0.1em] uppercase text-black">{m.drawerConfirmed}</h3>
       <div className="bg-white rounded-lg p-5 w-full text-left space-y-3 border border-black/10">
+        {reference && <Row label={m.drawerRef} value={`#${reference}`} />}
         <Row label={m.drawerRowProduct} value={product} />
         <Row label={m.drawerQuantity} value={String(quantity)} />
-        {total !== null && <Row label={m.drawerRowTotal} value={rs(total)} highlight />}
+        {pricing && pricing.discount > 0 && (
+          <Row label={`${m.drawerDiscount} (${pricing.discountCode})`} value={`−${rs(pricing.discount)}`} />
+        )}
+        {pricing && (
+          <Row
+            label={m.drawerDelivery}
+            value={pricing.freeDelivery ? m.drawerDeliveryFree : m.drawerDeliveryOnCall}
+          />
+        )}
+        {pricing && <Row label={m.drawerRowTotal} value={rs(pricing.total)} highlight />}
         <Row label={m.drawerRowName} value={name} />
         <Row label={m.drawerRowPhone} value={phone} />
         <Row label={m.drawerRowAddress} value={address} wrap />

@@ -188,6 +188,21 @@ const en = {
   drawerRowAddress: "Address",
   drawerThanks: "Thank you for your order, {name}! We will contact you at {phone} shortly to confirm delivery details.",
   drawerKeepShopping: "Continue Shopping",
+  drawerCode: "Discount Code",
+  drawerCodePh: "e.g. SAKHAR10",
+  drawerCodeApply: "Apply",
+  drawerCodeRemove: "Remove",
+  drawerCodeApplied: `${COMMERCE.discountPercent}% off applied`,
+  drawerCodeInvalid: "That code isn't valid.",
+  drawerCodeBelowMin: "This code works on orders of {min} or more. Add {more} to use it.",
+  drawerSubtotal: "Subtotal",
+  drawerDiscount: "Discount",
+  drawerDelivery: "Delivery",
+  drawerDeliveryFree: "Free",
+  drawerDeliveryOnCall: "Confirmed on call",
+  drawerToFree: "Add {more} more for free delivery.",
+  drawerFreeNote: "Delivery is free on this order.",
+  drawerRef: "Order Ref",
 } as const;
 
 /** Every key in `en`, required. A missing one will not compile. */
@@ -300,6 +315,21 @@ const ne: Messages = {
   drawerRowAddress: "ठेगाना",
   drawerThanks: "अर्डरका लागि धन्यवाद, {name}! डेलिभरी विवरण पक्का गर्न हामी छिट्टै {phone} मा सम्पर्क गर्नेछौँ।",
   drawerKeepShopping: "किनमेल जारी राख्नुहोस्",
+  drawerCode: "छुट कोड",
+  drawerCodePh: "जस्तै SAKHAR10",
+  drawerCodeApply: "लगाउनुहोस्",
+  drawerCodeRemove: "हटाउनुहोस्",
+  drawerCodeApplied: `${formatNumber(COMMERCE.discountPercent, "ne")}% छुट लाग्यो`,
+  drawerCodeInvalid: "यो कोड मिलेन।",
+  drawerCodeBelowMin: "यो कोड {min} वा बढीको अर्डरमा लाग्छ। प्रयोग गर्न {more} थप्नुहोस्।",
+  drawerSubtotal: "उप-जम्मा",
+  drawerDiscount: "छुट",
+  drawerDelivery: "डेलिभरी",
+  drawerDeliveryFree: "निःशुल्क",
+  drawerDeliveryOnCall: "फोनमा पक्का गरिन्छ",
+  drawerToFree: "निःशुल्क डेलिभरीका लागि {more} थप्नुहोस्।",
+  drawerFreeNote: "यो अर्डरमा डेलिभरी निःशुल्क छ।",
+  drawerRef: "अर्डर नम्बर",
 };
 
 const MESSAGES: Record<Locale, Messages> = { en, ne };

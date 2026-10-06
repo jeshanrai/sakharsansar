@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback, useMemo } from "react";
 import { motion } from "framer-motion";
 import { Search, Filter, Download, ChevronDown, ClipboardList, Phone, MapPin, Calendar } from "lucide-react";
 import { apiFetch } from "@/lib/api";
+import { orderRef } from "@/lib/order-pricing";
 import { Card, SectionHeading, Button, Pill, EmptyState } from "../_components/primitives";
 import { STATUS_TONES, type Order, type OrderStatus } from "../_data/types";
 
@@ -52,7 +53,11 @@ export default function OrdersPage({ onToast }: { onToast: (msg: string) => void
     if (!search) return orders;
     const q = search.toLowerCase();
     return orders.filter(
-      (o) => o.customer.toLowerCase().includes(q) || o.product.toLowerCase().includes(q) || o.phone.includes(search)
+      (o) =>
+        o.customer.toLowerCase().includes(q) ||
+        o.product.toLowerCase().includes(q) ||
+        o.phone.includes(search) ||
+        orderRef(o.id).toLowerCase().includes(q.replace(/^#/, "")),
     );
   }, [orders, search]);
 
@@ -143,7 +148,7 @@ export default function OrdersPage({ onToast }: { onToast: (msg: string) => void
                       </div>
                       <div className="min-w-0">
                         <p className="font-medium text-[#1A1410] truncate">{order.customer}</p>
-                        <p className="text-[11px] text-[#1A1410]/45">{order.phone}</p>
+                        <p className="text-[11px] text-[#1A1410]/45">#{orderRef(order.id)} · {order.phone}</p>
                       </div>
                     </div>
                   </td>
@@ -183,7 +188,7 @@ export default function OrdersPage({ onToast }: { onToast: (msg: string) => void
                     </div>
                     <div className="min-w-0">
                       <p className="font-medium text-[#1A1410] truncate">{order.customer}</p>
-                      <p className="text-xs text-[#1A1410]/50 truncate">{order.product} · ×{order.quantity}</p>
+                      <p className="text-xs text-[#1A1410]/50 truncate">#{orderRef(order.id)} · {order.product} · ×{order.quantity}</p>
                     </div>
                   </div>
                   <p className="font-semibold text-[#1A1410] tabular-nums text-sm shrink-0">{rs(order.amount)}</p>

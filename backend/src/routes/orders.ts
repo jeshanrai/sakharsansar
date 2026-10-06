@@ -9,33 +9,50 @@ const router = Router();
 
 // POST /api/orders — public (from frontend order form)
 router.post("/", async (req: Request, res: Response): Promise<void> => {
-  const { customer, phone, address, product, quantity, amount } = req.body;
+  const { customer, phone, address, product, quantity, amount, subtotal, discountCode, discount, freeDelivery } =
+    req.body ?? {};
 
   if (!customer || !phone || !address || !product || !quantity) {
     res.status(400).json({ error: "Missing required fields" });
     return;
   }
 
+  // Public endpoint: clamp what the storefront sends, as /enquiries does. The
+  // drawer caps quantity at 99; anything outside 1–99 did not come from it.
+  const qty = Math.trunc(Number(quantity));
+  if (!Number.isFinite(qty) || qty < 1 || qty > 99) {
+    res.status(400).json({ error: "Invalid quantity" });
+    return;
+  }
+  const money = (v: unknown) => Math.max(0, Math.round(Number(v) || 0));
+
   const order = await prisma.order.create({
     data: {
-      customer,
-      phone,
-      address,
-      product,
-      quantity: Number(quantity),
-      amount: Number(amount) || 0,
+      customer: String(customer).slice(0, 200),
+      phone: String(phone).slice(0, 40),
+      address: String(address).slice(0, 1000),
+      product: String(product).slice(0, 200),
+      quantity: qty,
+      amount: money(amount),
     },
   });
 
   // Notify the shop inbox. Fire-and-forget: the mailer never throws, so a mail
-  // hiccup can't fail the order the customer just placed.
+  // hiccup can't fail the order the customer just placed. The discount and
+  // delivery terms are not stored on the order (no column for them yet), so the
+  // email is where the shop sees what the customer was quoted.
   void sendOrderNotification({
+    id: order.id,
     customer: order.customer,
     phone: order.phone,
     address: order.address,
     product: order.product,
     quantity: order.quantity,
     amount: order.amount,
+    subtotal: money(subtotal),
+    discountCode: discountCode ? String(discountCode).slice(0, 40) : null,
+    discount: money(discount),
+    freeDelivery: freeDelivery === true,
   });
 
   res.status(201).json(order);

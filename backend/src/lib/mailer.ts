@@ -89,29 +89,47 @@ async function send(subject: string, html: string, replyTo?: string): Promise<vo
 }
 
 export interface OrderEmail {
+  id: string;
   customer: string;
   phone: string;
   address: string;
   product: string;
   quantity: number;
   amount?: number;
+  subtotal?: number;
+  discountCode?: string | null;
+  discount?: number;
+  freeDelivery?: boolean;
+}
+
+/** The reference the customer is shown: the tail of the order id, upper-cased.
+ *  Mirrors orderRef() in the storefront's src/lib/order-pricing.ts. */
+export function orderRef(id: string): string {
+  return id.slice(-6).toUpperCase();
 }
 
 export async function sendOrderNotification(order: OrderEmail): Promise<void> {
-  const html = wrap(
-    "🛒 New order from the website",
-    table([
-      ["Customer", order.customer],
-      ["Phone", order.phone],
-      ["Product", order.product],
-      ["Quantity", order.quantity],
-      ["Amount", order.amount ? `Rs. ${order.amount}` : "—"],
-      ["Address", order.address],
-    ]),
-  );
+  const ref = orderRef(order.id);
+  const rows: [string, unknown][] = [
+    ["Ref", `#${ref}`],
+    ["Customer", order.customer],
+    ["Phone", order.phone],
+    ["Product", order.product],
+    ["Quantity", order.quantity],
+  ];
+  if (order.discountCode && order.discount) {
+    rows.push(["Subtotal", `Rs. ${order.subtotal}`]);
+    rows.push(["Discount", `${order.discountCode} −Rs. ${order.discount}`]);
+  }
+  rows.push(["Amount", order.amount ? `Rs. ${order.amount}` : "—"]);
+  if (order.amount) {
+    rows.push(["Delivery", order.freeDelivery ? "Free (over threshold)" : "To be quoted on the call"]);
+  }
+  rows.push(["Address", order.address]);
+
   await send(
-    `🛒 New order: ${order.product} ×${order.quantity}`,
-    html,
+    `🛒 New order #${ref}: ${order.product} ×${order.quantity}`,
+    wrap("🛒 New order from the website", table(rows)),
   );
 }
 
