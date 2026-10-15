@@ -54,7 +54,7 @@ export function postMetadata(post: BlogPost): Metadata {
     // 15 of the ~60 characters Google shows. Posts whose headline needs the
     // full width set `seoTitle` and opt out of the template entirely.
     title: post.seoTitle ? { absolute: post.seoTitle } : post.title,
-    description: post.description,
+    description: post.metaDescription ?? post.description,
     alternates: alternates({
       canonical: path,
       // A translated pair covers one topic in two languages. Without

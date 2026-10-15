@@ -22,11 +22,12 @@ import { nePathFor } from "@/lib/locale-paths";
 export const metadata: Metadata = {
   // Absolute, so the root layout's "| SakharSansar" template is not appended
   // on top. With it, the title ran to 64 characters and Google cut the brand
-  // off the end; leading with it instead keeps both the brand and the subject
-  // inside the width a result actually shows. "Blogs" alone, which this was
-  // before, carried no keyword at all.
-  title: { absolute: "SakharSansar Journal: Jaggery Recipes & Benefits" },
-  description: "Letters from Sankhuwasabha: recipes, rituals, and the slow stories behind every block of pure Himalayan jaggery.",
+  // off the end. "Blogs" alone, which this was before, carried no keyword at
+  // all; "SakharSansar Journal" after it drew 50 impressions and no clicks in
+  // four weeks, because a brand name is not a reason to click. Named dishes
+  // and Nepal are.
+  title: { absolute: "Sakhar Recipes from Nepal: Yomari, Chaku, Sel Roti & More" },
+  description: "Yomari, chaku, sel roti, thekua and til ko laddu with hill sakhar, plus straight answers on jaggery vs sugar, diabetes and storage, from Nepal.",
   alternates: alternates({
     canonical: "/blog",
     languages: languageAlternates({ en: "/blog", ne: nePathFor("/blog")! }),

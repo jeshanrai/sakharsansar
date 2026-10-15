@@ -40,7 +40,13 @@ export interface BlogPost {
    * Used verbatim (no brand suffix), so keep it under 60 characters.
    */
   seoTitle?: string;
+  /** Rendered as the lede under the H1, and the meta description by default. */
   description: string;
+  /**
+   * Meta description, when the result line needs to sell the click rather
+   * than restate the lede. 140 to 155 characters.
+   */
+  metaDescription?: string;
   content: string;
   /** ISO date, YYYY-MM-DD. */
   date: string;

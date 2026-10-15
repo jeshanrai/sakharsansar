@@ -8,7 +8,7 @@ import JsonLd from "@/components/seo/JsonLd";
 import Breadcrumbs from "@/components/layout/Breadcrumbs";
 import data from "@/data/content.json";
 import { WEBSITE_ID, faqLd, itemListLd, productNodeId } from "@/lib/seo";
-import { DELIVERY, SITE, absoluteUrl } from "@/lib/site";
+import { COMMERCE, DELIVERY, SITE, absoluteUrl, formatRs } from "@/lib/site";
 import { alternates, openGraph, twitter } from "@/lib/metadata";
 import { languageAlternates } from "@/lib/hreflang";
 import { nePathFor } from "@/lib/locale-paths";
@@ -16,13 +16,12 @@ import { nePathFor } from "@/lib/locale-paths";
 const Footer = dynamic(() => import("@/components/layout/Footer"));
 
 export const metadata: Metadata = {
-  // No brand suffix here — the root layout's `title.template` appends
-  // "| SakharSansar" to every child segment's title.
   // "jaggery in nepal" belongs to the homepage (docs/blog-house-style.md);
   // this page takes the buying form of the query, so the two do not compete.
-  title: "Buy Jaggery Online in Nepal: Sakhar (सखर)",
-  description:
-    "Buy jaggery online in Nepal: Sankhuwasabha sakhar, 1kg block Rs. 400, 250g powder Rs. 149. Wood-fired, chemical-free, delivered across Nepal.",
+  // Absolute, so the starting price fits where the brand suffix would sit:
+  // the brand is already in the URL line above the title.
+  title: { absolute: "Buy Jaggery Online in Nepal: Sakhar (सखर) from Rs. 149" },
+  description: `1kg hill sakhar block Rs. 400, 250g powder Rs. 149. Wood-fired in Sankhuwasabha, packed to order, delivered anywhere in Nepal, free over ${formatRs(COMMERCE.freeShippingThreshold)}.`,
   alternates: alternates({
     canonical: "/shop",
     languages: languageAlternates({ en: "/shop", ne: nePathFor("/shop")! }),

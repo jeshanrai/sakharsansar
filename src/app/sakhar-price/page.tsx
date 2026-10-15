@@ -38,9 +38,17 @@ import { SITE } from "@/lib/site";
 
 const PATH = "/sakhar-price";
 
+const priceOf = (slug: string) => content.products.find((p) => p.slug === slug)!;
+const block = priceOf("organic-jaggery-block");
+const powder = priceOf("jaggery-powder");
+
 export const metadata: Metadata = {
-  title: price.seoTitle,
-  description: price.description,
+  // Absolute: with the brand suffix the "Hill vs Terai" qualifier, which is
+  // the reason to click past a price Google may already show, would not fit.
+  title: { absolute: price.seoTitle },
+  // A price page whose result line carries no price wastes its best asset.
+  // The lede (price.description) stays as written on the page.
+  description: `${block.price} a kg for our hill sakhar block, ${powder.price} for ${powder.weight} powder. Why Terai gur costs less, what a very cheap block means, and the cost per cup of chiya.`,
   alternates: alternates({ canonical: PATH }),
   openGraph: openGraph({
     title: "Jaggery (Sakhar) Price in Nepal: The Full List",
