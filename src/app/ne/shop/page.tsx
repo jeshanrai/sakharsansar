@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Footer from "@/components/layout/Footer";
 import ArticleBody from "@/components/blog/ArticleBody";
 import JsonLd from "@/components/seo/JsonLd";
+import GradeNote from "@/components/product/GradeNote";
 import { NeHero, NeProductGrid, neMetadata } from "@/components/ne/NePage";
 import content from "@/data/content.json";
 import { faqEntries, parseArticle } from "@/lib/article";
@@ -65,6 +66,7 @@ export default function NepaliShop() {
 
         <section aria-label="सामानहरू" className="px-6 sm:px-10 lg:px-16 pt-14 sm:pt-16">
           <div className="max-w-[1000px] mx-auto">
+            <GradeNote locale="ne" className="mb-8 max-w-2xl" />
             <NeProductGrid />
           </div>
         </section>

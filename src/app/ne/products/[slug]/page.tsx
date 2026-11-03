@@ -5,6 +5,7 @@ import { Leaf, ShieldCheck, Truck } from "lucide-react";
 import Footer from "@/components/layout/Footer";
 import ArticleBody from "@/components/blog/ArticleBody";
 import ProductActions from "@/components/product/ProductActions";
+import GradeNote from "@/components/product/GradeNote";
 import Breadcrumbs from "@/components/layout/Breadcrumbs";
 import JsonLd from "@/components/seo/JsonLd";
 import { neMetadata } from "@/components/ne/NePage";
@@ -43,6 +44,9 @@ export function generateStaticParams() {
 }
 
 export const dynamicParams = false;
+
+/** As on /products/[slug]: the two sakhar products carry the grade line. */
+const GRADED = new Set(["organic-jaggery-block", "jaggery-powder"]);
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
@@ -116,12 +120,13 @@ export default async function NepaliProductPage({ params }: Props) {
 
               <p className="font-serif italic text-jaggery/75 text-lede mb-9 max-w-md">{ne.short}</p>
 
-              <div className="flex items-baseline gap-4 mb-9">
+              <div className={`flex items-baseline gap-4 ${GRADED.has(slug) ? "mb-3" : "mb-9"}`}>
                 <span className="font-serif text-h3 text-jaggery nums-price">{price}</span>
                 <span className="label-caps text-jaggery/70 rounded-full border border-jaggery/20 px-3.5 py-1.5 nums-price">
                   {ne.weight}
                 </span>
               </div>
+              {GRADED.has(slug) && <GradeNote locale="ne" className="mb-9 max-w-md" />}
 
               <ProductActions productName={product.name} slug={product.slug} locale="ne" />
 

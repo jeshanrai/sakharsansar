@@ -59,7 +59,22 @@ export default function BlogList() {
   // without bound; /blog/page/[n] carries the rest, and builds itself the day
   // there is a rest to carry.
   const ordered = postsOnPage(1);
-  const [featured, ...rest] = ordered;
+  const [featured] = ordered;
+
+  // The carousel and the category grid are client components, so whatever
+  // they are handed is serialised into the page. Handed whole posts, the
+  // index shipped every article body in its source, <!-- --> editor notes
+  // and unpublished placeholders included. They only need what a card shows.
+  const cards = ordered.map(({ slug, title, description, image, imageAlt, lang, date, tags }) => ({
+    slug,
+    title,
+    description,
+    image,
+    imageAlt,
+    lang,
+    date,
+    tags: tags ?? [],
+  }));
   const totalPages = pageCount();
   const categories = [...new Set(ordered.flatMap((p) => p.tags ?? []))];
 
@@ -191,7 +206,7 @@ export default function BlogList() {
         )}
 
         {/* ─── 3 · Editor's Picks (green carousel) ──── */}
-        <BlogEditorsPicks posts={rest} />
+        <BlogEditorsPicks posts={cards.slice(1)} />
 
         {/* ─── 4 · Blog Categories (peach) ──────────── */}
         <div className="relative bg-peach">
@@ -203,7 +218,7 @@ export default function BlogList() {
           />
           <div className="pt-10 sm:pt-16">
             <BlogCategories
-              posts={ordered}
+              posts={cards}
               categories={categories}
               hubSlugs={BLOG_CATEGORIES.map((c) => c.slug)}
             />

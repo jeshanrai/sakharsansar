@@ -6,6 +6,7 @@ import { productCards } from "@/lib/product-cards";
 import { categoryPaths } from "@/lib/categories";
 import JsonLd from "@/components/seo/JsonLd";
 import Breadcrumbs from "@/components/layout/Breadcrumbs";
+import GradeNote from "@/components/product/GradeNote";
 import data from "@/data/content.json";
 import { WEBSITE_ID, faqLd, itemListLd, productNodeId } from "@/lib/seo";
 import { COMMERCE, DELIVERY, SITE, absoluteUrl, formatRs } from "@/lib/site";
@@ -135,6 +136,8 @@ export default function ShopPage() {
             forty-two farming families. We deliver inside the Kathmandu Valley
             ourselves, and everywhere else with {DELIVERY.outsideValleyCarrier}.
           </p>
+          {/* Above the cards, so the grade is read before the price is. */}
+          <GradeNote className="mt-3 max-w-2xl" />
         </header>
         <ShopContent products={productCards()} categoryPaths={categoryPaths()} />
 

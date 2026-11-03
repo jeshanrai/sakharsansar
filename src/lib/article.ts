@@ -1,4 +1,4 @@
-import { COMMERCE, SITE, formatRs } from "./site";
+import { COMMERCE, MARKET, SITE, formatRs } from "./site";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
@@ -136,6 +136,7 @@ const TOKENS: Record<string, string> = {
   "{{phone}}": SITE.phone,
   "{{email}}": SITE.email,
   "{{freeShipping}}": formatRs(COMMERCE.freeShippingThreshold),
+  "{{gulmiPrice}}": formatRs(MARKET.gulmiPerKg),
 };
 
 function interpolate(markdown: string): string {
@@ -154,6 +155,22 @@ function stripComments(markdown: string): string {
   return markdown.replace(/<!--[\s\S]*?-->/g, "");
 }
 
+/**
+ * A heading may pin its anchor with a trailing `{#id}`.
+ *
+ * The derived id moves whenever the wording does, and some headings are
+ * linked from outside the article: every price on the site points at the
+ * "is it worth it" section of /sakhar-price, whose heading quotes the price
+ * and so would change its own anchor the day the price did.
+ */
+const PINNED_ID = /\s*\{#([\w-]+)\}\s*$/;
+
+function heading(raw: string): { id: string; text: string } {
+  const pinned = raw.match(PINNED_ID);
+  const text = raw.replace(PINNED_ID, "").trim();
+  return { id: pinned ? pinned[1] : slugifyHeading(text), text };
+}
+
 export function parseArticle(markdown: string): Block[] {
   const blocks: Block[] = [];
 
@@ -164,13 +181,11 @@ export function parseArticle(markdown: string): Block[] {
 
     // Headings
     if (raw.startsWith("### ")) {
-      const text = raw.slice(4).trim();
-      blocks.push({ kind: "h3", id: slugifyHeading(text), text });
+      blocks.push({ kind: "h3", ...heading(raw.slice(4)) });
       continue;
     }
     if (raw.startsWith("## ")) {
-      const text = raw.slice(3).trim();
-      blocks.push({ kind: "h2", id: slugifyHeading(text), text });
+      blocks.push({ kind: "h2", ...heading(raw.slice(3)) });
       continue;
     }
 

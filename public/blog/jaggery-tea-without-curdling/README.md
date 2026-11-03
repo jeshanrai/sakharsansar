@@ -33,6 +33,13 @@ Dimensions are read from the file itself, so any size or orientation works.
 
 ## Shot #2 is the one that earns the links
 
+> **Hold this shot (3 Nov 2026).** The owner reports that our sakhar does not
+> split milk the way the Gulmi and Terai blocks did, and is proving it with a
+> filmed three-pan test. Until those results are in, do not shoot a split pan
+> with our sakhar and caption it "same sakhar": if the test holds, it would
+> contradict the test, and if it doesn't, the test wording changes. If the
+> shot is made, use a block we bought and say which.
+
 Deliberately ruin a pan for this. Drop a lump of sakhar into hard-boiling milk,
 let it split properly, and pour it into a glass identical to the good one.
 

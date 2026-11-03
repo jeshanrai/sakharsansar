@@ -1,7 +1,7 @@
 import commerce from "@/data/ne/commerce.json";
 import content from "@/data/content.json";
 import { formatMoney, formatPrice } from "./i18n";
-import { COMMERCE } from "./site";
+import { COMMERCE, MARKET } from "./site";
 import { parsePrice } from "./seo";
 
 /**
@@ -25,6 +25,7 @@ const FIGURES: Record<string, string> = {
   blockPrice: priceOf("organic-jaggery-block"),
   powderPrice: priceOf("jaggery-powder"),
   freeShipping: formatMoney(COMMERCE.freeShippingThreshold, "ne"),
+  gulmiPrice: formatPrice(MARKET.gulmiPerKg, "ne"),
 };
 
 /** Replace every {placeholder}; an unknown one fails the build, loudly. */

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Footer from "@/components/layout/Footer";
 import ProductActions from "@/components/product/ProductActions";
 import ProductDetailSections from "@/components/product/ProductDetailSections";
+import GradeNote from "@/components/product/GradeNote";
 import { AnimatedWave } from "@/components/ui/StoryArt";
 import { Daisy } from "@/components/ui/Doodles";
 import JsonLd from "@/components/seo/JsonLd";
@@ -37,6 +38,33 @@ export async function generateStaticParams() {
  * dropping the URL. `false` makes those a real 404.
  */
 export const dynamicParams = false;
+
+/**
+ * The products sold as sakhar, which are the ones a buyer weighs against
+ * Gulmi and Terai jaggery. The dry fruits are a snack priced per 100 g and
+ * get no grade line.
+ */
+const GRADED = new Set(["organic-jaggery-block", "jaggery-powder"]);
+
+/**
+ * A "How to Use" line may carry one `[label](/path)` link into the journal —
+ * the block names chaku as a use and links the recipe, because that is the
+ * moment a January buyer needs to know this is the ingredient. Internal paths
+ * only; anything else is left as written.
+ */
+function withLink(text: string) {
+  const m = text.match(/\[([^\]]+)\]\((\/[^)\s]*)\)/);
+  if (!m || m.index === undefined) return text;
+  return (
+    <>
+      {text.slice(0, m.index)}
+      <Link href={m[2]} className="text-grove underline underline-offset-4 hover:text-jaggery transition-colors">
+        {m[1]}
+      </Link>
+      {text.slice(m.index + m[0].length)}
+    </>
+  );
+}
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
@@ -179,7 +207,7 @@ export default async function ProductPage({ params }: Props) {
       body: (
         <ul className="list-disc pl-5 space-y-2">
           {product.howToUse.map((use) => (
-            <li key={use}>{use}</li>
+            <li key={use}>{withLink(use)}</li>
           ))}
         </ul>
       ),
@@ -310,7 +338,7 @@ export default async function ProductPage({ params }: Props) {
                 {product.description}
               </p>
 
-              <div className="flex items-baseline gap-4 mb-9">
+              <div className={`flex items-baseline gap-4 ${GRADED.has(product.slug) ? "mb-3" : "mb-9"}`}>
                 <span className="font-serif text-h3 text-jaggery nums-price">
                   {product.price}
                 </span>
@@ -318,6 +346,7 @@ export default async function ProductPage({ params }: Props) {
                   {product.weight}
                 </span>
               </div>
+              {GRADED.has(product.slug) && <GradeNote className="mb-9 max-w-md" />}
 
               <ProductActions productName={product.name} slug={product.slug} />
 

@@ -40,6 +40,7 @@ A small subset of markdown. Anything outside it renders as a paragraph.
 
 ```
 ## H2                      Section. Anchored, used by schema.
+## H2 {#worth-it}          Pins the anchor, for a heading linked from elsewhere.
 ### H3                     Sub-section, and FAQ questions.
 > text                     The answer box. One per post, right after the intro.
 - item / 1. item           Lists. Every line in the block must be an item.
@@ -53,7 +54,13 @@ row | row | row
 :::
 ```
 
-Two things worth knowing:
+Three things worth knowing:
+
+- **`<!-- -->` never reaches the page.** Use it for placeholders that must
+  not publish, such as the milk-test copy waiting on the owner's results.
+  Keep a comment out of the middle of a `:::table`: it leaves a blank line,
+  which splits the table in two. Put it after the table, or at the end of a
+  row's line.
 
 - **A figure whose file is missing simply does not render.** Write the figure
   lines for photographs you have not shot yet; they appear on the build after
@@ -119,9 +126,9 @@ ranks. Check any new keyword against what is already published:
 
 | Slug | Owns |
 |------|------|
-| `himalayan-jaggery-sankhuwasabha` | Sankhuwasabha sakhar, hill vs Terai, what sakhar is, sakhar vs gud / khudo / chaku (the vocabulary section). **The pillar.** A separate glossary post was considered on 24 Sep 2026 and rejected: it would compete with this and with `sakhar-in-english`. |
+| `himalayan-jaggery-sankhuwasabha` | Sankhuwasabha sakhar, hill vs Terai, **Sankhuwasabha vs Gulmi vs Terai, Gulmi sakhar, Thorgeli, types of sakhar in Nepal, "is it really Sankhuwasabha"** (the five seller questions, added 3 Nov 2026), what sakhar is, sakhar vs gud / khudo / chaku (the vocabulary section). **The pillar.** A separate glossary post was considered on 24 Sep 2026 and rejected: it would compete with this and with `sakhar-in-english`. |
 | `sakhar-in-english` | jaggery in Nepali, sakhar in English / Hindi / Marathi, what is jaggery |
-| `/sakhar-price` (a page, not a post) | price, cost per kg, what you pay per cup |
+| `/sakhar-price` (a page, not a post) | price, cost per kg, what you pay per cup, the three-grade price ladder, why Sankhuwasabha costs more. Its `#worth-it` section is where every price on the site links; never rename that anchor. A dedicated grades post was considered on 3 Nov 2026 and rejected: this page and the pillar already covered most of it. |
 | `jaggery-vs-sugar` | the honest comparison, jaggery nutrition, calories, minerals, GI |
 | `jaggery-health-claims-truth` | jaggery benefits, sakhar benefits, is jaggery good for health |
 | `jaggery-powder-vs-block` | powder vs block |
@@ -129,7 +136,8 @@ ranks. Check any new keyword against what is already published:
 | `how-to-identify-pure-jaggery-sakhar` | purity, adulteration, the 7 home tests |
 | `is-jaggery-safe-for-diabetics` | diabetes and all GI claims |
 | `jaggery-tea-without-curdling` | sakhar chiya method |
-| `chaku-recipe-maghe-sankranti` | chaku, Maghe Sankranti |
+| `chaku-recipe-maghe-sankranti` | chaku, chaku recipe, how to make chaku |
+| `maghe-sankranti-food` | Maghe Sankranti food, what is eaten at Maghe Sankranti, how much sakhar for the festival. Links out to each recipe; carries **no chaku method**, so it never competes with the chaku page. Added 3 Nov 2026. |
 | `thekua-recipe-chhath` | thekua, Chhath prasad |
 | `sel-roti-sakhar` | sel roti with jaggery, Tihar |
 | `yomari-chaku-recipe` | yomari, Yomari Punhi, chaku as a filling |

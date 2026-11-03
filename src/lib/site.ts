@@ -148,6 +148,27 @@ export const DELIVERY = {
   outsideValleyCarrier: "Nepal Can Move",
 } as const;
 
+/**
+ * Other people's prices, where the site quotes one. Each figure carries the
+ * article it was read from and the date, because a competitor's price with no
+ * source is a number we made up, and one with no date goes stale silently.
+ *
+ * Gulmi (Thorgeli brand) is Rs. 275 from the cooperative's own plant per the
+ * Kathmandu Post of 13 Jan 2026, and Rs. 280 from one farmer in the same
+ * piece. Singha Durbar's Rs. 260 is from Asar 2082 (about June 2025) and is
+ * quoted on /sakhar-price as the older figure.
+ *
+ * There is deliberately no Terai figure. We have not checked one, so the
+ * line next to every price says "for less" and nothing more.
+ */
+export const MARKET = {
+  gulmiPerKg: 275,
+  gulmiSource:
+    "https://kathmandupost.com/money/2026/01/13/thorgeli-jaggery-turns-sugarcane-into-a-year-round-livelihood-in-gulmi",
+  /** Where every price on the site sends a hesitating buyer. */
+  worthItPath: "/sakhar-price#worth-it",
+} as const;
+
 /** 1500 -> "Rs. 1,500". Nepali grouping is 3-digit up to 5 figures, which is
  *  where every number we quote sits, so plain en-US grouping is correct here. */
 export function formatRs(amount: number): string {
