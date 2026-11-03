@@ -2,6 +2,8 @@ import { Router, Response } from "express";
 import prisma from "../lib/prisma";
 import { requireAuth, AuthRequest } from "../middleware/auth";
 import { PaymentMethod } from "@prisma/client";
+import { seasonFromQuery, rangeOf } from "../lib/seasons";
+import { isOwner, closedYearRefusal } from "../lib/owner";
 
 const router = Router();
 
@@ -10,10 +12,17 @@ router.use(requireAuth);
 
 // GET /api/sales
 router.get("/", async (req: AuthRequest, res: Response): Promise<void> => {
-  const { paymentMethod, createdBy, page = "1", limit = "20" } = req.query;
+  const { paymentMethod, createdBy, season: seasonParam, page = "1", limit = "20" } = req.query;
   const skip = (Number(page) - 1) * Number(limit);
 
+  const { season, error } = await seasonFromQuery(seasonParam);
+  if (error) {
+    res.status(400).json({ error });
+    return;
+  }
+
   const where: Record<string, unknown> = { deletedAt: null };
+  if (season) where.date = rangeOf(season);
   if (paymentMethod && paymentMethod !== "All") {
     where.paymentMethod = paymentMethod as PaymentMethod;
   }
@@ -47,6 +56,12 @@ router.post("/", async (req: AuthRequest, res: Response): Promise<void> => {
     return;
   }
 
+  const refusal = await closedYearRefusal(req.adminId, [date || new Date()]);
+  if (refusal) {
+    res.status(403).json({ error: refusal });
+    return;
+  }
+
   const sale = await prisma.sale.create({
     data: {
       customer,
@@ -69,6 +84,18 @@ router.patch("/:id", async (req: AuthRequest, res: Response): Promise<void> => {
   const id = req.params.id as string;
   const { customer, phone, product, quantity, amount, paymentMethod, description, date } = req.body;
 
+  const existing = await prisma.sale.findFirst({ where: { id, deletedAt: null }, select: { date: true } });
+  if (!existing) {
+    res.status(404).json({ error: "Sale not found" });
+    return;
+  }
+  // Staff may edit sales, but not into or out of a closed year.
+  const refusal = await closedYearRefusal(req.adminId, [existing.date, date]);
+  if (refusal) {
+    res.status(403).json({ error: refusal });
+    return;
+  }
+
   const data: Record<string, unknown> = { updatedBy: req.adminId };
   if (customer !== undefined) data.customer = customer;
   if (phone !== undefined) data.phone = phone;
@@ -87,9 +114,15 @@ router.patch("/:id", async (req: AuthRequest, res: Response): Promise<void> => {
   res.json(sale);
 });
 
-// DELETE /api/sales/:id — soft delete
+// DELETE /api/sales/:id — soft delete, owner only. Staff can edit a sale but
+// not remove it.
 router.delete("/:id", async (req: AuthRequest, res: Response): Promise<void> => {
   const id = req.params.id as string;
+
+  if (!(await isOwner(req.adminId))) {
+    res.status(403).json({ error: "Only the owner can delete sales." });
+    return;
+  }
 
   await prisma.sale.update({
     where: { id },

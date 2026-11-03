@@ -1,18 +1,37 @@
 import { Router, Request, Response } from "express";
 import prisma from "../lib/prisma";
 import { requireAuth } from "../middleware/auth";
+import { seasonFromQuery, rangeOf, within, type Season } from "../lib/seasons";
 
 const router = Router();
 
 router.use(requireAuth);
 
-// GET /api/dashboard/stats
-router.get("/stats", async (_req: Request, res: Response): Promise<void> => {
-  const now = new Date();
-  const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+/**
+ * Every figure here can be asked for one year with `?season=N`. For a closed
+ * year, "this month" and the charts end where the year ended, so Year 1 reads
+ * as it did on its last day.
+ */
+function yearScope(season: Season | null) {
+  const yr = season ? rangeOf(season) : {};
+  const now = yr.lt ? new Date(yr.lt.getTime() - 1) : new Date();
+  return { yr, now };
+}
 
-  const activeSaleFilter = { deletedAt: null };
-  const activeExpenseFilter = { deletedAt: null };
+// GET /api/dashboard/stats
+router.get("/stats", async (req: Request, res: Response): Promise<void> => {
+  const { season, error } = await seasonFromQuery(req.query.season);
+  if (error) {
+    res.status(400).json({ error });
+    return;
+  }
+  const { yr, now } = yearScope(season);
+  const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+  const thisMonth = within({ gte: startOfMonth }, season);
+
+  const activeOrderFilter = { deletedAt: null, createdAt: yr };
+  const activeSaleFilter = { deletedAt: null, date: yr };
+  const activeExpenseFilter = { deletedAt: null, date: yr };
 
   const [
     totalOrders,
@@ -33,25 +52,25 @@ router.get("/stats", async (_req: Request, res: Response): Promise<void> => {
     recentSales,
     salesByPaymentMethod,
   ] = await Promise.all([
-    prisma.order.count({ where: { deletedAt: null } }),
-    prisma.order.count({ where: { createdAt: { gte: startOfMonth }, deletedAt: null } }),
-    prisma.order.findMany({ where: { deletedAt: null }, select: { amount: true, quantity: true } }),
+    prisma.order.count({ where: activeOrderFilter }),
+    prisma.order.count({ where: { createdAt: thisMonth, deletedAt: null } }),
+    prisma.order.findMany({ where: activeOrderFilter, select: { amount: true, quantity: true } }),
     prisma.order.findMany({
-      where: { createdAt: { gte: startOfMonth }, deletedAt: null },
+      where: { createdAt: thisMonth, deletedAt: null },
       select: { amount: true, quantity: true },
     }),
     prisma.expense.aggregate({ where: activeExpenseFilter, _sum: { amount: true } }),
     prisma.expense.aggregate({
-      where: { date: { gte: startOfMonth }, ...activeExpenseFilter },
+      where: { ...activeExpenseFilter, date: thisMonth },
       _sum: { amount: true },
     }),
-    prisma.order.findMany({ where: { deletedAt: null }, orderBy: { createdAt: "desc" }, take: 5 }),
+    prisma.order.findMany({ where: activeOrderFilter, orderBy: { createdAt: "desc" }, take: 5 }),
     prisma.expense.findMany({ where: activeExpenseFilter, orderBy: { date: "desc" }, take: 5 }),
-    prisma.order.groupBy({ by: ["status"], where: { deletedAt: null }, _count: { id: true } }),
+    prisma.order.groupBy({ by: ["status"], where: activeOrderFilter, _count: { id: true } }),
     // Sales aggregations
     prisma.sale.aggregate({ where: activeSaleFilter, _sum: { amount: true }, _count: true }),
     prisma.sale.aggregate({
-      where: { date: { gte: startOfMonth }, ...activeSaleFilter },
+      where: { ...activeSaleFilter, date: thisMonth },
       _sum: { amount: true },
       _count: true,
     }),
@@ -80,11 +99,11 @@ router.get("/stats", async (_req: Request, res: Response): Promise<void> => {
     const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
     const nextMonth = new Date(now.getFullYear(), now.getMonth() - i + 1, 1);
     const monthOrders = await prisma.order.findMany({
-      where: { createdAt: { gte: date, lt: nextMonth } },
+      where: { createdAt: within({ gte: date, lt: nextMonth }, season) },
       select: { amount: true },
     });
     const monthExpenses = await prisma.expense.aggregate({
-      where: { date: { gte: date, lt: nextMonth } },
+      where: { date: within({ gte: date, lt: nextMonth }, season) },
       _sum: { amount: true },
     });
     monthlyChart.push({
@@ -129,9 +148,15 @@ router.get("/stats", async (_req: Request, res: Response): Promise<void> => {
 });
 
 // GET /api/dashboard/users-stats
-router.get("/users-stats", async (_req: Request, res: Response): Promise<void> => {
-  const activeSaleFilter = { deletedAt: null };
-  const activeExpenseFilter = { deletedAt: null };
+router.get("/users-stats", async (req: Request, res: Response): Promise<void> => {
+  const { season, error } = await seasonFromQuery(req.query.season);
+  if (error) {
+    res.status(400).json({ error });
+    return;
+  }
+  const { yr } = yearScope(season);
+  const activeSaleFilter = { deletedAt: null, date: yr };
+  const activeExpenseFilter = { deletedAt: null, date: yr };
 
   // Get all admins with their sales and expenses
   const admins = await prisma.admin.findMany({
@@ -169,9 +194,14 @@ router.get("/users-stats", async (_req: Request, res: Response): Promise<void> =
 });
 
 // GET /api/dashboard/sales-chart
-router.get("/sales-chart", async (_req: Request, res: Response): Promise<void> => {
-  const { timeframe = "monthly" } = _req.query;
-  const now = new Date();
+router.get("/sales-chart", async (req: Request, res: Response): Promise<void> => {
+  const { timeframe = "monthly" } = req.query;
+  const { season, error } = await seasonFromQuery(req.query.season);
+  if (error) {
+    res.status(400).json({ error });
+    return;
+  }
+  const { now } = yearScope(season);
   const activeSaleFilter = { deletedAt: null };
 
   let chartData: { label: string; sales: number }[] = [];
@@ -186,7 +216,7 @@ router.get("/sales-chart", async (_req: Request, res: Response): Promise<void> =
 
       const weeklySales = await prisma.sale.aggregate({
         where: {
-          date: { gte: weekStart, lt: weekEnd },
+          date: within({ gte: weekStart, lt: weekEnd }, season),
           ...activeSaleFilter,
         },
         _sum: { amount: true },
@@ -206,7 +236,7 @@ router.get("/sales-chart", async (_req: Request, res: Response): Promise<void> =
 
       const monthlySales = await prisma.sale.aggregate({
         where: {
-          date: { gte: date, lt: nextMonth },
+          date: within({ gte: date, lt: nextMonth }, season),
           ...activeSaleFilter,
         },
         _sum: { amount: true },

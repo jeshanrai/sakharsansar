@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Mail, X, Send, AlertCircle, CheckCircle2, Plus } from "lucide-react";
 import { apiFetch } from "@/lib/api";
 import { Card, SectionHeading, Button } from "../_components/primitives";
+import YearsPanel from "../_components/YearsPanel";
 
 type NotifySettings = {
   emails: string[];
@@ -93,6 +94,10 @@ export default function SettingsPage({ onToast }: { onToast: (msg: string) => vo
 
   return (
     <div className="space-y-6">
+      <YearsPanel onToast={onToast} />
+
+      <div className="h-px bg-[#1A1410]/8 my-2" />
+
       <SectionHeading
         eyebrow="Settings"
         title="Order notifications"

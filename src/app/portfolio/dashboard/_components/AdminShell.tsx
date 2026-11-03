@@ -20,7 +20,9 @@ import {
   ChevronRight,
   Sparkles,
   Settings,
+  CalendarRange,
 } from "lucide-react";
+import { useSeason } from "../_data/season";
 
 export type Tab = "overview" | "orders" | "enquiries" | "sales" | "delivery" | "expenses" | "b2b" | "users" | "settings";
 
@@ -35,18 +37,19 @@ const NAV: { id: Tab; label: string; mobileLabel?: string; icon: typeof LayoutDa
   { id: "expenses", label: "Expenses", icon: Receipt, hint: "Cash outflow" },
   { id: "b2b", label: "B2B Shops", mobileLabel: "Shops", icon: Store, hint: "Wholesale clients" },
   { id: "users", label: "Team", icon: Users, hint: "Staff activity" },
-  { id: "settings", label: "Settings", icon: Settings, hint: "Order emails", bottomBar: false },
+  { id: "settings", label: "Settings", icon: Settings, hint: "Years, order emails", bottomBar: false },
 ];
 
 interface Props {
   activeTab: Tab;
   onTabChange: (t: Tab) => void;
   adminName: string;
+  roleLabel: string;
   onLogout?: () => void;
   children: React.ReactNode;
 }
 
-export default function AdminShell({ activeTab, onTabChange, adminName, onLogout, children }: Props) {
+export default function AdminShell({ activeTab, onTabChange, adminName, roleLabel, onLogout, children }: Props) {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [scrolled, setScrolled] = useState(false);
@@ -126,7 +129,7 @@ export default function AdminShell({ activeTab, onTabChange, adminName, onLogout
           </div>
           <div className="flex-1 text-left min-w-0">
             <p className="text-sm font-semibold text-white truncate">{adminName || "Admin"}</p>
-            <p className="text-[11px] text-[#F5EDE0]/65 truncate font-medium">Owner</p>
+            <p className="text-[11px] text-[#F5EDE0]/65 truncate font-medium">{roleLabel}</p>
           </div>
           <button
             onClick={onLogout}
@@ -195,7 +198,7 @@ export default function AdminShell({ activeTab, onTabChange, adminName, onLogout
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-semibold text-white truncate">{adminName || "Admin"}</p>
-                    <p className="text-[11px] text-[#F5EDE0]/65 font-medium">Owner</p>
+                    <p className="text-[11px] text-[#F5EDE0]/65 font-medium">{roleLabel}</p>
                   </div>
                   <button onClick={onLogout} className="h-9 w-9 rounded-xl bg-[#F5EDE0]/5 flex items-center justify-center text-rose-300/80">
                     <LogOut className="w-4 h-4" />
@@ -242,6 +245,8 @@ export default function AdminShell({ activeTab, onTabChange, adminName, onLogout
                 {NAV.find((n) => n.id === activeTab)?.label}
               </p>
             </div>
+
+            <YearPicker />
 
             <button className="relative h-10 w-10 rounded-xl bg-white border border-[#1A1410]/8 flex items-center justify-center shadow-sm hover:border-[#B8763E]/30 transition-colors">
               <Bell className="w-4 h-4 text-[#1A1410]/70" />
@@ -301,5 +306,29 @@ export default function AdminShell({ activeTab, onTabChange, adminName, onLogout
         </div>
       </nav>
     </div>
+  );
+}
+
+/** Which year every page shows. Hidden until there is more than one year. */
+function YearPicker() {
+  const { seasons, selected, setSelected } = useSeason();
+  if (seasons.length < 2) return null;
+  return (
+    <label className="relative h-10 flex items-center rounded-xl bg-white border border-[#1A1410]/8 shadow-sm hover:border-[#B8763E]/30 transition-colors">
+      <CalendarRange className="absolute left-3 w-4 h-4 text-[#B8763E] pointer-events-none" />
+      <span className="sr-only">Year</span>
+      <select
+        value={selected}
+        onChange={(e) => setSelected(Number(e.target.value))}
+        className="h-full appearance-none bg-transparent pl-9 pr-3 text-sm font-medium text-[#1A1410] focus:outline-none cursor-pointer"
+      >
+        {[...seasons].reverse().map((s) => (
+          <option key={s.number} value={s.number}>
+            Year {s.number}
+            {s.current ? " (current)" : ""}
+          </option>
+        ))}
+      </select>
+    </label>
   );
 }

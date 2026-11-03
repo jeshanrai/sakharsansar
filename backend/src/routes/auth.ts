@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import prisma from "../lib/prisma";
 import { requireAuth, AuthRequest } from "../middleware/auth";
+import { isOwnerEmail } from "../lib/owner";
 
 const router = Router();
 const JWT_SECRET = process.env.JWT_SECRET || "fallback-secret";
@@ -29,7 +30,10 @@ router.post("/login", async (req: Request, res: Response): Promise<void> => {
   }
 
   const token = jwt.sign({ id: admin.id }, JWT_SECRET, { expiresIn: "7d" });
-  res.json({ token, admin: { id: admin.id, name: admin.name, email: admin.email } });
+  res.json({
+    token,
+    admin: { id: admin.id, name: admin.name, email: admin.email, isOwner: isOwnerEmail(admin.email) },
+  });
 });
 
 // GET /api/auth/me
@@ -42,7 +46,7 @@ router.get("/me", requireAuth, async (req: AuthRequest, res: Response): Promise<
     res.status(404).json({ error: "Not found" });
     return;
   }
-  res.json(admin);
+  res.json({ ...admin, isOwner: isOwnerEmail(admin.email) });
 });
 
 export default router;

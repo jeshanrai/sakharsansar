@@ -33,6 +33,7 @@ import {
 import { apiFetch } from "@/lib/api";
 import { Card, Pill } from "../_components/primitives";
 import { STATUS_TONES, PAYMENT_TONES, type DashboardStats, type PaymentMethod } from "../_data/types";
+import { useSeason } from "../_data/season";
 
 const rs = (n: number) => `Rs. ${(n || 0).toLocaleString()}`;
 
@@ -51,19 +52,20 @@ const STATUS_COLOR: Record<string, string> = {
 };
 
 export default function OverviewPage({ adminName }: { adminName: string }) {
+  const { selected } = useSeason();
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [growthRange, setGrowthRange] = useState<"weekly" | "monthly">("monthly");
   const [growthData, setGrowthData] = useState<{ label: string; sales: number }[]>([]);
 
   const fetchStats = useCallback(async () => {
-    const res = await apiFetch("/dashboard/stats");
+    const res = await apiFetch(`/dashboard/stats?season=${selected}`);
     if (res.ok) setStats(await res.json());
-  }, []);
+  }, [selected]);
 
   const fetchGrowth = useCallback(async (range: "weekly" | "monthly") => {
-    const res = await apiFetch(`/dashboard/sales-chart?timeframe=${range}`);
+    const res = await apiFetch(`/dashboard/sales-chart?timeframe=${range}&season=${selected}`);
     if (res.ok) setGrowthData(await res.json());
-  }, []);
+  }, [selected]);
 
   useEffect(() => {
     fetchStats();

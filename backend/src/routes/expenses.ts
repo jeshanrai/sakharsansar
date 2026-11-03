@@ -1,6 +1,8 @@
 import { Router, Response } from "express";
 import prisma from "../lib/prisma";
 import { requireAuth, AuthRequest } from "../middleware/auth";
+import { seasonFromQuery, rangeOf } from "../lib/seasons";
+import { closedYearRefusal } from "../lib/owner";
 
 const router = Router();
 
@@ -9,10 +11,17 @@ router.use(requireAuth);
 
 // GET /api/expenses
 router.get("/", async (req: AuthRequest, res: Response): Promise<void> => {
-  const { category, createdBy, page = "1", limit = "20" } = req.query;
+  const { category, createdBy, season: seasonParam, page = "1", limit = "20" } = req.query;
   const skip = (Number(page) - 1) * Number(limit);
 
+  const { season, error } = await seasonFromQuery(seasonParam);
+  if (error) {
+    res.status(400).json({ error });
+    return;
+  }
+
   const where: Record<string, unknown> = { deletedAt: null };
+  if (season) where.date = rangeOf(season);
   if (category && category !== "All") {
     where.category = category as string;
   }
@@ -42,6 +51,12 @@ router.post("/", async (req: AuthRequest, res: Response): Promise<void> => {
     return;
   }
 
+  const refusal = await closedYearRefusal(req.adminId, [date || new Date()]);
+  if (refusal) {
+    res.status(403).json({ error: refusal });
+    return;
+  }
+
   const expense = await prisma.expense.create({
     data: {
       title,
@@ -59,6 +74,16 @@ router.post("/", async (req: AuthRequest, res: Response): Promise<void> => {
 // DELETE /api/expenses/:id — soft delete
 router.delete("/:id", async (req: AuthRequest, res: Response): Promise<void> => {
   const id = req.params.id as string;
+  const existing = await prisma.expense.findFirst({ where: { id, deletedAt: null }, select: { date: true } });
+  if (!existing) {
+    res.status(404).json({ error: "Expense not found" });
+    return;
+  }
+  const refusal = await closedYearRefusal(req.adminId, [existing.date]);
+  if (refusal) {
+    res.status(403).json({ error: refusal });
+    return;
+  }
   await prisma.expense.update({
     where: { id },
     data: { deletedAt: new Date(), deletedBy: req.adminId },

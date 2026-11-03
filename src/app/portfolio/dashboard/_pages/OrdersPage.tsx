@@ -7,11 +7,13 @@ import { apiFetch } from "@/lib/api";
 import { orderRef } from "@/lib/order-pricing";
 import { Card, SectionHeading, Button, Pill, EmptyState } from "../_components/primitives";
 import { STATUS_TONES, type Order, type OrderStatus } from "../_data/types";
+import { useSeason } from "../_data/season";
 
 const rs = (n: number) => `Rs. ${(n || 0).toLocaleString()}`;
 const STATUSES: ("ALL" | OrderStatus)[] = ["ALL", "PENDING", "CONFIRMED", "SHIPPED", "DELIVERED", "CANCELLED"];
 
 export default function OrdersPage({ onToast }: { onToast: (msg: string) => void }) {
+  const { selected } = useSeason();
   const [orders, setOrders] = useState<Order[]>([]);
   const [totalPages, setTotalPages] = useState(1);
   const [search, setSearch] = useState("");
@@ -23,6 +25,7 @@ export default function OrdersPage({ onToast }: { onToast: (msg: string) => void
     setLoading(true);
     const qs = new URLSearchParams({ page: String(p), limit: "10" });
     if (status !== "ALL") qs.set("status", status);
+    qs.set("season", String(selected));
     const res = await apiFetch(`/orders?${qs.toString()}`);
     if (res.ok) {
       const data = await res.json();
@@ -30,7 +33,7 @@ export default function OrdersPage({ onToast }: { onToast: (msg: string) => void
       setTotalPages(data.totalPages || 1);
     }
     setLoading(false);
-  }, []);
+  }, [selected]);
 
   useEffect(() => {
     fetchOrders(page, filter);

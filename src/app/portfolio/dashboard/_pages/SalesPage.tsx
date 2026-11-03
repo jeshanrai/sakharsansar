@@ -16,6 +16,7 @@ import {
   EmptyState,
 } from "../_components/primitives";
 import { PAYMENT_TONES, type Sale, type PaymentMethod } from "../_data/types";
+import { useSeason, errorText } from "../_data/season";
 
 const rs = (n: number) => `Rs. ${(n || 0).toLocaleString()}`;
 
@@ -26,6 +27,8 @@ const PM_ICONS: Record<PaymentMethod, React.ComponentType<{ className?: string }
 };
 
 export default function SalesPage({ onToast }: { onToast: (msg: string) => void }) {
+  // Staff can record and edit sales in the current year; only the owner deletes.
+  const { selected, isOwner, canEdit } = useSeason();
   const [sales, setSales] = useState<Sale[]>([]);
   const [totalPages, setTotalPages] = useState(1);
   const [search, setSearch] = useState("");
@@ -53,6 +56,7 @@ export default function SalesPage({ onToast }: { onToast: (msg: string) => void 
     setLoading(true);
     const qs = new URLSearchParams({ page: String(p), limit: "10" });
     if (pm !== "ALL") qs.set("paymentMethod", pm);
+    qs.set("season", String(selected));
     const res = await apiFetch(`/sales?${qs.toString()}`);
     if (res.ok) {
       const data = await res.json();
@@ -60,7 +64,7 @@ export default function SalesPage({ onToast }: { onToast: (msg: string) => void 
       setTotalPages(data.totalPages || 1);
     }
     setLoading(false);
-  }, []);
+  }, [selected]);
 
   useEffect(() => {
     fetchSales(page, filter);
@@ -109,7 +113,7 @@ export default function SalesPage({ onToast }: { onToast: (msg: string) => void 
       setPage(1);
       fetchSales(1, filter);
     } else {
-      onToast("Save failed");
+      onToast(await errorText(res, "Save failed"));
     }
   };
 
@@ -122,7 +126,7 @@ export default function SalesPage({ onToast }: { onToast: (msg: string) => void 
       onToast("Sale deleted");
       fetchSales(page, filter);
     } else {
-      onToast("Delete failed");
+      onToast(await errorText(res, "Delete failed"));
     }
   };
 
@@ -146,9 +150,11 @@ export default function SalesPage({ onToast }: { onToast: (msg: string) => void 
         title="Sales"
         description="Every in-store sale, repeat order, and walk-in, all captured here."
         action={
-          <Button onClick={() => openForm()}>
-            <Plus className="w-4 h-4" /> Record Sale
-          </Button>
+          canEdit && (
+            <Button onClick={() => openForm()}>
+              <Plus className="w-4 h-4" /> Record Sale
+            </Button>
+          )
         }
       />
 
@@ -232,18 +238,24 @@ export default function SalesPage({ onToast }: { onToast: (msg: string) => void 
                   </td>
                   <td className="px-5 py-4">
                     <div className="flex items-center justify-end gap-1">
-                      <button
-                        onClick={() => openForm(sale)}
-                        className="h-8 w-8 rounded-lg bg-[#FAF6EE] text-[#1A1410]/60 hover:text-[#B8763E] hover:bg-[#B8763E]/10 transition-colors flex items-center justify-center"
-                      >
-                        <Edit3 className="w-3.5 h-3.5" />
-                      </button>
-                      <button
-                        onClick={() => setConfirmDel(sale)}
-                        className="h-8 w-8 rounded-lg bg-[#FAF6EE] text-[#1A1410]/60 hover:text-rose-500 hover:bg-rose-50 transition-colors flex items-center justify-center"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
+                      {canEdit && (
+                        <button
+                          onClick={() => openForm(sale)}
+                          aria-label="Edit sale"
+                          className="h-8 w-8 rounded-lg bg-[#FAF6EE] text-[#1A1410]/60 hover:text-[#B8763E] hover:bg-[#B8763E]/10 transition-colors flex items-center justify-center"
+                        >
+                          <Edit3 className="w-3.5 h-3.5" />
+                        </button>
+                      )}
+                      {isOwner && (
+                        <button
+                          onClick={() => setConfirmDel(sale)}
+                          aria-label="Delete sale"
+                          className="h-8 w-8 rounded-lg bg-[#FAF6EE] text-[#1A1410]/60 hover:text-rose-500 hover:bg-rose-50 transition-colors flex items-center justify-center"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      )}
                     </div>
                   </td>
                 </motion.tr>
@@ -283,12 +295,16 @@ export default function SalesPage({ onToast }: { onToast: (msg: string) => void 
                           <Pill tone={PAYMENT_TONES[sale.paymentMethod]}>{sale.paymentMethod}</Pill>
                         </div>
                         <div className="flex items-center gap-1">
-                          <button onClick={() => openForm(sale)} className="h-8 w-8 rounded-lg bg-[#FAF6EE] text-[#1A1410]/60 flex items-center justify-center">
-                            <Edit3 className="w-3.5 h-3.5" />
-                          </button>
-                          <button onClick={() => setConfirmDel(sale)} className="h-8 w-8 rounded-lg bg-[#FAF6EE] text-rose-500 flex items-center justify-center">
-                            <Trash2 className="w-3.5 h-3.5" />
-                          </button>
+                          {canEdit && (
+                            <button onClick={() => openForm(sale)} aria-label="Edit sale" className="h-8 w-8 rounded-lg bg-[#FAF6EE] text-[#1A1410]/60 flex items-center justify-center">
+                              <Edit3 className="w-3.5 h-3.5" />
+                            </button>
+                          )}
+                          {isOwner && (
+                            <button onClick={() => setConfirmDel(sale)} aria-label="Delete sale" className="h-8 w-8 rounded-lg bg-[#FAF6EE] text-rose-500 flex items-center justify-center">
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -305,12 +321,14 @@ export default function SalesPage({ onToast }: { onToast: (msg: string) => void 
         )}
       </div>
 
+      {canEdit && (
       <button
         onClick={() => openForm()}
         className="md:hidden fixed bottom-24 right-4 h-14 w-14 rounded-2xl bg-gradient-to-br from-[#B8763E] to-[#9A5F2E] text-white shadow-2xl shadow-[#B8763E]/30 flex items-center justify-center z-20 active:scale-95 transition-transform"
       >
         <Plus className="w-5 h-5" />
       </button>
+      )}
 
       <Modal open={formOpen} onClose={() => setFormOpen(false)} title={editing ? "Edit Sale" : "Record New Sale"}>
         <form onSubmit={submit} className="space-y-4">

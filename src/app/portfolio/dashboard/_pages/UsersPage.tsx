@@ -7,6 +7,7 @@ import { apiFetch } from "@/lib/api";
 import { Card, SectionHeading, Button, EmptyState } from "../_components/primitives";
 import UserDetailDrawer from "../_components/UserDetailDrawer";
 import type { UserRow } from "../_data/types";
+import { useSeason } from "../_data/season";
 
 const rs = (n: number) => `Rs. ${(n || 0).toLocaleString()}`;
 
@@ -19,6 +20,7 @@ const initialsOf = (name: string) =>
     .toUpperCase();
 
 export default function UsersPage() {
+  const { selected } = useSeason();
   const [users, setUsers] = useState<UserRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedUser, setSelectedUser] = useState<UserRow | null>(null);
@@ -32,7 +34,7 @@ export default function UsersPage() {
   useEffect(() => {
     let cancelled = false;
     (async () => {
-      const res = await apiFetch("/dashboard/users-stats");
+      const res = await apiFetch(`/dashboard/users-stats?season=${selected}`);
       if (!cancelled && res.ok) {
         setUsers(await res.json());
       }
@@ -41,7 +43,7 @@ export default function UsersPage() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [selected]);
 
   if (loading) {
     return (

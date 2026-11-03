@@ -2,6 +2,8 @@ import { Router, Request, Response } from "express";
 import prisma from "../lib/prisma";
 import { requireAuth, AuthRequest } from "../middleware/auth";
 import { sendOrderNotification } from "../lib/mailer";
+import { seasonFromQuery, rangeOf } from "../lib/seasons";
+import { closedYearRefusal } from "../lib/owner";
 
 import { OrderStatus } from "@prisma/client";
 
@@ -69,10 +71,17 @@ router.post("/", async (req: Request, res: Response): Promise<void> => {
 
 // GET /api/orders — protected (dashboard)
 router.get("/", requireAuth, async (req: Request, res: Response): Promise<void> => {
-  const { status, page = "1", limit = "20" } = req.query;
+  const { status, season: seasonParam, page = "1", limit = "20" } = req.query;
   const skip = (Number(page) - 1) * Number(limit);
 
+  const { season, error } = await seasonFromQuery(seasonParam);
+  if (error) {
+    res.status(400).json({ error });
+    return;
+  }
+
   const where: Record<string, unknown> = { deletedAt: null };
+  if (season) where.createdAt = rangeOf(season);
   if (status) {
     where.status = status as OrderStatus;
   }
@@ -90,7 +99,9 @@ router.get("/", requireAuth, async (req: Request, res: Response): Promise<void> 
   res.json({ orders, total, page: Number(page), totalPages: Math.ceil(total / Number(limit)) });
 });
 
-// PATCH /api/orders/:id — protected (update status)
+// PATCH /api/orders/:id — protected (update status). Open to every admin in
+// every year: an order placed just before a year closed still has to be
+// confirmed and delivered.
 router.patch("/:id", requireAuth, async (req: AuthRequest, res: Response): Promise<void> => {
   const id = req.params.id as string;
   const { status } = req.body;
@@ -106,6 +117,16 @@ router.patch("/:id", requireAuth, async (req: AuthRequest, res: Response): Promi
 // DELETE /api/orders/:id — soft delete
 router.delete("/:id", requireAuth, async (req: AuthRequest, res: Response): Promise<void> => {
   const id = req.params.id as string;
+  const existing = await prisma.order.findFirst({ where: { id, deletedAt: null }, select: { createdAt: true } });
+  if (!existing) {
+    res.status(404).json({ error: "Order not found" });
+    return;
+  }
+  const refusal = await closedYearRefusal(req.adminId, [existing.createdAt]);
+  if (refusal) {
+    res.status(403).json({ error: refusal });
+    return;
+  }
   await prisma.order.update({
     where: { id },
     data: { deletedAt: new Date(), deletedBy: req.adminId },

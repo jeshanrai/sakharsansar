@@ -13,6 +13,7 @@ import {
   Tag,
 } from "lucide-react";
 import { apiFetch } from "@/lib/api";
+import { useSeason } from "../_data/season";
 import {
   PAYMENT_TONES,
   CATEGORY_COLORS,
@@ -41,6 +42,7 @@ interface Props {
 }
 
 export default function UserDetailDrawer({ user, open, onClose }: Props) {
+  const { selected } = useSeason();
   const [tab, setTab] = useState<Tab>("sales");
   const [sales, setSales] = useState<Sale[]>([]);
   const [expenses, setExpenses] = useState<Expense[]>([]);
@@ -75,8 +77,8 @@ export default function UserDetailDrawer({ user, open, onClose }: Props) {
     setExpenses([]);
     try {
       const [sRes, eRes] = await Promise.all([
-        apiFetch(`/sales?createdBy=${encodeURIComponent(id)}&limit=100`),
-        apiFetch(`/expenses?createdBy=${encodeURIComponent(id)}&limit=100`),
+        apiFetch(`/sales?createdBy=${encodeURIComponent(id)}&limit=100&season=${selected}`),
+        apiFetch(`/expenses?createdBy=${encodeURIComponent(id)}&limit=100&season=${selected}`),
       ]);
       if (sRes.ok) {
         const data = await sRes.json();
@@ -89,7 +91,7 @@ export default function UserDetailDrawer({ user, open, onClose }: Props) {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [selected]);
 
   useEffect(() => {
     if (open && user?.id) {

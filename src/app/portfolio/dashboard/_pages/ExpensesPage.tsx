@@ -17,10 +17,12 @@ import {
   EmptyState,
 } from "../_components/primitives";
 import { EXPENSE_CATEGORIES, CATEGORY_COLORS, type Expense } from "../_data/types";
+import { useSeason, errorText } from "../_data/season";
 
 const rs = (n: number) => `Rs. ${(n || 0).toLocaleString()}`;
 
 export default function ExpensesPage({ onToast }: { onToast: (msg: string) => void }) {
+  const { selected, canEdit } = useSeason();
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [totalPages, setTotalPages] = useState(1);
   const [search, setSearch] = useState("");
@@ -44,6 +46,7 @@ export default function ExpensesPage({ onToast }: { onToast: (msg: string) => vo
     setLoading(true);
     const qs = new URLSearchParams({ page: String(p), limit: "10" });
     if (cat !== "ALL") qs.set("category", cat);
+    qs.set("season", String(selected));
     const res = await apiFetch(`/expenses?${qs.toString()}`);
     if (res.ok) {
       const data = await res.json();
@@ -51,7 +54,7 @@ export default function ExpensesPage({ onToast }: { onToast: (msg: string) => vo
       setTotalPages(data.totalPages || 1);
     }
     setLoading(false);
-  }, []);
+  }, [selected]);
 
   useEffect(() => {
     fetchExpenses(page, category);
@@ -78,7 +81,7 @@ export default function ExpensesPage({ onToast }: { onToast: (msg: string) => vo
       setPage(1);
       fetchExpenses(1, category);
     } else {
-      onToast("Save failed");
+      onToast(await errorText(res, "Save failed"));
     }
   };
 
@@ -91,7 +94,7 @@ export default function ExpensesPage({ onToast }: { onToast: (msg: string) => vo
       onToast("Expense deleted");
       fetchExpenses(page, category);
     } else {
-      onToast("Delete failed");
+      onToast(await errorText(res, "Delete failed"));
     }
   };
 
@@ -123,9 +126,11 @@ export default function ExpensesPage({ onToast }: { onToast: (msg: string) => vo
         title="Expenses"
         description="Materials, packaging, logistics. Track every rupee leaving the workshop."
         action={
-          <Button onClick={() => setFormOpen(true)}>
-            <Plus className="w-4 h-4" /> Add Expense
-          </Button>
+          canEdit && (
+            <Button onClick={() => setFormOpen(true)}>
+              <Plus className="w-4 h-4" /> Add Expense
+            </Button>
+          )
         }
       />
 
@@ -268,12 +273,14 @@ export default function ExpensesPage({ onToast }: { onToast: (msg: string) => vo
                   <td className="px-5 py-4 text-[#1A1410]/45 text-xs">{new Date(exp.date).toLocaleDateString()}</td>
                   <td className="px-5 py-4">
                     <div className="flex items-center justify-end">
+                      {canEdit && (
                       <button
                         onClick={() => setConfirmDel(exp)}
                         className="h-8 w-8 rounded-lg bg-[#FAF6EE] text-[#1A1410]/60 hover:text-rose-500 hover:bg-rose-50 transition-colors flex items-center justify-center"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
                       </button>
+                      )}
                     </div>
                   </td>
                 </motion.tr>
@@ -317,12 +324,14 @@ export default function ExpensesPage({ onToast }: { onToast: (msg: string) => vo
                   </div>
                   <div className="flex flex-col items-end gap-2">
                     <p className="font-semibold text-rose-500 tabular-nums text-sm">−{rs(exp.amount)}</p>
+                    {canEdit && (
                     <button
                       onClick={() => setConfirmDel(exp)}
                       className="h-8 w-8 rounded-lg bg-[#FAF6EE] text-rose-500 flex items-center justify-center"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>
+                    )}
                   </div>
                 </div>
               </Card>
@@ -336,12 +345,14 @@ export default function ExpensesPage({ onToast }: { onToast: (msg: string) => vo
         )}
       </div>
 
+      {canEdit && (
       <button
         onClick={() => setFormOpen(true)}
         className="md:hidden fixed bottom-24 right-4 h-14 w-14 rounded-2xl bg-gradient-to-br from-[#B8763E] to-[#9A5F2E] text-white shadow-2xl shadow-[#B8763E]/30 flex items-center justify-center z-20 active:scale-95 transition-transform"
       >
         <Plus className="w-5 h-5" />
       </button>
+      )}
 
       <Modal open={formOpen} onClose={() => setFormOpen(false)} title="New Expense">
         <form onSubmit={submit} className="space-y-4">
