@@ -64,7 +64,7 @@ router.get("/stats", async (req: Request, res: Response): Promise<void> => {
       where: { ...activeExpenseFilter, date: thisMonth },
       _sum: { amount: true },
     }),
-    prisma.order.findMany({ where: activeOrderFilter, orderBy: { createdAt: "desc" }, take: 5 }),
+    prisma.order.findMany({ where: activeOrderFilter, orderBy: { createdAt: "desc" }, take: 5, omit: { paymentProof: true } }),
     prisma.expense.findMany({ where: activeExpenseFilter, orderBy: { date: "desc" }, take: 5 }),
     prisma.order.groupBy({ by: ["status"], where: activeOrderFilter, _count: { id: true } }),
     // Sales aggregations

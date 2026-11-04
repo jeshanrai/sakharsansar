@@ -2,15 +2,20 @@
 
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { motion } from "framer-motion";
-import { Search, Filter, Download, ChevronDown, ClipboardList, Phone, MapPin, Calendar } from "lucide-react";
+import { Search, Filter, Download, ChevronDown, ClipboardList, Phone, MapPin, Calendar, ArrowRightLeft, CheckCircle2, Banknote, Landmark, CreditCard, QrCode, XCircle, Mail } from "lucide-react";
 import { apiFetch } from "@/lib/api";
 import { orderRef } from "@/lib/order-pricing";
-import { Card, SectionHeading, Button, Pill, EmptyState } from "../_components/primitives";
-import { STATUS_TONES, type Order, type OrderStatus } from "../_data/types";
-import { useSeason } from "../_data/season";
+import { Card, SectionHeading, Button, Pill, EmptyState, Modal } from "../_components/primitives";
+import { STATUS_TONES, type Order, type OrderStatus, type PaymentMethod } from "../_data/types";
+import { useSeason, errorText } from "../_data/season";
 
 const rs = (n: number) => `Rs. ${(n || 0).toLocaleString()}`;
 const STATUSES: ("ALL" | OrderStatus)[] = ["ALL", "PENDING", "CONFIRMED", "SHIPPED", "DELIVERED", "CANCELLED"];
+const PM_ICONS: Record<PaymentMethod, React.ComponentType<{ className?: string }>> = {
+  CASH: Banknote,
+  ONLINE: Landmark,
+  CREDIT: CreditCard,
+};
 
 export default function OrdersPage({ onToast }: { onToast: (msg: string) => void }) {
   const { selected } = useSeason();
@@ -20,6 +25,13 @@ export default function OrdersPage({ onToast }: { onToast: (msg: string) => void
   const [filter, setFilter] = useState<"ALL" | OrderStatus>("ALL");
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
+  const [moving, setMoving] = useState<Order | null>(null);
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("CASH");
+  const [submitting, setSubmitting] = useState(false);
+  const [reviewing, setReviewing] = useState<Order | null>(null);
+  const [proof, setProof] = useState<string | null>(null);
+  const [proofLoading, setProofLoading] = useState(false);
+  const [verifying, setVerifying] = useState(false);
 
   const fetchOrders = useCallback(async (p: number, status: "ALL" | OrderStatus) => {
     setLoading(true);
@@ -52,6 +64,58 @@ export default function OrdersPage({ onToast }: { onToast: (msg: string) => void
     }
   };
 
+  const openMove = (order: Order) => {
+    setPaymentMethod(order.paymentMethod === "FONEPAY" ? "ONLINE" : "CASH");
+    setMoving(order);
+  };
+
+  const openReview = async (order: Order) => {
+    setReviewing(order);
+    setProof(null);
+    if (!order.hasProof) return;
+    setProofLoading(true);
+    const res = await apiFetch(`/orders/${order.id}/proof`);
+    if (res.ok) setProof((await res.json()).proof ?? null);
+    setProofLoading(false);
+  };
+
+  const reviewPayment = async (action: "verify" | "reject") => {
+    if (!reviewing) return;
+    setVerifying(true);
+    const res = await apiFetch(`/orders/${reviewing.id}/payment`, { method: "PATCH", body: JSON.stringify({ action }) });
+    setVerifying(false);
+    if (res.ok) {
+      const updated = await res.json();
+      setOrders((cur) => cur.map((o) => (o.id === reviewing.id ? { ...o, ...updated } : o)));
+      onToast(
+        action === "verify"
+          ? `Payment verified · #${orderRef(reviewing.id)}${reviewing.email ? " · customer emailed" : ""}`
+          : `Payment rejected · #${orderRef(reviewing.id)}${reviewing.email ? " · customer emailed" : ""}`,
+      );
+      setReviewing(null);
+    } else {
+      onToast(await errorText(res, "Could not update payment"));
+    }
+  };
+
+  const moveToSales = async () => {
+    if (!moving) return;
+    setSubmitting(true);
+    const res = await apiFetch(`/orders/${moving.id}/sale`, {
+      method: "POST",
+      body: JSON.stringify({ paymentMethod }),
+    });
+    setSubmitting(false);
+    if (res.ok) {
+      const sale = await res.json();
+      setOrders((cur) => cur.map((o) => (o.id === moving.id ? { ...o, saleId: sale.id } : o)));
+      onToast(`Order #${orderRef(moving.id)} moved to sales`);
+      setMoving(null);
+    } else {
+      onToast(await errorText(res, "Could not move to sales"));
+    }
+  };
+
   const filtered = useMemo(() => {
     if (!search) return orders;
     const q = search.toLowerCase();
@@ -65,7 +129,7 @@ export default function OrdersPage({ onToast }: { onToast: (msg: string) => void
   }, [orders, search]);
 
   const kpis = useMemo(() => {
-    const pending = orders.filter((o) => o.status === "PENDING").length;
+    const pending = orders.filter((o) => o.status === "PENDING" || o.paymentStatus === "PENDING").length;
     const delivered = orders.filter((o) => o.status === "DELIVERED").length;
     const revenue = orders.filter((o) => o.status !== "CANCELLED").reduce((s, o) => s + o.amount, 0);
     return { pending, delivered, revenue, total: orders.length };
@@ -88,7 +152,7 @@ export default function OrdersPage({ onToast }: { onToast: (msg: string) => void
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <KPI label="On this page" value={String(kpis.total)} />
-        <KPI label="Pending" value={String(kpis.pending)} tone="amber" />
+        <KPI label="Needs action" value={String(kpis.pending)} tone="amber" />
         <KPI label="Delivered" value={String(kpis.delivered)} tone="emerald" />
         <KPI label="Page Revenue" value={rs(kpis.revenue)} />
       </div>
@@ -131,9 +195,11 @@ export default function OrdersPage({ onToast }: { onToast: (msg: string) => void
                 <Th>Product</Th>
                 <Th className="text-center">Qty</Th>
                 <Th className="text-right">Amount</Th>
+                <Th>Payment</Th>
                 <Th>Status</Th>
                 <Th>Date</Th>
                 <Th>Address</Th>
+                <Th className="text-right">Sales</Th>
               </tr>
             </thead>
             <tbody>
@@ -159,10 +225,16 @@ export default function OrdersPage({ onToast }: { onToast: (msg: string) => void
                   <td className="px-5 py-4 text-center text-[#1A1410]/75">×{order.quantity}</td>
                   <td className="px-5 py-4 text-right font-semibold text-[#1A1410] tabular-nums">{rs(order.amount)}</td>
                   <td className="px-5 py-4">
+                    <PaymentBadge order={order} onReview={openReview} />
+                  </td>
+                  <td className="px-5 py-4">
                     <StatusSelect order={order} onChange={updateStatus} />
                   </td>
                   <td className="px-5 py-4 text-[#1A1410]/45 text-xs">{new Date(order.createdAt).toLocaleDateString()}</td>
                   <td className="px-5 py-4 text-[#1A1410]/45 text-xs max-w-[160px] truncate">{order.address}</td>
+                  <td className="px-5 py-4 text-right">
+                    <MoveToSales order={order} onMove={openMove} onReview={openReview} />
+                  </td>
                 </motion.tr>
               ))}
             </tbody>
@@ -200,9 +272,13 @@ export default function OrdersPage({ onToast }: { onToast: (msg: string) => void
                   <div className="flex items-center gap-1.5"><Phone className="w-3 h-3" /> {order.phone}</div>
                   <div className="flex items-center gap-1.5"><Calendar className="w-3 h-3" /> {new Date(order.createdAt).toLocaleDateString()}</div>
                   <div className="flex items-center gap-1.5 col-span-2"><MapPin className="w-3 h-3" /> <span className="truncate">{order.address}</span></div>
+                  <div className="col-span-2"><PaymentBadge order={order} onReview={openReview} /></div>
                 </div>
-                <div className="mt-3">
-                  <StatusSelect order={order} onChange={updateStatus} fullWidth />
+                <div className="mt-3 flex gap-2 items-center">
+                  <div className="flex-1">
+                    <StatusSelect order={order} onChange={updateStatus} fullWidth />
+                  </div>
+                  <MoveToSales order={order} onMove={openMove} onReview={openReview} />
                 </div>
               </Card>
             </motion.div>
@@ -214,7 +290,169 @@ export default function OrdersPage({ onToast }: { onToast: (msg: string) => void
           </Card>
         )}
       </div>
+
+      <Modal open={!!reviewing} onClose={() => setReviewing(null)} title="Fonepay Payment" size="sm">
+        {reviewing && (
+          <div className="space-y-4">
+            <div className="rounded-xl bg-[#FAF6EE] p-4 text-sm space-y-1.5">
+              <div className="flex justify-between">
+                <span className="font-medium text-[#1A1410]">{reviewing.customer}</span>
+                <span className="font-semibold text-[#1A1410] tabular-nums">{rs(reviewing.amount)}</span>
+              </div>
+              <p className="text-xs text-[#1A1410]/50">#{orderRef(reviewing.id)} · {reviewing.phone} · {new Date(reviewing.createdAt).toLocaleString()}</p>
+              <p className="text-xs text-[#1A1410]/70">
+                Transaction ID: <span className="font-mono font-semibold text-[#1A1410]">{reviewing.paymentRef || "not given"}</span>
+              </p>
+              {reviewing.email && (
+                <p className="text-xs text-[#1A1410]/55 flex items-center gap-1.5"><Mail className="w-3 h-3" /> {reviewing.email}</p>
+              )}
+            </div>
+
+            {reviewing.hasProof && (
+              <div className="rounded-xl border border-[#1A1410]/8 overflow-hidden bg-[#FAF6EE]">
+                {proofLoading ? (
+                  <div className="p-6 text-center text-xs text-[#1A1410]/40">Loading screenshot…</div>
+                ) : proof ? (
+                  <a href={proof} target="_blank" rel="noreferrer" title="Open full size">
+                    {/* eslint-disable-next-line @next/next/no-img-element -- data: URL from the API */}
+                    <img src={proof} alt="Payment screenshot" className="w-full max-h-[50vh] object-contain" />
+                  </a>
+                ) : (
+                  <div className="p-6 text-center text-xs text-[#1A1410]/40">Couldn&apos;t load the screenshot.</div>
+                )}
+              </div>
+            )}
+
+            <p className="text-xs text-[#1A1410]/50">
+              Match the amount ({rs(reviewing.amount)}) and transaction ID against the Fonepay merchant app or bank statement
+              (terminal 2222090020996830) before verifying. {reviewing.email ? "The customer is emailed either way." : "No customer email on this order: call them."}
+            </p>
+
+            {reviewing.paymentStatus !== "PENDING" && (
+              <p className="text-xs font-medium text-[#1A1410]/70">Currently: {reviewing.paymentStatus?.toLowerCase()}</p>
+            )}
+
+            <div className="flex gap-2.5 pt-1">
+              <Button
+                variant="secondary"
+                type="button"
+                onClick={() => reviewPayment("reject")}
+                className="flex-1"
+                disabled={verifying || reviewing.paymentStatus === "REJECTED"}
+              >
+                <XCircle className="w-4 h-4" /> Not received
+              </Button>
+              <Button
+                type="button"
+                onClick={() => reviewPayment("verify")}
+                className="flex-1"
+                disabled={verifying || reviewing.paymentStatus === "VERIFIED"}
+              >
+                <CheckCircle2 className="w-4 h-4" /> {verifying ? "Saving…" : "Verify payment"}
+              </Button>
+            </div>
+          </div>
+        )}
+      </Modal>
+
+      <Modal open={!!moving} onClose={() => setMoving(null)} title="Move to Sales" size="sm">
+        {moving && (
+          <div className="space-y-4">
+            <div className="rounded-xl bg-[#FAF6EE] p-4 text-sm">
+              <p className="font-medium text-[#1A1410]">{moving.customer}</p>
+              <p className="text-xs text-[#1A1410]/50 mt-0.5">#{orderRef(moving.id)} · {moving.phone}</p>
+              <div className="flex justify-between mt-3 text-[#1A1410]/75">
+                <span>{moving.product} ×{moving.quantity}</span>
+                <span className="font-semibold text-[#1A1410] tabular-nums">{rs(moving.amount)}</span>
+              </div>
+            </div>
+            <div>
+              <label className="text-[11px] tracking-[0.14em] uppercase text-[#1A1410]/50 font-medium block mb-1.5">
+                Payment Method
+              </label>
+              <div className="grid grid-cols-3 gap-2">
+                {(["CASH", "ONLINE", "CREDIT"] as PaymentMethod[]).map((m) => {
+                  const Icon = PM_ICONS[m];
+                  return (
+                    <button
+                      key={m}
+                      type="button"
+                      onClick={() => setPaymentMethod(m)}
+                      className={`flex flex-col items-center gap-1.5 py-3 rounded-xl text-xs font-medium transition-all ${
+                        paymentMethod === m ? "bg-[#1A1410] text-[#FAF6EE] shadow-sm" : "bg-[#FAF6EE] text-[#1A1410]/55 hover:text-[#1A1410]"
+                      }`}
+                    >
+                      <Icon className="w-4 h-4" />
+                      {m}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+            <p className="text-xs text-[#1A1410]/45">The sale is dated today and notes the order number and address.</p>
+            <div className="flex gap-2.5 pt-1">
+              <Button variant="secondary" type="button" onClick={() => setMoving(null)} className="flex-1">
+                Cancel
+              </Button>
+              <Button type="button" onClick={moveToSales} className="flex-1" disabled={submitting}>
+                {submitting ? "Moving…" : "Record Sale"}
+              </Button>
+            </div>
+          </div>
+        )}
+      </Modal>
     </div>
+  );
+}
+
+const PAYMENT_TONES = {
+  COD: "bg-[#1A1410]/5 text-[#1A1410]/60",
+  PENDING: "bg-amber-100 text-amber-800",
+  VERIFIED: "bg-emerald-100 text-emerald-700",
+  REJECTED: "bg-red-100 text-red-700",
+} as const;
+
+function PaymentBadge({ order, onReview }: { order: Order; onReview: (o: Order) => void }) {
+  if (order.paymentMethod !== "FONEPAY") {
+    return (
+      <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-medium whitespace-nowrap ${PAYMENT_TONES.COD}`}>
+        <Banknote className="w-3 h-3" /> COD
+      </span>
+    );
+  }
+  const st = order.paymentStatus === "VERIFIED" || order.paymentStatus === "REJECTED" ? order.paymentStatus : "PENDING";
+  const label = { PENDING: "Fonepay · verify", VERIFIED: "Fonepay · verified", REJECTED: "Fonepay · not found" }[st];
+  return (
+    <button
+      type="button"
+      onClick={() => onReview(order)}
+      className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-medium whitespace-nowrap hover:opacity-80 transition-opacity ${PAYMENT_TONES[st]}`}
+    >
+      <QrCode className="w-3 h-3" /> {label}
+    </button>
+  );
+}
+
+function MoveToSales({ order, onMove, onReview }: { order: Order; onMove: (o: Order) => void; onReview: (o: Order) => void }) {
+  if (order.saleId) {
+    return (
+      <span className="inline-flex items-center gap-1 text-[11px] font-medium text-emerald-600 whitespace-nowrap">
+        <CheckCircle2 className="w-3.5 h-3.5" /> In sales
+      </span>
+    );
+  }
+  if (order.status === "CANCELLED") return null;
+  if (order.paymentMethod === "FONEPAY" && order.paymentStatus !== "VERIFIED") {
+    return (
+      <Button size="sm" variant="secondary" onClick={() => onReview(order)} className="whitespace-nowrap">
+        <QrCode className="w-3.5 h-3.5" /> Check payment
+      </Button>
+    );
+  }
+  return (
+    <Button size="sm" variant="secondary" onClick={() => onMove(order)} className="whitespace-nowrap">
+      <ArrowRightLeft className="w-3.5 h-3.5" /> Move to sales
+    </Button>
   );
 }
 

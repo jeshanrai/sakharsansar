@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { X, CheckCircle, Minus, Plus, ArrowRight, ArrowLeft, AlertCircle } from 'lucide-react';
+import { X, CheckCircle, Minus, Plus, ArrowRight, ArrowLeft, AlertCircle, Banknote, QrCode, Download, ImagePlus } from 'lucide-react';
 import Image from "next/image";
 import data from "@/data/content.json";
 import JaggeryLoader from "../ui/JaggeryLoader";
@@ -20,7 +20,47 @@ const parsePrice = (s?: string) => (s ? parseInt(s.replace(/[^0-9]/g, ""), 10) |
 // "Rs. 1,500" on English pages, "रु. 1,500" on Nepali ones.
 const money = (n: number, locale: Locale) => formatPrice(n, locale);
 
-type Step = "order" | "delivery";
+type Step = "order" | "delivery" | "payment";
+type PayMethod = "COD" | "FONEPAY";
+
+// The shop's Fonepay QR (Sakhar Sansar, terminal 2222090020996830).
+const FONEPAY_QR = "/payments/fonepay-qr.jpg";
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+// The backend refuses screenshots over ~1.4 MB of base64.
+const MAX_PROOF_CHARS = 1_300_000;
+
+/**
+ * Shrinks a payment screenshot to a JPEG data URL small enough to post with the
+ * order. Screenshots are tall phone captures; 1400px on the long side keeps the
+ * transaction ID readable.
+ */
+async function compressImage(file: File): Promise<string> {
+  const url = URL.createObjectURL(file);
+  try {
+    const img = await new Promise<HTMLImageElement>((resolve, reject) => {
+      const el = new window.Image();
+      el.onload = () => resolve(el);
+      el.onerror = reject;
+      el.src = url;
+    });
+    for (const [side, quality] of [[1400, 0.8], [1200, 0.7], [1000, 0.6], [800, 0.5]] as const) {
+      const scale = Math.min(1, side / Math.max(img.width, img.height));
+      const canvas = document.createElement("canvas");
+      canvas.width = Math.round(img.width * scale);
+      canvas.height = Math.round(img.height * scale);
+      const ctx = canvas.getContext("2d");
+      if (!ctx) throw new Error("no canvas");
+      ctx.fillStyle = "#fff";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      const data = canvas.toDataURL("image/jpeg", quality);
+      if (data.length <= MAX_PROOF_CHARS) return data;
+    }
+    throw new Error("too large");
+  } finally {
+    URL.revokeObjectURL(url);
+  }
+}
 
 export default function OrderDrawer({
   initialRequest,
@@ -42,7 +82,12 @@ export default function OrderDrawer({
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [touched, setTouched] = useState(false);
-  const [formData, setFormData] = useState({ name: "", phone: "", address: "" });
+  const [formData, setFormData] = useState({ name: "", phone: "", email: "", address: "" });
+  const [payMethod, setPayMethod] = useState<PayMethod>("COD");
+  const [paymentRef, setPaymentRef] = useState("");
+  const [paymentProof, setPaymentProof] = useState<string | null>(null);
+  const [proofError, setProofError] = useState(false);
+  const [payTouched, setPayTouched] = useState(false);
   const [codeInput, setCodeInput] = useState("");
   const [appliedCode, setAppliedCode] = useState("");
   const [orderId, setOrderId] = useState<string | null>(null);
@@ -59,6 +104,11 @@ export default function OrderDrawer({
 
   const phoneValid = /\d{7,}/.test(formData.phone.replace(/\D/g, ""));
   const detailsValid = formData.name.trim() !== "" && phoneValid && formData.address.trim() !== "";
+  const email = formData.email.trim();
+  const emailValid = email === "" || EMAIL_RE.test(email);
+  // Paying now needs an email (to say it's verified) and something to verify.
+  const fonepay = payMethod === "FONEPAY" && !isCustom;
+  const paymentValid = !fonepay || (EMAIL_RE.test(email) && (paymentRef.trim() !== "" || paymentProof !== null));
 
   const resetState = useCallback(() => {
     setStep("order");
@@ -68,7 +118,12 @@ export default function OrderDrawer({
     setIsLoading(false);
     setError(null);
     setTouched(false);
-    setFormData({ name: "", phone: "", address: "" });
+    setFormData({ name: "", phone: "", email: "", address: "" });
+    setPayMethod("COD");
+    setPaymentRef("");
+    setPaymentProof(null);
+    setProofError(false);
+    setPayTouched(false);
     setCodeInput("");
     setAppliedCode("");
     setOrderId(null);
@@ -128,9 +183,30 @@ export default function OrderDrawer({
     setError(null);
   };
 
+  const goToPayment = () => {
+    setTouched(true);
+    if (!detailsValid || !emailValid) return;
+    if (isCustom) setPayMethod("COD");
+    setStep("payment");
+    setError(null);
+  };
+
+  const onProofFile = async (file: File | undefined) => {
+    setProofError(false);
+    if (!file) return;
+    try {
+      setPaymentProof(await compressImage(file));
+    } catch {
+      setPaymentProof(null);
+      setProofError(true);
+    }
+  };
+
   const submitOrder = async () => {
     setTouched(true);
-    if (!detailsValid) return;
+    setPayTouched(true);
+    if (!detailsValid || !emailValid) { setStep("delivery"); return; }
+    if (!paymentValid) return;
     setIsLoading(true);
     setError(null);
 
@@ -158,9 +234,21 @@ export default function OrderDrawer({
           unitPrice: isCustom ? 0 : unitPrice,
           weight: product?.weight ?? null,
           image: product?.image ?? null,
+          email: email || null,
+          paymentMethod: fonepay ? "FONEPAY" : "COD",
+          paymentRef: fonepay ? paymentRef.trim() || null : null,
+          paymentProof: fonepay ? paymentProof : null,
         }),
       });
       backendOk = res.ok;
+      if (!res.ok && res.status === 400) {
+        // A validation refusal is the customer's to fix; don't paper over it
+        // with the Google Form backup (which can't carry the screenshot).
+        const body = await res.json().catch(() => null);
+        setIsLoading(false);
+        setError(body?.error || m.drawerError);
+        return;
+      }
       if (res.ok) {
         const saved = await res.json().catch(() => null);
         if (saved?.id) setOrderId(String(saved.id));
@@ -188,6 +276,8 @@ export default function OrderDrawer({
             `Total ${rs(pricing.total)}`,
             discountCode ? `code ${discountCode} −${rs(pricing.discount)}` : "",
             pricing.freeDelivery ? "free delivery" : "",
+            fonepay ? `FONEPAY txn ${paymentRef.trim() || "(screenshot only)"}` : "COD",
+            email ? `email ${email}` : "",
           ].filter(Boolean).join(" · "),
     );
 
@@ -231,13 +321,15 @@ export default function OrderDrawer({
         <div className="flex justify-between items-center p-6 sm:px-10 sm:py-7 border-b border-black/10 bg-white">
           <div>
             <h2 className="font-poppins text-xl font-medium tracking-[0.1em] uppercase text-black">
-              {isSubmitted ? m.drawerTitleDone : m.drawerTitle}
+              {isSubmitted ? (fonepay ? m.drawerPlaced : m.drawerTitleDone) : m.drawerTitle}
             </h2>
             {!isSubmitted && (
               <div className="mt-2 flex items-center gap-2">
-                <StepDot active={step === "order"} done={step === "delivery"} label={m.drawerStepOrder} />
+                <StepDot active={step === "order"} done={step !== "order"} label={m.drawerStepOrder} />
                 <span className="w-6 h-px bg-black/15" />
-                <StepDot active={step === "delivery"} done={false} label={m.drawerStepDelivery} />
+                <StepDot active={step === "delivery"} done={step === "payment"} label={m.drawerStepDelivery} />
+                <span className="w-6 h-px bg-black/15" />
+                <StepDot active={step === "payment"} done={false} label={m.drawerStepPayment} />
               </div>
             )}
           </div>
@@ -259,6 +351,8 @@ export default function OrderDrawer({
               quantity={quantity}
               pricing={isCustom ? null : pricing}
               reference={orderId ? orderRef(orderId) : null}
+              fonepay={fonepay}
+              email={email}
               name={formData.name}
               phone={formData.phone}
               address={formData.address}
@@ -427,10 +521,10 @@ export default function OrderDrawer({
                 <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" strokeWidth={2} />
               </button>
             </div>
-          ) : (
+          ) : step === "delivery" ? (
             /* ───── Step 2: Delivery ───── */
             <form
-              onSubmit={(e) => { e.preventDefault(); submitOrder(); }}
+              onSubmit={(e) => { e.preventDefault(); goToPayment(); }}
               className="p-6 sm:p-10 flex flex-col gap-7"
             >
               {/* Compact order summary */}
@@ -465,6 +559,24 @@ export default function OrderDrawer({
                 />
               </Field>
 
+              <Field
+                label={m.drawerEmailOptional}
+                error={touched && !emailValid ? m.drawerEmailInvalid : undefined}
+                hint={m.drawerEmailHint}
+              >
+                <input
+                  type="email"
+                  autoComplete="email"
+                  inputMode="email"
+                  className={`w-full bg-white border px-4 py-3 text-sm outline-none text-black transition-colors ${
+                    touched && !emailValid ? "border-red-400 focus:border-red-500" : "border-black/10 focus:border-black"
+                  }`}
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  placeholder={m.drawerEmailPh}
+                />
+              </Field>
+
               <Field label={m.drawerAddress}>
                 <textarea
                   required
@@ -475,11 +587,6 @@ export default function OrderDrawer({
                   placeholder={m.drawerAddressPh}
                 />
               </Field>
-
-              <p className="text-xs text-black/45 leading-relaxed -mt-2">
-                {m.drawerCallNote}{" "}
-                {isCustom ? m.drawerCallNoteCustom : pricing.freeDelivery ? m.drawerFreeNote : m.drawerCallNoteCharges}
-              </p>
 
               {error && (
                 <div className="flex items-start gap-2.5 bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
@@ -499,9 +606,163 @@ export default function OrderDrawer({
                 </button>
                 <button
                   type="submit"
+                  className="group flex-1 py-4 bg-black text-white text-[10px] font-semibold tracking-[0.2em] uppercase hover:bg-black/80 transition-colors flex items-center justify-center gap-2"
+                >
+                  {m.drawerContinuePayment}
+                  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" strokeWidth={2} />
+                </button>
+              </div>
+            </form>
+          ) : (
+            /* ───── Step 3: Payment ───── */
+            <form
+              onSubmit={(e) => { e.preventDefault(); submitOrder(); }}
+              className="p-6 sm:p-10 flex flex-col gap-6"
+            >
+              <div className="bg-white border border-black/10 px-4 py-3 flex items-center justify-between text-sm">
+                <span className="text-black/60">
+                  <span className="font-medium text-black">{quantity}×</span> {isCustom ? m.drawerCustom : productName(selectedProduct, locale)}
+                </span>
+                {!isCustom && <span className="font-medium text-[#C17A2A]">{rs(pricing.total)}</span>}
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <span className="text-[10px] font-semibold tracking-[0.2em] text-black/50 uppercase">{m.drawerPayHow}</span>
+                <div role="radiogroup" className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <PayOption
+                    selected={!fonepay}
+                    onSelect={() => setPayMethod("COD")}
+                    icon={<Banknote className="w-5 h-5" strokeWidth={1.5} />}
+                    title={m.drawerPayCod}
+                    sub={m.drawerPayCodSub}
+                  />
+                  <PayOption
+                    selected={fonepay}
+                    disabled={isCustom}
+                    onSelect={() => setPayMethod("FONEPAY")}
+                    icon={<QrCode className="w-5 h-5" strokeWidth={1.5} />}
+                    title={m.drawerPayNow}
+                    sub={m.drawerPayNowSub}
+                  />
+                </div>
+                {isCustom && <p className="text-xs text-black/50">{m.drawerPayCustomCod}</p>}
+              </div>
+
+              {fonepay ? (
+                <div className="flex flex-col gap-5 animate-in fade-in duration-300">
+                  <div className="bg-white border border-black/10 p-4 flex flex-col items-center gap-3">
+                    <div className="w-full flex items-baseline justify-between">
+                      <span className="text-[10px] font-semibold tracking-[0.2em] text-black/50 uppercase">{m.drawerPayAmount}</span>
+                      <span className="font-poppins text-2xl font-medium text-[#C17A2A] tabular-nums">{rs(pricing.total)}</span>
+                    </div>
+                    <div className="relative w-full max-w-[280px] aspect-[900/1078] bg-white">
+                      <Image src={FONEPAY_QR} alt="Fonepay QR: Sakhar Sansar" fill sizes="280px" className="object-contain" />
+                    </div>
+                    <a
+                      href={FONEPAY_QR}
+                      download="sakharsansar-fonepay-qr.jpg"
+                      className="inline-flex items-center gap-2 text-[10px] font-semibold tracking-[0.2em] uppercase text-black/70 hover:text-black border border-black/15 px-4 py-2 transition-colors"
+                    >
+                      <Download className="w-3.5 h-3.5" strokeWidth={2} /> {m.drawerPaySaveQr}
+                    </a>
+                    <p className="text-[11px] text-black/45 text-center sm:hidden">{m.drawerPayMobileTip}</p>
+                  </div>
+
+                  <ol className="text-sm text-black/70 leading-relaxed list-decimal pl-5 space-y-1">
+                    <li>{m.drawerPayStep1}</li>
+                    <li>{m.drawerPayStep2.replace("{amount}", rs(pricing.total))}</li>
+                    <li>{m.drawerPayStep3}</li>
+                  </ol>
+                  {!pricing.freeDelivery && <p className="text-xs text-black/45 -mt-3">{m.drawerPayDeliveryNote}</p>}
+
+                  <Field label={m.drawerPayTxn}>
+                    <input
+                      type="text"
+                      autoComplete="off"
+                      className="w-full bg-white border border-black/10 px-4 py-3 text-sm focus:border-black outline-none text-black transition-colors"
+                      value={paymentRef}
+                      onChange={(e) => setPaymentRef(e.target.value)}
+                      placeholder={m.drawerPayTxnPh}
+                    />
+                  </Field>
+
+                  <Field label={m.drawerPayProof} error={proofError ? m.drawerPayProofError : undefined}>
+                    {paymentProof ? (
+                      <div className="bg-white border border-black/10 p-3 flex items-center gap-3">
+                        {/* eslint-disable-next-line @next/next/no-img-element -- a local data: URL */}
+                        <img src={paymentProof} alt="" className="w-14 h-20 object-cover bg-[#F4F1ED]" />
+                        <span className="flex-1 text-xs text-green-700">✓</span>
+                        <label className="cursor-pointer text-[10px] font-semibold tracking-[0.2em] uppercase text-black/50 hover:text-black">
+                          {m.drawerPayProofChange}
+                          <input type="file" accept="image/*" className="sr-only" onChange={(e) => onProofFile(e.target.files?.[0])} />
+                        </label>
+                        <button
+                          type="button"
+                          onClick={() => setPaymentProof(null)}
+                          className="text-[10px] font-semibold tracking-[0.2em] uppercase text-black/50 hover:text-black"
+                        >
+                          {m.drawerPayProofRemove}
+                        </button>
+                      </div>
+                    ) : (
+                      <label className="cursor-pointer bg-white border border-dashed border-black/25 hover:border-black px-4 py-4 flex items-center justify-center gap-2 text-sm text-black/60 transition-colors">
+                        <ImagePlus className="w-4 h-4" strokeWidth={1.75} /> {m.drawerPayProofAdd}
+                        <input type="file" accept="image/*" className="sr-only" onChange={(e) => onProofFile(e.target.files?.[0])} />
+                      </label>
+                    )}
+                  </Field>
+                  {payTouched && !paymentRef.trim() && !paymentProof && (
+                    <span className="text-xs text-red-600 -mt-3">{m.drawerPayNeedProof}</span>
+                  )}
+
+                  {!EMAIL_RE.test(email) && (
+                    <Field
+                      label={m.drawerEmail}
+                      error={payTouched ? (email ? m.drawerEmailInvalid : m.drawerEmailNeeded) : undefined}
+                      hint={payTouched ? undefined : m.drawerEmailNeeded}
+                    >
+                      <input
+                        type="email"
+                        autoComplete="email"
+                        inputMode="email"
+                        className="w-full bg-white border border-black/10 px-4 py-3 text-sm focus:border-black outline-none text-black transition-colors"
+                        value={formData.email}
+                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                        placeholder={m.drawerEmailPh}
+                      />
+                    </Field>
+                  )}
+
+                  <p className="text-xs text-black/45 leading-relaxed">{m.drawerPayVerifyNote}</p>
+                </div>
+              ) : (
+                <p className="text-xs text-black/45 leading-relaxed">
+                  {m.drawerCallNote}{" "}
+                  {isCustom ? m.drawerCallNoteCustom : pricing.freeDelivery ? m.drawerFreeNote : m.drawerCallNoteCharges}
+                </p>
+              )}
+
+              {error && (
+                <div className="flex items-start gap-2.5 bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
+                  <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" strokeWidth={2} />
+                  <span>{error}</span>
+                </div>
+              )}
+
+              <div className="flex gap-3 pt-1">
+                <button
+                  type="button"
+                  onClick={() => { setStep("delivery"); setError(null); }}
+                  className="group inline-flex items-center justify-center gap-2 px-6 py-4 bg-white border border-black/15 text-black text-[10px] font-semibold tracking-[0.2em] uppercase hover:bg-black/5 transition-colors"
+                >
+                  <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-1 transition-transform" strokeWidth={2} />
+                  {m.drawerBack}
+                </button>
+                <button
+                  type="submit"
                   className="flex-1 py-4 bg-black text-white text-[10px] font-semibold tracking-[0.2em] uppercase hover:bg-black/80 transition-colors"
                 >
-                  {isCustom ? m.drawerRequest : `${m.drawerPlace} · ${rs(pricing.total)}`}
+                  {isCustom ? m.drawerRequest : fonepay ? m.drawerSubmitPaid : `${m.drawerPlace} · ${rs(pricing.total)}`}
                 </button>
               </div>
             </form>
@@ -524,13 +785,38 @@ function StepDot({ active, done, label }: { active: boolean; done: boolean; labe
   );
 }
 
-function Field({ label, error, children }: { label: string; error?: string; children: React.ReactNode }) {
+function Field({ label, error, hint, children }: { label: string; error?: string; hint?: string; children: React.ReactNode }) {
   return (
     <div className="flex flex-col gap-2">
       <label className="text-[10px] font-semibold tracking-[0.2em] text-black/50 uppercase">{label}</label>
       {children}
-      {error && <span className="text-xs text-red-600">{error}</span>}
+      {error ? <span className="text-xs text-red-600">{error}</span> : hint ? <span className="text-xs text-black/45">{hint}</span> : null}
     </div>
+  );
+}
+
+function PayOption({
+  selected, disabled, onSelect, icon, title, sub,
+}: {
+  selected: boolean; disabled?: boolean; onSelect: () => void; icon: React.ReactNode; title: string; sub: string;
+}) {
+  return (
+    <button
+      type="button"
+      role="radio"
+      aria-checked={selected}
+      disabled={disabled}
+      onClick={onSelect}
+      className={`text-left p-4 border transition-colors flex gap-3 items-start disabled:opacity-35 disabled:cursor-not-allowed ${
+        selected ? "bg-black text-white border-black" : "bg-white text-black border-black/10 hover:border-black/40"
+      }`}
+    >
+      <span className="mt-0.5 shrink-0">{icon}</span>
+      <span className="flex flex-col gap-1">
+        <span className="font-poppins text-sm font-medium">{title}</span>
+        <span className={`text-xs leading-snug ${selected ? "text-white/70" : "text-black/50"}`}>{sub}</span>
+      </span>
+    </button>
   );
 }
 
@@ -574,6 +860,8 @@ function SuccessView({
   quantity,
   pricing,
   reference,
+  fonepay,
+  email,
   name,
   phone,
   address,
@@ -588,6 +876,8 @@ function SuccessView({
   pricing: OrderPricing | null;
   /** Null when only the Google Form backup got through: there is no id to quote. */
   reference: string | null;
+  fonepay: boolean;
+  email: string;
   name: string;
   phone: string;
   address: string;
@@ -598,7 +888,7 @@ function SuccessView({
       <div className="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center">
         <CheckCircle className="w-12 h-12 text-green-600" strokeWidth={1.5} />
       </div>
-      <h3 className="font-poppins text-2xl font-medium tracking-[0.1em] uppercase text-black">{m.drawerConfirmed}</h3>
+      <h3 className="font-poppins text-2xl font-medium tracking-[0.1em] uppercase text-black">{fonepay ? m.drawerPlaced : m.drawerConfirmed}</h3>
       <div className="bg-white rounded-lg p-5 w-full text-left space-y-3 border border-black/10">
         {reference && <Row label={m.drawerRef} value={`#${reference}`} />}
         <Row label={m.drawerRowProduct} value={product} />
@@ -613,12 +903,16 @@ function SuccessView({
           />
         )}
         {pricing && <Row label={m.drawerRowTotal} value={rs(pricing.total)} highlight />}
+        <Row label={m.drawerRowPayment} value={fonepay ? m.drawerPayVerifying : m.drawerPayCod} />
         <Row label={m.drawerRowName} value={name} />
         <Row label={m.drawerRowPhone} value={phone} />
         <Row label={m.drawerRowAddress} value={address} wrap />
       </div>
       <p className="text-black/60 text-sm leading-relaxed">
-        {m.drawerThanks.replace("{name}", name).replace("{phone}", phone)}
+        {fonepay
+          ? m.drawerThanksFonepay.replace("{name}", name).replace("{email}", email)
+          : m.drawerThanks.replace("{name}", name).replace("{phone}", phone)}
+        {!fonepay && email && <> {m.drawerEmailSent.replace("{email}", email)}</>}
       </p>
       <button
         onClick={onClose}

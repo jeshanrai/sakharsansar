@@ -40,6 +40,22 @@ model Order {
   quantity  Int
   amount    Float
   status    OrderStatus @default(PENDING)
+  // Optional: where the order / payment / delivery updates are emailed.
+  email     String?
+  // How the customer chose to pay, and where that payment stands. COD orders
+  // start NOT_REQUIRED; Fonepay orders start PENDING until an admin checks the
+  // transaction against the bank statement.
+  paymentMethod     OrderPaymentMethod @default(COD)
+  paymentStatus     PaymentStatus      @default(NOT_REQUIRED)
+  // Fonepay transaction / trace ID the customer typed in.
+  paymentRef        String?
+  // Screenshot of the payment, as a compressed data: URL (JPEG, ≤ ~1 MB).
+  paymentProof      String?
+  paymentVerifiedAt DateTime?
+  paymentVerifiedBy String?
+  // Set once the order has been moved to the sales book, so it can't be
+  // recorded twice.
+  saleId    String?     @unique
   createdAt DateTime    @default(now())
   updatedAt DateTime    @updatedAt
 
@@ -157,6 +173,18 @@ enum OrderStatus {
   SHIPPED
   DELIVERED
   CANCELLED
+}
+
+enum OrderPaymentMethod {
+  COD
+  FONEPAY
+}
+
+enum PaymentStatus {
+  NOT_REQUIRED
+  PENDING
+  VERIFIED
+  REJECTED
 }
 
 enum EnquiryType {

@@ -57,7 +57,8 @@ const corsOptions: cors.CorsOptions = {
 // when req.method === "OPTIONS". No separate app.options() handler needed.
 app.use(cors(corsOptions));
 
-app.use(express.json());
+// 2 MB: an order may carry a compressed payment screenshot (≤ ~1.4 MB base64).
+app.use(express.json({ limit: "2mb" }));
 
 // Routes
 app.use("/api/auth", authRoutes);

@@ -31,8 +31,21 @@ export interface Order {
   quantity: number;
   amount: number;
   status: OrderStatus;
+  /** Set once the order has been moved to the sales book. */
+  saleId?: string | null;
   createdAt: string;
+  email?: string | null;
+  paymentMethod?: OrderPaymentMethod;
+  paymentStatus?: OrderPaymentStatus;
+  /** Fonepay transaction ID the customer entered. */
+  paymentRef?: string | null;
+  /** Whether a payment screenshot is stored; fetch it from /orders/:id/proof. */
+  hasProof?: boolean;
+  paymentVerifiedAt?: string | null;
 }
+
+export type OrderPaymentMethod = "COD" | "FONEPAY";
+export type OrderPaymentStatus = "NOT_REQUIRED" | "PENDING" | "VERIFIED" | "REJECTED";
 
 export interface Sale {
   id: string;

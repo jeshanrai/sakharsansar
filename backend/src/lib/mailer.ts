@@ -22,6 +22,9 @@ const RESEND_API_KEY = process.env.RESEND_API_KEY ?? "";
 export const MAIL_FROM = process.env.RESEND_FROM || "SakharSansar Orders <orders@sakharsansar.com.np>";
 const SITE_URL = (process.env.SITE_URL || "https://www.sakharsansar.com.np").replace(/\/$/, "");
 const DASHBOARD_URL = `${SITE_URL}/portfolio/dashboard`;
+// Shown to customers in their emails, and where their replies go.
+const SHOP_EMAIL = process.env.SHOP_EMAIL || "sakharsansar@gmail.com";
+const SHOP_PHONE = process.env.SHOP_PHONE || "+977-9860149199";
 
 export const mailConfigured = Boolean(RESEND_API_KEY);
 const resend = mailConfigured ? new Resend(RESEND_API_KEY) : null;
@@ -36,6 +39,7 @@ type Message = {
   to?: string[];
   /** Which Settings toggle governs this email. Omitted for test sends. */
   event?: NotifyEvent;
+  attachments?: { filename: string; content: string }[];
 };
 
 async function send(msg: Message): Promise<SendResult> {
@@ -59,6 +63,7 @@ async function send(msg: Message): Promise<SendResult> {
       html: msg.html,
       text: msg.text,
       ...(msg.replyTo ? { replyTo: msg.replyTo } : {}),
+      ...(msg.attachments?.length ? { attachments: msg.attachments } : {}),
     });
     if (error) {
       console.error(`✖ Email failed: ${msg.subject}\n  ${error.message}`);
@@ -134,12 +139,16 @@ const C = {
 };
 const FONT = "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif";
 
-function shell({ preheader, eyebrow, title, subtitle, body }: {
+const STAFF_FOOTER = `Sent automatically by the SakharSansar website.<br>
+      Change who receives these in the <a href="${DASHBOARD_URL}" style="color:${"#8A7A66"}">admin panel</a> → Settings.`;
+
+function shell({ preheader, eyebrow, title, subtitle, body, footer = STAFF_FOOTER }: {
   preheader: string;
   eyebrow: string;
   title: string;
   subtitle: string;
   body: string;
+  footer?: string;
 }): string {
   return `<!doctype html>
 <html lang="en">
@@ -168,8 +177,7 @@ function shell({ preheader, eyebrow, title, subtitle, body }: {
       ${body}
     </td></tr>
     <tr><td align="center" style="padding:18px 12px 0;font-size:12px;line-height:18px;color:${C.muted}">
-      Sent automatically by the SakharSansar website.<br>
-      Change who receives these in the <a href="${DASHBOARD_URL}" style="color:${C.muted}">admin panel</a> → Settings.
+      ${footer}
     </td></tr>
   </table>
 </td></tr>
@@ -218,6 +226,22 @@ export interface OrderEmail {
   discountCode?: string | null;
   discount?: number;
   freeDelivery?: boolean;
+  email?: string | null;
+  paymentMethod?: "COD" | "FONEPAY";
+  /** Fonepay transaction / trace ID the customer entered. */
+  paymentRef?: string | null;
+  /** data:image/jpeg;base64,… screenshot, attached to the shop's email. */
+  paymentProof?: string | null;
+}
+
+const PAY_LABEL = { COD: "Cash on delivery", FONEPAY: "Fonepay QR (paid online)" } as const;
+
+/** Turns a data: URL into a Resend attachment, or null if it isn't one. */
+function proofAttachment(proof: string | null | undefined, ref: string) {
+  const m = proof?.match(/^data:image\/(jpeg|png|webp);base64,([A-Za-z0-9+/=]+)$/);
+  if (!m) return null;
+  const ext = m[1] === "jpeg" ? "jpg" : m[1];
+  return { filename: `payment-${ref}.${ext}`, content: m[2] };
 }
 
 export function renderOrderEmail(order: OrderEmail): { subject: string; html: string; text: string } {
@@ -255,7 +279,7 @@ export function renderOrderEmail(order: OrderEmail): { subject: string; html: st
         ${discount ? amountRow(`Discount (${order.discountCode})`, `−${rs(discount)}`, { color: C.green }) : ""}
         ${amountRow("Delivery", delivery, { color: order.freeDelivery ? C.green : C.ink })}
         <tr><td colspan="2" style="padding-top:6px;border-bottom:1px solid ${C.line}"></td></tr>
-        ${amountRow("Total to collect", rs(order.amount), { color: C.amber, bold: true })}
+        ${amountRow(order.paymentMethod === "FONEPAY" ? "Total (paid via Fonepay)" : "Total to collect", rs(order.amount), { color: C.amber, bold: true })}
       </table>`
     : `<div style="margin-top:12px;padding:12px 14px;background:${C.bg};border-radius:12px;font-size:14px;color:${C.ink}">
         Custom / bulk order: <strong>agree the price on the call.</strong>
@@ -276,8 +300,19 @@ export function renderOrderEmail(order: OrderEmail): { subject: string; html: st
     </td></tr>
   </table>`;
 
+  const fonepay = order.paymentMethod === "FONEPAY";
+  const payment = fonepay
+    ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border:2px solid ${C.amber};border-radius:14px">
+        <tr><td style="padding:14px 16px">
+          <div style="font-size:15px;font-weight:700;color:${C.ink}">Fonepay QR: verify before dispatch</div>
+          <div style="font-size:14px;color:${C.ink};padding-top:6px">Transaction ID: <strong>${esc(order.paymentRef || "not given")}</strong></div>
+          <div style="font-size:13px;color:${C.muted};padding-top:4px">${order.paymentProof ? "Payment screenshot attached to this email." : "No screenshot sent."} Match it against the Fonepay / bank statement, then press <em>Verify payment</em> in the dashboard.</div>
+        </td></tr>
+      </table>`
+    : `<div style="padding:12px 14px;background:${C.bg};border-radius:12px;font-size:14px;color:${C.ink}"><strong>Cash on delivery</strong>: collect ${priced ? rs(order.amount) : "the agreed amount"} at the door.</div>`;
+
   const next = `<div style="padding-top:22px;font-size:14px;line-height:21px;color:${C.ink}">
-      <strong>Next:</strong> call ${esc(order.customer.split(" ")[0] || "the customer")} to confirm the order${priced && !order.freeDelivery ? " and quote delivery" : ""}, then mark it <em>Confirmed</em> in the dashboard.
+      <strong>Next:</strong> ${fonepay ? "verify the payment, then " : ""}call ${esc(order.customer.split(" ")[0] || "the customer")} to confirm the order${priced && !order.freeDelivery ? " and quote delivery" : ""}, then mark it <em>Confirmed</em> in the dashboard.
     </div>
     <div style="padding-top:16px">${button(DASHBOARD_URL, "Open orders dashboard", true)}</div>`;
 
@@ -286,7 +321,7 @@ export function renderOrderEmail(order: OrderEmail): { subject: string; html: st
     eyebrow: "New order",
     title: `Order #${ref}`,
     subtitle: placed,
-    body: `${sectionTitle("Order")}${productRow}${totals}${sectionTitle("Deliver to")}${customer}${next}`,
+    body: `${sectionTitle("Order")}${productRow}${totals}${sectionTitle("Payment")}${payment}${sectionTitle("Deliver to")}${customer}${next}`,
   });
 
   const text = [
@@ -297,9 +332,12 @@ export function renderOrderEmail(order: OrderEmail): { subject: string; html: st
       ? [
           ...(discount ? [`Subtotal: ${rs(subtotal)}`, `Discount (${order.discountCode}): -${rs(discount)}`] : []),
           `Delivery: ${delivery}`,
-          `Total to collect: ${rs(order.amount)}`,
+          `Total: ${rs(order.amount)}`,
         ]
       : ["Custom / bulk order: agree the price on the call."]),
+    "",
+    `Payment: ${PAY_LABEL[order.paymentMethod ?? "COD"]}`,
+    ...(fonepay ? [`Transaction ID: ${order.paymentRef || "not given"}`, "VERIFY THE PAYMENT BEFORE DISPATCH."] : []),
     "",
     `Customer: ${order.customer}`,
     `Phone: ${order.phone}`,
@@ -308,13 +346,162 @@ export function renderOrderEmail(order: OrderEmail): { subject: string; html: st
     `Dashboard: ${DASHBOARD_URL}`,
   ].join("\n");
 
-  const subject = `New order #${ref} · ${priced ? rs(order.amount) : "Custom order"} · ${order.customer}`;
+  const subject = `New order #${ref} · ${priced ? rs(order.amount) : "Custom order"}${fonepay ? " · Fonepay (verify)" : " · COD"} · ${order.customer}`;
   return { subject, html, text };
 }
 
 export async function sendOrderNotification(order: OrderEmail, to?: string[]): Promise<SendResult> {
   // An explicit list means a test from Settings: send even if orders are off.
-  return send({ ...renderOrderEmail(order), to, event: to ? undefined : "order" });
+  const proof = proofAttachment(order.paymentProof, orderRef(order.id));
+  return send({
+    ...renderOrderEmail(order),
+    to,
+    event: to ? undefined : "order",
+    replyTo: order.email && looksLikeEmail(order.email) ? order.email : undefined,
+    attachments: proof ? [proof] : undefined,
+  });
+}
+
+// ── Customer updates ──────────────────────────────────────────────────
+// Sent to the address the customer typed at checkout. These ignore the
+// Settings toggles (those govern the shop's own inbox) and are skipped quietly
+// when the order has no email.
+
+export type CustomerUpdate =
+  | "placed"            // order received (COD) / received, payment being verified (Fonepay)
+  | "payment_verified"  // Fonepay payment matched the statement
+  | "payment_rejected"  // couldn't find the payment
+  | "confirmed"         // COD order confirmed on the call
+  | "shipped"           // out for delivery
+  | "delivered";
+
+export interface CustomerOrder {
+  id: string;
+  createdAt?: Date;
+  customer: string;
+  email?: string | null;
+  phone: string;
+  address: string;
+  product: string;
+  quantity: number;
+  amount: number;
+  paymentMethod: "COD" | "FONEPAY";
+  paymentRef?: string | null;
+}
+
+const CUSTOMER_FOOTER = `Questions about your order? Reply to this email, or call us on
+      <a href="tel:${SHOP_PHONE.replace(/[^\d+]/g, "")}" style="color:${"#8A7A66"}">${SHOP_PHONE}</a>.<br>
+      SakharSansar · <a href="${SITE_URL}" style="color:${"#8A7A66"}">${SITE_URL.replace(/^https?:\/\/(www\.)?/, "")}</a>`;
+
+/** Four steps, the current one lit. Tables only, so it survives Outlook. */
+function progress(current: 0 | 1 | 2 | 3): string {
+  const steps = ["Placed", "Confirmed", "On the way", "Delivered"];
+  const cells = steps.map((label, i) => {
+    const done = i <= current;
+    return `<td align="center" style="padding:0 2px;width:25%">
+      <div style="height:6px;border-radius:3px;background:${done ? C.amber : C.line}"></div>
+      <div style="padding-top:6px;font-size:11px;letter-spacing:0.5px;color:${done ? C.ink : C.muted};font-weight:${i === current ? 700 : 400}">${label}</div>
+    </td>`;
+  }).join("");
+  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:20px"><tr>${cells}</tr></table>`;
+}
+
+function customerCopy(kind: CustomerUpdate, o: CustomerOrder, ref: string): {
+  subject: string; title: string; lead: string; step: 0 | 1 | 2 | 3; eyebrow: string;
+} {
+  const first = o.customer.split(" ")[0] || o.customer;
+  const fonepay = o.paymentMethod === "FONEPAY";
+  switch (kind) {
+    case "placed":
+      return fonepay
+        ? {
+            subject: `Order #${ref} received: verifying your payment`,
+            eyebrow: "Order placed",
+            title: "We've got your order",
+            lead: `Thank you, ${first}! Your order #${ref} is placed. We're now matching your Fonepay payment${o.paymentRef ? ` (transaction ${o.paymentRef})` : ""} with our bank statement. That usually takes a few hours during the day. We'll email you as soon as it's verified, and then your sakhar heads out.`,
+            step: 0,
+          }
+        : {
+            subject: `Order #${ref} placed: cash on delivery`,
+            eyebrow: "Order placed",
+            title: "We've got your order",
+            lead: `Thank you, ${first}! Your order #${ref} is placed. We'll call you on ${o.phone} to confirm the delivery details. You pay ${o.amount > 0 ? rs(o.amount) : "the agreed amount"} in cash when it arrives.`,
+            step: 0,
+          };
+    case "payment_verified":
+      return {
+        subject: `Payment verified: order #${ref} is confirmed`,
+        eyebrow: "Payment verified",
+        title: "Payment verified ✓",
+        lead: `Good news, ${first}: we've received your payment of ${rs(o.amount)} and your order #${ref} is confirmed. We're packing it now and will email you again when it's on the way.`,
+        step: 1,
+      };
+    case "payment_rejected":
+      return {
+        subject: `Order #${ref}: we couldn't find your payment`,
+        eyebrow: "Payment issue",
+        title: "We couldn't match your payment",
+        lead: `Sorry, ${first}. We couldn't find a Fonepay payment matching order #${ref}${o.paymentRef ? ` (transaction ${o.paymentRef})` : ""} in our statement. Your order is on hold. Please reply to this email with your payment screenshot, or call us, and we'll sort it out right away.`,
+        step: 0,
+      };
+    case "confirmed":
+      return {
+        subject: `Order #${ref} confirmed`,
+        eyebrow: "Order confirmed",
+        title: "Your order is confirmed",
+        lead: `Thanks, ${first}. Your order #${ref} is confirmed and being packed. We'll let you know when it's on the way.`,
+        step: 1,
+      };
+    case "shipped":
+      return {
+        subject: `Order #${ref} is on the way 🚚`,
+        eyebrow: "On the way",
+        title: "Your order is on the way",
+        lead: `${first}, your order #${ref} has left us and is on its way to you.${fonepay ? " It's already paid, so there's nothing to pay at the door." : ` Please keep ${o.amount > 0 ? rs(o.amount) : "the agreed amount"} ready in cash for the delivery person.`}`,
+        step: 2,
+      };
+    case "delivered":
+      return {
+        subject: `Order #${ref} delivered: thank you!`,
+        eyebrow: "Delivered",
+        title: "Delivered. Enjoy!",
+        lead: `Your order #${ref} has been delivered. Thank you for choosing SakharSansar, ${first}. We hope you enjoy every bite.`,
+        step: 3,
+      };
+  }
+}
+
+export function renderCustomerEmail(kind: CustomerUpdate, o: CustomerOrder) {
+  const ref = orderRef(o.id);
+  const copy = customerCopy(kind, o, ref);
+  const rows: [string, string | null | undefined][] = [
+    ["Order", `#${ref}`],
+    ["Item", `${o.quantity} × ${o.product}`],
+    ["Total", o.amount > 0 ? rs(o.amount) : "Confirmed on the call"],
+    ["Payment", o.paymentMethod === "FONEPAY"
+      ? `Fonepay QR${kind === "payment_verified" || kind === "shipped" || kind === "delivered" ? " (verified)" : kind === "payment_rejected" ? " (not found)" : " (verifying)"}`
+      : "Cash on delivery"],
+    ["Deliver to", o.address],
+  ];
+  const body = `<div style="padding-top:20px;font-size:15px;line-height:23px;color:${C.ink}">${esc(copy.lead)}</div>
+    ${kind === "payment_rejected" ? "" : progress(copy.step)}
+    ${factsTable(rows)}`;
+  const html = shell({
+    preheader: copy.lead.slice(0, 120),
+    eyebrow: copy.eyebrow,
+    title: copy.title,
+    subtitle: `Order #${ref}`,
+    body,
+    footer: CUSTOMER_FOOTER,
+  });
+  const text = [copy.title, "", copy.lead, "", factsText(rows), "", `Questions? Reply to this email or call ${SHOP_PHONE}.`].join("\n");
+  return { subject: copy.subject, html, text };
+}
+
+export async function sendCustomerUpdate(kind: CustomerUpdate, o: CustomerOrder): Promise<SendResult> {
+  const to = o.email?.trim();
+  if (!to || !looksLikeEmail(to)) return { ok: false, error: "Order has no customer email." };
+  return send({ ...renderCustomerEmail(kind, o), to: [to], replyTo: SHOP_EMAIL });
 }
 
 // ── Enquiries ─────────────────────────────────────────────────────────
