@@ -221,6 +221,13 @@ on the post so the credit renders under the hero, crop it into
 `recipe.images` on a recipe post. Never imply it is our kitchen: the `note`
 says so. Replace it with our own shot as soon as one exists.
 
+Link the credit to the file page as
+`https://commons.wikimedia.org/w/index.php?curid=<page id>`, not the
+`/wiki/File:Name.jpg` form. Same page, but a URL ending in `.jpg` is
+counted by site audits as an external image (Semrush reported eleven
+"broken external images" on 4 Nov 2026 that were all credit links). The page
+id is on the file page under "Page information".
+
 ## Approved external sources
 
 | Source | URL |
@@ -231,7 +238,7 @@ says so. Replace it with our own shot as soon as one exists.
 | WHO, the 25 g figure | https://www.who.int/news/item/04-03-2015-who-calls-on-countries-to-reduce-sugars-intake-among-adults-and-children |
 | Wikipedia, non-centrifugal cane sugar | https://en.wikipedia.org/wiki/Non-centrifugal_cane_sugar |
 | Wikipedia, Kolhapur jaggery | https://en.wikipedia.org/wiki/Kolhapur_jaggery |
-| All India Radio, Tokha chaku | https://www.newsonair.gov.in/kathmandu-streets-full-oof-fragrance-of-freshly-cookled-jaggery-for-maghe-sankranti |
+| All India Radio, Tokha chaku | https://newsonair.gov.in/kathmandu-streets-full-oof-fragrance-of-freshly-cookled-jaggery-for-maghe-sankranti/ |
 | ClinicalTrials.gov, jaggery GI trial | https://clinicaltrials.gov/study/NCT07015814 |
 | WHO guideline on complementary feeding, 6–23 months (2023) | https://www.who.int/publications/i/item/9789240081864 |
 

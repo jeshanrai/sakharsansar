@@ -478,11 +478,15 @@ function priceValidUntil(): string {
 export function productLd(
   product: ProductLike,
   /**
-   * For the Nepali product pages: their own URL and language. The node then
-   * describes the /ne/ page in Nepali, under that page's own @id, rather than
-   * restating the English node with a second, contradicting name.
+   * For the Nepali product pages: their own URL. The node then describes the
+   * /ne/ page in Nepali, under that page's own @id, rather than restating the
+   * English node with a second, contradicting name.
+   *
+   * No `inLanguage`: schema.org defines it on CreativeWork, Event and a few
+   * others, not on Product, and validators reject it there. The page's
+   * language is already carried by <html lang> and hreflang.
    */
-  opts?: { path?: string; inLanguage?: string },
+  opts?: { path?: string },
 ): Json {
   const url = absoluteUrl(opts?.path ?? `/products/${product.slug}`);
   const amount = parseAmount(product.weight);
@@ -490,7 +494,6 @@ export function productLd(
     "@context": "https://schema.org",
     "@type": "Product",
     "@id": `${url}#product`,
-    ...(opts?.inLanguage ? { inLanguage: opts.inLanguage } : {}),
     name: product.name,
     description: product.longDescription ?? product.description,
     image: absoluteUrl(product.image),

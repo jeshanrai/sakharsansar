@@ -30,7 +30,7 @@ const CHANNELS = [
     icon: MapPin,
     label: "Find us",
     value: "Kapan, Kathmandu, Nepal",
-    href: "https://maps.google.com/?q=Kapan+Kathmandu+Nepal",
+    href: "https://www.google.com/maps/search/?api=1&query=Kapan%20Kathmandu%20Nepal",
     note: "Made in Sankhuwasabha by 42 farming families",
   },
 ];

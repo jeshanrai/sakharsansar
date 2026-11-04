@@ -138,7 +138,7 @@ export default function Footer({ locale = "en" }: { locale?: Locale }) {
                   {SITE.phone}
                 </a>
                 <a
-                  href={`https://maps.google.com/?q=${encodeURIComponent(
+                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
                     `${SITE.address.street} ${SITE.address.locality} Nepal`,
                   )}`}
                   target="_blank"

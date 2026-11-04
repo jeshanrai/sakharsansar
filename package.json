@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "dev:backend": "cd backend && npm run dev",
-    "build": "next build && npm run check:meta && npm run check:schema && npm run check:claims && npm run check:categories && npm run check:batch && npm run check:festivals && npm run seo:audit",
+    "build": "next build && npm run check:meta && npm run check:schema && npm run check:claims && npm run check:categories && npm run check:batch && npm run check:festivals && npm run check:robots && npm run seo:audit && npm run check:links",
     "start": "next start",
     "lint": "eslint",
     "check:meta": "node scripts/check-meta-descriptions.mjs",
@@ -15,6 +15,9 @@
     "check:categories": "node scripts/check-blog-categories.mjs",
     "check:festivals": "node scripts/check-festival-dates.mjs",
     "seo:audit": "node scripts/seo-audit.mjs",
+    "check:robots": "node scripts/check-robots.mjs",
+    "check:links": "node scripts/check-links.mjs",
+    "schema:vocab": "node scripts/build-schema-vocab.mjs",
     "smoke:build": "node scripts/smoke-build.mjs",
     "smoke:test": "node scripts/smoke-build.test.mjs",
     "db:push": "cd backend && npx prisma db push",

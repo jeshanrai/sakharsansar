@@ -11,7 +11,6 @@ import JsonLd from "@/components/seo/JsonLd";
 import { neMetadata } from "@/components/ne/NePage";
 import content from "@/data/content.json";
 import { faqEntries, parseArticle } from "@/lib/article";
-import { LOCALES } from "@/lib/hreflang";
 import { formatPrice, t } from "@/lib/i18n";
 import { NE_PRODUCT_SLUGS } from "@/lib/locale-paths";
 import { fill, neProduct } from "@/lib/ne-content";
@@ -79,7 +78,7 @@ export default async function NepaliProductPage({ params }: Props) {
       <JsonLd
         data={productLd(
           { ...product, name: ne.name, description: ne.short, longDescription: ne.short },
-          { path, inLanguage: LOCALES.ne.htmlLang },
+          { path },
         )}
       />
       {faqs.length > 0 && <JsonLd data={faqLd(faqs)} />}

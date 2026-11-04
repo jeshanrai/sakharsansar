@@ -11,6 +11,7 @@ import Breadcrumbs from "@/components/layout/Breadcrumbs";
 import { BLOG_ENABLED, pageCount, postPath, postsOnPage, sortedPosts } from "@/lib/blog";
 import { BLOG_CATEGORIES } from "@/lib/blog-categories";
 import { ORG_ID, WEBSITE_ID } from "@/lib/seo";
+import { AUTHOR, AUTHOR_ID } from "@/lib/author";
 import { SITE, absoluteUrl } from "@/lib/site";
 import { Bee, Ladybug, AnimatedWave } from "@/components/ui/StoryArt";
 import { Daisy } from "@/components/ui/Doodles";
@@ -99,7 +100,12 @@ export default function BlogList() {
       url: absoluteUrl(postPath(post)),
       datePublished: post.date,
       image: absoluteUrl(post.image),
-      author: { "@type": "Organization", name: post.author },
+      // A person, not an Organization: the same Person entity the post pages
+      // and /about/rashmita-bhandari define, so the bylines merge into one.
+      author:
+        post.author === AUTHOR.name
+          ? { "@id": AUTHOR_ID }
+          : { "@type": "Person", name: post.author },
     })),
   };
 

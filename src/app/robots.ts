@@ -33,7 +33,8 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
       disallow: ["/portfolio", "/portfolio/"],
     })),
+    // No `host`: it is a Yandex-only directive that expects a bare hostname,
+    // and audit tools flag it (with a URL value) as invalid robots.txt.
     sitemap: `${SITE_URL}/sitemap.xml`,
-    host: SITE_URL,
   };
 }

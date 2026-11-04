@@ -19,7 +19,9 @@
  * What it asserts, per Phase B.3:
  *   - every page carries at least one JSON-LD block, and every block parses
  *   - every `@id` reference resolves to a node defined somewhere on the site
- *   - required fields are present for each type
+ *   - required fields are present for each type, nested nodes included
+ *   - every type, property and enumeration value is a schema.org term, and
+ *     every property is one schema.org defines for that node's type
  *   - a Product's schema price is the price the page actually renders
  *   - no `aggregateRating` on a page that renders no visible review
  *
@@ -31,6 +33,7 @@
  *   npm run check:schema -- --live            # crawl the live sitemap instead
  *   npm run check:schema -- --live=https://…  # or another origin
  */
+import { readFile } from "node:fs/promises";
 import { liveBaseFrom, loadPages, visibleText } from "./lib/pages.mjs";
 
 /**
@@ -68,7 +71,106 @@ const REQUIRED = {
   ContactPage: ["name", "url", "description"],
   ProfilePage: ["name", "url", "mainEntity"],
   Blog: ["name", "url"],
+  // Nested types. These are checked wherever they appear, not only at the top
+  // of a block: an FAQ answer with no text or a recipe step with no text
+  // invalidates the rich result just as surely as a missing top-level name.
+  Question: ["name", "acceptedAnswer"],
+  Answer: ["text"],
+  HowTo: ["name", "step"],
+  HowToStep: ["text"],
+  ListItem: ["position"],
+  VideoObject: ["name", "description", "thumbnailUrl", "uploadDate"],
+  ImageObject: ["url"],
+  MerchantReturnPolicy: ["applicableCountry", "returnPolicyCategory"],
+  OfferShippingDetails: ["shippingDestination", "deliveryTime"],
+  PostalAddress: ["addressCountry"],
 };
+
+/**
+ * Overrides for a type when it appears nested rather than as a page's own
+ * node. The /blog index lists every post as a summary BlogPosting; the full
+ * article checklist belongs to the post page that node points at.
+ */
+const NESTED_REQUIRED = {
+  BlogPosting: ["headline", "url", "datePublished", "author"],
+};
+
+/**
+ * The schema.org vocabulary, vendored so the build needs no network.
+ * Regenerate with `node scripts/build-schema-vocab.mjs`.
+ *
+ * It exists because of `Product.inLanguage`: schema.org defines `inLanguage`
+ * on CreativeWork and Event, not on Product, and Semrush counted every
+ * Nepali product page as invalid markup. Every required-field check passed,
+ * because the problem was a property that should not be there at all.
+ */
+const VOCAB = JSON.parse(
+  await readFile(new URL("./lib/schema-vocab.json", import.meta.url), "utf8"),
+);
+
+/** A class and every class above it. Enumeration members resolve to their enumeration. */
+const ancestorCache = new Map();
+function ancestors(type) {
+  if (ancestorCache.has(type)) return ancestorCache.get(type);
+  const out = new Set();
+  const stack = [type];
+  while (stack.length > 0) {
+    const t = stack.pop();
+    if (out.has(t)) continue;
+    out.add(t);
+    stack.push(...(VOCAB.classes[t] ?? []));
+    if (VOCAB.enumMembers[t]) stack.push(VOCAB.enumMembers[t]);
+  }
+  ancestorCache.set(type, out);
+  return out;
+}
+
+/** Problems with a node's type and properties against the vocabulary. */
+function vocabularyProblems(node) {
+  const types = typesOf(node);
+  const problems = [];
+  for (const t of types) {
+    if (!VOCAB.classes[t]) problems.push(`unknown schema.org type "${t}"`);
+  }
+  if (types.length === 0) return problems;
+  const lineage = new Set(types.flatMap((t) => [...ancestors(t)]));
+  for (const key of Object.keys(node)) {
+    if (key.startsWith("@")) continue;
+    const domains = VOCAB.properties[key];
+    if (!domains) {
+      problems.push(`${types.join("/")} uses "${key}", which is not a schema.org property`);
+    } else if (!domains.some((d) => lineage.has(d))) {
+      problems.push(
+        `${types.join("/")} uses "${key}", which schema.org defines only on ${domains.join(", ")}`,
+      );
+    }
+  }
+  for (const value of Object.values(node)) {
+    for (const v of Array.isArray(value) ? value : [value]) {
+      if (typeof v === "string" && v.startsWith("https://schema.org/")) {
+        const term = v.slice("https://schema.org/".length);
+        if (!VOCAB.classes[term] && !VOCAB.enumMembers[term]) {
+          problems.push(`${types.join("/")} uses ${v}, which is not a schema.org term`);
+        }
+      }
+    }
+  }
+  return problems;
+}
+
+/** Every typed object inside a node tree, the node itself included. */
+function* typedNodes(node, seen = new Set()) {
+  if (node === null || typeof node !== "object" || seen.has(node)) return;
+  seen.add(node);
+  if (Array.isArray(node)) {
+    for (const item of node) yield* typedNodes(item, seen);
+    return;
+  }
+  if (typesOf(node).length > 0) yield node;
+  for (const [key, value] of Object.entries(node)) {
+    if (key !== "@context") yield* typedNodes(value, seen);
+  }
+}
 
 /** Google truncates a BlogPosting headline past this and flags it as a warning. */
 const HEADLINE_MAX = 110;
@@ -158,13 +260,21 @@ for (const { route, html } of pages) {
   for (const node of nodes) {
     collect(node, route, definitions, references);
 
-    for (const type of typesOf(node)) {
-      const required = REQUIRED[type];
-      if (!required) continue;
-      const missing = required.filter((f) => node[f] === undefined || node[f] === null);
-      if (missing.length > 0) {
-        problems.push([route, `${type} is missing: ${missing.join(", ")}`]);
+    for (const typed of typedNodes(node)) {
+      // `{"@type": "WebPage", "@id": url}` under mainEntityOfPage is a typed
+      // pointer at a node defined elsewhere, not a definition to complete.
+      const pointer = Object.keys(typed).every((k) => k === "@type" || k === "@id");
+      for (const type of pointer ? [] : typesOf(typed)) {
+        const required = (typed !== node && NESTED_REQUIRED[type]) || REQUIRED[type];
+        if (!required) continue;
+        const missing = required.filter(
+          (f) => typed[f] === undefined || typed[f] === null || typed[f] === "",
+        );
+        if (missing.length > 0) {
+          problems.push([route, `${type} is missing: ${missing.join(", ")}`]);
+        }
       }
+      for (const reason of vocabularyProblems(typed)) problems.push([route, reason]);
     }
 
     if (typesOf(node).includes("BlogPosting")) {
