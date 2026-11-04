@@ -1,5 +1,6 @@
 import { Router, Response } from "express";
 import prisma from "../lib/prisma";
+import { sendSaleNotification } from "../lib/mailer";
 import { requireAuth, AuthRequest } from "../middleware/auth";
 import { PaymentMethod } from "@prisma/client";
 import { seasonFromQuery, rangeOf } from "../lib/seasons";
@@ -75,6 +76,22 @@ router.post("/", async (req: AuthRequest, res: Response): Promise<void> => {
       createdBy: req.adminId,
     },
   });
+
+  // Notify the shop inbox. Fire-and-forget: the mailer never throws.
+  void prisma.admin
+    .findUnique({ where: { id: req.adminId }, select: { name: true } })
+    .catch(() => null)
+    .then((admin) => sendSaleNotification({
+      customer: sale.customer,
+      phone: sale.phone,
+      product: sale.product,
+      quantity: sale.quantity,
+      amount: sale.amount,
+      paymentMethod: sale.paymentMethod,
+      description: sale.description,
+      date: sale.date,
+      addedBy: admin?.name ?? null,
+    }));
 
   res.status(201).json(sale);
 });

@@ -1,6 +1,13 @@
 import { Router, Response } from "express";
 import { requireAuth, AuthRequest } from "../middleware/auth";
-import { getNotificationEmails, setNotificationEmails, isEmail, MAX_NOTIFY_EMAILS } from "../lib/settings";
+import {
+  getNotificationEmails,
+  setNotificationEmails,
+  getNotificationEvents,
+  setNotificationEvents,
+  isEmail,
+  MAX_NOTIFY_EMAILS,
+} from "../lib/settings";
 import { MAIL_FROM, mailConfigured, sendOrderNotification } from "../lib/mailer";
 
 const router = Router();
@@ -8,11 +15,12 @@ router.use(requireAuth);
 
 // GET /api/settings/notifications — who gets order emails, and whether sending is set up
 router.get("/notifications", async (_req: AuthRequest, res: Response): Promise<void> => {
-  const { emails, source } = await getNotificationEmails();
-  res.json({ emails, source, from: MAIL_FROM, configured: mailConfigured, max: MAX_NOTIFY_EMAILS });
+  const [{ emails, source }, events] = await Promise.all([getNotificationEmails(), getNotificationEvents()]);
+  res.json({ emails, source, events, from: MAIL_FROM, configured: mailConfigured, max: MAX_NOTIFY_EMAILS });
 });
 
-// PUT /api/settings/notifications — replace the list
+// PUT /api/settings/notifications — replace the list, and optionally the
+// per-event toggles ({ events: { order, enquiry, sale, expense } })
 router.put("/notifications", async (req: AuthRequest, res: Response): Promise<void> => {
   const raw: unknown = req.body?.emails;
   if (!Array.isArray(raw) || raw.some((e) => typeof e !== "string")) {
@@ -30,7 +38,12 @@ router.put("/notifications", async (req: AuthRequest, res: Response): Promise<vo
   }
   try {
     const emails = await setNotificationEmails(raw as string[], req.adminId);
-    res.json({ emails, source: "settings" });
+    const rawEvents: unknown = req.body?.events;
+    const events =
+      rawEvents && typeof rawEvents === "object"
+        ? await setNotificationEvents(rawEvents as Record<string, unknown>, req.adminId)
+        : await getNotificationEvents();
+    res.json({ emails, source: "settings", events });
   } catch (err) {
     console.error(err);
     res.status(500).json({

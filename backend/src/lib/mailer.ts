@@ -1,5 +1,5 @@
 import { Resend } from "resend";
-import { getNotificationEmails } from "./settings";
+import { getNotificationEmails, getNotificationEvents, type NotifyEvent } from "./settings";
 
 /**
  * Resend notifier.
@@ -28,12 +28,23 @@ const resend = mailConfigured ? new Resend(RESEND_API_KEY) : null;
 
 export type SendResult = { ok: true; id?: string } | { ok: false; error: string };
 
-type Message = { subject: string; html: string; text: string; replyTo?: string; to?: string[] };
+type Message = {
+  subject: string;
+  html: string;
+  text: string;
+  replyTo?: string;
+  to?: string[];
+  /** Which Settings toggle governs this email. Omitted for test sends. */
+  event?: NotifyEvent;
+};
 
 async function send(msg: Message): Promise<SendResult> {
   if (!resend) {
     console.warn(`⚠ Email skipped (set RESEND_API_KEY): ${msg.subject}`);
     return { ok: false, error: "RESEND_API_KEY is not set on the backend." };
+  }
+  if (msg.event && !(await getNotificationEvents())[msg.event]) {
+    return { ok: false, error: `${msg.event} emails are turned off in Settings.` };
   }
   const to = msg.to ?? (await getNotificationEmails()).emails;
   if (to.length === 0) {
@@ -102,6 +113,10 @@ function kathmanduTime(d: Date): string {
     minute: "2-digit",
     hour12: true,
   });
+}
+
+function kathmanduDate(d: Date): string {
+  return d.toLocaleDateString("en-GB", { timeZone: "Asia/Kathmandu", weekday: "short", day: "numeric", month: "short", year: "numeric" });
 }
 
 // ── Layout ────────────────────────────────────────────────────────────
@@ -298,7 +313,8 @@ export function renderOrderEmail(order: OrderEmail): { subject: string; html: st
 }
 
 export async function sendOrderNotification(order: OrderEmail, to?: string[]): Promise<SendResult> {
-  return send({ ...renderOrderEmail(order), to });
+  // An explicit list means a test from Settings: send even if orders are off.
+  return send({ ...renderOrderEmail(order), to, event: to ? undefined : "order" });
 }
 
 // ── Enquiries ─────────────────────────────────────────────────────────
@@ -334,5 +350,92 @@ export async function sendEnquiryNotification(enquiry: EnquiryEmail): Promise<Se
     }),
     text: `New ${enquiry.type} enquiry\n\nFrom: ${enquiry.name}\nContact: ${enquiry.contact}\n\n${enquiry.message}`,
     replyTo: replyable ? enquiry.contact : undefined,
+    event: "enquiry",
+  });
+}
+
+// ── Sales & expenses (dashboard entries) ──────────────────────────────
+// Short on purpose: one headline amount, a few facts, who entered it.
+
+function factsTable(rows: [string, string | null | undefined][]): string {
+  const body = rows
+    .filter(([, v]) => v)
+    .map(([k, v]) => `<tr>
+      <td style="padding:7px 0;font-size:14px;color:${C.muted};width:38%;vertical-align:top">${esc(k)}</td>
+      <td style="padding:7px 0;font-size:14px;color:${C.ink};font-weight:600;white-space:pre-line">${esc(v)}</td>
+    </tr>`)
+    .join("");
+  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:18px">${body}</table>`;
+}
+
+function factsText(rows: [string, string | null | undefined][]): string {
+  return rows.filter(([, v]) => v).map(([k, v]) => `${k}: ${v}`).join("\n");
+}
+
+const PAYMENT_LABEL: Record<string, string> = { CASH: "Cash", ONLINE: "Online", CREDIT: "Credit (unpaid)" };
+
+export interface SaleEmail {
+  customer: string;
+  phone?: string | null;
+  product: string;
+  quantity: number;
+  amount: number;
+  paymentMethod: string;
+  description?: string | null;
+  date: Date;
+  addedBy?: string | null;
+}
+
+export async function sendSaleNotification(sale: SaleEmail): Promise<SendResult> {
+  const payment = PAYMENT_LABEL[sale.paymentMethod] ?? sale.paymentMethod;
+  const rows: [string, string | null | undefined][] = [
+    ["Customer", sale.customer],
+    ["Phone", sale.phone],
+    ["Product", `${sale.quantity} × ${sale.product}`],
+    ["Payment", payment],
+    ["Note", sale.description],
+    ["Added by", sale.addedBy],
+  ];
+  return send({
+    subject: `Sale ${rs(sale.amount)} · ${sale.quantity}× ${sale.product} · ${sale.customer}`,
+    html: shell({
+      preheader: `${rs(sale.amount)} · ${payment} · ${sale.customer}`,
+      eyebrow: "Sale added",
+      title: rs(sale.amount),
+      subtitle: kathmanduDate(sale.date),
+      body: factsTable(rows),
+    }),
+    text: `Sale added: ${rs(sale.amount)} (${kathmanduDate(sale.date)})\n${factsText(rows)}`,
+    event: "sale",
+  });
+}
+
+export interface ExpenseEmail {
+  title: string;
+  amount: number;
+  category: string;
+  description?: string | null;
+  date: Date;
+  addedBy?: string | null;
+}
+
+export async function sendExpenseNotification(expense: ExpenseEmail): Promise<SendResult> {
+  const rows: [string, string | null | undefined][] = [
+    ["For", expense.title],
+    ["Category", expense.category],
+    ["Note", expense.description],
+    ["Added by", expense.addedBy],
+  ];
+  return send({
+    subject: `Expense ${rs(expense.amount)} · ${expense.title} (${expense.category})`,
+    html: shell({
+      preheader: `${rs(expense.amount)} · ${expense.title}`,
+      eyebrow: "Expense added",
+      title: rs(expense.amount),
+      subtitle: kathmanduDate(expense.date),
+      body: factsTable(rows),
+    }),
+    text: `Expense added: ${rs(expense.amount)} (${kathmanduDate(expense.date)})\n${factsText(rows)}`,
+    event: "expense",
   });
 }

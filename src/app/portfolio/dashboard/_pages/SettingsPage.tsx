@@ -1,13 +1,25 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Mail, X, Send, AlertCircle, CheckCircle2, Plus } from "lucide-react";
+import { Mail, X, Send, AlertCircle, CheckCircle2, Plus, ShoppingBag, MessageSquare, Receipt, Wallet } from "lucide-react";
 import { apiFetch } from "@/lib/api";
 import { Card, SectionHeading, Button } from "../_components/primitives";
 import YearsPanel from "../_components/YearsPanel";
 
+type NotifyEvent = "order" | "enquiry" | "sale" | "expense";
+type NotifyEvents = Record<NotifyEvent, boolean>;
+
+const EVENT_OPTIONS: { key: NotifyEvent; label: string; hint: string; icon: typeof Mail }[] = [
+  { key: "order", label: "New order", hint: "Placed on the website", icon: ShoppingBag },
+  { key: "enquiry", label: "New enquiry", hint: "Contact form message", icon: MessageSquare },
+  { key: "sale", label: "Sale added", hint: "Entered in the dashboard", icon: Receipt },
+  { key: "expense", label: "Expense added", hint: "Entered in the dashboard", icon: Wallet },
+];
+const ALL_ON: NotifyEvents = { order: true, enquiry: true, sale: true, expense: true };
+
 type NotifySettings = {
   emails: string[];
+  events?: NotifyEvents;
   /** "env" until someone saves a list here: the backend's MAIL_TO is in use. */
   source: "settings" | "env";
   from: string;
@@ -22,6 +34,7 @@ export default function SettingsPage({ onToast }: { onToast: (msg: string) => vo
   const [settings, setSettings] = useState<NotifySettings | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [emails, setEmails] = useState<string[]>([]);
+  const [events, setEvents] = useState<NotifyEvents>(ALL_ON);
   const [draft, setDraft] = useState("");
   const [draftError, setDraftError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
@@ -37,6 +50,7 @@ export default function SettingsPage({ onToast }: { onToast: (msg: string) => vo
         const data: NotifySettings = await res.json();
         setSettings(data);
         setEmails(data.emails);
+        setEvents({ ...ALL_ON, ...data.events });
       })
       .catch((err) => alive && setLoadError(err instanceof Error ? err.message : String(err)));
     return () => {
@@ -45,7 +59,9 @@ export default function SettingsPage({ onToast }: { onToast: (msg: string) => vo
   }, []);
 
   const max = settings?.max ?? 5;
-  const dirty = settings ? settings.source === "env" || !sameList(emails, settings.emails) : false;
+  const savedEvents = { ...ALL_ON, ...settings?.events };
+  const eventsDirty = EVENT_OPTIONS.some(({ key }) => events[key] !== savedEvents[key]);
+  const dirty = settings ? settings.source === "env" || !sameList(emails, settings.emails) || eventsDirty : false;
 
   const addDraft = () => {
     const value = draft.trim().toLowerCase();
@@ -63,7 +79,7 @@ export default function SettingsPage({ onToast }: { onToast: (msg: string) => vo
     setNotice(null);
     const res = await apiFetch("/settings/notifications", {
       method: "PUT",
-      body: JSON.stringify({ emails }),
+      body: JSON.stringify({ emails, events }),
     });
     const data = await res.json().catch(() => null);
     setSaving(false);
@@ -71,9 +87,10 @@ export default function SettingsPage({ onToast }: { onToast: (msg: string) => vo
       setNotice({ kind: "error", text: data?.error ?? "Could not save." });
       return;
     }
-    setSettings((s) => (s ? { ...s, emails: data.emails, source: "settings" } : s));
+    setSettings((s) => (s ? { ...s, emails: data.emails, events: data.events, source: "settings" } : s));
     setEmails(data.emails);
-    onToast("Notification emails saved");
+    if (data.events) setEvents({ ...ALL_ON, ...data.events });
+    onToast("Notification settings saved");
   };
 
   const sendTest = async () => {
@@ -100,8 +117,8 @@ export default function SettingsPage({ onToast }: { onToast: (msg: string) => vo
 
       <SectionHeading
         eyebrow="Settings"
-        title="Order notifications"
-        description="Every order placed on the website is emailed to these addresses, with the customer's details and a button to call them."
+        title="Email notifications"
+        description="Choose what gets emailed, and to whom. Each email is short: the amount, the key details, and who entered it."
       />
 
       {loadError ? (
@@ -125,10 +142,45 @@ export default function SettingsPage({ onToast }: { onToast: (msg: string) => vo
           )}
 
           <div className="space-y-3">
-            <p className="text-[11px] tracking-[0.14em] uppercase text-[#1A1410]/50 font-medium">Send order emails to</p>
+            <p className="text-[11px] tracking-[0.14em] uppercase text-[#1A1410]/50 font-medium">Email me when</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              {EVENT_OPTIONS.map(({ key, label, hint, icon: Icon }) => {
+                const on = events[key];
+                return (
+                  <button
+                    key={key}
+                    type="button"
+                    role="switch"
+                    aria-checked={on}
+                    onClick={() => setEvents({ ...events, [key]: !on })}
+                    className={`flex items-center gap-3 rounded-xl border px-3.5 py-3 text-left transition-colors ${
+                      on ? "bg-[#FAF6EE] border-[#B8763E]/30" : "bg-white border-[#1A1410]/8"
+                    }`}
+                  >
+                    <Icon className={`w-4 h-4 shrink-0 ${on ? "text-[#B8763E]" : "text-[#1A1410]/30"}`} />
+                    <span className="flex-1 min-w-0">
+                      <span className={`block text-sm font-medium ${on ? "text-[#1A1410]" : "text-[#1A1410]/50"}`}>{label}</span>
+                      <span className="block text-xs text-[#1A1410]/45">{hint}</span>
+                    </span>
+                    <span
+                      aria-hidden
+                      className={`relative h-5 w-9 shrink-0 rounded-full transition-colors ${on ? "bg-[#B8763E]" : "bg-[#1A1410]/15"}`}
+                    >
+                      <span
+                        className={`absolute top-0.5 h-4 w-4 rounded-full bg-white shadow transition-all ${on ? "left-[18px]" : "left-0.5"}`}
+                      />
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          <div className="space-y-3">
+            <p className="text-[11px] tracking-[0.14em] uppercase text-[#1A1410]/50 font-medium">Send emails to</p>
 
             {emails.length === 0 ? (
-              <p className="text-sm text-[#1A1410]/50">No addresses yet. Orders won&apos;t be emailed to anyone.</p>
+              <p className="text-sm text-[#1A1410]/50">No addresses yet. Nothing will be emailed.</p>
             ) : (
               <ul className="space-y-2">
                 {emails.map((email) => (
