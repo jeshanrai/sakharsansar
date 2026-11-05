@@ -36,9 +36,9 @@ const READING: Record<string, Reading[]> = {
       note: "Water, iodine and your own hands. Run them on ours too.",
     },
     {
-      slug: "jaggery-vs-sugar",
-      anchor: "how sakhar actually compares with white sugar",
-      note: "What the difference is, and where it has been overstated.",
+      slug: "himalayan-jaggery-sankhuwasabha",
+      anchor: "how this block is made in Sankhuwasabha",
+      note: "The cane, the kadhai and the fire, and how it differs from Terai gur.",
     },
     {
       slug: "chaku-recipe-maghe-sankranti",
@@ -58,9 +58,9 @@ const READING: Record<string, Reading[]> = {
       note: "Two to three rupees a cup, worked out in full.",
     },
     {
-      slug: "jaggery-vs-sugar",
-      anchor: "swapping sakhar in for refined sugar",
-      note: "Where it works, and where it honestly does not.",
+      slug: "jaggery-powder-vs-block",
+      anchor: "whether you want the powder or the block",
+      note: "Which form suits chiya, baking and anything that melts.",
     },
   ],
   "mixed-dry-fruits": [

@@ -3,6 +3,7 @@ import dynamic from "next/dynamic";
 import contentData from "@/data/content.json";
 import HeroSection from "@/components/sections/HeroSection";
 import TrustStrip from "@/components/sections/TrustStrip";
+import JournalSection from "@/components/sections/JournalSection";
 import JsonLd from "@/components/seo/JsonLd";
 import { ORG_ID, WEBSITE_ID, itemListLd, productNodeId } from "@/lib/seo";
 import { SITE, absoluteUrl } from "@/lib/site";
@@ -89,6 +90,7 @@ export default function Home() {
         <HeroSection />
         <TrustStrip />
         <ProductsSection products={productCards()} />
+        <JournalSection />
       </main>
       <Footer />
     </>
