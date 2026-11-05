@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { EmailOffStart, EmailOffEnd } from "@/components/ui/EmailOff";
 import { Inter, Fraunces, Tiro_Devanagari_Hindi, Fredoka, Gochi_Hand } from "next/font/google";
 import "./globals.css";
 import PromoBar from "@/components/layout/PromoBar";
@@ -220,6 +221,7 @@ export default function RootLayout({
       <body
         className="font-sans antialiased bg-cream text-jaggery"
       >
+        <EmailOffStart />
         <PromoBar />
         {/* The pair map is built here, on the server. The switcher inside the
             nav is a client component — it needs the path to know where it is —
@@ -230,6 +232,7 @@ export default function RootLayout({
         <FloatingContact />
         <OrderDrawerHost />
         <Analytics />
+        <EmailOffEnd />
       </body>
     </html>
   );

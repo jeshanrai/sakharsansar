@@ -41,6 +41,33 @@ const SKIP = [/^\/portfolio(\/|$)/];
 
 const liveBase = liveBaseFrom(process.argv.slice(2));
 
+// ─── Cloudflare email obfuscation ───────────────────────────────────────────
+//
+// Cloudflare rewrites any email address in the served HTML into a link to
+// /cdn-cgi/l/email-protection, which 404s to a crawler: the 71 "broken
+// internal links" of 4 Nov 2026, one per page, from the footer's mailto:. It
+// skips text between these markers, which the root layout puts around the
+// whole body (src/components/ui/EmailOff.tsx). The build has no Cloudflare in
+// front of it, so the check is on the markup: an address in the body outside
+// the markers would be rewritten once deployed.
+const EMAIL_OFF_OPEN = "<!--email_off-->";
+const EMAIL_OFF_CLOSE = "<!--/email_off-->";
+const EMAIL = /[\w.+-]+@[\w-]+\.[a-z][\w.-]*/gi;
+
+/** Email addresses Cloudflare would rewrite: in the HTML body, outside <script>
+ *  and <style>, and not between an email_off pair. */
+function unguardedEmails(html) {
+  const body = html
+    .replace(/<head[\s>][\s\S]*?<\/head>/i, "")
+    .replace(/<script[\s\S]*?<\/script>/gi, "")
+    .replace(/<style[\s\S]*?<\/style>/gi, "");
+  const outside = body
+    .split(EMAIL_OFF_OPEN)
+    .map((part, i) => (i === 0 ? part : part.split(EMAIL_OFF_CLOSE).slice(1).join(EMAIL_OFF_CLOSE)))
+    .join(" ");
+  return [...new Set(outside.match(EMAIL) ?? [])];
+}
+
 // ─── Server ─────────────────────────────────────────────────────────────────
 
 function freePort() {
@@ -233,6 +260,23 @@ try {
   }
   const nePages = pages.filter((u) => new URL(u).pathname.startsWith("/ne")).length;
 
+  // Live, Cloudflare has already rewritten the addresses, and the result shows
+  // up above as a /cdn-cgi/l/email-protection 404.
+  if (!liveBase) {
+    const leaks = pages
+      .map((u) => [new URL(u).pathname, unguardedEmails(results.get(u).body)])
+      .filter(([, emails]) => emails.length > 0);
+    if (leaks.length > 0) {
+      exitCode = 1;
+      console.error(
+        `\n✗ ${leaks.length} page(s) carry an email address outside <!--email_off-->; ` +
+          `Cloudflare would rewrite it into a /cdn-cgi/l/email-protection link that 404s:\n`,
+      );
+      for (const [path, emails] of leaks.slice(0, 10)) console.error(`  ${path}: ${emails.join(", ")}`);
+      console.error("");
+    }
+  }
+
   if (failures.length > 0) {
     exitCode = 1;
     console.error(`\n✗ ${failures.length} broken internal URL(s) across ${pages.length} pages (${base}):\n`);
@@ -242,10 +286,10 @@ try {
       console.error(`    ${refs[0].kind}, from ${from.length} page(s): ${from.slice(0, 5).join(", ")}${from.length > 5 ? ", …" : ""}`);
     }
     console.error("");
-  } else {
+  } else if (exitCode === 0) {
     console.log(
       `✓ ${referrers.size} internal URLs referenced from ${pages.length} pages (${nePages} under /ne): ` +
-        `none 4xx/5xx, no links through a redirect`,
+        `none 4xx/5xx, no links through a redirect, no email outside email_off`,
     );
   }
 } finally {
