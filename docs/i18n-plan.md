@@ -273,6 +273,26 @@ Rough, and the translation line is the one that will move:
 
 Steps 1–3 are the ones with a clear return. Do not commit to step 5 up front.
 
+### Deferred: waiting on existing `/ne/` impressions
+
+Added 5 Nov 2026. Do not start these until the existing `/ne/blog/*` posts
+are getting impressions in Search Console. As of the 1 Nov export, only three
+of the eleven had any (`sakhar-khane-faida` 10, `chaku-kasari-banaune` 9,
+`sakhar-ra-chini` 6). A new Nepali URL would most likely go unindexed like the
+rest.
+
+- **Nepali version of the Sankhuwasabha pillar**:
+  `/ne/blog/sankhuwasabha-ko-sakhar`, paired with
+  `/blog/himalayan-jaggery-sankhuwasabha`. It targets the Devanagari
+  searches, which no page covers yet.
+
+**Cancelled, not deferred.** Do not reopen these:
+
+- A `/sankhuwasabha-sakhar` landing page. The homepage is the Sankhuwasabha
+  landing page. A second page would compete with the homepage and the pillar,
+  which both already target "Sankhuwasabha Sakhar".
+- A "where to buy Sankhuwasabha sakhar" post.
+
 ---
 
 ## What could go wrong
