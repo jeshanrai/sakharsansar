@@ -32,6 +32,21 @@ export default function StoryRootsSection() {
               full mineral richness of the land, and our whole craft is about adding
               nothing and taking nothing away. Honest, ground-up stuff.
             </p>
+            {/* Sister businesses from the same district. Linked from this page
+                only, by brand name: a sitewide footer block across sites with
+                one operator reads as a link network; one mention here does not. */}
+            <p className="text-jaggery/75 text-body mt-4">
+              Sugarcane isn&rsquo;t the only crop these hills are known for. Our sister
+              businesses from Sankhuwasabha grow black cardamom at{" "}
+              <a href="https://cardamomnepal.com" className="text-jaggery underline underline-offset-4">
+                CardamomNepal
+              </a>{" "}
+              and Rudraksha at{" "}
+              <a href="https://nepalrudrakshadana.com" className="text-jaggery underline underline-offset-4">
+                Nepal Rudraksha Dana
+              </a>
+              .
+            </p>
             <Link
               href="/shop"
               className="mt-7 inline-flex items-center gap-2 rounded-full bg-jaggery text-cream label-caps px-7 py-3.5 hover:bg-grove transition-colors"
