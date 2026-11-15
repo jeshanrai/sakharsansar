@@ -177,6 +177,13 @@ const nextConfig: NextConfig = {
         source,
         headers: [{ key: "X-Robots-Tag", value: "noindex" }],
       })),
+      // The sitemap is a file for crawlers, not a search result. `noindex`
+      // keeps the XML itself out of the results; Google still fetches it and
+      // reads every URL in it, so it stays in robots.txt and Search Console.
+      {
+        source: "/sitemap.xml",
+        headers: [{ key: "X-Robots-Tag", value: "noindex" }],
+      },
       // Static asset caching — long max-age, immutable
       {
         source: "/:all*(svg|jpg|jpeg|png|webp|avif|ico)",
