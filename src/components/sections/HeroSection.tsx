@@ -185,12 +185,12 @@ export default function HeroSection() {
               {/* ── Left copy ── */}
               <div className="lg:col-span-6 xl:col-span-7 order-2 lg:order-1">
                 {/* Eyebrow chip */}
-                <div className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border ${tone.ring} ${tone.text}`}>
+                <div className={`inline-flex items-center gap-2 px-3 sm:px-3.5 py-1.5 rounded-full border ${tone.ring} ${tone.text}`}>
                   <span className="relative flex w-2 h-2">
                     <span className={`absolute inline-flex w-full h-full rounded-full ${tone.dot} animate-ping opacity-60`} />
                     <span className={`relative inline-flex w-2 h-2 rounded-full ${tone.dot}`} />
                   </span>
-                  <span className="label-caps text-[10px]">{slide.eyebrow}</span>
+                  <span className="label-caps min-[350px]:whitespace-nowrap">{slide.eyebrow}</span>
                 </div>
 
                 {/* Headline — chunky display with sticker-cut accent */}

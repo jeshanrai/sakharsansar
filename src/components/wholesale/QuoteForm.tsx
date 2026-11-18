@@ -386,9 +386,9 @@ export default function QuoteForm() {
 }
 
 const INPUT =
-  "w-full bg-white border border-jaggery/15 rounded-xl px-4 py-3 text-[15px] text-jaggery placeholder:text-jaggery/70 focus:outline-none focus:border-grove transition-colors";
+  "w-full bg-white border border-jaggery/15 rounded-xl px-4 py-3 text-base text-jaggery placeholder:text-jaggery/70 focus:outline-none focus:border-grove transition-colors";
 const SELECT =
-  "w-full bg-white border border-jaggery/15 rounded-xl px-4 py-3 text-[15px] text-jaggery focus:outline-none focus:border-grove transition-colors appearance-none cursor-pointer";
+  "w-full bg-white border border-jaggery/15 rounded-xl px-4 py-3 text-base text-jaggery focus:outline-none focus:border-grove transition-colors appearance-none cursor-pointer";
 
 function Field({
   label,
@@ -403,7 +403,7 @@ function Field({
 }) {
   return (
     <div>
-      <label htmlFor={htmlFor} className="label-caps text-jaggery/70 block mb-2">
+      <label htmlFor={htmlFor} className="label-caps leading-[1.4]! text-jaggery/70 block mb-2">
         {label}
         {hint && <span className="ml-2 normal-case tracking-normal text-jaggery/70">({hint})</span>}
       </label>

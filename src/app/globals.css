@@ -22,7 +22,7 @@
 
   /* Editorial type scale — pairs line-height with each step.
      Uses clamp() so headlines breathe across viewports without media queries. */
-  --text-eyebrow:    0.6875rem;   /* 11px · label-caps */
+  --text-eyebrow:    0.75rem;     /* 12px · label-caps (was 11px; raised for phone legibility) */
   --text-eyebrow--line-height: 1;
   --text-caption:    0.75rem;     /* 12px */
   --text-caption--line-height: 1.4;
@@ -116,6 +116,25 @@
    `.font-marker` and `h2 { font-size }` beat `.text-h3`, so no heading on the
    site could be restyled by class. */
 @layer base {
+  /* iOS Safari zooms the page when a field under 16px takes focus. This is
+     the floor for any field that sets no size of its own; a size utility on
+     the field still wins, so every public field also carries text-base or
+     larger explicitly. Zoom is never disabled in the viewport to get around
+     this — pinch-zoom is an accessibility requirement. */
+  input:not([type="checkbox"], [type="radio"], [type="range"], [type="file"], [type="hidden"]),
+  select,
+  textarea {
+    font-size: 1rem;
+  }
+
+  /* Breadcrumb links are inline text at eyebrow size, ~14px tall — under the
+     24px tap minimum. Vertical padding on an inline box grows its hit area
+     without touching the line box, so the trail looks and sits exactly as
+     before. Every breadcrumb on the site is a nav labelled "Breadcrumb". */
+  nav[aria-label="Breadcrumb"] a {
+    padding-block: 6px;
+  }
+
   html {
     scroll-behavior: smooth;
     /* Limit how much iOS Safari inflates text in landscape */
@@ -165,6 +184,21 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+}
+
+/* An invisible hit area of at least 28x28, centred on the control, for small
+   links and buttons whose look should not change. Same technique as the hero
+   slide dots. The pseudo-element takes the clicks; on anything already 28px
+   or larger the min() keeps the inset at 0, so it never shrinks the target.
+   Uses ::after — do not combine with an after: utility on the same element. */
+@utility tap-target {
+  position: relative;
+  &::after {
+    content: "";
+    position: absolute;
+    inset-block: min(0px, calc((100% - 28px) / 2));
+    inset-inline: min(0px, calc((100% - 28px) / 2));
   }
 }
 

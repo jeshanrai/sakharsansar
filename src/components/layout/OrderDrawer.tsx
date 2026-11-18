@@ -364,7 +364,7 @@ export default function OrderDrawer({
               <div className="flex flex-col gap-2">
                 <label className="text-[10px] font-semibold tracking-[0.2em] text-black/50 uppercase">{m.drawerSelect}</label>
                 <select
-                  className="w-full bg-white border border-black/10 px-4 py-3 text-sm focus:border-black outline-none font-poppins text-black transition-colors"
+                  className="w-full bg-white border border-black/10 px-4 py-3 text-base focus:border-black outline-none font-poppins text-black transition-colors"
                   value={selectedProduct}
                   onChange={(e) => setSelectedProduct(e.target.value)}
                   required
@@ -465,7 +465,7 @@ export default function OrderDrawer({
                         type="text"
                         autoComplete="off"
                         autoCapitalize="characters"
-                        className="flex-1 min-w-0 bg-white border border-black/10 px-4 py-3 text-sm focus:border-black outline-none text-black uppercase transition-colors"
+                        className="flex-1 min-w-0 bg-white border border-black/10 px-4 py-3 text-base focus:border-black outline-none text-black uppercase transition-colors"
                         value={codeInput}
                         onChange={(e) => setCodeInput(e.target.value)}
                         onKeyDown={(e) => {
@@ -539,7 +539,7 @@ export default function OrderDrawer({
                 <input
                   type="text"
                   required
-                  className="w-full bg-white border border-black/10 px-4 py-3 text-sm focus:border-black outline-none text-black transition-colors"
+                  className="w-full bg-white border border-black/10 px-4 py-3 text-base focus:border-black outline-none text-black transition-colors"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   placeholder={m.drawerNamePh}
@@ -550,7 +550,7 @@ export default function OrderDrawer({
                 <input
                   type="tel"
                   required
-                  className={`w-full bg-white border px-4 py-3 text-sm outline-none text-black transition-colors ${
+                  className={`w-full bg-white border px-4 py-3 text-base outline-none text-black transition-colors ${
                     touched && !phoneValid ? "border-red-400 focus:border-red-500" : "border-black/10 focus:border-black"
                   }`}
                   value={formData.phone}
@@ -568,7 +568,7 @@ export default function OrderDrawer({
                   type="email"
                   autoComplete="email"
                   inputMode="email"
-                  className={`w-full bg-white border px-4 py-3 text-sm outline-none text-black transition-colors ${
+                  className={`w-full bg-white border px-4 py-3 text-base outline-none text-black transition-colors ${
                     touched && !emailValid ? "border-red-400 focus:border-red-500" : "border-black/10 focus:border-black"
                   }`}
                   value={formData.email}
@@ -581,7 +581,7 @@ export default function OrderDrawer({
                 <textarea
                   required
                   rows={3}
-                  className="w-full bg-white border border-black/10 px-4 py-3 text-sm focus:border-black outline-none text-black transition-colors resize-none"
+                  className="w-full bg-white border border-black/10 px-4 py-3 text-base focus:border-black outline-none text-black transition-colors resize-none"
                   value={formData.address}
                   onChange={(e) => setFormData({ ...formData, address: e.target.value })}
                   placeholder={m.drawerAddressPh}
@@ -665,7 +665,7 @@ export default function OrderDrawer({
                     >
                       <Download className="w-3.5 h-3.5" strokeWidth={2} /> {m.drawerPaySaveQr}
                     </a>
-                    <p className="text-[11px] text-black/45 text-center sm:hidden">{m.drawerPayMobileTip}</p>
+                    <p className="text-[12px] text-black/45 text-center sm:hidden">{m.drawerPayMobileTip}</p>
                   </div>
 
                   <ol className="text-sm text-black/70 leading-relaxed list-decimal pl-5 space-y-1">
@@ -679,7 +679,7 @@ export default function OrderDrawer({
                     <input
                       type="text"
                       autoComplete="off"
-                      className="w-full bg-white border border-black/10 px-4 py-3 text-sm focus:border-black outline-none text-black transition-colors"
+                      className="w-full bg-white border border-black/10 px-4 py-3 text-base focus:border-black outline-none text-black transition-colors"
                       value={paymentRef}
                       onChange={(e) => setPaymentRef(e.target.value)}
                       placeholder={m.drawerPayTxnPh}
@@ -725,7 +725,7 @@ export default function OrderDrawer({
                         type="email"
                         autoComplete="email"
                         inputMode="email"
-                        className="w-full bg-white border border-black/10 px-4 py-3 text-sm focus:border-black outline-none text-black transition-colors"
+                        className="w-full bg-white border border-black/10 px-4 py-3 text-base focus:border-black outline-none text-black transition-colors"
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                         placeholder={m.drawerEmailPh}

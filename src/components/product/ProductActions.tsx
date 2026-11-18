@@ -21,7 +21,7 @@ export default function ProductActions({
   const m = t(locale);
 
   return (
-    <div className="flex items-stretch gap-3">
+    <div data-fab-avoid className="flex items-stretch gap-3">
       <button
         onClick={() => openOrderDrawer(productName)}
         className="group flex-1 inline-flex items-center justify-center gap-3 px-8 py-5 bg-jaggery text-cream label-caps hover:bg-jaggery-soft transition-colors rounded-full"

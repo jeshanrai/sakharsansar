@@ -49,7 +49,7 @@ export default function LanguageSwitcher({
       // engines read this as a translation link rather than a related one.
       hrefLang={locale === "ne" ? "en-NP" : "ne-NP"}
       lang={locale === "ne" ? "en" : "ne"}
-      className={`inline-flex items-center gap-1.5 label-caps text-jaggery/70 hover:text-grove transition-colors ${className}`}
+      className={`tap-target inline-flex items-center gap-1.5 whitespace-nowrap label-caps text-jaggery/70 hover:text-grove transition-colors ${className}`}
     >
       <Languages className="w-3.5 h-3.5 shrink-0" strokeWidth={1.8} aria-hidden />
       {locale === "ne" ? m.langSwitchToEn : m.langSwitchToNe}

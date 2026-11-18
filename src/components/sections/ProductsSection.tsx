@@ -148,7 +148,7 @@ export default function ProductsSection({
         <div className="mt-10 flex justify-center sm:hidden">
           <Link
             href="/shop"
-            className="group inline-flex items-center gap-2 label-caps text-[10px] text-jaggery border-b border-jaggery/30 pb-1.5"
+            className="tap-target group inline-flex items-center gap-2 label-caps text-jaggery border-b border-jaggery/30 pb-1.5"
           >
             View all {products.length} forms
             <ArrowRight

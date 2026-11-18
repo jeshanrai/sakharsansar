@@ -41,7 +41,7 @@ export default function StoryProcessSection() {
                 href="https://www.tiktok.com/@sakharsansar/video/7626774007022357780"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-6 inline-block label-caps text-grove underline underline-offset-4 hover:text-jaggery transition-colors"
+                className="tap-target mt-6 inline-block label-caps text-grove underline underline-offset-4 hover:text-jaggery transition-colors"
               >
                 Watch the full making process on TikTok
               </a>

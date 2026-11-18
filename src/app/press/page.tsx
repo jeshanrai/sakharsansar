@@ -287,7 +287,7 @@ export default function PressPage() {
                       <a
                         href={photo.src}
                         download
-                        className="mt-1.5 inline-flex items-center gap-1.5 text-grove hover:text-jaggery transition-colors"
+                        className="tap-target mt-1.5 inline-flex items-center gap-1.5 text-grove hover:text-jaggery transition-colors"
                       >
                         <Download className="w-3 h-3" strokeWidth={2} aria-hidden />
                         Download

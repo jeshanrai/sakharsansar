@@ -281,7 +281,7 @@ export default function ShopContent({
   return (
     <>
       {/* ─── Sticky filter bar ────────────────────────── */}
-      <div className="sticky top-29 z-30 bg-cream border-b border-jaggery/10 shadow-[0_6px_16px_-12px_rgba(26,20,16,0.25)]">
+      <div className="sticky top-18 z-30 bg-cream border-b border-jaggery/10 shadow-[0_6px_16px_-12px_rgba(26,20,16,0.25)]">
         <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
           {/* Filter controls */}
           <div className="pt-4 pb-3.5 flex items-center gap-3">
@@ -336,7 +336,7 @@ export default function ShopContent({
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Find sakhar…"
-                  className="h-9 w-[180px] lg:w-[220px] pl-9 pr-8 rounded-full bg-white border border-jaggery/12 text-[13px] text-jaggery placeholder:text-jaggery/70 focus:outline-none focus:border-jaggery/40 focus:w-[260px] transition-all"
+                  className="h-9 w-[180px] lg:w-[220px] pl-9 pr-8 rounded-full bg-white border border-jaggery/12 text-base text-jaggery placeholder:text-jaggery/70 focus:outline-none focus:border-jaggery/40 focus:w-[260px] transition-all"
                 />
                 {searchQuery && (
                   <button
@@ -442,7 +442,7 @@ export default function ShopContent({
                   )}
                   <button
                     onClick={clearAll}
-                    className="ml-1 text-[11px] font-bold tracking-[0.15em] uppercase text-terracotta-ink hover:text-jaggery transition-colors"
+                    className="tap-target ml-1 text-[12px] font-bold tracking-[0.15em] uppercase text-terracotta-ink hover:text-jaggery transition-colors"
                   >
                     Clear all
                   </button>
@@ -528,7 +528,7 @@ export default function ShopContent({
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       placeholder="Find sakhar…"
-                      className="w-full h-11 pl-10 pr-9 rounded-full bg-white border border-jaggery/12 text-[13px] text-jaggery placeholder:text-jaggery/70 focus:outline-none focus:border-jaggery/40"
+                      className="w-full h-11 pl-10 pr-9 rounded-full bg-white border border-jaggery/12 text-base text-jaggery placeholder:text-jaggery/70 focus:outline-none focus:border-jaggery/40"
                     />
                     {searchQuery && (
                       <button
@@ -604,7 +604,7 @@ function Chip({ children, onRemove }: { children: React.ReactNode; onRemove: () 
         type="button"
         onClick={onRemove}
         aria-label="Remove filter"
-        className="w-5 h-5 rounded-full hover:bg-jaggery/12 flex items-center justify-center transition-colors"
+        className="w-6 h-6 rounded-full hover:bg-jaggery/12 flex items-center justify-center transition-colors"
       >
         <X className="w-3 h-3" strokeWidth={2} />
       </button>

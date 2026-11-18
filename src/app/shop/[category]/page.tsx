@@ -141,7 +141,7 @@ export default async function ShopCategoryPage({ params }: Props) {
             </ol>
           </nav>
 
-          <p className="text-[11px] font-bold tracking-caps uppercase text-jaggery/70 mb-3">
+          <p className="text-[12px] font-bold tracking-caps uppercase text-jaggery/70 mb-3">
             {products.length} {products.length === 1 ? "form" : "forms"} · Shipped pan-Nepal
           </p>
           <h1 className="font-marker uppercase text-jaggery leading-[0.9] tracking-tight text-[clamp(2rem,5vw,3.25rem)]">

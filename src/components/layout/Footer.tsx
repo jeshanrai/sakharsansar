@@ -57,7 +57,7 @@ function columns(locale: Locale) {
 }
 
 function FooterLink({ href, label }: { href: string; label: string }) {
-  const classes = "text-jaggery/70 hover:text-grove transition-colors text-[15px]";
+  const classes = "inline-block min-w-6 py-1 -my-1 text-jaggery/70 hover:text-grove transition-colors text-[15px]";
   if (href.startsWith("/")) {
     return (
       // The footer links to every route on the site and appears on every page,
@@ -83,7 +83,7 @@ export default function Footer({ locale = "en" }: { locale?: Locale }) {
   const COLUMNS = columns(locale);
   return (
     <footer id="contact" className="bg-peach text-jaggery scroll-mt-32">
-      <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-12 pt-16 sm:pt-20 pb-10">
+      <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-12 pt-16 sm:pt-20 pb-[calc(6rem+env(safe-area-inset-bottom))]">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-y-12 gap-x-8">
           {/* ─── Brand + social + address ─────────────── */}
           <div className="md:col-span-6">

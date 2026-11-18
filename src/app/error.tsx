@@ -36,7 +36,7 @@ export default function Error({
   return (
     <main className="bg-cream overflow-x-hidden pt-36 pb-24 px-5 sm:px-8 lg:px-12 min-h-[70vh]">
       <div className="max-w-3xl mx-auto">
-        <p className="text-[11px] font-bold tracking-caps uppercase text-jaggery/70 mb-3">
+        <p className="text-[12px] font-bold tracking-caps uppercase text-jaggery/70 mb-3">
           Something went wrong
         </p>
         <h1 className="font-marker uppercase text-jaggery leading-[0.9] tracking-tight text-[clamp(2.25rem,6vw,4rem)]">
@@ -59,14 +59,14 @@ export default function Error({
           <button
             type="button"
             onClick={reset}
-            className="group inline-flex items-center justify-center gap-2 rounded-full bg-jaggery text-cream px-7 py-4 label-caps text-[11px] hover:-translate-y-0.5 transition-transform"
+            className="group inline-flex items-center justify-center gap-2 rounded-full bg-jaggery text-cream px-7 py-4 label-caps text-[12px] hover:-translate-y-0.5 transition-transform"
           >
             <RotateCcw className="w-4 h-4" strokeWidth={1.75} />
             Try again
           </button>
           <Link
             href="/"
-            className="group inline-flex items-center justify-center gap-2 rounded-full border border-jaggery/20 text-jaggery px-7 py-4 label-caps text-[11px] hover:border-jaggery/40 transition-colors"
+            className="group inline-flex items-center justify-center gap-2 rounded-full border border-jaggery/20 text-jaggery px-7 py-4 label-caps text-[12px] hover:border-jaggery/40 transition-colors"
           >
             Back to the shop
             <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" strokeWidth={1.75} />

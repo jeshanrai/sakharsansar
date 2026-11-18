@@ -1,6 +1,9 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
+
+/** Height of the promo bar above the nav (Tailwind h-9). */
+const PROMO_H = 36;
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -49,9 +52,21 @@ export default function Navbar({
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
   const favCount = useFavouritesCount();
+  const navRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    const handle = () => setScrolled(window.scrollY > 4);
+    const handle = () => {
+      const y = window.scrollY;
+      setScrolled(y > 4);
+      // The promo bar is no longer fixed — it sits at the top of the document
+      // and scrolls away. The nav starts just under it and slides up with it,
+      // so on a phone only the 72px nav stays pinned once the bar is gone.
+      // Written to the style directly: this runs every scroll frame and needs
+      // no re-render.
+      if (navRef.current) {
+        navRef.current.style.transform = `translateY(-${Math.min(Math.max(y, 0), PROMO_H)}px)`;
+      }
+    };
     handle();
     window.addEventListener("scroll", handle, { passive: true });
     return () => window.removeEventListener("scroll", handle);
@@ -81,6 +96,7 @@ export default function Navbar({
   return (
     <>
       <nav
+        ref={navRef}
         aria-label="Main navigation"
         className={`fixed top-9 inset-x-0 z-50 h-[72px] bg-cream transition-shadow duration-300 ${
           scrolled
@@ -159,7 +175,7 @@ export default function Navbar({
               {favCount > 0 && (
                 <span
                   aria-hidden
-                  className="absolute top-1.5 right-1.5 min-w-[16px] h-[16px] px-1 rounded-full bg-terracotta text-cream text-[10px] font-semibold flex items-center justify-center tabular-nums leading-none"
+                  className="absolute top-1.5 right-1.5 min-w-[18px] h-[18px] px-1 rounded-full bg-terracotta text-cream text-[12px] font-semibold flex items-center justify-center tabular-nums leading-none"
                 >
                   {favCount}
                 </span>
@@ -176,7 +192,7 @@ export default function Navbar({
               <ShoppingBag className="h-[24px] w-[24px]" strokeWidth={1.6} />
               <span
                 aria-hidden
-                className="absolute top-1.5 right-1.5 min-w-[16px] h-[16px] px-1 rounded-full bg-terracotta text-cream text-[10px] font-semibold flex items-center justify-center tabular-nums leading-none"
+                className="absolute top-1.5 right-1.5 min-w-[18px] h-[18px] px-1 rounded-full bg-terracotta text-cream text-[12px] font-semibold flex items-center justify-center tabular-nums leading-none"
               >
                 2
               </span>
@@ -259,7 +275,7 @@ export default function Navbar({
             <Heart className="h-4 w-4" strokeWidth={1.6} />
             {m.navFavourites}
             {favCount > 0 && (
-              <span className="ml-0.5 min-w-[18px] h-[18px] px-1 rounded-full bg-terracotta text-cream text-[10px] font-semibold flex items-center justify-center tabular-nums">
+              <span className="ml-0.5 min-w-[20px] h-[20px] px-1 rounded-full bg-terracotta text-cream text-[12px] font-semibold flex items-center justify-center tabular-nums">
                 {favCount}
               </span>
             )}

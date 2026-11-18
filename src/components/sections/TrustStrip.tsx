@@ -93,7 +93,7 @@ export default function TrustStrip() {
                 <p className="font-marker uppercase text-[clamp(2rem,3.6vw,2.75rem)]">
                   {badge.big}
                 </p>
-                <p className="label-caps text-[clamp(0.7rem,1vw,0.8rem)] mt-2 text-cream/85">
+                <p className="label-caps text-[clamp(0.75rem,1vw,0.8rem)] mt-2 text-cream/85">
                   {badge.small}
                 </p>
               </div>

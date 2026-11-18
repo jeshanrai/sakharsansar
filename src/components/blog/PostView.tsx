@@ -211,7 +211,7 @@ export default function PostView({ post }: { post: BlogPost }) {
             </p>
 
             {/* Byline */}
-            <div className="flex items-center gap-3">
+            <div data-fab-avoid className="flex items-center gap-3">
               {post.authorImage ? (
                 <Image
                   src={post.authorImage}
@@ -228,7 +228,7 @@ export default function PostView({ post }: { post: BlogPost }) {
               <div>
                 <Link
                   href={AUTHOR.path}
-                  className="font-medium text-jaggery text-sm hover:text-grove transition-colors"
+                  className="tap-target font-medium text-jaggery text-sm hover:text-grove transition-colors"
                 >
                   {post.author}
                 </Link>
@@ -301,7 +301,7 @@ export default function PostView({ post }: { post: BlogPost }) {
 
             {/* Author — who wrote this and why they would know */}
             {post.authorBio && (
-              <aside className="mt-16 rounded-2xl bg-ivory ring-1 ring-jaggery/8 px-6 sm:px-8 py-8 flex flex-col sm:flex-row gap-6">
+              <aside data-fab-avoid className="mt-16 rounded-2xl bg-ivory ring-1 ring-jaggery/8 px-6 sm:px-8 py-8 flex flex-col sm:flex-row gap-6">
                 {post.authorImage && (
                   <Image
                     src={post.authorImage}
@@ -330,7 +330,7 @@ export default function PostView({ post }: { post: BlogPost }) {
                     </span>
                     <a
                       href={`tel:${SITE.phone.replace(/[^+\d]/g, "")}`}
-                      className="inline-flex items-center gap-1.5 hover:text-grove transition-colors"
+                      className="tap-target inline-flex items-center gap-1.5 hover:text-grove transition-colors"
                     >
                       <Phone className="w-3.5 h-3.5" strokeWidth={1.75} aria-hidden />
                       {SITE.phone}

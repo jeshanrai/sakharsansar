@@ -143,7 +143,7 @@ export default function SakharPricePage() {
                   className="group rounded-2xl bg-cream/70 border border-jaggery/10 px-5 py-4 hover:border-grove/40 hover:bg-cream transition-colors"
                 >
                   <span className="label-caps text-jaggery/60">{p.weight}</span>
-                  <span className="mt-1 block font-display text-2xl text-jaggery">
+                  <span data-fab-avoid className="mt-1 block font-display text-2xl text-jaggery">
                     {p.price}
                   </span>
                   <span className="mt-1 block text-[14px] text-jaggery/70 group-hover:text-grove transition-colors">

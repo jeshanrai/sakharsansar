@@ -75,7 +75,11 @@ export default function PromoBar() {
     <div
       role="region"
       aria-label="Promotional offers"
-      className="fixed top-0 inset-x-0 z-[60] h-9 bg-jaggery text-cream overflow-hidden border-b border-honey/15"
+      // Absolute, not fixed: it shows on arrival and scrolls away with the
+      // page. On a phone the fixed bar plus the nav took 108px — 15% of the
+      // screen — on every scroll position. The nav slides up to meet the top
+      // as this leaves (see Navbar).
+      className="absolute top-0 inset-x-0 z-[60] h-9 bg-jaggery text-cream overflow-hidden border-b border-honey/15"
     >
       <div className="relative h-full flex items-center overflow-hidden">
         <div className="flex animate-marquee whitespace-nowrap will-change-transform">

@@ -99,7 +99,7 @@ function TableView({ block, locale }: { block: Block & { kind: "table" }; locale
   return (
     <figure className="my-10 -mx-2 sm:mx-0">
       {block.caption && (
-        <figcaption className="label-caps text-caramel-deep mb-3 px-2 sm:px-0">
+        <figcaption className="label-caps leading-[1.4]! text-caramel-deep mb-3 px-2 sm:px-0">
           {block.caption}
         </figcaption>
       )}
@@ -298,7 +298,7 @@ function InlineView({ nodes }: { nodes: Inline[] }) {
                 href={node.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-grove underline decoration-grove/30 underline-offset-[3px] hover:decoration-grove transition-colors"
+                className="py-1 text-grove underline decoration-grove/30 underline-offset-[3px] hover:decoration-grove transition-colors"
               >
                 {node.text}
                 <ArrowUpRight
@@ -311,7 +311,7 @@ function InlineView({ nodes }: { nodes: Inline[] }) {
               <Link
                 key={i}
                 href={node.href}
-                className="text-grove underline decoration-grove/30 underline-offset-[3px] hover:decoration-grove transition-colors"
+                className="py-1 text-grove underline decoration-grove/30 underline-offset-[3px] hover:decoration-grove transition-colors"
               >
                 {node.text}
               </Link>

@@ -36,7 +36,7 @@ export default function NotFound() {
     <>
       <main className="overflow-x-hidden pt-36 pb-24 px-5 sm:px-8 lg:px-12 min-h-[70vh]">
         <div className="max-w-3xl mx-auto">
-          <p className="text-[11px] font-bold tracking-caps uppercase text-jaggery/70 mb-3">
+          <p className="text-[12px] font-bold tracking-caps uppercase text-jaggery/70 mb-3">
             Error 404
           </p>
           <h1 className="font-marker uppercase text-jaggery leading-[0.9] tracking-tight text-[clamp(2.25rem,6vw,4rem)]">

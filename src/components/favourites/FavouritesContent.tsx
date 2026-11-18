@@ -47,7 +47,7 @@ export default function FavouritesContent({
       <div className="relative max-w-7xl mx-auto">
         {/* Breadcrumb */}
         <nav aria-label="Breadcrumb" className="mb-6">
-          <ol className="flex items-center gap-1.5 text-[11px] font-medium text-jaggery/70">
+          <ol className="flex items-center gap-1.5 text-[12px] font-medium text-jaggery/70">
             <li>
               <Link href="/" className="hover:text-jaggery transition-colors">
                 Home
@@ -82,7 +82,7 @@ export default function FavouritesContent({
           {count > 0 && (
             <button
               onClick={clearFavourites}
-              className="self-start sm:self-auto inline-flex items-center gap-1.5 text-[11px] font-bold tracking-[0.15em] uppercase text-terracotta hover:text-jaggery transition-colors"
+              className="self-start sm:self-auto inline-flex items-center gap-1.5 text-[12px] font-bold tracking-[0.15em] uppercase text-terracotta hover:text-jaggery transition-colors"
             >
               <X className="w-3.5 h-3.5" strokeWidth={2} />
               Clear all
@@ -159,6 +159,7 @@ const FavouriteCard = memo(function FavouriteCard({
           {/* Add to bag → opens order drawer pre-filled */}
           <button
             type="button"
+            data-fab-avoid
             onClick={() => openOrderDrawer(product.name)}
             aria-label={`Add ${product.name} to bag`}
             className="absolute inset-x-3 bottom-3 z-10 h-10 rounded-full bg-jaggery text-cream label-caps text-[10px] flex items-center justify-center gap-1.5 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300"

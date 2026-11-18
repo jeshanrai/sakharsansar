@@ -122,7 +122,7 @@ export default function BlogCategories({
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search blog posts…"
               aria-label="Search blog posts"
-              className="w-full rounded-full border border-jaggery/25 bg-ivory/60 pl-11 pr-4 py-3.5 label-caps text-jaggery placeholder:text-jaggery/70 focus:outline-none focus:border-grove transition-colors"
+              className="w-full rounded-full border border-jaggery/25 bg-ivory/60 pl-11 pr-4 py-3.5 font-sans font-medium uppercase tracking-caps text-base leading-none text-jaggery placeholder:text-jaggery/70 focus:outline-none focus:border-grove transition-colors"
             />
           </div>
         </div>

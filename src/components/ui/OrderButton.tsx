@@ -6,6 +6,7 @@ import { ArrowRight } from "lucide-react";
 export default function OrderButton() {
   return (
     <button
+      data-fab-avoid
       onClick={() => openOrderDrawer()}
       className="group inline-flex items-center gap-3 px-10 py-4 sm:py-5 bg-[#C17A2A] text-white text-base sm:text-lg font-semibold rounded-full hover:bg-[#A8671F] transition-colors duration-300"
     >

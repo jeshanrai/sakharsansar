@@ -139,7 +139,7 @@ export default function ContactForm() {
           value={form.name}
           onChange={update("name")}
           placeholder="e.g. Anjali Shrestha"
-          className="w-full bg-white border border-jaggery/15 rounded-xl px-4 py-3 text-[15px] text-jaggery placeholder:text-jaggery/70 focus:outline-none focus:border-grove transition-colors"
+          className="w-full bg-white border border-jaggery/15 rounded-xl px-4 py-3 text-base text-jaggery placeholder:text-jaggery/70 focus:outline-none focus:border-grove transition-colors"
         />
       </Field>
 
@@ -150,12 +150,12 @@ export default function ContactForm() {
           value={form.contact}
           onChange={update("contact")}
           placeholder="So we can reply"
-          className="w-full bg-white border border-jaggery/15 rounded-xl px-4 py-3 text-[15px] text-jaggery placeholder:text-jaggery/70 focus:outline-none focus:border-grove transition-colors"
+          className="w-full bg-white border border-jaggery/15 rounded-xl px-4 py-3 text-base text-jaggery placeholder:text-jaggery/70 focus:outline-none focus:border-grove transition-colors"
         />
       </Field>
 
       <Field label="What's it about?">
-        <select value={form.type} onChange={update("type")} className="w-full bg-white border border-jaggery/15 rounded-xl px-4 py-3 text-[15px] text-jaggery focus:outline-none focus:border-grove transition-colors appearance-none cursor-pointer">
+        <select value={form.type} onChange={update("type")} className="w-full bg-white border border-jaggery/15 rounded-xl px-4 py-3 text-base text-jaggery focus:outline-none focus:border-grove transition-colors appearance-none cursor-pointer">
           {INQUIRY_TYPES.map((t) => (
             <option key={t.value} value={t.value}>
               {t.label}
@@ -171,7 +171,7 @@ export default function ContactForm() {
           value={form.message}
           onChange={update("message")}
           placeholder="Tell us what you need: quantities, timelines, anything."
-          className="w-full bg-white border border-jaggery/15 rounded-xl px-4 py-3 text-[15px] text-jaggery placeholder:text-jaggery/70 focus:outline-none focus:border-grove transition-colors resize-none"
+          className="w-full bg-white border border-jaggery/15 rounded-xl px-4 py-3 text-base text-jaggery placeholder:text-jaggery/70 focus:outline-none focus:border-grove transition-colors resize-none"
         />
       </Field>
 
