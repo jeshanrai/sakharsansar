@@ -77,7 +77,7 @@ text.split(/\r?\n/).forEach((raw, i) => {
   const value = line.slice(colon + 1).trim();
 
   if (!FIELDS.has(field)) {
-    problems.push([n, `"${line.slice(0, colon).trim()}" is not a robots.txt field: ${raw.trim()}`]);
+    problems.push([n, `"${line.slice(0, colon).trim()}" is not a robots.txt field: ${raw.trim()}`, `field:${field}`]);
     return;
   }
 
@@ -108,11 +108,39 @@ text.split(/\r?\n/).forEach((raw, i) => {
 
 for (const [agent, lines] of groups) {
   if (lines.length > 1) {
-    problems.push([lines[1], `user-agent "${agent}" has more than one group (lines ${lines.join(", ")})`]);
+    problems.push([lines[1], `user-agent "${agent}" has more than one group (lines ${lines.join(", ")})`, `group:${agent}`]);
   }
 }
 if (sitemaps === 0) problems.push([0, "no Sitemap line"]);
 if (groups.size === 0) problems.push([0, "no user-agent group at all"]);
+
+// ─── Known and accepted: Cloudflare's managed robots.txt ────────────────────
+//
+// Live only. Cloudflare prepends its "Managed robots.txt" block at the edge,
+// and on 18 Nov 2026 the owner decided to leave that setting as it is. It
+// produces exactly these nine warnings, accepted as known so a live audit
+// reports only problems that are new. Matched by content, not line number,
+// and only while the block's BEGIN marker is in the file. Anything else,
+// including a ninth duplicated agent if Cloudflare extends its list, still
+// fails. To stop accepting them, empty this list.
+const CLOUDFLARE_MARKER = "BEGIN Cloudflare Managed content";
+const ACCEPTED_CLOUDFLARE = new Set([
+  "field:content-signal",
+  "group:*",
+  "group:google-extended",
+  "group:gptbot",
+  "group:claudebot",
+  "group:claude-web",
+  "group:anthropic-ai",
+  "group:applebot-extended",
+  "group:ccbot",
+]);
+const accepted = [];
+if (liveBase && text.toLowerCase().includes(CLOUDFLARE_MARKER.toLowerCase())) {
+  for (let i = problems.length - 1; i >= 0; i--) {
+    if (ACCEPTED_CLOUDFLARE.has(problems[i][2])) accepted.push(...problems.splice(i, 1));
+  }
+}
 
 if (problems.length > 0) {
   console.error(`\n✗ ${problems.length} robots.txt problem(s) in ${source}:\n`);
@@ -124,3 +152,6 @@ if (problems.length > 0) {
 }
 
 console.log(`✓ robots.txt: ${groups.size} user-agent groups, ${rules} rules, ${sitemaps} sitemap (${source})`);
+if (accepted.length > 0) {
+  console.log(`  ${accepted.length} known Cloudflare managed-block warning(s) accepted (see ACCEPTED_CLOUDFLARE)`);
+}
