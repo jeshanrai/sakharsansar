@@ -11,6 +11,7 @@ import { alternates, openGraph, twitter } from "@/lib/metadata";
 import { languageAlternates } from "@/lib/hreflang";
 import { nePathFor } from "@/lib/locale-paths";
 import { productCards } from "@/lib/product-cards";
+import { PAGE_UPDATED } from "@/lib/page-dates";
 
 // Below-the-fold — split out of the initial JS bundle
 const ProductsSection = dynamic(
@@ -70,6 +71,8 @@ export default function Home() {
       url: absoluteUrl("/hero.jpg"),
     },
     inLanguage: SITE.lang,
+    // Same date the sitemap gives this page.
+    dateModified: PAGE_UPDATED["/"],
   };
 
   const catalogueJsonLd = itemListLd(

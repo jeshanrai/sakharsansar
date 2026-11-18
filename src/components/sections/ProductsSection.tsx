@@ -62,7 +62,7 @@ export default function ProductsSection({
               <span className="label-caps text-caramel-deep text-[10px]">Shop pure sakhar</span>
             </div>
             <h2 className="font-serif font-soft text-jaggery tracking-[-0.02em] text-balance leading-[1.05] text-[clamp(2rem,4vw,3.25rem)]">
-              The sakhar collection.
+              Sakhar: jaggery in Nepal, from the farm.
             </h2>
           </div>
           <p className="text-jaggery/70 text-[15px] leading-relaxed max-w-sm sm:text-right">

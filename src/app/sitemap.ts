@@ -6,6 +6,7 @@ import { CATEGORIES } from "@/lib/categories";
 import { languageAlternateUrls } from "@/lib/hreflang";
 import { NE_PAGES, nePathFor } from "@/lib/locale-paths";
 import { SITE_URL, absoluteUrl } from "@/lib/site";
+import { pageLastModified } from "@/lib/page-dates";
 
 /**
  * Dynamic sitemap — auto-includes every public route plus product and blog
@@ -149,9 +150,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
       },
     }));
 
+  // The pages outside the journal get a lastmod only on a real edit date,
+  // from the same map their own schema reads (src/lib/page-dates.ts).
+  const dated = (entry: MetadataRoute.Sitemap[number]) => {
+    const lastModified = pageLastModified(pathOf(entry.url));
+    return lastModified ? { ...entry, lastModified } : entry;
+  };
+
   return [
-    ...[...staticRoutes, ...productRoutes].map(paired),
-    ...neRoutes,
+    ...[...staticRoutes, ...productRoutes].map(paired).map(dated),
+    ...neRoutes.map(dated),
     ...categoryRoutes,
     ...blogRoutes,
   ];

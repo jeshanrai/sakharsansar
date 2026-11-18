@@ -127,7 +127,7 @@ ranks. Check any new keyword against what is already published:
 | Slug | Owns |
 |------|------|
 | `himalayan-jaggery-sankhuwasabha` | Sankhuwasabha sakhar, hill vs Terai, **Sankhuwasabha vs Gulmi vs Terai, Gulmi sakhar, Thorgeli, types of sakhar in Nepal, "is it really Sankhuwasabha"** (the five seller questions, added 3 Nov 2026), what sakhar is, sakhar vs gud / khudo / chaku (the vocabulary section). **The pillar.** A separate glossary post was considered on 24 Sep 2026 and rejected: it would compete with this and with `sakhar-in-english`. |
-| `sakhar-in-english` | jaggery in Nepali, sakhar in English / Hindi / Marathi, what is jaggery |
+| `sakhar-in-english` | jaggery in Nepali, jaggery meaning in Nepali, sakhar in English / Hindi / Marathi, gud in English, gud in Nepali, what is jaggery |
 | `/sakhar-price` (a page, not a post) | price, cost per kg, what you pay per cup, the three-grade price ladder, why Sankhuwasabha costs more. Its `#worth-it` section is where every price on the site links; never rename that anchor. A dedicated grades post was considered on 3 Nov 2026 and rejected: this page and the pillar already covered most of it. |
 | `jaggery-vs-sugar` | the honest comparison, jaggery nutrition, calories, minerals, GI |
 | `jaggery-health-claims-truth` | jaggery benefits, sakhar benefits, is jaggery good for health |

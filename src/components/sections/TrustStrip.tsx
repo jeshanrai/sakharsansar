@@ -54,6 +54,14 @@ export default function TrustStrip() {
             <span className="block text-[clamp(2rem,4.5vw,3.5rem)]">100% organic.</span>{" "}
             <span className="block text-[clamp(2.5rem,5.5vw,4.5rem)] text-honey mt-1 sm:mt-2">Pure sakhar.</span>
           </h2>
+          {/* The page's only plain prose above the fold. It carries the exact
+              phrase "jaggery in Nepal" (880 a month, the site's focus keyword)
+              and "gud", the name Nepali buyers search more than "sakhar". */}
+          <p className="mt-6 sm:mt-8 mx-auto max-w-2xl text-cream/85 text-[clamp(1rem,1.4vw,1.125rem)] leading-relaxed">
+            Sakhar (सख्खर), also called gud, is the name for jaggery in Nepal.
+            Ours is pressed from cane in Sankhuwasabha, boiled over a wood fire
+            and poured by hand, with nothing added.
+          </p>
         </div>
 
         {/* Badge grid */}
