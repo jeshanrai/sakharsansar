@@ -259,7 +259,7 @@ export default function HeroSection() {
                   >
                     <p className="label-caps text-honey-ink text-[9px]">100% Pure</p>
                     <p className="font-serif text-cream text-[13px] tracking-tight mt-0.5">
-                      Sankhuwasabha gur
+                      Sankhuwasabha sakhar
                     </p>
                   </div>
                 </div>
