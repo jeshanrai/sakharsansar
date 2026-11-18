@@ -218,7 +218,12 @@ export default function ShopPage() {
                   what sakhar actually costs per kilo in Nepal
                 </Link>{" "}
                 — including where cheaper Terai gur is the sensible buy, and
-                what a block priced well below the rest usually means.
+                what a block priced well below the rest usually means. Nobody
+                drinks a kilo, so the{" "}
+                <Link href="/tools/sakhar-cost-per-cup" className="text-grove underline underline-offset-4 hover:text-jaggery transition-colors">
+                  sakhar cost per cup calculator
+                </Link>{" "}
+                turns any price into what one cup of chiya costs.
               </p>
             </div>
           </div>

@@ -362,7 +362,7 @@ export default function OrderDrawer({
             /* ───── Step 1: Order ───── */
             <div className="p-6 sm:p-10 flex flex-col gap-8">
               <div className="flex flex-col gap-2">
-                <label className="text-[10px] font-semibold tracking-[0.2em] text-black/50 uppercase">{m.drawerSelect}</label>
+                <label className="text-[12px] font-semibold tracking-[0.2em] text-black/50 uppercase">{m.drawerSelect}</label>
                 <select
                   className="w-full bg-white border border-black/10 px-4 py-3 text-base focus:border-black outline-none font-poppins text-black transition-colors"
                   value={selectedProduct}
@@ -384,7 +384,7 @@ export default function OrderDrawer({
                     {product?.image ? (
                       <Image src={product.image} alt={selectedProduct} fill className="object-cover" sizes="80px" />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center text-black/30 text-[10px] tracking-[0.15em] uppercase text-center px-2">
+                      <div className="w-full h-full flex items-center justify-center text-black/30 text-[12px] tracking-[0.15em] uppercase text-center px-2">
                         {m.drawerCustomShort}
                       </div>
                     )}
@@ -404,7 +404,7 @@ export default function OrderDrawer({
 
               {/* Quantity stepper */}
               <div className="flex flex-col gap-2">
-                <label className="text-[10px] font-semibold tracking-[0.2em] text-black/50 uppercase">{m.drawerQuantity}</label>
+                <label className="text-[12px] font-semibold tracking-[0.2em] text-black/50 uppercase">{m.drawerQuantity}</label>
                 <div className="flex items-center gap-4">
                   <div className="flex items-center border border-black/10 bg-white">
                     <button
@@ -446,14 +446,14 @@ export default function OrderDrawer({
               {/* Discount code */}
               {selectedProduct && !isCustom && (
                 <div className="flex flex-col gap-2">
-                  <label htmlFor="order-code" className="text-[10px] font-semibold tracking-[0.2em] text-black/50 uppercase">{m.drawerCode}</label>
+                  <label htmlFor="order-code" className="text-[12px] font-semibold tracking-[0.2em] text-black/50 uppercase">{m.drawerCode}</label>
                   {appliedCode ? (
                     <div className="flex items-center justify-between bg-white border border-black/10 px-4 py-3 text-sm">
                       <span className="font-poppins font-medium text-black tracking-[0.1em]">{normaliseCode(appliedCode)}</span>
                       <button
                         type="button"
                         onClick={() => { setAppliedCode(""); setCodeInput(""); }}
-                        className="text-[10px] font-semibold tracking-[0.2em] uppercase text-black/50 hover:text-black transition-colors"
+                        className="text-[12px] font-semibold tracking-[0.2em] uppercase text-black/50 hover:text-black transition-colors"
                       >
                         {m.drawerCodeRemove}
                       </button>
@@ -477,7 +477,7 @@ export default function OrderDrawer({
                         type="button"
                         onClick={() => setAppliedCode(codeInput)}
                         disabled={!codeInput.trim()}
-                        className="px-5 bg-black text-white text-[10px] font-semibold tracking-[0.2em] uppercase hover:bg-black/80 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                        className="px-5 bg-black text-white text-[12px] font-semibold tracking-[0.2em] uppercase hover:bg-black/80 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
                       >
                         {m.drawerCodeApply}
                       </button>
@@ -515,7 +515,7 @@ export default function OrderDrawer({
                 type="button"
                 onClick={goToDelivery}
                 disabled={!selectedProduct}
-                className="group w-full py-4 bg-black text-white text-[10px] font-semibold tracking-[0.2em] uppercase hover:bg-black/80 transition-colors disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                className="group w-full py-4 bg-black text-white text-[12px] font-semibold tracking-[0.2em] uppercase hover:bg-black/80 transition-colors disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
                 {m.drawerContinue}
                 <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" strokeWidth={2} />
@@ -599,14 +599,14 @@ export default function OrderDrawer({
                 <button
                   type="button"
                   onClick={() => { setStep("order"); setError(null); }}
-                  className="group inline-flex items-center justify-center gap-2 px-6 py-4 bg-white border border-black/15 text-black text-[10px] font-semibold tracking-[0.2em] uppercase hover:bg-black/5 transition-colors"
+                  className="group inline-flex items-center justify-center gap-2 px-6 py-4 bg-white border border-black/15 text-black text-[12px] font-semibold tracking-[0.2em] uppercase hover:bg-black/5 transition-colors"
                 >
                   <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-1 transition-transform" strokeWidth={2} />
                   {m.drawerBack}
                 </button>
                 <button
                   type="submit"
-                  className="group flex-1 py-4 bg-black text-white text-[10px] font-semibold tracking-[0.2em] uppercase hover:bg-black/80 transition-colors flex items-center justify-center gap-2"
+                  className="group flex-1 py-4 bg-black text-white text-[12px] font-semibold tracking-[0.2em] uppercase hover:bg-black/80 transition-colors flex items-center justify-center gap-2"
                 >
                   {m.drawerContinuePayment}
                   <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" strokeWidth={2} />
@@ -627,7 +627,7 @@ export default function OrderDrawer({
               </div>
 
               <div className="flex flex-col gap-2">
-                <span className="text-[10px] font-semibold tracking-[0.2em] text-black/50 uppercase">{m.drawerPayHow}</span>
+                <span className="text-[12px] font-semibold tracking-[0.2em] text-black/50 uppercase">{m.drawerPayHow}</span>
                 <div role="radiogroup" className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   <PayOption
                     selected={!fonepay}
@@ -652,7 +652,7 @@ export default function OrderDrawer({
                 <div className="flex flex-col gap-5 animate-in fade-in duration-300">
                   <div className="bg-white border border-black/10 p-4 flex flex-col items-center gap-3">
                     <div className="w-full flex items-baseline justify-between">
-                      <span className="text-[10px] font-semibold tracking-[0.2em] text-black/50 uppercase">{m.drawerPayAmount}</span>
+                      <span className="text-[12px] font-semibold tracking-[0.2em] text-black/50 uppercase">{m.drawerPayAmount}</span>
                       <span className="font-poppins text-2xl font-medium text-[#C17A2A] tabular-nums">{rs(pricing.total)}</span>
                     </div>
                     <div className="relative w-full max-w-[280px] aspect-[900/1078] bg-white">
@@ -661,7 +661,7 @@ export default function OrderDrawer({
                     <a
                       href={FONEPAY_QR}
                       download="sakharsansar-fonepay-qr.jpg"
-                      className="inline-flex items-center gap-2 text-[10px] font-semibold tracking-[0.2em] uppercase text-black/70 hover:text-black border border-black/15 px-4 py-2 transition-colors"
+                      className="inline-flex items-center gap-2 text-[12px] font-semibold tracking-[0.2em] uppercase text-black/70 hover:text-black border border-black/15 px-4 py-2 transition-colors"
                     >
                       <Download className="w-3.5 h-3.5" strokeWidth={2} /> {m.drawerPaySaveQr}
                     </a>
@@ -692,14 +692,14 @@ export default function OrderDrawer({
                         {/* eslint-disable-next-line @next/next/no-img-element -- a local data: URL */}
                         <img src={paymentProof} alt="" className="w-14 h-20 object-cover bg-[#F4F1ED]" />
                         <span className="flex-1 text-xs text-green-700">✓</span>
-                        <label className="cursor-pointer text-[10px] font-semibold tracking-[0.2em] uppercase text-black/50 hover:text-black">
+                        <label className="cursor-pointer text-[12px] font-semibold tracking-[0.2em] uppercase text-black/50 hover:text-black">
                           {m.drawerPayProofChange}
                           <input type="file" accept="image/*" className="sr-only" onChange={(e) => onProofFile(e.target.files?.[0])} />
                         </label>
                         <button
                           type="button"
                           onClick={() => setPaymentProof(null)}
-                          className="text-[10px] font-semibold tracking-[0.2em] uppercase text-black/50 hover:text-black"
+                          className="text-[12px] font-semibold tracking-[0.2em] uppercase text-black/50 hover:text-black"
                         >
                           {m.drawerPayProofRemove}
                         </button>
@@ -753,14 +753,14 @@ export default function OrderDrawer({
                 <button
                   type="button"
                   onClick={() => { setStep("delivery"); setError(null); }}
-                  className="group inline-flex items-center justify-center gap-2 px-6 py-4 bg-white border border-black/15 text-black text-[10px] font-semibold tracking-[0.2em] uppercase hover:bg-black/5 transition-colors"
+                  className="group inline-flex items-center justify-center gap-2 px-6 py-4 bg-white border border-black/15 text-black text-[12px] font-semibold tracking-[0.2em] uppercase hover:bg-black/5 transition-colors"
                 >
                   <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-1 transition-transform" strokeWidth={2} />
                   {m.drawerBack}
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 py-4 bg-black text-white text-[10px] font-semibold tracking-[0.2em] uppercase hover:bg-black/80 transition-colors"
+                  className="flex-1 py-4 bg-black text-white text-[12px] font-semibold tracking-[0.2em] uppercase hover:bg-black/80 transition-colors"
                 >
                   {isCustom ? m.drawerRequest : fonepay ? m.drawerSubmitPaid : `${m.drawerPlace} · ${rs(pricing.total)}`}
                 </button>
@@ -776,7 +776,7 @@ export default function OrderDrawer({
 function StepDot({ active, done, label }: { active: boolean; done: boolean; label: string }) {
   return (
     <span
-      className={`text-[10px] font-semibold tracking-[0.15em] uppercase transition-colors ${
+      className={`text-[12px] font-semibold tracking-[0.15em] uppercase transition-colors ${
         active ? "text-black" : done ? "text-[#C17A2A]" : "text-black/30"
       }`}
     >
@@ -788,7 +788,7 @@ function StepDot({ active, done, label }: { active: boolean; done: boolean; labe
 function Field({ label, error, hint, children }: { label: string; error?: string; hint?: string; children: React.ReactNode }) {
   return (
     <div className="flex flex-col gap-2">
-      <label className="text-[10px] font-semibold tracking-[0.2em] text-black/50 uppercase">{label}</label>
+      <label className="text-[12px] font-semibold tracking-[0.2em] text-black/50 uppercase">{label}</label>
       {children}
       {error ? <span className="text-xs text-red-600">{error}</span> : hint ? <span className="text-xs text-black/45">{hint}</span> : null}
     </div>
@@ -848,7 +848,7 @@ function Breakdown({
         <span>{pricing.freeDelivery ? m.drawerDeliveryFree : m.drawerDeliveryOnCall}</span>
       </div>
       <div className="flex items-center justify-between pt-1">
-        <span className="text-[10px] font-semibold tracking-[0.2em] text-black/50 uppercase">{m.drawerTotal}</span>
+        <span className="text-[12px] font-semibold tracking-[0.2em] text-black/50 uppercase">{m.drawerTotal}</span>
         <span className="font-poppins text-2xl font-medium text-[#C17A2A] tabular-nums">{rs(pricing.total)}</span>
       </div>
     </div>
@@ -916,7 +916,7 @@ function SuccessView({
       </p>
       <button
         onClick={onClose}
-        className="mt-2 w-full py-4 bg-black text-white text-[10px] font-semibold tracking-[0.2em] uppercase hover:bg-black/80 transition-colors"
+        className="mt-2 w-full py-4 bg-black text-white text-[12px] font-semibold tracking-[0.2em] uppercase hover:bg-black/80 transition-colors"
       >
         {m.drawerKeepShopping}
       </button>

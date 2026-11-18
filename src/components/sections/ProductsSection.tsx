@@ -59,7 +59,7 @@ export default function ProductsSection({
           <div>
             <div className="flex items-center gap-2.5 mb-3">
               <span className="w-6 h-px bg-caramel" />
-              <span className="label-caps text-caramel-deep text-[10px]">Shop pure sakhar</span>
+              <span className="label-caps text-caramel-deep text-[12px]">Shop pure sakhar</span>
             </div>
             <h2 className="font-serif font-soft text-jaggery tracking-[-0.02em] text-balance leading-[1.05] text-[clamp(2rem,4vw,3.25rem)]">
               Sakhar: jaggery in Nepal, from the farm.
@@ -94,7 +94,7 @@ export default function ProductsSection({
                 >
                   {cat}
                   <span
-                    className={`text-[10px] tabular-nums ${
+                    className={`text-[12px] tabular-nums ${
                       isActive ? "text-cream/75" : "text-jaggery/35"
                     }`}
                   >
@@ -107,7 +107,7 @@ export default function ProductsSection({
 
           <Link
             href="/shop"
-            className="group hidden sm:inline-flex items-center gap-1.5 label-caps text-[10px] text-jaggery/70 hover:text-jaggery transition-colors shrink-0"
+            className="group hidden sm:inline-flex items-center gap-1.5 label-caps text-[12px] text-jaggery/70 hover:text-jaggery transition-colors shrink-0"
           >
             View all
             <ArrowRight
@@ -190,7 +190,7 @@ const ProductCard = memo(function ProductCard({
           {/* Badge — top-left */}
           {badge && (
             <span
-              className={`absolute top-3 left-3 z-10 label-caps text-[9px] px-2.5 py-1 rounded-full ${badge.tone}`}
+              className={`absolute top-3 left-3 z-10 label-caps text-[12px] px-2.5 py-1 rounded-full ${badge.tone}`}
             >
               {badge.label}
             </span>
@@ -234,7 +234,7 @@ const ProductCard = memo(function ProductCard({
           <Link
             href={`/products/${product.slug}`}
             aria-label={`Add ${product.name} to bag`}
-            className="absolute inset-x-3 bottom-3 z-10 h-10 rounded-full bg-jaggery text-cream label-caps text-[10px] flex items-center justify-center gap-1.5 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300"
+            className="absolute inset-x-3 bottom-3 z-10 h-10 rounded-full bg-jaggery text-cream label-caps text-[12px] flex items-center justify-center gap-1.5 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300"
           >
             <Plus className="w-3.5 h-3.5" strokeWidth={2} />
             Add to bag
@@ -246,7 +246,7 @@ const ProductCard = memo(function ProductCard({
       <div className="relative z-10 pt-5 px-1.5 pb-1 flex flex-col [text-shadow:0_1px_2px_rgba(26,20,16,0.28)]">
         {/* Top meta — category */}
         <div className="flex items-center justify-between gap-2 mb-3">
-          <span className="text-[10px] font-bold tracking-[0.22em] uppercase text-honey-ink">
+          <span className="text-[12px] font-bold tracking-[0.22em] uppercase text-honey-ink">
             {product.category}
           </span>
         </div>
@@ -259,7 +259,7 @@ const ProductCard = memo(function ProductCard({
         </Link>
 
         {/* Weight */}
-        <p className="mt-2.5 text-[10px] font-bold tracking-[0.2em] uppercase text-cream/80">
+        <p className="mt-2.5 text-[12px] font-bold tracking-[0.2em] uppercase text-cream/80">
           {product.weight}
         </p>
 

@@ -23,8 +23,9 @@ There is no `lib/site-config.ts`; older briefs that mention it mean these:
   read it from here. `npm run check:claims` fails the build on a hardcoded
   phone number, the retired Rs. 2,000 threshold and retired origin claims.
 - `src/lib/seo.ts`: every JSON-LD builder: organization, website,
-  breadcrumbs, FAQ, HowTo, Recipe, Product + Offer (with shipping details and
-  return policy transcribed from /shipping-policy and /refund-policy), video,
+  breadcrumbs, FAQ, HowTo, Recipe, Product + Offer (with the return policy
+  transcribed from /refund-policy; no shippingDetails, because no single
+  shipping rate is true), video,
   ItemList. No `aggregateRating` anywhere.
 - `src/data/content.json`: product records (price, weight, `seoTitle`,
   `metaDescription`). Product prices live here, not in `site.ts`.

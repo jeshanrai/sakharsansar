@@ -65,7 +65,7 @@ export default function FavouritesContent({
           <div>
             <div className="flex items-center gap-2.5 mb-4">
               <span className="w-6 h-px bg-caramel" />
-              <span className="text-[10px] font-bold tracking-[0.22em] uppercase text-caramel-deep">
+              <span className="text-[12px] font-bold tracking-[0.22em] uppercase text-caramel-deep">
                 Saved for later
               </span>
             </div>
@@ -162,7 +162,7 @@ const FavouriteCard = memo(function FavouriteCard({
             data-fab-avoid
             onClick={() => openOrderDrawer(product.name)}
             aria-label={`Add ${product.name} to bag`}
-            className="absolute inset-x-3 bottom-3 z-10 h-10 rounded-full bg-jaggery text-cream label-caps text-[10px] flex items-center justify-center gap-1.5 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300"
+            className="absolute inset-x-3 bottom-3 z-10 h-10 rounded-full bg-jaggery text-cream label-caps text-[12px] flex items-center justify-center gap-1.5 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300"
           >
             <Plus className="w-3.5 h-3.5" strokeWidth={2} />
             Add to bag
@@ -172,7 +172,7 @@ const FavouriteCard = memo(function FavouriteCard({
 
       <div className="relative z-10 pt-5 px-1.5 pb-1 flex flex-col [text-shadow:0_1px_2px_rgba(26,20,16,0.28)]">
         <div className="flex items-center justify-between gap-2 mb-3">
-          <span className="text-[10px] font-bold tracking-[0.22em] uppercase text-honey-ink">
+          <span className="text-[12px] font-bold tracking-[0.22em] uppercase text-honey-ink">
             {product.category}
           </span>
         </div>
@@ -188,7 +188,7 @@ const FavouriteCard = memo(function FavouriteCard({
           </h2>
         </Link>
 
-        <p className="mt-2.5 text-[10px] font-bold tracking-[0.2em] uppercase text-cream/80">
+        <p className="mt-2.5 text-[12px] font-bold tracking-[0.2em] uppercase text-cream/80">
           {product.weight}
         </p>
 
@@ -232,7 +232,7 @@ function EmptyState({ catalogue }: { catalogue: Product[] }) {
       <div className="mt-16 sm:mt-20">
         <div className="flex items-center justify-center gap-2.5 mb-8">
           <Sparkles className="w-4 h-4 text-caramel-deep" strokeWidth={1.5} />
-          <span className="text-[10px] font-bold tracking-[0.22em] uppercase text-caramel-deep">
+          <span className="text-[12px] font-bold tracking-[0.22em] uppercase text-caramel-deep">
             You might love
           </span>
         </div>

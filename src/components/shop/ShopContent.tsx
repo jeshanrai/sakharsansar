@@ -99,7 +99,7 @@ const ShopProductCard = memo(function ShopProductCard({
       <div className="relative z-10 aspect-square w-full">
         <div className="relative w-full h-full rounded-2xl overflow-hidden bg-cream">
           {badge && (
-            <span className={`absolute top-3 left-3 z-10 label-caps text-[9px] px-2.5 py-1 rounded-full ${badge.tone}`}>
+            <span className={`absolute top-3 left-3 z-10 label-caps text-[12px] px-2.5 py-1 rounded-full ${badge.tone}`}>
               {badge.label}
             </span>
           )}
@@ -139,7 +139,7 @@ const ShopProductCard = memo(function ShopProductCard({
           <Link
             href={`/products/${product.slug}`}
             aria-label={`Add ${product.name} to bag`}
-            className="absolute inset-x-3 bottom-3 z-10 h-10 rounded-full bg-jaggery text-cream label-caps text-[10px] flex items-center justify-center gap-1.5 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300"
+            className="absolute inset-x-3 bottom-3 z-10 h-10 rounded-full bg-jaggery text-cream label-caps text-[12px] flex items-center justify-center gap-1.5 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300"
           >
             <Plus className="w-3.5 h-3.5" strokeWidth={2} />
             Add to bag
@@ -149,7 +149,7 @@ const ShopProductCard = memo(function ShopProductCard({
 
       <div className="relative z-10 pt-5 px-1.5 pb-1 flex flex-col [text-shadow:0_1px_2px_rgba(26,20,16,0.28)]">
         <div className="flex items-center justify-between gap-2 mb-3">
-          <span className="text-[10px] font-bold tracking-[0.22em] uppercase text-honey-ink">
+          <span className="text-[12px] font-bold tracking-[0.22em] uppercase text-honey-ink">
             {product.category}
           </span>
         </div>
@@ -160,7 +160,7 @@ const ShopProductCard = memo(function ShopProductCard({
           </h2>
         </Link>
 
-        <p className="mt-2.5 text-[10px] font-bold tracking-[0.2em] uppercase text-cream/80">
+        <p className="mt-2.5 text-[12px] font-bold tracking-[0.2em] uppercase text-cream/80">
           {product.weight}
         </p>
 
@@ -299,7 +299,7 @@ export default function ShopContent({
                   const label = (
                     <>
                       {cat}
-                      <span className={`text-[10px] tabular-nums ${active ? "text-cream/75" : "text-jaggery/35"}`}>
+                      <span className={`text-[12px] tabular-nums ${active ? "text-cream/75" : "text-jaggery/35"}`}>
                         {productCounts[cat] ?? 0}
                       </span>
                     </>
@@ -414,7 +414,7 @@ export default function ShopContent({
                 <SlidersHorizontal className="w-3.5 h-3.5" strokeWidth={1.75} />
                 <span className="hidden sm:inline">Filter</span>
                 {activeCount > 0 && (
-                  <span className="inline-flex items-center justify-center min-w-[16px] h-[16px] px-1 rounded-full bg-caramel text-cream text-[9px] font-bold tabular-nums">
+                  <span className="inline-flex items-center justify-center min-w-[16px] h-[16px] px-1 rounded-full bg-caramel text-cream text-[12px] font-bold tabular-nums">
                     {activeCount}
                   </span>
                 )}
@@ -518,7 +518,7 @@ export default function ShopContent({
 
                 {/* Mobile search */}
                 <div className="md:hidden mb-8">
-                  <h3 className="text-[10px] font-bold tracking-[0.22em] uppercase text-jaggery/70 mb-3">
+                  <h3 className="text-[12px] font-bold tracking-[0.22em] uppercase text-jaggery/70 mb-3">
                     Search
                   </h3>
                   <div className="relative">
@@ -544,7 +544,7 @@ export default function ShopContent({
 
                 {/* Price */}
                 <div className="mb-8">
-                  <h3 className="text-[10px] font-bold tracking-[0.22em] uppercase text-jaggery/70 mb-3">
+                  <h3 className="text-[12px] font-bold tracking-[0.22em] uppercase text-jaggery/70 mb-3">
                     Price
                   </h3>
                   <ul className="flex flex-col gap-0.5">

@@ -37,8 +37,8 @@ export default function BlogHighlightSection() {
                 </div>
                 <div className="flex flex-col flex-grow">
                   <div className="flex gap-4 items-center mb-6">
-                    <span className="text-[10px] font-semibold tracking-[0.2em] text-black/50 border border-black/10 px-3 py-1 uppercase">{post.tags[0]}</span>
-                    <span className="text-[10px] tracking-widest text-black/40 uppercase font-medium">{post.date}</span>
+                    <span className="text-[12px] font-semibold tracking-[0.2em] text-black/50 border border-black/10 px-3 py-1 uppercase">{post.tags[0]}</span>
+                    <span className="text-[12px] tracking-widest text-black/40 uppercase font-medium">{post.date}</span>
                   </div>
                   <h3 className="font-poppins text-xl font-medium uppercase tracking-[0.1em] text-black mb-4 group-hover:text-black/70 transition-colors">{post.title}</h3>
                   <p className="text-black/60 text-sm tracking-wide font-light flex-grow leading-relaxed mb-8">{post.description}</p>

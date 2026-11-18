@@ -34,7 +34,9 @@
  *   npm run check:schema -- --live=https://…  # or another origin
  */
 import { readFile } from "node:fs/promises";
-import { liveBaseFrom, loadPages, visibleText } from "./lib/pages.mjs";
+import { DEFAULT_BASE, liveBaseFrom, loadPages, visibleText } from "./lib/pages.mjs";
+
+const SITE_HOST = new URL(DEFAULT_BASE).host;
 
 /**
  * Fields each type must carry, keyed by the type name.
@@ -82,7 +84,10 @@ const REQUIRED = {
   VideoObject: ["name", "description", "thumbnailUrl", "uploadDate"],
   ImageObject: ["url"],
   MerchantReturnPolicy: ["applicableCountry", "returnPolicyCategory"],
-  OfferShippingDetails: ["shippingDestination", "deliveryTime"],
+  // Google's merchant listing requires shippingRate inside shippingDetails
+  // (Semrush "MERCHANT_LISTING: shippingDetails.shippingRate", 18 Nov 2026).
+  // The site emits none today; this stops one coming back incomplete.
+  OfferShippingDetails: ["shippingRate", "shippingDestination", "deliveryTime"],
   PostalAddress: ["addressCountry"],
 };
 
@@ -308,6 +313,34 @@ for (const { route, html } of pages) {
           }
         }
       }
+    }
+
+    // Google's carousel rules for a summary page, which schema.org's own
+    // vocabulary does not express: every entry is a ListItem with positions
+    // 1, 2, 3… in order and the absolute URL of a page on this site, and
+    // nothing else. An `item` beside `url` makes Google read the entry as the
+    // all-in-one format and then report the item's url missing ("CAROUSEL:
+    // item, url", 15 pages, Semrush 18 Nov 2026), which this check passed.
+    if (typesOf(node).includes("ItemList")) {
+      const entries = Array.isArray(node.itemListElement) ? node.itemListElement : [];
+      if (node.numberOfItems !== undefined && node.numberOfItems !== entries.length) {
+        problems.push([route, `ItemList numberOfItems is ${node.numberOfItems} but it lists ${entries.length}`]);
+      }
+      entries.forEach((entry, i) => {
+        const at = `ItemList entry ${i + 1}`;
+        if (!typesOf(entry).includes("ListItem")) problems.push([route, `${at} is not a ListItem`]);
+        if (entry.position !== i + 1) problems.push([route, `${at} has position ${entry.position}, expected ${i + 1}`]);
+        let host = "";
+        try {
+          host = new URL(entry.url).host;
+        } catch {}
+        if (!host) problems.push([route, `${at} has no absolute url`]);
+        else if (host !== SITE_HOST) problems.push([route, `${at} url is on ${host}, not ${SITE_HOST}`]);
+        const extra = Object.keys(entry).filter((k) => !["@type", "position", "url"].includes(k));
+        if (extra.length > 0) {
+          problems.push([route, `${at} carries ${extra.join(", ")}: Google's summary format is position and url only`]);
+        }
+      });
     }
 
     // Phase H owns earning real reviews. Until it lands, rating markup on a

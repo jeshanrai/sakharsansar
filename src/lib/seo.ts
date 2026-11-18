@@ -347,46 +347,12 @@ export function recipeLd(opts: {
   };
 }
 
-/**
- * Shipping terms, transcribed from /shipping-policy. Kathmandu Valley is the
- * slowest of the two named regions (3–5 days) and "other locations" runs to
- * 10, so the advertised transit window is 2–10 business days.
- */
-function shippingDetailsLd(): Json {
-  return {
-    "@type": "OfferShippingDetails",
-    shippingDestination: {
-      "@type": "DefinedRegion",
-      addressCountry: "NP",
-    },
-    deliveryTime: {
-      "@type": "ShippingDeliveryTime",
-      handlingTime: {
-        "@type": "QuantitativeValue",
-        minValue: 1,
-        maxValue: 2,
-        unitCode: "DAY",
-      },
-      transitTime: {
-        "@type": "QuantitativeValue",
-        minValue: 2,
-        maxValue: 10,
-        unitCode: "DAY",
-      },
-      businessDays: {
-        "@type": "OpeningHoursSpecification",
-        dayOfWeek: [
-          "https://schema.org/Sunday",
-          "https://schema.org/Monday",
-          "https://schema.org/Tuesday",
-          "https://schema.org/Wednesday",
-          "https://schema.org/Thursday",
-          "https://schema.org/Friday",
-        ],
-      },
-    },
-  };
-}
+// No `shippingDetails` on the Offer. Google's merchant listing requires a
+// `shippingRate` inside it, and our delivery charge depends on weight and
+// location, so no single rate would be true. A missing optional property is a warning; an invented
+// rate is a false statement. Removed 18 Nov 2026 after Semrush reported
+// "MERCHANT_LISTING: shippingDetails.shippingRate" on all six product pages.
+// check:schema now fails if shippingDetails returns without a shippingRate.
 
 /**
  * Return terms, transcribed from /refund-policy.
@@ -522,7 +488,6 @@ export function productLd(
       availability: "https://schema.org/InStock",
       itemCondition: "https://schema.org/NewCondition",
       seller: { "@id": ORG_ID },
-      shippingDetails: shippingDetailsLd(),
       hasMerchantReturnPolicy: returnPolicyLd(),
     },
   };
@@ -594,11 +559,10 @@ export function webPageLd(opts: {
  * Collection pages (shop, categories, journal hubs) rank better with an
  * explicit ItemList.
  *
- * Pass `id` — from `productNodeId` / `postNodeId` — wherever the listed thing
- * has a node of its own on its detail page. Without it a `ListItem` says only
- * "there is a link here called X"; with it, the entry resolves to the very
- * `Product` or `BlogPosting` the other page describes, and the two pages stop
- * being separate mentions of the same thing.
+ * Emits Google's summary-page format: position and url per entry. `name` and
+ * `id` are accepted so callers keep describing what they list, but neither is
+ * emitted: adding `item: {"@id": id}` beside `url` is what turned every list
+ * on the site into a carousel error. check:schema enforces the shape.
  */
 export function itemListLd(
   name: string,
@@ -609,12 +573,15 @@ export function itemListLd(
     "@type": "ItemList",
     name,
     numberOfItems: items.length,
+    // Google's summary-page carousel format: each ListItem is a position and
+    // the URL of the detail page, nothing else. The entries used to carry
+    // `item: {"@id": …}` as well, which reads as the other (all-in-one)
+    // format with its `item` missing a url: Semrush's 15 "CAROUSEL: item,
+    // url" errors. The detail page's own node is found through that URL.
     itemListElement: items.map((item, i) => ({
       "@type": "ListItem",
       position: i + 1,
-      name: item.name,
       url: absoluteUrl(item.path),
-      ...(item.id ? { item: { "@id": item.id } } : {}),
     })),
   };
 }

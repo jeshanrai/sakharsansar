@@ -1,4 +1,5 @@
 import price from "@/data/sakhar-price.json";
+import wholesale from "@/data/wholesale.json";
 
 /**
  * Last substantive edit of the non-post pages, by path.
@@ -13,7 +14,9 @@ import price from "@/data/sakhar-price.json";
  */
 export const PAGE_UPDATED: Record<string, string> = {
   "/": "2026-11-18",
+  "/shop": "2026-11-18",
   "/sakhar-price": price.updated ?? price.date,
+  "/wholesale": wholesale.updated ?? wholesale.date,
   "/products/organic-jaggery-block": "2026-11-18",
   "/products/jaggery-powder": "2026-11-18",
   "/ne/products/organic-jaggery-block": "2026-11-18",

@@ -61,7 +61,7 @@ export default function JournalSection() {
           <div>
             <div className="flex items-center gap-2.5 mb-3">
               <span className="w-6 h-px bg-caramel" />
-              <span className="label-caps text-caramel-deep text-[10px]">From the journal</span>
+              <span className="label-caps text-caramel-deep text-[12px]">From the journal</span>
             </div>
             <h2 className="font-serif font-soft text-jaggery tracking-[-0.02em] text-balance leading-[1.05] text-[clamp(2rem,4vw,3.25rem)]">
               Read before you cook.
